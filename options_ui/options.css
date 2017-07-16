@@ -1,0 +1,22 @@
+#extensionName {
+	font-weight: bold;
+	text-align: center;
+	border-bottom: 2px solid black;
+}
+
+.borderbot {
+	border-bottom: 1px solid black;
+}
+
+.divCentered {
+	text-align: center;
+}
+
+.colorButton {
+	width: 80px;
+}
+
+button {
+    margin:auto;
+    display:block;
+}

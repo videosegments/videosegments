@@ -1,0 +1,47 @@
+{
+	"manifest_version": 2,
+	"name": "__MSG_extensionName__",
+	"version": "1.0",
+
+	"default_locale": "en",
+	"description": "__MSG_extensionDescription__",
+	"icons": {
+		"32": "icons/icon-32.png",
+		"48": "icons/icon-48.png",
+		"96": "icons/icon-96.png"
+	},
+	
+	"author": "Alex Lys",
+	
+	"browser_action": {
+		"default_icon": {
+			"32": "icons/icon-32.png"
+		},
+		"default_title": "Video Segments",
+		"default_popup": "browser_action/popup.html"
+	},
+
+	"content_scripts": [
+		{
+			"matches": ["<all_urls>"],
+			"js": ["content-script/index.js"],
+			"run_at": "document_end",
+			"all_frames": true
+		}
+	],
+	
+	"incognito": "split",
+	
+	"offline_enabled": false,
+	
+	"options_ui": {
+		"page": "options_ui/options.html"
+	},
+
+	"permissions": [
+		"https://db.videosegments.org/get_segments.php*",
+		"https://db.videosegments.org/send_segments.php",
+		"https://db.videosegments.org/confirm_segments.php",
+		"storage"
+	]
+}
