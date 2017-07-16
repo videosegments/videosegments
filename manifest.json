@@ -30,8 +30,6 @@
 		}
 	],
 	
-	"incognito": "split",
-	
 	"offline_enabled": false,
 	
 	"options_ui": {

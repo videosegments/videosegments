@@ -13,7 +13,7 @@ else {
 function translateTextById(id) {
 	var currentElement = document.getElementById(id);
 	if ( currentElement ) {
-		currentElement.innerHTML = translator.i18n.getMessage(id);
+		currentElement.appendChild(document.createTextNode(translator.i18n.getMessage(id)));
 	}
 }
 

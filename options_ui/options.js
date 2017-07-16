@@ -31,7 +31,7 @@ function saveOptions() {
 			
 		var optionsSaved = document.getElementById('optionsSaved');
 		var translation = translator.i18n.getMessage('optionsSaved');
-		optionsSaved.innerHTML = translation;
+		optionsSaved.appendChild(document.createTextNode(translator.i18n.getMessage('optionsSaved')));
 		setTimeout(function() {
 			optionsSaved.innerHTML = '\xa0';
 		}, 2000);
