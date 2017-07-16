@@ -29,7 +29,7 @@
 'use strict';
  
 // debug message to be sure script is loaded 
-console.log('[VideoSegments] index.js injected');
+// console.log('[VideoSegments] index.js injected');
 
 /**
  * Main class to handle media player
@@ -65,7 +65,7 @@ var mediaPlayerWrapper = {
 	 * and load user settings 
 	 */
 	init: function(mediaPlayer, settings) {
-		console.log('mediaPlayerWrapper::init()');
+		// console.log('mediaPlayerWrapper::init()');
 		
 		// save mediaPlayer reference
 		this.mediaPlayer = mediaPlayer;
@@ -109,7 +109,7 @@ var mediaPlayerWrapper = {
 			return;
 		}
 		
-		console.log('mediaPlayerWrapper::onDurationChange()');
+		// console.log('mediaPlayerWrapper::onDurationChange()');
 		
 		// remove segment bar 
 		this.removeSegmentBar();
@@ -142,7 +142,7 @@ var mediaPlayerWrapper = {
 	 * will growth when other domains will be added
 	 */
 	getVideoSourceInformation: function() {
-		console.log('mediaPlayerWrapper::getVideoSourceInformation()');
+		// console.log('mediaPlayerWrapper::getVideoSourceInformation()');
 		
 		// youtube
 		var match = this.mediaPlayer.baseURI.match(/^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/);
@@ -157,7 +157,7 @@ var mediaPlayerWrapper = {
 	 * request segments from database 
 	 */
 	requestSegments: function(domain, id, requestTime) {
-		console.log('mediaPlayerWrapper::requestSegments()');
+		// console.log('mediaPlayerWrapper::requestSegments()');
 		
 		var self = this;
 		// if user prefer to wait until segments are loaded 
@@ -167,13 +167,13 @@ var mediaPlayerWrapper = {
 			// start timer 
 			this.pauseTimer = setTimeout(function() {
 					self.mediaPlayer.play();
-					console.log('requestSegments() timeout');
+					// console.log('requestSegments() timeout');
 				}, 
 				this.settings.autoPauseDuration*1000
 			);
 		}
 		
-		console.log('request: https://db.videosegments.org/get_segments.php?domain=' + domain + '&' + 'video_id=' + id);
+		// console.log('request: https://db.videosegments.org/get_segments.php?domain=' + domain + '&' + 'video_id=' + id);
 		
 		var xhr = new XMLHttpRequest();
 		xhr.open('GET', 'https://db.videosegments.org/get_segments.php?domain=' + domain + '&' + 'video_id=' + id);
@@ -253,7 +253,7 @@ var mediaPlayerWrapper = {
 			return;
 		}
 		
-		console.log('mediaPlayerWrapper::onPlay()');
+		// console.log('mediaPlayerWrapper::onPlay()');
 		
 		// find segment to rewind
 		var rewindSegment = this.getNextSegment(0);
@@ -272,7 +272,7 @@ var mediaPlayerWrapper = {
 			return;
 		}
 		
-		console.log('mediaPlayerWrapper::tryRewind()');
+		// console.log('mediaPlayerWrapper::tryRewind()');
 		
 		// kill rewind timer
 		if ( this.timer ) {
@@ -282,7 +282,7 @@ var mediaPlayerWrapper = {
 		
 		// 2 digit precision is enough
 		var currentTime = this.mediaPlayer.currentTime.toFixed(2);
-		console.log('current time: ' + currentTime, ', rewind time: ' + this.segmentsData.timestamps[rewindSegment]);
+		// console.log('current time: ' + currentTime, ', rewind time: ' + this.segmentsData.timestamps[rewindSegment]);
 		// get difference between segment start time and current time
 		var delay = this.segmentsData.timestamps[rewindSegment] - currentTime;
 		// if called earlier (timeouts are inaccurate)
@@ -315,7 +315,7 @@ var mediaPlayerWrapper = {
 			return null;
 		}
 		
-		console.log('mediaPlayerWrapper::getNextSegment()');
+		// console.log('mediaPlayerWrapper::getNextSegment()');
 		
 		// segments count
 		var segments = this.segmentsData.timestamps.length;
@@ -335,7 +335,7 @@ var mediaPlayerWrapper = {
 	 * Called when player paused. Kill rewind timer
 	 */
 	onPause: function() {
-		console.log('mediaPlayerWrapper::onPause()');
+		// console.log('mediaPlayerWrapper::onPause()');
 		
 		clearTimeout(this.timer);
 		this.timer = null;
@@ -345,7 +345,7 @@ var mediaPlayerWrapper = {
 	 * Called when player play speed was changed. Update rewind delay
 	 */
 	onRateChange: function() {
-		console.log('mediaPlayerWrapper::onRateChange()');
+		// console.log('mediaPlayerWrapper::onRateChange()');
 		
 		// update playing speed
 		this.playbackRate = this.mediaPlayer.playbackRate;
@@ -360,7 +360,7 @@ var mediaPlayerWrapper = {
 	 * Adds a segment bar after progress bar 
 	 */
 	insertSegmentBar: function() {
-		console.log('mediaPlayerWrapper::insertSegmentBar()');
+		// console.log('mediaPlayerWrapper::insertSegmentBar()');
 		
 		// if user doesn't want to see progress bar 
 		if ( !this.settings.progressBar ) {
@@ -402,7 +402,7 @@ var mediaPlayerWrapper = {
 	 * Removes a segment bar after progress bar 
 	 */
 	removeSegmentBar: function() {
-		console.log('mediaPlayerWrapper::removeSegmentBar()');
+		// console.log('mediaPlayerWrapper::removeSegmentBar()');
 		
 		// if segments for video exists and user want to see progress bar 
 		if ( this.segmentsData && this.settings.progressBar ) {
@@ -437,12 +437,12 @@ var editorWrapper = {
 	 * Initializes class variables, create UI 
 	 */
 	init: function(mediaPlayerWrapper, segmentsData, settings, domain, id) {
-		console.log('editorWrapper::init()');
+		// console.log('editorWrapper::init()');
 		
 		// for iframe this will be undefined
 		var watchHeader = document.getElementById('watch-header');
 		if ( !watchHeader ) {
-			console.log('watch-header not found');
+			// console.log('watch-header not found');
 			return;
 		}
 		
@@ -681,7 +681,7 @@ var editorWrapper = {
 	 * Updates preview of segments (
 	 */ 
 	updateSegmentsPreview: function() {
-		console.log('editorWrapper::updateSegmentsPreview()');
+		// console.log('editorWrapper::updateSegmentsPreview()');
 		var entries = this.editorDiv.getElementsByClassName('vs-editor-entry');
 		
 		// should be replaced with better code! 
@@ -737,7 +737,7 @@ var editorWrapper = {
 	 * Send segments data to database 
 	 */
 	sendSegmentsData: function() {
-		console.log('editorWrapper::sendSegmentsData()');
+		// console.log('editorWrapper::sendSegmentsData()');
 		
 		// format as json 
 		// var timestamps = '', types = ',' + document.getElementById('vs_type_'+(this.segmentsCount-1)).value, descriptions, input;
@@ -761,7 +761,7 @@ var editorWrapper = {
 		timestamps = timestamps.slice(0, -1);
 		types += editorEntries[lastSegmentIndex].getElementsByClassName('vs-editor-segment-type')[0].value;
 		
-		console.log('ts: ', timestamps, 'types: ', types);
+		// console.log('ts: ', timestamps, 'types: ', types);
 		
 		// remove first symbols (which is ",")
 		// timestamps = timestamps.substr(1);
@@ -773,7 +773,7 @@ var editorWrapper = {
 		xhr.onreadystatechange = function() { 
 			if ( xhr.readyState == 4 ) {
 				if ( xhr.status == 200 ) {
-					console.log('responce: ', xhr.responseText);
+					// console.log('responce: ', xhr.responseText);
 			
 					// server will return '1' if he asking for confirmation (captcha)
 					if ( xhr.responseText[0] == '1' ) {
@@ -793,7 +793,7 @@ var editorWrapper = {
 		// format query 
 		var post = 'domain=youtube&video_id='+this.id+'&timestamps='+timestamps+'&types='+types+'&authid='+this.settings.authid;
 		xhr.setRequestHeader("content-type", "application/x-www-form-urlencoded");
-		console.log(post);
+		// console.log(post);
 		xhr.send(post);
 	},
 	
@@ -802,7 +802,7 @@ var editorWrapper = {
 	 * http://stackoverflow.com/a/14030201
 	 */
 	requestCaptcha: function(authid, timestamps, types) {
-		console.log('editorWrapper::requestCaptcha()');
+		// console.log('editorWrapper::requestCaptcha()');
 		
 		var form = document.createElement('form');
 		
@@ -833,13 +833,13 @@ var editorWrapper = {
 	 * Remove editor div's from page 
 	 */
 	destroy: function() {
-		console.log('editorWrapper::destroy()');
+		// console.log('editorWrapper::destroy()');
 		this.editorDiv.remove();
 	},
 };
 
 function loadSettings() {
-	console.log('loadSettings()');
+	// console.log('loadSettings()');
 	
 	// load user settings 
 	// cross-browser support
