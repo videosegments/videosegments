@@ -20,12 +20,28 @@ document.getElementById('colorCutscene').addEventListener('change', function() {
 document.getElementById('colorOfftop').addEventListener('change', function() { updatePreferenceColor(this.id); });
 document.getElementById('colorScam').addEventListener('change', function() { updatePreferenceColor(this.id); });
 
+// load user settings 
+// cross-browser support
+var crossBrowser;
+// gecko
+if ( (typeof browser != 'undefined') && browser.storage ) {
+	crossBrowser = browser;
+}
+// chromium
+else if ( (typeof chrome != 'undefined') && chrome.storage ) {
+	crossBrowser = chrome;
+}
+else {
+	console.log('failed: ', crossBrowser);
+}
+
 function updatePreferenceValue(preferanceName) 
 {
 	var preferenceValue = document.getElementById(preferanceName).value;
 	var preferance = {};
 	preferance[preferanceName] = preferenceValue;
 	storage.set(preferance);
+	notifyWrapper();
 }
 
 function updatePreferenceBool(preferanceName) 
@@ -34,6 +50,7 @@ function updatePreferenceBool(preferanceName)
 	var preferance = {};
 	preferance[preferanceName] = preferenceValue;
 	storage.set(preferance);
+	notifyWrapper();
 }
 
 function updatePreferenceColor(preferanceName) 
@@ -42,6 +59,16 @@ function updatePreferenceColor(preferanceName)
 	var preferance = {};
 	preferance[preferanceName] = preferenceValue;
 	storage.set(preferance);
+	notifyWrapper();
+}
+
+function notifyWrapper()
+{
+	var querying = crossBrowser.tabs.query({}, function(tabs) {
+		for ( let i = 0; i < tabs.length; ++i ) {
+			crossBrowser.tabs.sendMessage(tabs[i].id, {});
+		}
+	});
 }
 
 // cross-browser support

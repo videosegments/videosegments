@@ -34,6 +34,7 @@
 
 	"permissions": [
 		"https://db.videosegments.org/get_segments.php*",
-		"storage"
+		"storage",
+		"tabs"
 	]
 }

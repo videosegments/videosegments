@@ -31,6 +31,27 @@
 // debug message to be sure script is loaded 
 // console.log('[VideoSegments] index.js injected');
 
+// load user settings 
+// cross-browser support
+var crossBrowser;
+var crossStorage;
+
+// gecko
+if ( (typeof browser != 'undefined') && browser.storage ) {
+	crossBrowser = browser;
+	crossStorage = browser.storage.local;
+}
+// chromium
+else if ( (typeof chrome != 'undefined') && chrome.storage ) {
+	crossBrowser = chrome;
+	crossStorage = chrome.storage.sync;
+}
+else {
+	crossBrowser = null;
+	crossStorage = null;
+	console.log('failed: ', crossBrowser);
+}
+
 /**
  * Main class to handle media player
  */
@@ -434,32 +455,11 @@ var mediaPlayerWrapper = {
 	},
 };
 
-function loadSettings() {
+function loadSettings(callback) {
 	// console.log('loadSettings()');
 	
-	// load user settings 
-	// cross-browser support
-	var crossBrowser;
-	// gecko
-	if ( (typeof browser != 'undefined') && browser.storage ) {
-		crossBrowser = browser.storage.local;
-	}
-	// chromium
-	else if ( (typeof chrome != 'undefined') && chrome.storage ) {
-		crossBrowser = chrome.storage.sync;
-	}
-	else {
-		// sometimes extension simply don't want to load ... 
-		// and this happens only on firefox developer edition, idk why 
-		// on chrome/firefox everything fine, for dev version 
-		// browser and chrome are empty object { }
-		// console.log('failed: ', crossBrowser);
-		// return;
-		// somehow it's working now
-	}
-	
 	// request settings 
-	crossBrowser.get({
+	crossStorage.get({
 		/* stop playing until segments are fetched */ 
 		autoPauseDuration: 	1,
 		
@@ -553,10 +553,12 @@ function loadSettings() {
 		// settings.editor = result.editor;
 		// settings.authid = result.authid;
 		
-		// look for media player on page
-		tryFindMediaPlayer(settings);
+		callback(settings);
 	});
 }
+
+// media player wrapper
+var wrapper = null;
 
 // look for media players on page 
 function tryFindMediaPlayer(settings) 
@@ -570,7 +572,7 @@ function tryFindMediaPlayer(settings)
 		document.onclick = null;
 		
 		// create wrapper 
-		var wrapper = Object.create(mediaPlayerWrapper);
+		wrapper = Object.create(mediaPlayerWrapper);
 		// initialize wrapper 
 		wrapper.init(collection[0], settings);
 	}
@@ -612,4 +614,24 @@ function tryFindMediaPlayer(settings)
 	}
 }
 
-loadSettings();
+// load settings, look for media player on page
+loadSettings(tryFindMediaPlayer);
+
+// on settings update
+crossBrowser.runtime.onMessage.addListener(
+	function(request, sender, sendResponse) {
+		if ( wrapper ) {
+			loadSettings(function(settings) {
+				wrapper.settings = settings;
+			
+				wrapper.removeSegmentBar();
+				wrapper.insertSegmentBar();
+				
+				if ( !wrapper.mediaPlayer.paused ) {
+					wrapper.mediaPlayer.pause();
+					wrapper.mediaPlayer.play();
+				}
+			});
+		}
+	}
+);
