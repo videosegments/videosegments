@@ -238,7 +238,7 @@ var mediaPlayerWrapper = {
 					
 					// create custom event for moderator tools
 					// https://bugzilla.mozilla.org/show_bug.cgi?id=999586
-					// same issue, bypass by JSON.stringify
+					// same issue "Permission denied to access property", bypass by JSON
 					var event = new CustomEvent('vs_gotsegments', { 
 						detail: JSON.stringify({
 							segmentsData: self.segmentsData,

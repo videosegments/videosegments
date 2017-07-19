@@ -1,3 +1,49 @@
+document.addEventListener('DOMContentLoaded', restoreOptions);
+document.getElementById('autoPauseDuration').addEventListener('change', function() { updatePreferenceValue(this.id); });
+document.getElementById('progressBar').addEventListener('change', function() { updatePreferenceBool(this.id); });
+
+document.getElementById('content').addEventListener('change', function() { updatePreferenceBool(this.id); });
+document.getElementById('intro').addEventListener('change', function() { updatePreferenceBool(this.id); });
+document.getElementById('advertisement').addEventListener('change', function() { updatePreferenceBool(this.id); });
+document.getElementById('credits').addEventListener('change', function() { updatePreferenceBool(this.id); });
+document.getElementById('interactive').addEventListener('change', function() { updatePreferenceBool(this.id); });
+document.getElementById('cutscene').addEventListener('change', function() { updatePreferenceBool(this.id); });
+document.getElementById('offtop').addEventListener('change', function() { updatePreferenceBool(this.id); });
+document.getElementById('scam').addEventListener('change', function() { updatePreferenceBool(this.id); });
+
+document.getElementById('colorContent').addEventListener('change', function() { updatePreferenceColor(this.id); });
+document.getElementById('colorIntro').addEventListener('change', function() { updatePreferenceColor(this.id); });
+document.getElementById('colorAdvertisement').addEventListener('change', function() { updatePreferenceColor(this.id); });
+document.getElementById('colorCredits').addEventListener('change', function() { updatePreferenceColor(this.id); });
+document.getElementById('colorInteractive').addEventListener('change', function() { updatePreferenceColor(this.id); });
+document.getElementById('colorCutscene').addEventListener('change', function() { updatePreferenceColor(this.id); });
+document.getElementById('colorOfftop').addEventListener('change', function() { updatePreferenceColor(this.id); });
+document.getElementById('colorScam').addEventListener('change', function() { updatePreferenceColor(this.id); });
+
+function updatePreferenceValue(preferanceName) 
+{
+	var preferenceValue = document.getElementById(preferanceName).value;
+	var preferance = {};
+	preferance[preferanceName] = preferenceValue;
+	storage.set(preferance);
+}
+
+function updatePreferenceBool(preferanceName) 
+{
+	var preferenceValue = document.getElementById(preferanceName).checked;
+	var preferance = {};
+	preferance[preferanceName] = preferenceValue;
+	storage.set(preferance);
+}
+
+function updatePreferenceColor(preferanceName) 
+{
+	var preferenceValue = document.getElementById(preferanceName).style.backgroundColor;
+	var preferance = {};
+	preferance[preferanceName] = preferenceValue;
+	storage.set(preferance);
+}
+
 // cross-browser support
 var storage;
 // firefox
@@ -105,32 +151,32 @@ function restoreOptions() {
 		document.getElementById('autoPauseDuration').value = result.autoPauseDuration;
 		document.getElementById('progressBar').checked = result.progressBar;
 		
-		document.getElementById('segmentContent').checked = result.content;
-		document.getElementById('segmentIntro').checked = result.intro;
-		document.getElementById('segmentAdvertisement').checked = result.advertisement;
-		document.getElementById('segmentCutscene').checked = result.cutscene;
-		document.getElementById('segmentInteractive').checked = result.interactive;
-		document.getElementById('segmentCredits').checked = result.credits;
-		document.getElementById('segmentScam').checked = result.scam;
-		document.getElementById('segmentOfftop').checked = result.offtop;
+		document.getElementById('content').checked = result.content;
+		document.getElementById('intro').checked = result.intro;
+		document.getElementById('advertisement').checked = result.advertisement;
+		document.getElementById('cutscene').checked = result.cutscene;
+		document.getElementById('interactive').checked = result.interactive;
+		document.getElementById('credits').checked = result.credits;
+		document.getElementById('scam').checked = result.scam;
+		document.getElementById('offtop').checked = result.offtop;
 		
-		document.getElementById('segmentContentColorButton').style.backgroundColor = result.colorContent;
-		document.getElementById('segmentIntroColorButton').style.backgroundColor = result.colorIntro;
-		document.getElementById('segmentAdvertisementColorButton').style.backgroundColor = result.colorAdvertisement;
-		document.getElementById('segmentCutsceneColorButton').style.backgroundColor = result.colorCutscene;
-		document.getElementById('segmentInteractiveColorButton').style.backgroundColor = result.colorInteractive;
-		document.getElementById('segmentCreditsColorButton').style.backgroundColor = result.colorCredits;
-		document.getElementById('segmentScamColorButton').style.backgroundColor = result.colorScam;
-		document.getElementById('segmentOfftopColorButton').style.backgroundColor = result.colorOfftop;
+		document.getElementById('colorContent').style.backgroundColor = result.colorContent;
+		document.getElementById('colorIntro').style.backgroundColor = result.colorIntro;
+		document.getElementById('colorAdvertisement').style.backgroundColor = result.colorAdvertisement;
+		document.getElementById('colorCutscene').style.backgroundColor = result.colorCutscene;
+		document.getElementById('colorInteractive').style.backgroundColor = result.colorInteractive;
+		document.getElementById('colorCredits').style.backgroundColor = result.colorCredits;
+		document.getElementById('colorScam').style.backgroundColor = result.colorScam;
+		document.getElementById('colorOfftop').style.backgroundColor = result.colorOfftop;
 		
-		document.getElementById('segmentContentColorButton').value = getHexRGBColor(result.colorContent).toUpperCase();
-		document.getElementById('segmentIntroColorButton').value = getHexRGBColor(result.colorIntro).toUpperCase();
-		document.getElementById('segmentAdvertisementColorButton').value = getHexRGBColor(result.colorAdvertisement).toUpperCase();
-		document.getElementById('segmentCutsceneColorButton').value = getHexRGBColor(result.colorCutscene).toUpperCase();
-		document.getElementById('segmentInteractiveColorButton').value = getHexRGBColor(result.colorInteractive).toUpperCase();
-		document.getElementById('segmentCreditsColorButton').value = getHexRGBColor(result.colorCredits).toUpperCase();
-		document.getElementById('segmentScamColorButton').value = getHexRGBColor(result.colorScam).toUpperCase();
-		document.getElementById('segmentOfftopColorButton').value = getHexRGBColor(result.colorOfftop).toUpperCase();
+		document.getElementById('colorContent').value = getHexRGBColor(result.colorContent).toUpperCase();
+		document.getElementById('colorIntro').value = getHexRGBColor(result.colorIntro).toUpperCase();
+		document.getElementById('colorAdvertisement').value = getHexRGBColor(result.colorAdvertisement).toUpperCase();
+		document.getElementById('colorCutscene').value = getHexRGBColor(result.colorCutscene).toUpperCase();
+		document.getElementById('colorInteractive').value = getHexRGBColor(result.colorInteractive).toUpperCase();
+		document.getElementById('colorCredits').value = getHexRGBColor(result.colorCredits).toUpperCase();
+		document.getElementById('colorScam').value = getHexRGBColor(result.colorScam).toUpperCase();
+		document.getElementById('colorOfftop').value = getHexRGBColor(result.colorOfftop).toUpperCase();
 		
 	});
 }
@@ -149,6 +195,3 @@ function getHexRGBColor(color)
   
   return color.substr(1);
 }
-
-document.addEventListener('DOMContentLoaded', restoreOptions);
-document.getElementById('buttonSave').addEventListener('click', saveOptions);

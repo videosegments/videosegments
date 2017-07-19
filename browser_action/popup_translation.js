@@ -55,4 +55,3 @@ translateTextById('segmentScamColor');
 translateTextById('segmentOfftopColor');
 
 translateTextById('optionsUpdate');
-translateTextById('buttonSave');
