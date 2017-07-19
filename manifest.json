@@ -31,10 +31,6 @@
 	],
 	
 	"offline_enabled": false,
-	
-	"options_ui": {
-		"page": "options_ui/options.html"
-	},
 
 	"permissions": [
 		"https://db.videosegments.org/get_segments.php*",
