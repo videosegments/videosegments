@@ -237,13 +237,15 @@ var mediaPlayerWrapper = {
 					// }
 					
 					// create custom event for moderator tools
+					// https://bugzilla.mozilla.org/show_bug.cgi?id=999586
+					// same issue, bypass by JSON.stringify
 					var event = new CustomEvent('vs_gotsegments', { 
-						detail: {
+						detail: JSON.stringify({
 							segmentsData: self.segmentsData,
 							settings: self.settings,
 							domain: domain,
 							id: id
-						}
+						})
 					});
 					document.dispatchEvent(event);
 				}
