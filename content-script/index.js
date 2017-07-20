@@ -183,15 +183,18 @@ var mediaPlayerWrapper = {
 		var self = this;
 		// if user prefer to wait until segments are loaded 
 		if ( this.settings.autoPauseDuration > 0.0 ) {
-			// pause player  
-			this.mediaPlayer.pause();
-			// start timer 
-			this.pauseTimer = setTimeout(function() {
-					self.mediaPlayer.play();
-					// console.log('requestSegments() timeout');
-				}, 
-				this.settings.autoPauseDuration*1000
-			);
+			// prevent resuming of user-paused videos
+			if ( !this.mediaPlayer.paused ) {
+				// pause player  
+				this.mediaPlayer.pause();
+				// start timer 
+				this.pauseTimer = setTimeout(function() {
+						self.mediaPlayer.play();
+						// console.log('requestSegments() timeout');
+					}, 
+					this.settings.autoPauseDuration*1000
+				);
+			}
 		}
 		
 		// console.log('request: https://db.videosegments.org/get_segments.php?domain=' + domain + '&' + 'video_id=' + id);
@@ -371,8 +374,16 @@ var mediaPlayerWrapper = {
 	onPause: function() {
 		// console.log('mediaPlayerWrapper::onPause()');
 		
-		clearTimeout(this.timer);
-		this.timer = null;
+		if ( this.timer ) {
+			clearTimeout(this.timer);
+			this.timer = null;
+		}
+		
+		if (this.pauseTimer) {
+			clearTimeout(this.pauseTimer);
+			this.pauseTimer = null;
+		}
+		
 	},
 	
 	/*
@@ -386,8 +397,10 @@ var mediaPlayerWrapper = {
 		
 		// get next segment to rewind (TODO: remove this call)
 		var rewindSegment = this.getNextSegment(0);
-		// try to rewind 
-		this.tryRewind(rewindSegment);
+		if ( rewindSegment ) {
+			// try to rewind 
+			this.tryRewind(rewindSegment);
+		}
 	},
 	
 	/*
