@@ -243,14 +243,16 @@ var mediaPlayerWrapper = {
 						self.mediaPlayer.addEventListener("ratechange", self.eventContexts.onRateChange);
 					}
 					else {
-						if ( jsonResponce.votes == 0 ) {
-							// insert request segmentation button 
-							self.insertMenu(false);
-						}
-						else {
-							// insert request segmentation button 
-							self.insertMenu(true);
-						}
+						setTimeout(function() {
+							if ( jsonResponce.votes == 0 ) {
+								// insert request segmentation button 
+								self.insertMenu(false);
+							}
+							else {
+								// insert request segmentation button 
+								self.insertMenu(true);
+							}
+						}, 1000);
 					}
 					
 					// if user waiting for segments 
