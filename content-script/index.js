@@ -62,6 +62,8 @@ var mediaPlayerWrapper = {
 	url: null,
 	/* user settings */
 	settings: null,
+	/* information about source of video */
+	sourceInformation: null,
 	
 	/* events contexts */
 	eventContexts: {},
@@ -74,9 +76,6 @@ var mediaPlayerWrapper = {
 	
 	/* playing speed */
 	playbackRate: null,
-	
-	/* editor */
-	editor: null,
 	
 	/* pause timer for loading */
 	pauseTimer: null,
@@ -100,6 +99,7 @@ var mediaPlayerWrapper = {
 		this.eventContexts.onPlay = this.onPlay.bind(this);
 		this.eventContexts.onPause = this.onPause.bind(this);
 		this.eventContexts.onRateChange = this.onRateChange.bind(this);
+		this.eventContexts.onSegmentsUpdated = this.onSegmentsUpdated.bind(this);
 		
 		// there is several events related to video status update:
 		// loadstart - duration is NaN for several browsers
@@ -147,14 +147,17 @@ var mediaPlayerWrapper = {
 		this.mediaPlayer.removeEventListener("ratechange", this.eventContexts.onRateChange);
 				
 		// get video source information (domain and id)
-		var sourceInformation = this.getVideoSourceInformation();
+		this.sourceInformation = this.getVideoSourceInformation();
 		
 		// if supported domain and id found
-		if ( sourceInformation ) {
+		if ( this.sourceInformation ) {
 			/* request segments */
 			// 3th argument is current time because request will take time and 
 			// we may have to rewind it with rounding in case of first segment must be skipped
-			this.requestSegments(sourceInformation.domain, sourceInformation.id, this.mediaPlayer.currentTime);
+			this.requestSegments(this.sourceInformation.domain, this.sourceInformation.id, this.mediaPlayer.currentTime);
+			
+			document.removeEventListener('vssegmentsupdated', this.eventContexts.onSegmentsUpdated);
+			document.addEventListener('vssegmentsupdated', this.eventContexts.onSegmentsUpdated);
 		}
 	},
 	
@@ -200,17 +203,20 @@ var mediaPlayerWrapper = {
 		// console.log('request: https://db.videosegments.org/get_segments.php?domain=' + domain + '&' + 'video_id=' + id);
 		
 		var xhr = new XMLHttpRequest();
-		xhr.open('GET', 'https://db.videosegments.org/get_segments.php?domain=' + domain + '&' + 'video_id=' + id);
+		xhr.open('GET', 'https://db.videosegments.org/get.php?domain=' + domain + '&' + 'id=' + id);
 		xhr.onreadystatechange = function() { 
 			if ( xhr.readyState == 4 ) {
 				if ( xhr.status == 200 ) {
+					// console.log(xhr.responseText);
+					
 					// these operations will take time so go back and round load time for rewind
 					self.mediaPlayer.currentTime = Math.floor(requestTime);
 					
+					var jsonResponce = JSON.parse(xhr.responseText);
 					// if there are segments 
-					if ( xhr.responseText.length > 0 ) {
+					if ( typeof jsonResponce.timestamps != 'undefined' ) {
 						// convert json-responce into object
-						self.segmentsData = JSON.parse(xhr.responseText);
+						self.segmentsData = jsonResponce;
 						
 						// add 0 and duration to json array of timestamps (db doesn't contain this information)
 						// if there is more than one segment
@@ -236,6 +242,16 @@ var mediaPlayerWrapper = {
 						self.mediaPlayer.addEventListener("pause", self.eventContexts.onPause);
 						self.mediaPlayer.addEventListener("ratechange", self.eventContexts.onRateChange);
 					}
+					else {
+						if ( jsonResponce.votes == 0 ) {
+							// insert request segmentation button 
+							self.insertMenu(false);
+						}
+						else {
+							// insert request segmentation button 
+							self.insertMenu(true);
+						}
+					}
 					
 					// if user waiting for segments 
 					if ( self.pauseTimer ) {
@@ -247,23 +263,10 @@ var mediaPlayerWrapper = {
 					// force call
 					self.onPlay();
 					
-					// create editor object 
-					// if ( self.settings.editor ) {
-						// editor may be deleted so check it in one second
-						// setTimeout(function() {
-							// if editor doesn't exists
-							// if ( document.getElementById('vs-editor') === null ) {
-								// create it again
-								// self.editor = Object.create(editorWrapper);
-								// self.editor.init(self, self.segmentsData, self.settings, domain, id);
-							// }
-						// }, 1000);
-					// }
-					
 					// create custom event for moderator tools
 					// https://bugzilla.mozilla.org/show_bug.cgi?id=999586
 					// same issue "Permission denied to access property", bypass by JSON
-					var event = new CustomEvent('vs_gotsegments', { 
+					var event = new CustomEvent('vsgotsegments', { 
 						detail: JSON.stringify({
 							segmentsData: self.segmentsData,
 							settings: self.settings,
@@ -466,6 +469,151 @@ var mediaPlayerWrapper = {
 			}
 		}
 	},
+	
+	/*
+	 * Create button for segmentation request (maybe will be menu later)
+	 */
+	insertMenu: function(requested) {
+		if ( this.segmentsData ) {
+			return;
+		}
+		
+		var prevMenuItem = document.getElementById('watch8-secondary-actions');
+		if ( prevMenuItem ) {
+			// create button 
+			var button = document.createElement('button');
+		
+			// modal for captcha 
+			var modal = document.createElement('div');
+			var modalContent = document.createElement('div');
+			
+			modal.id = 'vs-captcha-modal';
+			modal.style = 'display: none; position: fixed; z-index: 2000000000; padding-top: 100px; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgb(0,0,0); background-color: rgba(0,0,0,0.8);';
+			modalContent.style = 'background-color: #fefefe; margin: auto; border: 1px solid #888; width: 350px; ';
+			
+			modal.appendChild(modalContent);
+			prevMenuItem.appendChild(modal);
+			
+			// create image 
+			var img = document.createElement('img');
+			img.src = 'https://db.videosegments.org/images/icon_wb.png';
+			img.style.height = '20px';
+			img.style.width = '20px';
+			img.style.position = 'absolute';
+			
+			// cross browser support
+			var translator;
+			// firefox
+			if ( typeof browser !== 'undefined' ) {
+				translator = browser;
+			}
+			// chrome
+			else {
+				translator = chrome;
+			}
+			
+			// text 
+			var span = document.createElement('span');
+			span.style.marginLeft = '25px';
+			span.style.font = '11px YouTube Noto,Roboto,arial,sans-serif';
+			
+			// add to button
+			button.appendChild(img);
+			button.appendChild(span);
+			
+			button.style.color = 'gray';
+			
+			if ( requested ) {
+				span.appendChild(document.createTextNode(translator.i18n.getMessage('segmentationRequestedLabel')));
+			}
+			else {
+				button.id = 'vs-request-segmentation-button';
+				
+				// add pseudorule :hover 
+				var css = '#vs-request-segmentation-button:hover {cursor: pointer} #vs-request-segmentation-button:hover > span {color: black}';
+				var style = document.createElement('style');
+
+				if ( style.styleSheet ) {
+					style.styleSheet.cssText = css;
+				} else {
+					style.appendChild(document.createTextNode(css));
+				}
+
+				document.getElementsByTagName('head')[0].appendChild(style);
+				span.appendChild(document.createTextNode(translator.i18n.getMessage('requestSegmentationLabel')));
+			
+				// button click handler
+				var self = this;
+				var clickContext = function() {
+					modal.style.display = "block";
+							
+					var iframe = document.createElement("iframe");
+					iframe.src = 'https://db.videosegments.org/captcha.php';
+					iframe.width  = 350;
+					iframe.height = 500;
+					iframe.id = 'vs-captcha-iframe';
+					modal.childNodes[0].appendChild(iframe);
+					
+					var messageContext = function(event) { 
+						if ( event.origin === 'https://db.videosegments.org' ) {
+							var xhr = new XMLHttpRequest();
+							xhr.open('POST', 'https://db.videosegments.org/request.php');
+							xhr.onreadystatechange = function() { 
+								if ( xhr.readyState == 4 ) {
+									if ( xhr.status == 200 ) {
+										console.log(xhr.responseText);
+										
+										modal.style.display = "none";
+										modal.childNodes[0].childNodes[0].remove();
+										
+										button.childNodes[1].textContent = translator.i18n.getMessage('segmentationRequestedLabel');
+										button.childNodes[1].removeEventListener('click', clickContext);
+										button.id = '';
+									}
+								}
+							}
+							
+							var post = 'domain='+self.sourceInformation.domain+'&id='+self.sourceInformation.id+'&captcha='+event.data;
+							xhr.setRequestHeader("content-type", "application/x-www-form-urlencoded");
+							xhr.send(post);
+						}
+					}
+					
+					var clickContext = function(event) { 
+						if ( event.target == modal ) {
+							modal.style.display = "none";
+							modal.childNodes[0].childNodes[0].remove();
+							window.removeEventListener('message', messageContext);
+							window.removeEventListener('click', clickContext);
+						}
+					}
+					
+					window.addEventListener('message', messageContext);
+					window.addEventListener('click', clickContext);
+				};
+				
+				button.addEventListener('click', clickContext);
+			}
+			
+			prevMenuItem.insertAdjacentElement('afterEnd', button);
+		}
+	},
+	
+	/*
+	 * Called when segments in editor were changed
+	 */ 
+	onSegmentsUpdated: function(event) 
+	{
+		if ( !this.segmentsData ) {
+			this.mediaPlayer.addEventListener("play", this.eventContexts.onPlay);
+			this.mediaPlayer.addEventListener("pause", this.eventContexts.onPause);
+			this.mediaPlayer.addEventListener("ratechange", this.eventContexts.onRateChange);
+		}
+		
+		this.removeSegmentBar();
+		this.segmentsData = JSON.parse(event.detail).segmentsData;
+		this.insertSegmentBar();
+	}
 };
 
 function loadSettings(callback) {
@@ -497,11 +645,7 @@ function loadSettings(callback) {
 		colorInteractive:	'#00ffff',
 		colorCutscene:		'#808080',
 		colorOfftop:		'#ff00ff',
-		colorScam:			'#008080',
-		
-		/* editor */
-		// editor: false,
-		// authid: '',
+		colorScam:			'#008080'
 		
 	}, function(result) {
 		// save settings
@@ -561,10 +705,6 @@ function loadSettings(callback) {
 			// 's': '#ff00ff',
 			// 'o': '#008080',
 		// };
-		
-		/* save editor preferances */
-		// settings.editor = result.editor;
-		// settings.authid = result.authid;
 		
 		callback(settings);
 	});

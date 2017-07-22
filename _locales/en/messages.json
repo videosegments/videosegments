@@ -126,6 +126,17 @@
 	},
 	
 	
+	
+	"requestSegmentationLabel": {
+		"message": "Request",
+		"description": ""
+	},
+	"segmentationRequestedLabel": {
+		"message": "Requested",
+		"description": ""
+	},
+	
+	
 
 	
 	"buttonSave": {

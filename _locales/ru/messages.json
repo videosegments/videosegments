@@ -126,6 +126,17 @@
 	},
 	
 	
+	
+	"requestSegmentationLabel": {
+		"message": "Запросить",
+		"description": ""
+	},
+	"segmentationRequestedLabel": {
+		"message": "Запрошено",
+		"description": ""
+	},
+	
+	
 
 	
 	"buttonSave": {

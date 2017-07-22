@@ -54,4 +54,4 @@ translateTextById('segmentCreditsColor');
 translateTextById('segmentScamColor');
 translateTextById('segmentOfftopColor');
 
-translateTextById('optionsUpdate');
+// translateTextById('optionsUpdate');
