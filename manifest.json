@@ -17,7 +17,7 @@
 		"default_icon": {
 			"32": "icons/icon-32.png"
 		},
-		"default_title": "Video Segments",
+		"default_title": "VideoSegments",
 		"default_popup": "browser_action/popup.html"
 	},
 
@@ -33,7 +33,9 @@
 	"offline_enabled": false,
 
 	"permissions": [
-		"https://db.videosegments.org/get_segments.php*",
+		"https://db.videosegments.org/get.php*",
+		"https://db.videosegments.org/request.php*",
+		"https://db.videosegments.org/captcha.php",
 		"storage",
 		"tabs"
 	]
