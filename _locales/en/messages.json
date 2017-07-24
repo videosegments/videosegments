@@ -5,7 +5,7 @@
 	},
 
 	"extensionDescription": {
-		"message": "Skips automatically unwanted content in videos (advertisement, intros, credits, etc).",
+		"message": "Skips automatically advertisement, intros, credits, etc in videos (based on preferences) which was segmented by addon's moderators.",
 		"description": "Description of the extension."
 	},
 	
