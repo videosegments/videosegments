@@ -33,10 +33,11 @@
 	"offline_enabled": false,
 
 	"permissions": [
+		"https://db.videosegments.org/",
 		"https://db.videosegments.org/get.php*",
 		"https://db.videosegments.org/request.php*",
 		"https://db.videosegments.org/captcha.php",
-		"storage",
-		"tabs"
+		"https://db.videosegments.org/images/icon_wb.png",
+		"storage"
 	]
 }
