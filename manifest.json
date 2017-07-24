@@ -1,14 +1,16 @@
 {
 	"manifest_version": 2,
 	"name": "__MSG_extensionName__",
-	"version": "1.2.0",
+	"version": "1.2.1",
 
 	"default_locale": "en",
 	"description": "__MSG_extensionDescription__",
 	"icons": {
 		"32": "icons/icon-32.png",
 		"48": "icons/icon-48.png",
+		"64": "icons/icon-64.png",
 		"96": "icons/icon-96.png"
+		"128": "icons/icon-128.png"
 	},
 	
 	"author": "Alex Lys",
@@ -33,11 +35,9 @@
 	"offline_enabled": false,
 
 	"permissions": [
-		"https://db.videosegments.org/",
 		"https://db.videosegments.org/get.php*",
 		"https://db.videosegments.org/request.php*",
 		"https://db.videosegments.org/captcha.php",
-		"https://db.videosegments.org/images/icon_wb.png",
 		"storage"
 	]
 }
