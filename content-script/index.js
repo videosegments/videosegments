@@ -31,25 +31,16 @@
 // debug message to be sure script is loaded 
 // console.log('[VideoSegments] index.js injected');
 
-// load user settings 
 // cross-browser support
 var crossBrowser;
-var crossStorage;
 
 // gecko
 if ( (typeof browser != 'undefined') && browser.storage ) {
 	crossBrowser = browser;
-	crossStorage = browser.storage.local;
 }
 // chromium
 else if ( (typeof chrome != 'undefined') && chrome.storage ) {
 	crossBrowser = chrome;
-	crossStorage = chrome.storage.sync;
-}
-else {
-	crossBrowser = null;
-	crossStorage = null;
-	console.log('failed: ', crossBrowser);
 }
 
 /**
@@ -541,7 +532,7 @@ var mediaPlayerWrapper = {
 					modal.style.display = "block";
 							
 					var iframe = document.createElement("iframe");
-					iframe.src = 'https://db.videosegments.org/captcha2.php';
+					iframe.src = 'https://db.videosegments.org/captcha.php';
 					iframe.width  = 350;
 					iframe.height = 500;
 					iframe.id = 'vs-captcha-iframe';
@@ -581,7 +572,7 @@ var mediaPlayerWrapper = {
 						}
 					}
 					
-					// window.addEventListener('message', messageContext);
+					window.addEventListener('message', messageContext);
 					window.addEventListener('click', clickContext);
 				};
 				
@@ -613,10 +604,9 @@ function loadSettings(callback) {
 	// console.log('loadSettings()');
 	
 	// request settings 
-	crossStorage.get({
+	crossBrowser.storage.sync.get({
 		/* stop playing until segments are fetched */ 
 		autoPauseDuration: 	1,
-		
 		/* add segments below progress bar*/ 
 		progressBar: 		true,
 		
@@ -704,7 +694,7 @@ function loadSettings(callback) {
 }
 
 // media player wrapper
-var wrapper = null;
+var wrapper;
 
 // look for media players on page 
 function tryFindMediaPlayer(settings) 
