@@ -35,11 +35,11 @@
 var crossBrowser;
 
 // gecko
-if ( (typeof browser != 'undefined') && browser.storage ) {
+if ( (typeof browser != 'undefined') ) {
 	crossBrowser = browser;
 }
 // chromium
-else if ( (typeof chrome != 'undefined') && chrome.storage ) {
+else if ( (typeof chrome != 'undefined') ) {
 	crossBrowser = chrome;
 }
 
@@ -604,7 +604,7 @@ function loadSettings(callback) {
 	// console.log('loadSettings()');
 	
 	// request settings 
-	crossBrowser.storage.sync.get({
+	crossBrowser.storage.local.get({
 		/* stop playing until segments are fetched */ 
 		autoPauseDuration: 	1,
 		/* add segments below progress bar*/ 
