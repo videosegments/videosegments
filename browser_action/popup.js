@@ -24,15 +24,12 @@ document.getElementById('colorScam').addEventListener('change', function() { upd
 // cross-browser support
 var crossBrowser;
 // gecko
-if ( (typeof browser != 'undefined') && browser.storage ) {
+if ( (typeof browser != 'undefined') ) {
 	crossBrowser = browser;
 }
 // chromium
-else if ( (typeof chrome != 'undefined') && chrome.storage ) {
+else if ( (typeof chrome != 'undefined') ) {
 	crossBrowser = chrome;
-}
-else {
-	console.log('failed: ', crossBrowser);
 }
 
 function updatePreferenceValue(preferanceName) 
@@ -40,7 +37,7 @@ function updatePreferenceValue(preferanceName)
 	var preferenceValue = document.getElementById(preferanceName).value;
 	var preferance = {};
 	preferance[preferanceName] = preferenceValue;
-	storage.set(preferance);
+	crossBrowser.storage.local.set(preferance);
 	notifyWrapper();
 }
 
@@ -49,7 +46,7 @@ function updatePreferenceBool(preferanceName)
 	var preferenceValue = document.getElementById(preferanceName).checked;
 	var preferance = {};
 	preferance[preferanceName] = preferenceValue;
-	storage.set(preferance);
+	crossBrowser.storage.local.set(preferance);
 	notifyWrapper();
 }
 
@@ -58,7 +55,7 @@ function updatePreferenceColor(preferanceName)
 	var preferenceValue = document.getElementById(preferanceName).style.backgroundColor;
 	var preferance = {};
 	preferance[preferanceName] = preferenceValue;
-	storage.set(preferance);
+	crossBrowser.storage.local.set(preferance);
 	notifyWrapper();
 }
 
@@ -69,17 +66,6 @@ function notifyWrapper()
 			crossBrowser.tabs.sendMessage(tabs[i].id, {});
 		}
 	});
-}
-
-// cross-browser support
-var storage;
-// firefox
-if ( typeof(browser) !== 'undefined' ) {
-	storage = browser.storage.local;
-}
-// chrome
-else {
-	storage = chrome.storage.sync;
 }
 
 function saveOptions() {
@@ -104,7 +90,7 @@ function saveOptions() {
 	var colorOfftop = document.getElementById('segmentOfftopColorButton').style.backgroundColor;
 	var colorScam = document.getElementById('segmentScamColorButton').style.backgroundColor;
 	
-	storage.set({
+	crossBrowser.storage.local.set({
 		autoPauseDuration: autoPauseDuration, 
 		progressBar: progressBar, 
 		
@@ -147,7 +133,7 @@ function saveOptions() {
 }
 
 function restoreOptions() {
-	storage.get({
+	crossBrowser.storage.local.get({
 		/* stop playing until segments are fetched */ 
 		autoPauseDuration: 	1,
 		
