@@ -456,8 +456,8 @@ var mediaPlayerWrapper = {
 	removeSegmentBar: function() {
 		// console.log('mediaPlayerWrapper::removeSegmentBar()');
 		
-		// if segments for video exists and user want to see progress bar 
-		if ( this.segmentsData && this.settings.progressBar ) {
+		// if segments for video exists
+		if ( this.segmentsData ) {
 			// segment element
 			var segment;
 			// segments count 
@@ -466,8 +466,10 @@ var mediaPlayerWrapper = {
 			for ( let i = 0; i < segmentsCount; ++i ) {
 				// get element
 				segment = document.getElementsByClassName("vs_progressbar" + i)[0];
-				// remove 
-				segment.remove();
+				if ( segment ) {
+					// remove 
+					segment.remove();
+				}
 			}
 		}
 	},
@@ -503,17 +505,6 @@ var mediaPlayerWrapper = {
 			img.style.width = '20px';
 			img.style.position = 'absolute';
 			
-			// cross browser support
-			var translator;
-			// firefox
-			if ( typeof browser !== 'undefined' ) {
-				translator = browser;
-			}
-			// chrome
-			else {
-				translator = chrome;
-			}
-			
 			// text 
 			var span = document.createElement('span');
 			span.style.marginLeft = '25px';
@@ -526,7 +517,7 @@ var mediaPlayerWrapper = {
 			button.style.color = 'gray';
 			
 			if ( requested ) {
-				span.appendChild(document.createTextNode(translator.i18n.getMessage('segmentationRequestedLabel')));
+				span.appendChild(document.createTextNode(crossBrowser.i18n.getMessage('segmentationRequestedLabel')));
 			}
 			else {
 				button.id = 'vs-request-segmentation-button';
@@ -542,7 +533,7 @@ var mediaPlayerWrapper = {
 				}
 
 				document.getElementsByTagName('head')[0].appendChild(style);
-				span.appendChild(document.createTextNode(translator.i18n.getMessage('requestSegmentationLabel')));
+				span.appendChild(document.createTextNode(crossBrowser.i18n.getMessage('requestSegmentationLabel')));
 			
 				// button click handler
 				var self = this;
@@ -550,7 +541,7 @@ var mediaPlayerWrapper = {
 					modal.style.display = "block";
 							
 					var iframe = document.createElement("iframe");
-					iframe.src = 'https://db.videosegments.org/captcha.php';
+					iframe.src = 'https://db.videosegments.org/captcha2.php';
 					iframe.width  = 350;
 					iframe.height = 500;
 					iframe.id = 'vs-captcha-iframe';
@@ -568,7 +559,7 @@ var mediaPlayerWrapper = {
 										modal.style.display = "none";
 										modal.childNodes[0].childNodes[0].remove();
 										
-										button.childNodes[1].textContent = translator.i18n.getMessage('segmentationRequestedLabel');
+										button.childNodes[1].textContent = crossBrowser.i18n.getMessage('segmentationRequestedLabel');
 										button.childNodes[1].removeEventListener('click', clickContext);
 										button.id = '';
 									}
@@ -590,7 +581,7 @@ var mediaPlayerWrapper = {
 						}
 					}
 					
-					window.addEventListener('message', messageContext);
+					// window.addEventListener('message', messageContext);
 					window.addEventListener('click', clickContext);
 				};
 				
@@ -778,9 +769,11 @@ crossBrowser.runtime.onMessage.addListener(
 		if ( wrapper ) {
 			loadSettings(function(settings) {
 				wrapper.settings = settings;
-			
+				
 				wrapper.removeSegmentBar();
-				wrapper.insertSegmentBar();
+				if ( settings.progressBar ) {
+					wrapper.insertSegmentBar();
+				}
 				
 				if ( !wrapper.mediaPlayer.paused ) {
 					wrapper.mediaPlayer.pause();
