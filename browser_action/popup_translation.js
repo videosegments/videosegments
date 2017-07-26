@@ -1,19 +1,19 @@
 // cross browser support
-var translator;
-// firefox
-if ( typeof browser !== 'undefined' ) {
-	translator = browser;
-}
-// chrome
-else {
-	translator = chrome;
+if ( typeof this.chrome != 'undefined' ) {
+	this.browser = this.chrome;
 }
 
 /* there must be a proper way to do it */
 function translateTextById(id) {
 	var currentElement = document.getElementById(id);
 	if ( currentElement ) {
-		currentElement.appendChild(document.createTextNode(translator.i18n.getMessage(id)));
+		currentElement.appendChild(document.createTextNode(browser.i18n.getMessage(id)));
+	}
+}
+function translateTextByClass(className) {
+	var elements = document.getElementsByClassName(className);
+	for ( let i = 0; i < elements.length; ++i ) {
+		elements[i].appendChild(document.createTextNode(browser.i18n.getMessage(className)));
 	}
 }
 
@@ -35,23 +35,13 @@ translateTextById('progressBarLabel');
 // translateTextById('segmentsBarPositionNoneLabel');
 
 translateTextById('settingsSegmentsToPlay');
-translateTextById('segmentContentLabel');
-translateTextById('segmentIntroLabel');
-translateTextById('segmentAdvertisementLabel');
-translateTextById('segmentCutsceneLabel');
-translateTextById('segmentInteractiveLabel');
-translateTextById('segmentCreditsLabel');
-translateTextById('segmentScamLabel');
-translateTextById('segmentOfftopLabel');
-
-translateTextById('settingsSegmentsColors');
-translateTextById('segmentContentColor');
-translateTextById('segmentIntroColor');
-translateTextById('segmentAdvertisementColor');
-translateTextById('segmentCutsceneColor');
-translateTextById('segmentInteractiveColor');
-translateTextById('segmentCreditsColor');
-translateTextById('segmentScamColor');
-translateTextById('segmentOfftopColor');
+translateTextByClass('segmentContentLabel');
+translateTextByClass('segmentIntroLabel');
+translateTextByClass('segmentAdvertisementLabel');
+translateTextByClass('segmentCutsceneLabel');
+translateTextByClass('segmentInteractiveLabel');
+translateTextByClass('segmentCreditsLabel');
+translateTextByClass('segmentScamLabel');
+translateTextByClass('segmentOfftopLabel');
 
 // translateTextById('optionsUpdate');

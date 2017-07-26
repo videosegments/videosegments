@@ -32,16 +32,10 @@
 // console.log('[VideoSegments] index.js injected');
 
 // cross-browser support
-var crossBrowser;
-
-// gecko
-if ( (typeof browser != 'undefined') ) {
-	crossBrowser = browser;
+if ( typeof this.chrome != 'undefined' ) {
+	this.browser = this.chrome;
 }
-// chromium
-else if ( (typeof chrome != 'undefined') ) {
-	crossBrowser = chrome;
-}
+// var browser = this.browser;
 
 /**
  * Main class to handle media player
@@ -508,7 +502,7 @@ var mediaPlayerWrapper = {
 			button.style.color = 'gray';
 			
 			if ( requested ) {
-				span.appendChild(document.createTextNode(crossBrowser.i18n.getMessage('segmentationRequestedLabel')));
+				span.appendChild(document.createTextNode(browser.i18n.getMessage('segmentationRequestedLabel')));
 			}
 			else {
 				button.id = 'vs-request-segmentation-button';
@@ -524,7 +518,7 @@ var mediaPlayerWrapper = {
 				}
 
 				document.getElementsByTagName('head')[0].appendChild(style);
-				span.appendChild(document.createTextNode(crossBrowser.i18n.getMessage('requestSegmentationLabel')));
+				span.appendChild(document.createTextNode(browser.i18n.getMessage('requestSegmentationLabel')));
 			
 				// button click handler
 				var self = this;
@@ -550,7 +544,7 @@ var mediaPlayerWrapper = {
 										modal.style.display = "none";
 										modal.childNodes[0].childNodes[0].remove();
 										
-										button.childNodes[1].textContent = crossBrowser.i18n.getMessage('segmentationRequestedLabel');
+										button.childNodes[1].textContent = browser.i18n.getMessage('segmentationRequestedLabel');
 										button.childNodes[1].removeEventListener('click', clickContext);
 										button.id = '';
 									}
@@ -604,7 +598,7 @@ function loadSettings(callback) {
 	// console.log('loadSettings()');
 	
 	// request settings 
-	crossBrowser.storage.local.get({
+	browser.storage.local.get({
 		/* stop playing until segments are fetched */ 
 		autoPauseDuration: 	1,
 		/* add segments below progress bar*/ 
@@ -754,7 +748,7 @@ function tryFindMediaPlayer(settings)
 loadSettings(tryFindMediaPlayer);
 
 // on settings update
-crossBrowser.runtime.onMessage.addListener(
+browser.runtime.onMessage.addListener(
 	function(request, sender, sendResponse) {
 		if ( wrapper ) {
 			loadSettings(function(settings) {

@@ -10,119 +10,74 @@
 	},
 	
 	
-	
-	"settingsGlobal": {
-		"message": "Global settings.",
-		"description": "Global settings."
-	},
-	
+		
 	"autoPauseFirstLabel": {
 		"message": "Wait segments loading for ",
-		"description": "Pause video while segments is loading."
+		"description": "Pause video while segments is loading"
 	},
 	
 	"autoPauseSecondLabel": {
-		"message": " seconds max.",
-		"description": "Pause video while segments is loading."
+		"message": " seconds max",
+		"description": "Pause video while segments is loading"
 	},
 	
 	"progressBarLabel": {
-		"message": "Add segmentsbar to progress bar.",
-		"description": "Add segmentsbar to progress bar."
+		"message": "Add segmentsbar to progress bar",
+		"description": "Add segmentsbar to progress bar"
 	},
 	
 	
 	
 	"settingsSegmentsToPlay": {
 		"message": "Segments to play:",
-		"description": "Which segments user will watch."
+		"description": "Which segments user will watch"
 	},
 	
 	"segmentContentLabel": {
-		"message": "Content.",
-		"description": "Content."
+		"message": "Content",
+		"description": ""
 	},
 	
 	"segmentIntroLabel": {
-		"message": "Intro.",
-		"description": "Intro."
+		"message": "Intro",
+		"description": ""
 	},
 	
 	"segmentAdvertisementLabel": {
-		"message": "Advertisement.",
-		"description": "Advertisement."
+		"message": "Advertisement",
+		"description": ""
 	},
 	
 	"segmentCutsceneLabel": {
-		"message": "Cutscene.",
-		"description": "Cutscene."
+		"message": "Cutscene",
+		"description": ""
 	},
 	
 	"segmentInteractiveLabel": {
-		"message": "Interactive.",
-		"description": "Interactive."
+		"message": "Interactive",
+		"description": ""
 	},
 	
 	"segmentCreditsLabel": {
-		"message": "Credits.",
-		"description": "Credits."
+		"message": "Credits",
+		"description": ""
 	},
 	
 	"segmentScamLabel": {
-		"message": "Scam.",
-		"description": "Scam."
+		"message": "Scam",
+		"description": ""
 	},
 	
 	"segmentOfftopLabel": {
-		"message": "Offtop.",
-		"description": "Offtop."
-	},
-	
-	
-	
-	"settingsSegmentsColors": {
-		"message": "Segments colors:",
-		"description": "Personalization."
-	},
-	
-	"segmentContentColor": {
-		"message": "Content",
-		"description": "Content."
-	},
-	
-	"segmentIntroColor": {
-		"message": "Intro",
-		"description": "Intro."
-	},
-	
-	"segmentAdvertisementColor": {
-		"message": "Advertisement",
-		"description": "Advertisement."
-	},
-	
-	"segmentCutsceneColor": {
-		"message": "Cutscene",
-		"description": "Cutscene."
-	},
-	
-	"segmentInteractiveColor": {
-		"message": "Interactive",
-		"description": "Interactive."
-	},
-	
-	"segmentCreditsColor": {
-		"message": "Credits",
-		"description": "Credits."
-	},
-	
-	"segmentScamColor": {
-		"message": "Scam",
-		"description": "Scam."
-	},
-	
-	"segmentOfftopColor": {
 		"message": "Offtop",
-		"description": "Offtop."
+		"description": ""
+	},
+	
+	
+	
+	"settingsSegmentsColorsLabel": {
+		"message": "Segments colors:",
+		"description": ""
 	},
 	
 	
@@ -134,34 +89,5 @@
 	"segmentationRequestedLabel": {
 		"message": "Requested",
 		"description": ""
-	},
-	
-	
-
-	
-	"buttonSave": {
-		"message": "Save changes",
-		"description": "Save changes."
-	},
-	
-	"optionsUpdate": {
-		"message": "Changes will applied after page refresh.",
-		"description": "When settings will be updated."
-	},
-	
-	"optionsSaved": {
-		"message": "Succesfully saved!",
-		"description": "Message when user click on button save."
-	},
-	
-	
-	"editorLabel": {
-		"message": "Enable editor (tool for moderators)",
-		"description": "Show editor at youtube domain"
-	},
-	
-	"authidLabel": {
-		"message": "Auth Id",
-		"description": "Input for authentification"
 	}
 }

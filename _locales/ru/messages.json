@@ -11,24 +11,19 @@
 	
 	
 	
-	"settingsGlobal": {
-		"message": "Общие настройки.",
-		"description": "Общие настройки."
-	},
-	
 	"autoPauseFirstLabel": {
 		"message": "Ждать до ",
-		"description": "Останавливать видео до загрузки сегментов."
+		"description": "Останавливать видео до загрузки сегментов"
 	},
 	
 	"autoPauseSecondLabel": {
-		"message": " секунд получения сегментов.",
-		"description": "Останавливать видео до загрузки сегментов."
+		"message": " секунд получения сегментов",
+		"description": "Останавливать видео до загрузки сегментов"
 	},
 	
 	"progressBarLabel": {
-		"message": "Добавлять сегменты под прогресс просмотра видео.",
-		"description": "Добавлять сегменты под прогресс просмотра видео."
+		"message": "Добавлять сегменты под прогресс просмотра видео",
+		"description": "Добавлять сегменты под прогресс просмотра видео"
 	},
 	
 	
@@ -39,43 +34,43 @@
 	},
 	
 	"segmentContentLabel": {
-		"message": "Контент.",
-		"description": "Контент."
+		"message": "Контент",
+		"description": ""
 	},
 	
 	"segmentIntroLabel": {
-		"message": "Вступление.",
-		"description": "Вступление."
+		"message": "Вступление",
+		"description": ""
 	},
 	
 	"segmentAdvertisementLabel": {
-		"message": "Реклама.",
-		"description": "Реклама."
+		"message": "Реклама",
+		"description": ""
 	},
 	
 	"segmentCutsceneLabel": {
-		"message": "Катсцена.",
-		"description": "Катсцена."
+		"message": "Катсцена",
+		"description": ""
 	},
 	
 	"segmentInteractiveLabel": {
-		"message": "Интерактив.",
-		"description": "Интерактив."
+		"message": "Интерактив",
+		"description": ""
 	},
 	
 	"segmentCreditsLabel": {
-		"message": "Титры.",
-		"description": "Титры."
+		"message": "Титры",
+		"description": ""
 	},
 	
 	"segmentScamLabel": {
-		"message": "Обман.",
-		"description": "Обман."
+		"message": "Обман",
+		"description": ""
 	},
 	
 	"segmentOfftopLabel": {
-		"message": "Оффтоп.",
-		"description": "Оффтоп."
+		"message": "Оффтоп",
+		"description": ""
 	},
 	
 	
@@ -83,46 +78,6 @@
 	"settingsSegmentsColors": {
 		"message": "Цвета сегментов:",
 		"description": "Personalization."
-	},
-	
-	"segmentContentColor": {
-		"message": "Контент",
-		"description": "Контент."
-	},
-	
-	"segmentIntroColor": {
-		"message": "Вступление",
-		"description": "Вступление."
-	},
-	
-	"segmentAdvertisementColor": {
-		"message": "Реклама",
-		"description": "Реклама."
-	},
-	
-	"segmentCutsceneColor": {
-		"message": "Катсцена",
-		"description": "Катсцена."
-	},
-	
-	"segmentInteractiveColor": {
-		"message": "Интерактив",
-		"description": "Интерактив."
-	},
-	
-	"segmentCreditsColor": {
-		"message": "Титры",
-		"description": "Титры."
-	},
-	
-	"segmentScamColor": {
-		"message": "Обман",
-		"description": "Обман."
-	},
-	
-	"segmentOfftopColor": {
-		"message": "Оффтоп",
-		"description": "Оффтоп."
 	},
 	
 	
@@ -134,34 +89,5 @@
 	"segmentationRequestedLabel": {
 		"message": "Запрошено",
 		"description": ""
-	},
-	
-	
-
-	
-	"buttonSave": {
-		"message": "Сохранить изменения",
-		"description": "Сохранить изменения."
-	},
-	
-	"optionsUpdate": {
-		"message": "Изменения проявятся после обновления страниц.",
-		"description": "Сообщение об применении настроек."
-	},
-	
-	"optionsSaved": {
-		"message": "Успешно сохранено!",
-		"description": "Сообщение после успешного сохранения."
-	},
-	
-	
-	"editorLabel": {
-		"message": "Включить редактор сегментов (для модераторов)",
-		"description": "Включить редактор сегментов"
-	},
-	
-	"authidLabel": {
-		"message": "Идентификатор",
-		"description": "Идентификатор"
 	}
 }

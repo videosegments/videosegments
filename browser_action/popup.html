@@ -16,7 +16,6 @@
 		
 		<!-- settings -->
 		<div>
-			<label id="settingsGlobal"></label><br>
 			<label for="autoPauseDuration" id="autoPauseFirstLabel"></label><input type="text" id="autoPauseDuration" size="2" style="font-family:monospace"/><label for="autoPauseDuration" id="autoPauseSecondLabel"></label><br>
 			<input type="checkbox" id="progressBar"/><label for="progressBar" id="progressBarLabel"></label><br>
 		</div>
@@ -37,21 +36,20 @@
 			<table width="400px">
 				<tr>
 					<td width="50%">
-						<input type="checkbox" id="content"/><label for="content" id="segmentContentLabel"></label><br>
-						<input type="checkbox" id="advertisement"/><label for="advertisement" id="segmentAdvertisementLabel"></label><br>
-						<input type="checkbox" id="interactive"/><label for="interactive" id="segmentInteractiveLabel"></label><br>
-						<input type="checkbox" id="cutscene"/><label for="cutscene" id="segmentCutsceneLabel"></label><br>
+						<input type="checkbox" id="content"/><label for="content" class="segmentContentLabel"></label><br>
+						<input type="checkbox" id="advertisement"/><label for="advertisement" class="segmentAdvertisementLabel"></label><br>
+						<input type="checkbox" id="interactive"/><label for="interactive" class="segmentInteractiveLabel"></label><br>
+						<input type="checkbox" id="cutscene"/><label for="cutscene" class="segmentCutsceneLabel"></label><br>
 					</td>
 					<td width="50%">
-						<input type="checkbox" id="intro"/><label for="intro" id="segmentIntroLabel"></label><br>
-						<input type="checkbox" id="credits"/><label for="credits" id="segmentCreditsLabel"></label><br>
-						<input type="checkbox" id="offtop"/><label for="offtop" id="segmentOfftopLabel"></label><br>
-						<input type="checkbox" id="scam"/><label for="scam" id="segmentScamLabel"></label><br>
+						<input type="checkbox" id="intro"/><label for="intro" class="segmentIntroLabel"></label><br>
+						<input type="checkbox" id="credits"/><label for="credits" class="segmentCreditsLabel"></label><br>
+						<input type="checkbox" id="offtop"/><label for="offtop" class="segmentOfftopLabel"></label><br>
+						<input type="checkbox" id="scam"/><label for="scam" class="segmentScamLabel"></label><br>
 					</td>
 				</tr>
 			<table>
 		</div>
-		<br>
 		
 		<div>
 			<label id="settingsSegmentsColors"></label><br>
@@ -59,43 +57,43 @@
 				<tr>
 					<td width="50%">
 						<input type="text" id="colorContent" class="jscolor {valueElement:null,value:'000000'} colorButton" />
-						<label id="segmentContentColor"></label>
+						<label class="segmentContentLabel"></label>
 					</td>
 					<td width="50%">
 						<input type="text" id="colorIntro" class="jscolor {valueElement:null,value:'000000'} colorButton" />
-						<label id="segmentIntroColor"></label>
+						<label class="segmentIntroLabel"></label>
 					</td>
 				</tr>
 				<tr>
 					<td width="50%">
 						<input type="text" id="colorAdvertisement" class="jscolor {valueElement:null,value:'000000'} colorButton" />
-						<label id="segmentAdvertisementColor"></label>
+						<label class="segmentAdvertisementLabel"></label>
 					</td>
 					<td width="50%">
 						<input type="text" id="colorCredits" class="jscolor {valueElement:null,value:'000000'} colorButton" />
-						<label id="segmentCreditsColor"></label>
+						<label class="segmentCreditsLabel"></label>
 					</td>
 				</tr>
 				<tr>
 				<tr>
 					<td width="50%">
 						<input type="text" id="colorInteractive" class="jscolor {valueElement:null,value:'000000'} colorButton" />
-						<label id="segmentInteractiveColor"></label>
+						<label class="segmentInteractiveLabel"></label>
 					</td>
 					<td width="50%">
 						<input type="text" id="colorOfftop" class="jscolor {valueElement:null,value:'000000'} colorButton" />
-						<label id="segmentOfftopColor"></label>
+						<label class="segmentOfftopLabel"></label>
 					</td>
 				</tr>
 				<tr>
 				<tr>
 					<td width="50%">
 						<input type="text" id="colorCutscene" class="jscolor {valueElement:null,value:'000000'} colorButton" />
-						<label id="segmentCutsceneColor"></label>
+						<label class="segmentCutsceneLabel"></label>
 					</td>
 					<td width="50%">
 						<input type="text" id="colorScam" class="jscolor {valueElement:null,value:'000000'} colorButton" />
-						<label id="segmentScamColor"></label>
+						<label class="segmentScamLabel"></label>
 					</td>
 				</tr>
 				<tr>
