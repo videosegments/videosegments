@@ -59,9 +59,6 @@ var mediaPlayerWrapper = {
 	/* segments bar */
 	segmentsBar: null,
 	
-	/* playing speed */
-	playbackRate: null,
-	
 	/* pause timer for loading */
 	pauseTimer: null,
 	
@@ -219,9 +216,6 @@ var mediaPlayerWrapper = {
 						// insert segment bar 
 						self.insertSegmentBar();
 						
-						// save playing speed
-						self.playbackRate = self.mediaPlayer.playbackRate;
-						
 						// add listeners for events
 						self.mediaPlayer.addEventListener("play", self.eventContexts.onPlay);
 						self.mediaPlayer.addEventListener("pause", self.eventContexts.onPause);
@@ -316,7 +310,7 @@ var mediaPlayerWrapper = {
 		if ( delay > 0 ) {
 			var self = this;
 			// wait 
-			this.timer = setTimeout(function() { self.tryRewind(rewindSegment); }, delay*(1000/this.playbackRate));
+			this.timer = setTimeout(function() { self.tryRewind(rewindSegment); }, delay*(1000/this.mediaPlayer.playbackRate));
 		}
 		else {
 			// rewind to segment end time
@@ -329,7 +323,7 @@ var mediaPlayerWrapper = {
 				// calculate delay 
 				delay = this.segmentsData.timestamps[rewindSegment] - this.mediaPlayer.currentTime;
 				// wait for next segment
-				this.timer = setTimeout(function() { self.tryRewind(rewindSegment); }, delay*(1000/this.playbackRate));
+				this.timer = setTimeout(function() { self.tryRewind(rewindSegment); }, delay*(1000/this.mediaPlayer.playbackRate));
 			}
 		}
 	},
@@ -381,9 +375,6 @@ var mediaPlayerWrapper = {
 	 */
 	onRateChange: function() {
 		// console.log('mediaPlayerWrapper::onRateChange()');
-		
-		// update playing speed
-		this.playbackRate = this.mediaPlayer.playbackRate;
 		
 		// get next segment to rewind (TODO: remove this call)
 		var rewindSegment = this.getNextSegment(0);
