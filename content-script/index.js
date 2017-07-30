@@ -59,6 +59,8 @@ var mediaPlayerWrapper = {
 	/* segments bar */
 	segmentsBar: null,
 	
+	/* timer for rewinding */
+	rewindTimer: null,
 	/* pause timer for loading */
 	pauseTimer: null,
 	
@@ -91,9 +93,9 @@ var mediaPlayerWrapper = {
 		this.mediaPlayer.addEventListener("durationchange", this.eventContexts.onDurationChange);
 		// althrough loading of preferances can take time and video already playing 
 		// so in this case we have to start manually
-		// if ( this.mediaPlayer.readyState > 3 ) {
-		this.onDurationChange();
-		// }
+		if ( this.mediaPlayer.readyState > 3 ) {
+			this.onDurationChange();
+		}
 		
 		// console.log(this.mediaPlayer.duration + ' ' + this.mediaPlayer.baseURI + ' ' + this.url);
 	},
@@ -296,9 +298,9 @@ var mediaPlayerWrapper = {
 		// console.log('mediaPlayerWrapper::tryRewind()');
 		
 		// kill rewind timer
-		if ( this.timer ) {
-			clearTimeout(this.timer);
-			this.timer = null;
+		if ( this.rewindTimer ) {
+			clearTimeout(this.rewindTimer);
+			this.rewindTimer = null;
 		}
 		
 		// 2 digit precision is enough
@@ -310,7 +312,7 @@ var mediaPlayerWrapper = {
 		if ( delay > 0 ) {
 			var self = this;
 			// wait 
-			this.timer = setTimeout(function() { self.tryRewind(rewindSegment); }, delay*(1000/this.mediaPlayer.playbackRate));
+			this.rewindTimer = setTimeout(function() { self.tryRewind(rewindSegment); }, delay*(1000/this.mediaPlayer.playbackRate));
 		}
 		else {
 			// rewind to segment end time
@@ -323,7 +325,7 @@ var mediaPlayerWrapper = {
 				// calculate delay 
 				delay = this.segmentsData.timestamps[rewindSegment] - this.mediaPlayer.currentTime;
 				// wait for next segment
-				this.timer = setTimeout(function() { self.tryRewind(rewindSegment); }, delay*(1000/this.mediaPlayer.playbackRate));
+				this.rewindTimer = setTimeout(function() { self.tryRewind(rewindSegment); }, delay*(1000/this.mediaPlayer.playbackRate));
 			}
 		}
 	},
@@ -358,16 +360,15 @@ var mediaPlayerWrapper = {
 	onPause: function() {
 		// console.log('mediaPlayerWrapper::onPause()');
 		
-		if ( this.timer ) {
-			clearTimeout(this.timer);
-			this.timer = null;
+		if ( this.rewindTimer ) {
+			clearTimeout(this.rewindTimer);
+			this.rewindTimer = null;
 		}
 		
 		if (this.pauseTimer) {
 			clearTimeout(this.pauseTimer);
 			this.pauseTimer = null;
 		}
-		
 	},
 	
 	/*
