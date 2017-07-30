@@ -64,6 +64,11 @@ var mediaPlayerWrapper = {
 	/* pause timer for loading */
 	pauseTimer: null,
 	
+	/* defaultSpeed */
+	defaultSpeed: null,
+	/*  */
+	preventUpdate: null,
+	
 	/* 
 	 * check if video hosted on supported domain 
 	 * and load user settings 
@@ -302,6 +307,10 @@ var mediaPlayerWrapper = {
 			this.rewindTimer = null;
 		}
 		
+		if ( this.defaultSpeed ) {
+			this.mediaPlayer.playbackRate = this.defaultSpeed;
+		}
+		
 		// 2 digit precision is enough
 		var currentTime = this.mediaPlayer.currentTime.toFixed(2);
 		// console.log('current time: ' + currentTime, ', rewind time: ' + this.segmentsData.timestamps[rewindSegment]);
@@ -314,17 +323,34 @@ var mediaPlayerWrapper = {
 			this.rewindTimer = setTimeout(function() { self.tryRewind(rewindSegment); }, delay*(1000/this.mediaPlayer.playbackRate));
 		}
 		else {
-			// rewind to segment end time
-			this.mediaPlayer.currentTime = this.segmentsData.timestamps[rewindSegment+1];
-			
-			// look for next segment
-			rewindSegment = this.getNextSegment(rewindSegment+1);
-			if ( rewindSegment ) {
+			var segmentLength = this.segmentsData.timestamps[rewindSegment+1] - this.mediaPlayer.currentTime;
+			if ( segmentLength > 12.0 ) {
+				// rewind to segment end time
+				this.mediaPlayer.currentTime = this.segmentsData.timestamps[rewindSegment+1];
+				
+				// look for next segment
+				rewindSegment = this.getNextSegment(rewindSegment+1);
+				if ( rewindSegment ) {
+					var self = this;
+					// calculate delay 
+					delay = this.segmentsData.timestamps[rewindSegment] - this.mediaPlayer.currentTime;
+					// wait for next segment
+					this.rewindTimer = setTimeout(function() { self.tryRewind(rewindSegment); }, delay*(1000/this.mediaPlayer.playbackRate));
+				}
+			}
+			else {
 				var self = this;
-				// calculate delay 
-				delay = this.segmentsData.timestamps[rewindSegment] - this.mediaPlayer.currentTime;
-				// wait for next segment
-				this.rewindTimer = setTimeout(function() { self.tryRewind(rewindSegment); }, delay*(1000/this.mediaPlayer.playbackRate));
+				this.defaultSpeed = this.mediaPlayer.playbackRate;
+				this.preventUpdate = true;
+				this.mediaPlayer.playbackRate = 3.0;
+				
+				this.rewindTimer = setTimeout(function() { 
+					var rewindSegment = self.getNextSegment(0);
+					if ( rewindSegment ) {
+						// try to rewind 
+						self.tryRewind(rewindSegment);
+					}
+				}, segmentLength*(1000/this.mediaPlayer.playbackRate));
 			}
 		}
 	},
@@ -368,6 +394,8 @@ var mediaPlayerWrapper = {
 			clearTimeout(this.pauseTimer);
 			this.pauseTimer = null;
 		}
+		
+		this.mediaPlayer.playbackRate = this.defaultSpeed;
 	},
 	
 	/*
@@ -376,11 +404,18 @@ var mediaPlayerWrapper = {
 	onRateChange: function() {
 		// console.log('mediaPlayerWrapper::onRateChange()');
 		
-		// get next segment to rewind (TODO: remove this call)
-		var rewindSegment = this.getNextSegment(0);
-		if ( rewindSegment ) {
-			// try to rewind 
-			this.tryRewind(rewindSegment);
+		if ( this.preventUpdate ) {
+			this.preventUpdate = false;
+		}
+		else {
+			if ( !this.mediaPlayer.paused ) {
+				// get next segment to rewind (TODO: remove this call)
+				var rewindSegment = this.getNextSegment(0);
+				if ( rewindSegment ) {
+					// try to rewind 
+					this.tryRewind(rewindSegment);
+				}
+			}
 		}
 	},
 	
