@@ -176,11 +176,9 @@ var mediaPlayerWrapper = {
 				this.mediaPlayer.pause();
 				// start timer 
 				this.pauseTimer = setTimeout(function() {
-						self.mediaPlayer.play();
-						// console.log('requestSegments() timeout');
-					}, 
-					this.settings.autoPauseDuration*1000
-				);
+					self.mediaPlayer.play();
+					// console.log('requestSegments() timeout');
+				}, this.settings.autoPauseDuration*1000);
 			}
 		}
 		
@@ -242,9 +240,10 @@ var mediaPlayerWrapper = {
 						self.pauseTimer = null;
 						self.mediaPlayer.play();
 					}
-					
-					// force call
-					self.onPlay();
+					else {
+						// force call
+						self.onPlay();
+					}
 					
 					// create custom event for moderator tools
 					// https://bugzilla.mozilla.org/show_bug.cgi?id=999586
