@@ -324,7 +324,7 @@ var mediaPlayerWrapper = {
 		}
 		else {
 			var segmentLength = this.segmentsData.timestamps[rewindSegment+1] - this.mediaPlayer.currentTime;
-			if ( segmentLength > 12.0 ) {
+			if ( segmentLength > 0.0 ) {
 				// rewind to segment end time
 				this.mediaPlayer.currentTime = this.segmentsData.timestamps[rewindSegment+1];
 				
@@ -395,7 +395,9 @@ var mediaPlayerWrapper = {
 			this.pauseTimer = null;
 		}
 		
-		this.mediaPlayer.playbackRate = this.defaultSpeed;
+		if ( this.defaultSpeed ) {
+			this.mediaPlayer.playbackRate = this.defaultSpeed;
+		}
 	},
 	
 	/*
@@ -408,6 +410,7 @@ var mediaPlayerWrapper = {
 			this.preventUpdate = false;
 		}
 		else {
+			this.defaultSpeed = this.mediaPlayer.playbackRate;
 			if ( !this.mediaPlayer.paused ) {
 				// get next segment to rewind (TODO: remove this call)
 				var rewindSegment = this.getNextSegment(0);
