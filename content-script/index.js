@@ -66,8 +66,10 @@ var mediaPlayerWrapper = {
 	
 	/* defaultSpeed */
 	defaultSpeed: null,
-	/*  */
+	/* do not update default playback rate */
 	preventUpdate: null,
+	/* number of previous segment */
+	previousSegment: null,
 	
 	/* 
 	 * check if video hosted on supported domain 
@@ -129,6 +131,15 @@ var mediaPlayerWrapper = {
 		
 		// update url 
 		this.url = this.mediaPlayer.baseURI;
+		
+		if ( this.defaultSpeed ) {
+			this.preventUpdate = true;
+			this.mediaPlayer.playbackRate = this.defaultSpeed;
+			this.defaultSpeed = null;
+		}
+		
+		// reset previous segment 
+		this.previousSegment = null;
 		
 		// remove event listeners 
 		this.mediaPlayer.removeEventListener("play", this.eventContexts.onPlay);
@@ -307,24 +318,45 @@ var mediaPlayerWrapper = {
 			this.rewindTimer = null;
 		}
 		
-		if ( this.defaultSpeed ) {
-			this.mediaPlayer.playbackRate = this.defaultSpeed;
+		if ( this.previousSegment != null ) {
+			var self = this;
+			var segmentLength = this.segmentsData.timestamps[this.previousSegment+1] - this.mediaPlayer.currentTime;
+			if ( segmentLength > 0.0 ) {
+				this.rewindTimer = setTimeout(function() { self.tryRewind(rewindSegment); }, segmentLength*(1000/this.mediaPlayer.playbackRate));
+				return;
+			}
+			else {
+				this.previousSegment = null;
+			}
 		}
 		
-		// 2 digit precision is enough
+		
+		// 2 digits precision is enough
 		var currentTime = this.mediaPlayer.currentTime.toFixed(2);
 		// console.log('current time: ' + currentTime, ', rewind time: ' + this.segmentsData.timestamps[rewindSegment]);
 		// get difference between segment start time and current time
 		var delay = this.segmentsData.timestamps[rewindSegment] - currentTime;
 		// if called earlier (timeouts are inaccurate)
 		if ( delay > 0 ) {
+			if ( this.defaultSpeed ) {
+				this.preventUpdate = true;
+				this.mediaPlayer.playbackRate = this.defaultSpeed;
+				this.defaultSpeed = null;
+			}
+			
 			var self = this;
 			// wait 
 			this.rewindTimer = setTimeout(function() { self.tryRewind(rewindSegment); }, delay*(1000/this.mediaPlayer.playbackRate));
 		}
 		else {
 			var segmentLength = this.segmentsData.timestamps[rewindSegment+1] - this.mediaPlayer.currentTime;
-			if ( segmentLength > 0.0 ) {
+			if ( segmentLength > this.settings.segmentsDuration[this.segmentsData.types[rewindSegment]] ) {
+				if ( this.defaultSpeed ) {
+					this.preventUpdate = true;
+					this.mediaPlayer.playbackRate = this.defaultSpeed;
+					this.defaultSpeed = null;
+				}
+				
 				// rewind to segment end time
 				this.mediaPlayer.currentTime = this.segmentsData.timestamps[rewindSegment+1];
 				
@@ -339,11 +371,18 @@ var mediaPlayerWrapper = {
 				}
 			}
 			else {
-				var self = this;
-				this.defaultSpeed = this.mediaPlayer.playbackRate;
-				this.preventUpdate = true;
-				this.mediaPlayer.playbackRate = 3.0;
+				// if current playing speed is slower than desired fast forward speed
+				if ( this.defaultSpeed < this.settings.segmentsSpeed[this.segmentsData.types[rewindSegment]] ) {
+					if ( this.defaultSpeed == null ) {
+						this.defaultSpeed = this.mediaPlayer.playbackRate;
+					}
+					
+					this.preventUpdate = true;
+					this.mediaPlayer.playbackRate = this.settings.segmentsSpeed[this.segmentsData.types[rewindSegment]];
+				}
+				this.previousSegment = rewindSegment;
 				
+				var self = this;
 				this.rewindTimer = setTimeout(function() { 
 					var rewindSegment = self.getNextSegment(0);
 					if ( rewindSegment ) {
@@ -396,23 +435,31 @@ var mediaPlayerWrapper = {
 		}
 		
 		if ( this.defaultSpeed ) {
+			this.preventUpdate = true;
 			this.mediaPlayer.playbackRate = this.defaultSpeed;
 		}
+		
+		this.previousSegment = null;
 	},
 	
 	/*
 	 * Called when player play speed was changed. Update rewind delay
 	 */
 	onRateChange: function() {
-		// console.log('mediaPlayerWrapper::onRateChange()');
+		// console.log('mediaPlayerWrapper::onRateChange()', e.timeStamp);
 		
 		if ( this.preventUpdate ) {
 			this.preventUpdate = false;
 		}
 		else {
-			this.defaultSpeed = this.mediaPlayer.playbackRate;
+			// idk why but this event will be called on video change when playrate > 100% 
+			if ( this.mediaPlayer.currentTime != 0 ) {
+				this.defaultSpeed = this.mediaPlayer.playbackRate;
+				console.log('rt:', this.defaultSpeed);
+			}
+			
 			if ( !this.mediaPlayer.paused ) {
-				// get next segment to rewind (TODO: remove this call)
+				// get next segment to rewind (TODO: optimize)
 				var rewindSegment = this.getNextSegment(0);
 				if ( rewindSegment ) {
 					// try to rewind 
@@ -629,29 +676,48 @@ function loadSettings() {
 	// request settings 
 	browser.storage.local.get({
 		/* stop playing until segments are fetched */ 
-		autoPauseDuration: 	1,
+		autoPauseDuration: 		1,
 		/* add segments below progress bar*/ 
-		progressBar: 		true,
+		progressBar: 			true,
 		
 		/* segments to play */ 
-		content:			true,
-		intro:				false,
-		advertisement:		false,
-		credits:			false,
-		interactive:		false,
-		cutscene:			false,
-		offtop:				false,
-		scam:				false,
+		content:				true,
+		intro:					false,
+		advertisement:			false,
+		credits:				false,
+		interactive:			false,
+		cutscene:				false,
+		offtop:					false,
+		scam:					false,
 		
 		/* colors of segments */ 
-		colorContent:		'#00ff00',
-		colorIntro:			'#0000ff',
-		colorAdvertisement:	'#ff0000',
-		colorCredits:		'#ffff00',
-		colorInteractive:	'#00ffff',
-		colorCutscene:		'#808080',
-		colorOfftop:		'#ff00ff',
-		colorScam:			'#008080'
+		colorContent:			'#00ff00',
+		colorIntro:				'#0000ff',
+		colorAdvertisement:		'#ff0000',
+		colorCredits:			'#ffff00',
+		colorInteractive:		'#00ffff',
+		colorCutscene:			'#808080',
+		colorOfftop:			'#ff00ff',
+		colorScam:				'#008080',
+		
+		/* fast forward settings */ 
+		contentDuration:		0.0,
+		introDuration:			0.0,
+		advertisementDuration:	0.0,
+		creditsDuration:		0.0,
+		interactiveDuration:	0.0,
+		cutsceneDuration:		5.0,
+		offtopDuration:			3.0,
+		scamDuration:			0.0,
+		
+		scamSpeed:				500,
+		offtopSpeed:			300,
+		cutsceneSpeed:			200,
+		interactiveSpeed:		500,
+		creditsSpeed:			500,
+		advertisementSpeed:		500,
+		introSpeed:				500,
+		contentSpeed:			100,
 		
 	}, function(result) {
 		// save settings
@@ -661,15 +727,7 @@ function loadSettings() {
 		settings.autoPauseDuration = result.autoPauseDuration;
 		settings.progressBar = result.progressBar;
 		
-		// invert "to play" -> "to skip"
-		// c  - content 
-		// i  - intro 
-		// a  - advertisement 
-		// cs - cutscene 
-		// ia - interactive
-		// cr - credits 
-		// o  - offtop 
-		// s  - scam
+		// invert play -> skip
 		settings.segmentsToSkip = {
 			'c': !result.content,
 			'i': !result.intro,
@@ -678,18 +736,9 @@ function loadSettings() {
 			'ia': !result.interactive,
 			'cr': !result.credits,
 			's': !result.scam,
-			'o': !result.offtop
+			'o': !result.offtop,
 		};
 		
-		// save colors
-		// c  - content 
-		// i  - intro 
-		// a  - advertisement 
-		// cs - cutscene 
-		// ia - interactive
-		// cr - credits 
-		// o  - offtop 
-		// s  - scam
 		settings.segmentsColors = {
 			'c': result.colorContent,
 			'i': result.colorIntro,
@@ -701,16 +750,28 @@ function loadSettings() {
 			'o': result.colorOfftop,
 		};
 		
-		// settings.segmentsColors = {
-			// 'c': '#00ff00',
-			// 'i': '#0000ff',
-			// 'a': '#ff0000',
-			// 'cs': '#808080',
-			// 'ia': '#00ffff',
-			// 'cr': '#ffff00',
-			// 's': '#ff00ff',
-			// 'o': '#008080',
-		// };
+		settings.segmentsDuration = {
+			'c': result.contentDuration,
+			'i': result.introDuration,
+			'a': result.advertisementDuration,
+			'cs': result.cutsceneDuration,
+			'ia': result.interactiveDuration,
+			'cr': result.creditsDuration,
+			's': result.scamDuration,
+			'o': result.offtopDuration,
+		};
+		
+		// % to float
+		settings.segmentsSpeed = {
+			'c': result.contentSpeed/100.0,
+			'i': result.introSpeed/100.0,
+			'a': result.advertisementSpeed/100.0,
+			'cs': result.cutsceneSpeed/100.0,
+			'ia': result.interactiveSpeed/100.0,
+			'cr': result.creditsSpeed/100.0,
+			's': result.scamSpeed/100.0,
+			'o': result.offtopSpeed/100.0,
+		}
 		
 		tryFindMediaPlayer(settings);
 	});

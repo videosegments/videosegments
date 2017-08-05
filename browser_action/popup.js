@@ -1,42 +1,43 @@
 document.addEventListener('DOMContentLoaded', restoreOptions);
-document.getElementById('autoPauseDuration').addEventListener('change', function() { updatePreferenceValue(this.id); });
-document.getElementById('progressBar').addEventListener('change', function() { updatePreferenceBool(this.id); });
 
-document.getElementById('content').addEventListener('change', function() { updatePreferenceBool(this.id); });
-document.getElementById('intro').addEventListener('change', function() { updatePreferenceBool(this.id); });
-document.getElementById('advertisement').addEventListener('change', function() { updatePreferenceBool(this.id); });
-document.getElementById('credits').addEventListener('change', function() { updatePreferenceBool(this.id); });
-document.getElementById('interactive').addEventListener('change', function() { updatePreferenceBool(this.id); });
-document.getElementById('cutscene').addEventListener('change', function() { updatePreferenceBool(this.id); });
-document.getElementById('offtop').addEventListener('change', function() { updatePreferenceBool(this.id); });
-document.getElementById('scam').addEventListener('change', function() { updatePreferenceBool(this.id); });
+document.getElementById('autoPauseDuration').addEventListener('change', 	function() { updatePreferenceValue(this.id); });
+document.getElementById('progressBar').addEventListener('change', 			function() { updatePreferenceBool(this.id); });
 
-document.getElementById('colorContent').addEventListener('change', function() { updatePreferenceColor(this.id, 'c'); });
-document.getElementById('colorIntro').addEventListener('change', function() { updatePreferenceColor(this.id, 'i'); });
-document.getElementById('colorAdvertisement').addEventListener('change', function() { updatePreferenceColor(this.id, 'a'); });
-document.getElementById('colorCredits').addEventListener('change', function() { updatePreferenceColor(this.id, 'c'); });
-document.getElementById('colorInteractive').addEventListener('change', function() { updatePreferenceColor(this.id, 'ia'); });
-document.getElementById('colorCutscene').addEventListener('change', function() { updatePreferenceColor(this.id, 'cs'); });
-document.getElementById('colorOfftop').addEventListener('change', function() { updatePreferenceColor(this.id, 'o'); });
-document.getElementById('colorScam').addEventListener('change', function() { updatePreferenceColor(this.id, 's'); });
+document.getElementById('content').addEventListener('change', 				function() { updatePreferenceBool(this.id); });
+document.getElementById('intro').addEventListener('change', 				function() { updatePreferenceBool(this.id); });
+document.getElementById('advertisement').addEventListener('change', 		function() { updatePreferenceBool(this.id); });
+document.getElementById('credits').addEventListener('change', 				function() { updatePreferenceBool(this.id); });
+document.getElementById('interactive').addEventListener('change', 			function() { updatePreferenceBool(this.id); });
+document.getElementById('cutscene').addEventListener('change', 				function() { updatePreferenceBool(this.id); });
+document.getElementById('offtop').addEventListener('change', 				function() { updatePreferenceBool(this.id); });
+document.getElementById('scam').addEventListener('change', 					function() { updatePreferenceBool(this.id); });
 
-document.getElementById('contentDuration').addEventListener('change', function() { updatePreferenceValue(this.id); });
-document.getElementById('introDuration').addEventListener('change', function() { updatePreferenceValue(this.id); });
-document.getElementById('advertisementDuration').addEventListener('change', function() { updatePreferenceValue(this.id); });
-document.getElementById('creditsDuration').addEventListener('change', function() { updatePreferenceValue(this.id); });
-document.getElementById('interactiveDuration').addEventListener('change', function() { updatePreferenceValue(this.id); });
-document.getElementById('cutsceneDuration').addEventListener('change', function() { updatePreferenceValue(this.id); });
-document.getElementById('offtopDuration').addEventListener('change', function() { updatePreferenceValue(this.id); });
-document.getElementById('scamDuration').addEventListener('change', function() { updatePreferenceValue(this.id); });
+document.getElementById('colorContent').addEventListener('change', 			function() { updatePreferenceColor(this.id, 'c'); });
+document.getElementById('colorIntro').addEventListener('change', 			function() { updatePreferenceColor(this.id, 'i'); });
+document.getElementById('colorAdvertisement').addEventListener('change', 	function() { updatePreferenceColor(this.id, 'a'); });
+document.getElementById('colorCredits').addEventListener('change', 			function() { updatePreferenceColor(this.id, 'c'); });
+document.getElementById('colorInteractive').addEventListener('change', 		function() { updatePreferenceColor(this.id, 'ia'); });
+document.getElementById('colorCutscene').addEventListener('change', 		function() { updatePreferenceColor(this.id, 'cs'); });
+document.getElementById('colorOfftop').addEventListener('change', 			function() { updatePreferenceColor(this.id, 'o'); });
+document.getElementById('colorScam').addEventListener('change', 			function() { updatePreferenceColor(this.id, 's'); });
 
-document.getElementById('contentSpeed').addEventListener('change', function() { updatePreferenceValue(this.id); });
-document.getElementById('introSpeed').addEventListener('change', function() { updatePreferenceValue(this.id); });
-document.getElementById('advertisementSpeed').addEventListener('change', function() { updatePreferenceValue(this.id); });
-document.getElementById('creditsSpeed').addEventListener('change', function() { updatePreferenceValue(this.id); });
-document.getElementById('interactiveSpeed').addEventListener('change', function() { updatePreferenceValue(this.id); });
-document.getElementById('cutsceneSpeed').addEventListener('change', function() { updatePreferenceValue(this.id); });
-document.getElementById('offtopSpeed').addEventListener('change', function() { updatePreferenceValue(this.id); });
-document.getElementById('scamSpeed').addEventListener('change', function() { updatePreferenceValue(this.id); });
+document.getElementById('contentDuration').addEventListener('change', 		function() { updatePreferenceDuration(this.id, 'c'); });
+document.getElementById('introDuration').addEventListener('change', 		function() { updatePreferenceDuration(this.id, 'i'); });
+document.getElementById('advertisementDuration').addEventListener('change', function() { updatePreferenceDuration(this.id, 'a'); });
+document.getElementById('creditsDuration').addEventListener('change', 		function() { updatePreferenceDuration(this.id, 'c'); });
+document.getElementById('interactiveDuration').addEventListener('change', 	function() { updatePreferenceDuration(this.id, 'ia'); });
+document.getElementById('cutsceneDuration').addEventListener('change', 		function() { updatePreferenceDuration(this.id, 'cs'); });
+document.getElementById('offtopDuration').addEventListener('change', 		function() { updatePreferenceDuration(this.id, 'o'); });
+document.getElementById('scamDuration').addEventListener('change', 			function() { updatePreferenceDuration(this.id, 's'); });
+
+document.getElementById('contentSpeed').addEventListener('change', 			function() { updatePreferenceSpeed(this.id, 'c'); });
+document.getElementById('introSpeed').addEventListener('change', 			function() { updatePreferenceSpeed(this.id, 'i'); });
+document.getElementById('advertisementSpeed').addEventListener('change', 	function() { updatePreferenceSpeed(this.id, 'a'); });
+document.getElementById('creditsSpeed').addEventListener('change', 			function() { updatePreferenceSpeed(this.id, 'c'); });
+document.getElementById('interactiveSpeed').addEventListener('change', 		function() { updatePreferenceSpeed(this.id, 'ia'); });
+document.getElementById('cutsceneSpeed').addEventListener('change', 		function() { updatePreferenceSpeed(this.id, 'cs'); });
+document.getElementById('offtopSpeed').addEventListener('change', 			function() { updatePreferenceSpeed(this.id, 'o'); });
+document.getElementById('scamSpeed').addEventListener('change', 			function() { updatePreferenceSpeed(this.id, 's'); });
 
 // load user settings 
 // cross-browser support
@@ -46,7 +47,7 @@ if ( typeof this.chrome != 'undefined' ) {
 
 function updatePreferenceValue(preferenceName) 
 {
-	var preferenceValue = document.getElementById(preferenceName).value;
+	var preferenceValue = parseFloat(document.getElementById(preferenceName).value);
 	var preference = {};
 	preference[preferenceName] = preferenceValue;
 	browser.storage.local.set(preference);
@@ -69,6 +70,24 @@ function updatePreferenceColor(preferenceName, preferenceCode)
 	preference[preferenceName] = preferenceValue;
 	browser.storage.local.set(preference);
 	notifyWrapper('segmentsColors', preferenceCode, preferenceValue);
+}
+
+function updatePreferenceDuration(preferenceName, preferenceCode) 
+{
+	var preferenceValue = parseFloat(document.getElementById(preferenceName).value);
+	var preference = {};
+	preference[preferenceName] = preferenceValue;
+	browser.storage.local.set(preference);
+	notifyWrapper('segmentsDuration', preferenceCode, preferenceValue);
+}
+
+function updatePreferenceSpeed(preferenceName, preferenceCode) 
+{
+	var preferenceValue = parseInt(document.getElementById(preferenceName).value);
+	var preference = {};
+	preference[preferenceName] = preferenceValue;
+	browser.storage.local.set(preference);
+	notifyWrapper('segmentsSpeed', preferenceCode, preferenceValue / 100.0);
 }
 
 function notifyWrapper(preferenceName, preferenceSubname, preferenceValue)
