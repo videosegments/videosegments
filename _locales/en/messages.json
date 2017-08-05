@@ -27,12 +27,7 @@
 	},
 	
 	
-	
-	"settingsSegmentsToPlay": {
-		"message": "Segments to play:",
-		"description": "Which segments user will watch"
-	},
-	
+		
 	"segmentContentLabel": {
 		"message": "Content",
 		"description": ""
@@ -75,8 +70,38 @@
 	
 	
 	
-	"settingsSegmentsColorsLabel": {
-		"message": "Segments colors:",
+	"playLabel": {
+		"message": "Play",
+		"description": ""
+	},
+	
+	"segmentNameLabel": {
+		"message": "Segment",
+		"description": ""
+	},
+	
+	"segmentColorLabel": {
+		"message": "Color",
+		"description": ""
+	},
+	
+	"segmentFastForwardLabel": {
+		"message": "Fast Forward (for skipping segments only)",
+		"description": ""
+	},
+	
+	"segmentFastForwardFirstLabel": {
+		"message": "If length < ",
+		"description": ""
+	},
+	
+	"segmentFastForwardSecondLabel": {
+		"message": " seconds play on ",
+		"description": ""
+	},
+	
+	"segmentFastForwardThirdLabel": {
+		"message": "%",
 		"description": ""
 	},
 	

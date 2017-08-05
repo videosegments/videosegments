@@ -11,14 +11,32 @@ document.getElementById('cutscene').addEventListener('change', function() { upda
 document.getElementById('offtop').addEventListener('change', function() { updatePreferenceBool(this.id); });
 document.getElementById('scam').addEventListener('change', function() { updatePreferenceBool(this.id); });
 
-document.getElementById('colorContent').addEventListener('change', function() { updatePreferenceColor(this.id); });
-document.getElementById('colorIntro').addEventListener('change', function() { updatePreferenceColor(this.id); });
-document.getElementById('colorAdvertisement').addEventListener('change', function() { updatePreferenceColor(this.id); });
-document.getElementById('colorCredits').addEventListener('change', function() { updatePreferenceColor(this.id); });
-document.getElementById('colorInteractive').addEventListener('change', function() { updatePreferenceColor(this.id); });
-document.getElementById('colorCutscene').addEventListener('change', function() { updatePreferenceColor(this.id); });
-document.getElementById('colorOfftop').addEventListener('change', function() { updatePreferenceColor(this.id); });
-document.getElementById('colorScam').addEventListener('change', function() { updatePreferenceColor(this.id); });
+document.getElementById('colorContent').addEventListener('change', function() { updatePreferenceColor(this.id, 'c'); });
+document.getElementById('colorIntro').addEventListener('change', function() { updatePreferenceColor(this.id, 'i'); });
+document.getElementById('colorAdvertisement').addEventListener('change', function() { updatePreferenceColor(this.id, 'a'); });
+document.getElementById('colorCredits').addEventListener('change', function() { updatePreferenceColor(this.id, 'c'); });
+document.getElementById('colorInteractive').addEventListener('change', function() { updatePreferenceColor(this.id, 'ia'); });
+document.getElementById('colorCutscene').addEventListener('change', function() { updatePreferenceColor(this.id, 'cs'); });
+document.getElementById('colorOfftop').addEventListener('change', function() { updatePreferenceColor(this.id, 'o'); });
+document.getElementById('colorScam').addEventListener('change', function() { updatePreferenceColor(this.id, 's'); });
+
+document.getElementById('contentDuration').addEventListener('change', function() { updatePreferenceValue(this.id); });
+document.getElementById('introDuration').addEventListener('change', function() { updatePreferenceValue(this.id); });
+document.getElementById('advertisementDuration').addEventListener('change', function() { updatePreferenceValue(this.id); });
+document.getElementById('creditsDuration').addEventListener('change', function() { updatePreferenceValue(this.id); });
+document.getElementById('interactiveDuration').addEventListener('change', function() { updatePreferenceValue(this.id); });
+document.getElementById('cutsceneDuration').addEventListener('change', function() { updatePreferenceValue(this.id); });
+document.getElementById('offtopDuration').addEventListener('change', function() { updatePreferenceValue(this.id); });
+document.getElementById('scamDuration').addEventListener('change', function() { updatePreferenceValue(this.id); });
+
+document.getElementById('contentSpeed').addEventListener('change', function() { updatePreferenceValue(this.id); });
+document.getElementById('introSpeed').addEventListener('change', function() { updatePreferenceValue(this.id); });
+document.getElementById('advertisementSpeed').addEventListener('change', function() { updatePreferenceValue(this.id); });
+document.getElementById('creditsSpeed').addEventListener('change', function() { updatePreferenceValue(this.id); });
+document.getElementById('interactiveSpeed').addEventListener('change', function() { updatePreferenceValue(this.id); });
+document.getElementById('cutsceneSpeed').addEventListener('change', function() { updatePreferenceValue(this.id); });
+document.getElementById('offtopSpeed').addEventListener('change', function() { updatePreferenceValue(this.id); });
+document.getElementById('scamSpeed').addEventListener('change', function() { updatePreferenceValue(this.id); });
 
 // load user settings 
 // cross-browser support
@@ -26,103 +44,39 @@ if ( typeof this.chrome != 'undefined' ) {
 	this.browser = this.chrome;
 }
 
-function updatePreferenceValue(preferanceName) 
+function updatePreferenceValue(preferenceName) 
 {
-	var preferenceValue = document.getElementById(preferanceName).value;
-	var preferance = {};
-	preferance[preferanceName] = preferenceValue;
-	browser.storage.local.set(preferance);
-	notifyWrapper();
+	var preferenceValue = document.getElementById(preferenceName).value;
+	var preference = {};
+	preference[preferenceName] = preferenceValue;
+	browser.storage.local.set(preference);
+	notifyWrapper(preferenceName, null, preferenceValue);
 }
 
-function updatePreferenceBool(preferanceName) 
+function updatePreferenceBool(preferenceName) 
 {
-	var preferenceValue = document.getElementById(preferanceName).checked;
-	var preferance = {};
-	preferance[preferanceName] = preferenceValue;
-	browser.storage.local.set(preferance);
-	notifyWrapper();
+	var preferenceValue = document.getElementById(preferenceName).checked;
+	var preference = {};
+	preference[preferenceName] = preferenceValue;
+	browser.storage.local.set(preference);
+	notifyWrapper(preferenceName, null, preferenceValue);
 }
 
-function updatePreferenceColor(preferanceName) 
+function updatePreferenceColor(preferenceName, preferenceCode) 
 {
-	var preferenceValue = document.getElementById(preferanceName).style.backgroundColor;
-	var preferance = {};
-	preferance[preferanceName] = preferenceValue;
-	browser.storage.local.set(preferance);
-	notifyWrapper();
+	var preferenceValue = document.getElementById(preferenceName).jscolor.toHEXString();
+	var preference = {};
+	preference[preferenceName] = preferenceValue;
+	browser.storage.local.set(preference);
+	notifyWrapper('segmentsColors', preferenceCode, preferenceValue);
 }
 
-function notifyWrapper()
+function notifyWrapper(preferenceName, preferenceSubname, preferenceValue)
 {
 	var querying = browser.tabs.query({}, function(tabs) {
 		for ( let i = 0; i < tabs.length; ++i ) {
-			browser.tabs.sendMessage(tabs[i].id, {});
+			browser.tabs.sendMessage(tabs[i].id, {preferenceName:preferenceName, preferenceSubname:preferenceSubname, preferenceValue:preferenceValue});
 		}
-	});
-}
-
-function saveOptions() {
-	var autoPauseDuration = document.getElementById('autoPauseDuration').value;
-	var progressBar = document.getElementById('progressBar').checked;
-	
-	var content = document.getElementById('segmentContent').checked;
-	var intro = document.getElementById('segmentIntro').checked;
-	var advertisement = document.getElementById('segmentAdvertisement').checked;
-	var credits = document.getElementById('segmentCredits').checked;
-	var interactive = document.getElementById('segmentInteractive').checked;
-	var cutscene = document.getElementById('segmentCutscene').checked;
-	var offtop = document.getElementById('segmentOfftop').checked;
-	var scam = document.getElementById('segmentScam').checked;
-	
-	var colorContent = document.getElementById('segmentContentColorButton').style.backgroundColor;
-	var colorIntro = document.getElementById('segmentIntroColorButton').style.backgroundColor;
-	var colorAdvertisement = document.getElementById('segmentAdvertisementColorButton').style.backgroundColor;
-	var colorCredits = document.getElementById('segmentCreditsColorButton').style.backgroundColor;
-	var colorInteractive = document.getElementById('segmentInteractiveColorButton').style.backgroundColor;
-	var colorCutscene = document.getElementById('segmentCutsceneColorButton').style.backgroundColor;
-	var colorOfftop = document.getElementById('segmentOfftopColorButton').style.backgroundColor;
-	var colorScam = document.getElementById('segmentScamColorButton').style.backgroundColor;
-	
-	browser.storage.local.set({
-		autoPauseDuration: autoPauseDuration, 
-		progressBar: progressBar, 
-		
-		content: content,
-		intro: intro,
-		advertisement: advertisement,
-		credits: credits,
-		interactive: interactive,
-		cutscene: cutscene,
-		offtop: offtop,
-		scam: scam,
-		
-		colorContent: colorContent,
-		colorIntro: colorIntro,
-		colorAdvertisement:	colorAdvertisement,
-		colorCredits: colorCredits,
-		colorInteractive: colorInteractive,
-		colorCutscene: colorCutscene,
-		colorOfftop: colorOfftop,
-		colorScam: colorScam,
-		
-	}, function() {
-		// cross browser support
-		var translator;
-		// firefox
-		if ( typeof browser !== 'undefined' ) {
-			translator = browser;
-		}
-		// chrome
-		else {
-			translator = chrome;
-		}
-			
-		var optionsSaved = document.getElementById('optionsSaved');
-		optionsSaved.appendChild(document.createTextNode(translator.i18n.getMessage('optionsSaved')));
-		setTimeout(function() {
-			optionsSaved.innerHTML = '\xa0';
-		}, 2000);
 	});
 }
 
@@ -130,29 +84,47 @@ function restoreOptions() {
 	browser.storage.local.get({
 		/* stop playing until segments are fetched */ 
 		autoPauseDuration: 	1,
-		
 		/* add segments below progress bar*/ 
-		progressBar: 		true,
+		progressBar: 			true,
 		
 		/* segments to play */ 
-		content:			true,
-		intro:				false,
-		advertisement:		false,
-		credits:			false,
-		interactive:		false,
-		cutscene:			false,
-		offtop:				false,
-		scam:				false,
+		content:				true,
+		intro:					false,
+		advertisement:			false,
+		credits:				false,
+		interactive:			false,
+		cutscene:				false,
+		offtop:					false,
+		scam:					false,
 		
 		/* colors of segments */ 
-		colorContent:		'#00ff00',
-		colorIntro:			'#0000ff',
-		colorAdvertisement:	'#ff0000',
-		colorCredits:		'#ffff00',
-		colorInteractive:	'#00ffff',
-		colorCutscene:		'#808080',
-		colorOfftop:		'#ff00ff',
-		colorScam:			'#008080',
+		colorContent:			'#00FF00',
+		colorIntro:				'#0000FF',
+		colorAdvertisement:		'#FF0000',
+		colorCredits:			'#FFFF00',
+		colorInteractive:		'#00FFFF',
+		colorCutscene:			'#808080',
+		colorOfftop:			'#FF00FF',
+		colorScam:				'#008080',
+			
+		/* fast forward settings */ 
+		contentDuration:		0.0,
+		introDuration:			0.0,
+		advertisementDuration:	0.0,
+		creditsDuration:		0.0,
+		interactiveDuration:	0.0,
+		cutsceneDuration:		5.0,
+		offtopDuration:			3.0,
+		scamDuration:			0.0,
+		
+		scamSpeed:				500,
+		offtopSpeed:			300,
+		cutsceneSpeed:			200,
+		interactiveSpeed:		500,
+		creditsSpeed:			500,
+		advertisementSpeed:		500,
+		introSpeed:				500,
+		contentSpeed:			100,
 		
 	}, function(result) {
 		document.getElementById('autoPauseDuration').value = result.autoPauseDuration;
@@ -167,44 +139,31 @@ function restoreOptions() {
 		document.getElementById('scam').checked = result.scam;
 		document.getElementById('offtop').checked = result.offtop;
 		
-		document.getElementById('colorContent').style.backgroundColor = result.colorContent;
-		document.getElementById('colorIntro').style.backgroundColor = result.colorIntro;
-		document.getElementById('colorAdvertisement').style.backgroundColor = result.colorAdvertisement;
-		document.getElementById('colorCutscene').style.backgroundColor = result.colorCutscene;
-		document.getElementById('colorInteractive').style.backgroundColor = result.colorInteractive;
-		document.getElementById('colorCredits').style.backgroundColor = result.colorCredits;
-		document.getElementById('colorScam').style.backgroundColor = result.colorScam;
-		document.getElementById('colorOfftop').style.backgroundColor = result.colorOfftop;
+		document.getElementById('colorContent').jscolor.fromString(result.colorContent.substr(1));
+		document.getElementById('colorIntro').jscolor.fromString(result.colorIntro.substr(1));
+		document.getElementById('colorAdvertisement').jscolor.fromString(result.colorAdvertisement.substr(1));
+		document.getElementById('colorCutscene').jscolor.fromString(result.colorCutscene.substr(1));
+		document.getElementById('colorInteractive').jscolor.fromString(result.colorInteractive.substr(1));
+		document.getElementById('colorCredits').jscolor.fromString(result.colorCredits.substr(1));
+		document.getElementById('colorScam').jscolor.fromString(result.colorScam.substr(1));
+		document.getElementById('colorOfftop').jscolor.fromString(result.colorOfftop.substr(1));
 		
-		document.getElementById('colorContent').value = getHexRGBColor(result.colorContent).toUpperCase();
-		document.getElementById('colorIntro').value = getHexRGBColor(result.colorIntro).toUpperCase();
-		document.getElementById('colorAdvertisement').value = getHexRGBColor(result.colorAdvertisement).toUpperCase();
-		document.getElementById('colorCutscene').value = getHexRGBColor(result.colorCutscene).toUpperCase();
-		document.getElementById('colorInteractive').value = getHexRGBColor(result.colorInteractive).toUpperCase();
-		document.getElementById('colorCredits').value = getHexRGBColor(result.colorCredits).toUpperCase();
-		document.getElementById('colorScam').value = getHexRGBColor(result.colorScam).toUpperCase();
-		document.getElementById('colorOfftop').value = getHexRGBColor(result.colorOfftop).toUpperCase();
+		document.getElementById('contentDuration').value = result.contentDuration;
+		document.getElementById('introDuration').value = result.introDuration;
+		document.getElementById('advertisementDuration').value = result.advertisementDuration;
+		document.getElementById('creditsDuration').value = result.creditsDuration;
+		document.getElementById('interactiveDuration').value = result.interactiveDuration;
+		document.getElementById('cutsceneDuration').value = result.cutsceneDuration;
+		document.getElementById('offtopDuration').value = result.offtopDuration;
+		document.getElementById('scamDuration').value = result.scamDuration;
 		
+		document.getElementById('contentSpeed').value = result.contentSpeed;
+		document.getElementById('introSpeed').value = result.introSpeed;
+		document.getElementById('advertisementSpeed').value = result.advertisementSpeed;
+		document.getElementById('creditsSpeed').value = result.creditsSpeed;
+		document.getElementById('interactiveSpeed').value = result.interactiveSpeed;
+		document.getElementById('cutsceneSpeed').value = result.cutsceneSpeed;
+		document.getElementById('offtopSpeed').value = result.offtopSpeed;
+		document.getElementById('scamSpeed').value = result.scamSpeed;
 	});
-}
-
-function getHexRGBColor(color)
-{
-	color = color.replace(/\s/g,"");
-	var aRGB = color.match(/^rgb\((\d{1,3}[%]?),(\d{1,3}[%]?),(\d{1,3}[%]?)\)$/i);
-
-	if ( aRGB ) {
-		color = '';
-		for ( let i = 1; i <= 3; ++i ) {
-			color += Math.round((aRGB[i][aRGB[i].length-1]=="%"?2.55:1)*parseInt(aRGB[i])).toString(16).replace(/^(.)$/,'0$1');
-		}
-	}
-	else {
-		color = color.replace(/^#?([\da-f])([\da-f])([\da-f])$/i, '$1$1$2$2$3$3');
-	}
-
-	if ( color[0] === '#' ) {
-		return color.substr(1);
-	}
-	return color;
 }

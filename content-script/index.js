@@ -623,7 +623,7 @@ var mediaPlayerWrapper = {
 	}
 };
 
-function loadSettings(callback) {
+function loadSettings() {
 	// console.log('loadSettings()');
 	
 	// request settings 
@@ -712,7 +712,7 @@ function loadSettings(callback) {
 			// 'o': '#008080',
 		// };
 		
-		callback(settings);
+		tryFindMediaPlayer(settings);
 	});
 }
 
@@ -780,19 +780,22 @@ loadSettings(tryFindMediaPlayer);
 browser.runtime.onMessage.addListener(
 	function(request, sender, sendResponse) {
 		if ( wrapper ) {
-			loadSettings(function(settings) {
-				wrapper.settings = settings;
-				
-				wrapper.removeSegmentBar();
-				if ( settings.progressBar ) {
-					wrapper.insertSegmentBar();
-				}
-				
-				if ( !wrapper.mediaPlayer.paused ) {
-					wrapper.mediaPlayer.pause();
-					wrapper.mediaPlayer.play();
-				}
-			});
+			if ( request.preferenceSubname ) {
+				wrapper.settings[request.preferenceName][request.preferenceSubname] = request.preferenceValue;
+			}
+			else {
+				wrapper.settings[request.preferenceName] = request.preferenceValue;
+			}
+			
+			wrapper.removeSegmentBar();
+			if ( wrapper.settings.progressBar ) {
+				wrapper.insertSegmentBar();
+			}
+			
+			if ( !wrapper.mediaPlayer.paused ) {
+				wrapper.mediaPlayer.pause();
+				wrapper.mediaPlayer.play();
+			}
 		}
 	}
 );

@@ -1,7 +1,28 @@
+body {
+	width: 450px;
+}
+
 #extensionName {
 	font-weight: bold;
+	font-size: 1.2em;
 	text-align: center;
 	border-bottom: 2px solid black;
+}
+
+#segmentsSettings table {
+	border-collapse: collapse;
+	margin: 10px auto;
+}
+
+#segmentsSettings table th {
+	border: 1px solid black;
+	padding: 2px 5px;
+}
+
+#segmentsSettings table td {
+	border: 1px solid black;
+	text-align: center;
+	padding: 2px 5px;
 }
 
 .borderbot {
@@ -12,20 +33,15 @@
 	text-align: center;
 }
 
-.colorButton {
-	width: 80px;
+.input-color {
+	font-family: courier; 
+	text-align: center; 
+	border: 0px;
 }
 
-input { 
-    text-align: center; 
-}
-
-body {
-	/* background: #FFFAFA; */
-	width: 450px;
-}
-
-button {
-    margin:auto;
-    display:block;
+.fancy-input {
+	font-family: courier; 
+	text-align: center; 
+	border: 0px solid black; 
+	border-bottom: 1px solid black;
 }

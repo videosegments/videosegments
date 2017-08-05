@@ -29,19 +29,19 @@ translateTextById('autoPauseFirstLabel');
 translateTextById('autoPauseSecondLabel');
 translateTextById('progressBarLabel');
 
-// translateTextById('settingsSegmentsBarPosition');
-// translateTextById('segmentsBarPositionWatchHeaderLabel');
-// translateTextById('segmentsBarPositionCommentsLabel');
-// translateTextById('segmentsBarPositionNoneLabel');
+translateTextById('segmentContentLabel');
+translateTextById('segmentIntroLabel');
+translateTextById('segmentAdvertisementLabel');
+translateTextById('segmentCutsceneLabel');
+translateTextById('segmentInteractiveLabel');
+translateTextById('segmentCreditsLabel');
+translateTextById('segmentScamLabel');
+translateTextById('segmentOfftopLabel');
 
-translateTextById('settingsSegmentsToPlay');
-translateTextByClass('segmentContentLabel');
-translateTextByClass('segmentIntroLabel');
-translateTextByClass('segmentAdvertisementLabel');
-translateTextByClass('segmentCutsceneLabel');
-translateTextByClass('segmentInteractiveLabel');
-translateTextByClass('segmentCreditsLabel');
-translateTextByClass('segmentScamLabel');
-translateTextByClass('segmentOfftopLabel');
-
-// translateTextById('optionsUpdate');
+translateTextById('playLabel');
+translateTextById('segmentNameLabel');
+translateTextById('segmentColorLabel');
+translateTextById('segmentFastForwardLabel');
+translateTextByClass('segmentFastForwardFirstLabel');
+translateTextByClass('segmentFastForwardSecondLabel');
+translateTextByClass('segmentFastForwardThirdLabel');
