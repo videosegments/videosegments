@@ -75,9 +75,39 @@
 	
 	
 	
-	"settingsSegmentsColors": {
-		"message": "Цвета сегментов:",
-		"description": "Personalization."
+	"playLabel": {
+		"message": "Проигрывать",
+		"description": ""
+	},
+	
+	"segmentNameLabel": {
+		"message": "Сегмент",
+		"description": ""
+	},
+	
+	"segmentColorLabel": {
+		"message": "Цвет",
+		"description": ""
+	},
+	
+	"segmentFastForwardLabel": {
+		"message": "Ускорение (для пропускаемых сегментов)",
+		"description": ""
+	},
+	
+	"segmentFastForwardFirstLabel": {
+		"message": "При длине < ",
+		"description": ""
+	},
+	
+	"segmentFastForwardSecondLabel": {
+		"message": " сек. скорость ",
+		"description": ""
+	},
+	
+	"segmentFastForwardThirdLabel": {
+		"message": "%",
+		"description": ""
 	},
 	
 	

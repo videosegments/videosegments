@@ -100,7 +100,8 @@ var mediaPlayerWrapper = {
 		this.mediaPlayer.addEventListener("durationchange", this.eventContexts.onDurationChange);
 		// althrough loading of preferances can take time and video already playing 
 		// so in this case we have to start manually
-		if ( this.mediaPlayer.readyState > 3 ) {
+		// console.log('this.mediaPlayer.readyState:', this.mediaPlayer.readyState);
+		if ( this.mediaPlayer.readyState >= 3 ) {
 			this.onDurationChange();
 		}
 		
@@ -154,7 +155,7 @@ var mediaPlayerWrapper = {
 			/* request segments */
 			// 3th argument is current time because request will take time and 
 			// we may have to rewind it with rounding in case of first segment must be skipped
-			this.requestSegments(this.sourceInformation.domain, this.sourceInformation.id, this.mediaPlayer.currentTime);
+			this.requestSegments(this.sourceInformation.domain, this.sourceInformation.id, this.mediaPlayer.currentTime.toFixed(2));
 			
 			document.removeEventListener('vssegmentsupdated', this.eventContexts.onSegmentsUpdated);
 			document.addEventListener('vssegmentsupdated', this.eventContexts.onSegmentsUpdated);
@@ -328,8 +329,14 @@ var mediaPlayerWrapper = {
 			else {
 				this.previousSegment = null;
 			}
+			
+			if ( rewindSegment == null ) {
+				this.preventUpdate = true;
+				this.mediaPlayer.playbackRate = this.defaultSpeed;
+				this.defaultSpeed = null;
+				return;
+			}
 		}
-		
 		
 		// 2 digits precision is enough
 		var currentTime = this.mediaPlayer.currentTime.toFixed(2);
@@ -382,13 +389,12 @@ var mediaPlayerWrapper = {
 				}
 				this.previousSegment = rewindSegment;
 				
+				// console.log(segmentLength*(1000/this.mediaPlayer.playbackRate), this.mediaPlayer.playbackRate, this.defaultSpeed);
+				
 				var self = this;
 				this.rewindTimer = setTimeout(function() { 
 					var rewindSegment = self.getNextSegment(0);
-					if ( rewindSegment ) {
-						// try to rewind 
-						self.tryRewind(rewindSegment);
-					}
+					self.tryRewind(rewindSegment);
 				}, segmentLength*(1000/this.mediaPlayer.playbackRate));
 			}
 		}
@@ -455,7 +461,7 @@ var mediaPlayerWrapper = {
 			// idk why but this event will be called on video change when playrate > 100% 
 			if ( this.mediaPlayer.currentTime != 0 ) {
 				this.defaultSpeed = this.mediaPlayer.playbackRate;
-				console.log('rt:', this.defaultSpeed);
+				// console.log('rt:', this.defaultSpeed);
 			}
 			
 			if ( !this.mediaPlayer.paused ) {
