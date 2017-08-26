@@ -132,8 +132,8 @@ function restoreOptions() {
 		advertisementDuration:	0.0,
 		creditsDuration:		0.0,
 		interactiveDuration:	0.0,
-		cutsceneDuration:		5.0,
-		offtopDuration:			3.0,
+		cutsceneDuration:		0.0,
+		offtopDuration:			0.0,
 		scamDuration:			0.0,
 		
 		scamSpeed:				500,
