@@ -10,7 +10,7 @@ function translateTextById(id) {
 		currentElement.appendChild(document.createTextNode(browser.i18n.getMessage(id)));
 	}
 }
-function translateTextByClass(className) {
+function translateTextByClassName(className) {
 	var elements = document.getElementsByClassName(className);
 	for ( let i = 0; i < elements.length; ++i ) {
 		elements[i].appendChild(document.createTextNode(browser.i18n.getMessage(className)));
@@ -29,19 +29,19 @@ translateTextById('autoPauseFirstLabel');
 translateTextById('autoPauseSecondLabel');
 translateTextById('progressBarLabel');
 
-translateTextById('segmentContentLabel');
-translateTextById('segmentIntroLabel');
-translateTextById('segmentAdvertisementLabel');
-translateTextById('segmentCutsceneLabel');
-translateTextById('segmentInteractiveLabel');
-translateTextById('segmentCreditsLabel');
-translateTextById('segmentScamLabel');
-translateTextById('segmentOfftopLabel');
+translateTextByClassName('segmentContentLabel');
+translateTextByClassName('segmentIntroLabel');
+translateTextByClassName('segmentAdvertisementLabel');
+translateTextByClassName('segmentCutsceneLabel');
+translateTextByClassName('segmentInteractiveLabel');
+translateTextByClassName('segmentCreditsLabel');
+translateTextByClassName('segmentScamLabel');
+translateTextByClassName('segmentOfftopLabel');
 
-translateTextById('playLabel');
-translateTextById('segmentNameLabel');
+translateTextById('segmentsToPlayLabel');
+translateTextById('segmentsToFastForwardLabel');
+
+translateTextByClassName('segmentNameLabel');
 translateTextById('segmentColorLabel');
-translateTextById('segmentFastForwardLabel');
-translateTextByClass('segmentFastForwardFirstLabel');
-translateTextByClass('segmentFastForwardSecondLabel');
-translateTextByClass('segmentFastForwardThirdLabel');
+translateTextById('segmentLengthLabel');
+translateTextById('segmentSpeedLabel');

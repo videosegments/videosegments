@@ -3,7 +3,8 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<link rel="stylesheet" type="text/css" href="popup.css" />
+		<link rel="stylesheet" type="text/css" href="popup.css">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	</head>
 
 	<body>
@@ -21,145 +22,195 @@
 		</div>
 		<br>
 		
-		<!-- rules for segments  -->
-		<div id="segmentsSettings">
-			<table>
-				<tr>
-					<th>
-						<span id="playLabel"></span>
-					</th>
-					<th>
-						<span id="segmentNameLabel"></span>
-					</th>
-					<th>
-						<span id="segmentColorLabel"></span>
-					</th>
-					<th>
-						<span id="segmentFastForwardLabel"></span>
-					</th>
-				</tr>
-				
-				<tr>
-					<td>
-						<input type="checkbox" id="content"/>
-					</td>
-					<td>
-						<span id="segmentContentLabel"></span>
-					</td>
-					<td>
-						<input type="text" id="colorContent" class="jscolor {valueElement:null,value:'000000'} input-color" size="6">
-					</td>
-					<td>
-						<span class="segmentFastForwardFirstLabel"></span><input type="text" id="contentDuration" class="fancy-input" size="4"><span class="segmentFastForwardSecondLabel"></span><input type="text" id="contentSpeed" class="fancy-input" size="4"><span class="segmentFastForwardThirdLabel"></span>
-					</td>
-				</tr>
-				
-				<tr>
-					<td>
-						<input type="checkbox" id="advertisement"/>
-					</td>
-					<td>
-						<span id="segmentAdvertisementLabel"></span>
-					</td>
-					<td>
-						<input type="text" id="colorAdvertisement" class="jscolor {valueElement:null,value:'000000'} input-color" size="6">
-					</td>
-					<td>
-						<span class="segmentFastForwardFirstLabel"></span><input type="text" id="advertisementDuration" class="fancy-input" size="4"><span class="segmentFastForwardSecondLabel"></span><input type="text" id="advertisementSpeed" class="fancy-input" size="4"><span class="segmentFastForwardThirdLabel"></span>
-					</td>
-				</tr>
-				
-				<tr>
-					<td>
-						<input type="checkbox" id="intro"/>
-					</td>
-					<td>
-						<span id="segmentIntroLabel"></span>
-					</td>
-					<td>
-						<input type="text" id="colorIntro" class="jscolor {valueElement:null,value:'000000'} input-color" size="6">
-					</td>
-					<td>
-						<span class="segmentFastForwardFirstLabel"></span><input type="text" id="introDuration" class="fancy-input" size="4"><span class="segmentFastForwardSecondLabel"></span><input type="text" id="introSpeed" class="fancy-input" size="4"><span class="segmentFastForwardThirdLabel"></span>
-					</td>
-				</tr>
-				
-				<tr>
-					<td>
-						<input type="checkbox" id="credits"/>
-					</td>
-					<td>
-						<span id="segmentCreditsLabel"></span>
-					</td>
-					<td>
-						<input type="text" id="colorCredits" class="jscolor {valueElement:null,value:'000000'} input-color" size="6">
-					</td>
-					<td>
-						<span class="segmentFastForwardFirstLabel"></span><input type="text" id="creditsDuration" class="fancy-input" size="4"><span class="segmentFastForwardSecondLabel"></span><input type="text" id="creditsSpeed" class="fancy-input" size="4"><span class="segmentFastForwardThirdLabel"></span>
-					</td>
-				</tr>
-				
-				<tr>
-					<td>
-						<input type="checkbox" id="cutscene"/>
-					</td>
-					<td>
-						<span id="segmentCutsceneLabel"></span>
-					</td>
-					<td>
-						<input type="text" id="colorCutscene" class="jscolor {valueElement:null,value:'000000'} input-color" size="6">
-					</td>
-					<td>
-						<span class="segmentFastForwardFirstLabel"></span><input type="text" id="cutsceneDuration" class="fancy-input" size="4"><span class="segmentFastForwardSecondLabel"></span><input type="text" id="cutsceneSpeed" class="fancy-input" size="4"><span class="segmentFastForwardThirdLabel"></span>
-					</td>
-				</tr>
-				
-				<tr>
-					<td>
-						<input type="checkbox" id="offtop"/>
-					</td>
-					<td>
-						<span id="segmentOfftopLabel"></span>
-					</td>
-					<td>
-						<input type="text" id="colorOfftop" class="jscolor {valueElement:null,value:'000000'} input-color" size="6">
-					</td>
-					<td>
-						<span class="segmentFastForwardFirstLabel"></span><input type="text" id="offtopDuration" class="fancy-input" size="4"><span class="segmentFastForwardSecondLabel"></span><input type="text" id="offtopSpeed" class="fancy-input" size="4"><span class="segmentFastForwardThirdLabel"></span>
-					</td>
-				</tr>
-				
-				<tr>
-					<td>
-						<input type="checkbox" id="interactive"/>
-					</td>
-					<td>
-						<span id="segmentInteractiveLabel"></span>
-					</td>
-					<td>
-						<input type="text" id="colorInteractive" class="jscolor {valueElement:null,value:'000000'} input-color" size="6">
-					</td>
-					<td>
-						<span class="segmentFastForwardFirstLabel"></span><input type="text" id="interactiveDuration" class="fancy-input" size="4"><span class="segmentFastForwardSecondLabel"></span><input type="text" id="interactiveSpeed" class="fancy-input" size="4"><span class="segmentFastForwardThirdLabel"></span>
-					</td>
-				</tr>
-				
-				<tr>
-					<td>
-						<input type="checkbox" id="scam"/>
-					</td>
-					<td>
-						<span id="segmentScamLabel"></span>
-					</td>
-					<td>
-						<input type="text" id="colorScam" class="jscolor {valueElement:null,value:'000000'} input-color" size="6">
-					</td>
-					<td>
-						<span class="segmentFastForwardFirstLabel"></span><input type="text" id="scamDuration" class="fancy-input" size="4"><span class="segmentFastForwardSecondLabel"></span><input type="text" id="scamSpeed" class="fancy-input" size="4"><span class="segmentFastForwardThirdLabel"></span>
-					</td>
-				</tr>
-			</table>
+		<!-- fancy slider -->
+		<div id="slider">
+			<div id="slider-body">
+				<!-- rules for segments  -->
+				<div class="slide">
+					<div style="display: block; text-align: center"><b><span id="segmentsToPlayLabel"></span></b></div>
+					<table style="margin: 2px auto">
+						<tr>
+							<th>
+								<span><i class="fa fa-play"></i></span>
+							</th>
+							<th>
+								<span class="segmentNameLabel"></span>
+							</th>
+							<th>
+								<span id="segmentColorLabel"></span>
+							</th>
+						</tr>
+						
+						<tr>
+							<td>
+								<input type="checkbox" id="content"/>
+							</td>
+							<td>
+								<span class="segmentContentLabel"></span>
+							</td>
+							<td>
+								<input type="text" id="colorContent" class="jscolor {valueElement:null,value:'000000'} input-color" size="6">
+							</td>
+						</tr>
+						
+						<tr>
+							<td>
+								<input type="checkbox" id="advertisement"/>
+							</td>
+							<td>
+								<span class="segmentAdvertisementLabel"></span>
+							</td>
+							<td>
+								<input type="text" id="colorAdvertisement" class="jscolor {valueElement:null,value:'000000'} input-color" size="6">
+							</td>
+						</tr>
+						
+						<tr>
+							<td>
+								<input type="checkbox" id="intro"/>
+							</td>
+							<td>
+								<span class="segmentIntroLabel"></span>
+							</td>
+							<td>
+								<input type="text" id="colorIntro" class="jscolor {valueElement:null,value:'000000'} input-color" size="6">
+							</td>
+						</tr>
+						
+						<tr>
+							<td>
+								<input type="checkbox" id="credits"/>
+							</td>
+							<td>
+								<span class="segmentCreditsLabel"></span>
+							</td>
+							<td>
+								<input type="text" id="colorCredits" class="jscolor {valueElement:null,value:'000000'} input-color" size="6">
+							</td>
+						</tr>
+						
+						<tr>
+							<td>
+								<input type="checkbox" id="cutscene"/>
+							</td>
+							<td>
+								<span class="segmentCutsceneLabel"></span>
+							</td>
+							<td>
+								<input type="text" id="colorCutscene" class="jscolor {valueElement:null,value:'000000'} input-color" size="6">
+							</td>
+						</tr>
+						
+						<tr>
+							<td>
+								<input type="checkbox" id="offtop"/>
+							</td>
+							<td>
+								<span class="segmentOfftopLabel"></span>
+							</td>
+							<td>
+								<input type="text" id="colorOfftop" class="jscolor {valueElement:null,value:'000000'} input-color" size="6">
+							</td>
+						</tr>
+						
+						<tr>
+							<td>
+								<input type="checkbox" id="interactive"/>
+							</td>
+							<td>
+								<span class="segmentInteractiveLabel"></span>
+							</td>
+							<td>
+								<input type="text" id="colorInteractive" class="jscolor {valueElement:null,value:'000000'} input-color" size="6">
+							</td>
+						</tr>
+						
+						<tr>
+							<td>
+								<input type="checkbox" id="scam"/>
+							</td>
+							<td>
+								<span class="segmentScamLabel"></span>
+							</td>
+							<td>
+								<input type="text" id="colorScam" class="jscolor {valueElement:null,value:'000000'} input-color" size="6">
+							</td>
+						</tr>
+					</table>
+				</div><!-- bypass borders
+				--><div class="slide">
+					<div style="display: block; text-align: center"><b><span id="segmentsToFastForwardLabel"></span></b></div>
+					<table style="margin: 2px auto">
+						<tr>
+							<th>
+								<span><i class="fa fa-forward"></i></span>
+							</th>
+							<th>
+								<span><span class="segmentNameLabel"></span></span>
+							</th>
+							<th>
+								<span><span id="segmentLengthLabel"></span></span>
+							</th>
+							<th>
+								<span><span id="segmentSpeedLabel"></span></span>
+							</th>
+						</tr>
+						
+						<tr>
+							<td><input type="checkbox"></td>
+							<td><span class="segmentContentLabel"></span></td>
+							<td><input id="contentDuration" class="fancy-input" size="5"></td>
+							<td><input id="contentSpeed" class="fancy-input" size="5">%</td>
+						</tr>
+						<tr>
+							<td><input type="checkbox"></td>
+							<td><span class="segmentIntroLabel"></span></td>
+							<td><input id="introDuration" class="fancy-input" size="5"></td>
+							<td><input id="introSpeed" class="fancy-input" size="5">%</td>
+						</tr>
+						<tr>
+							<td><input type="checkbox"></td>
+							<td><span class="segmentAdvertisementLabel"></span></td>
+							<td><input id="advertisementDuration" class="fancy-input" size="5"></td>
+							<td><input id="advertisementSpeed" class="fancy-input" size="5">%</td>
+						</tr>
+						<tr>
+							<td><input type="checkbox"></td>
+							<td><span class="segmentCreditsLabel"></span></td>
+							<td><input id="creditsDuration" class="fancy-input" size="5"></td>
+							<td><input id="creditsSpeed" class="fancy-input" size="5">%</td>
+						</tr>
+						<tr>
+							<td><input type="checkbox"></td>
+							<td><span class="segmentCutsceneLabel"></span></td>
+							<td><input id="cutsceneDuration" class="fancy-input" size="5"></td>
+							<td><input id="cutsceneSpeed" class="fancy-input" size="5">%</td>
+						</tr>
+						<tr>
+							<td><input type="checkbox"></td>
+							<td><span class="segmentOfftopLabel"></span></td>
+							<td><input id="offtopDuration" class="fancy-input" size="5"></td>
+							<td><input id="offtopSpeed" class="fancy-input" size="5">%</td>
+						</tr>
+						<tr>
+							<td><input type="checkbox"></td>
+							<td><span class="segmentInteractiveLabel"></span></td>
+							<td><input id="interactiveDuration" class="fancy-input" size="5"></td>
+							<td><input id="interactiveSpeed" class="fancy-input" size="5">%</td>
+						</tr>
+						<tr>
+							<td><input type="checkbox"></td>
+							<td><span class="segmentScamLabel"></span></td>
+							<td><input id="scamDuration" class="fancy-input" size="5"></td>
+							<td><input id="scamSpeed" class="fancy-input" size="5">%</td>
+						</tr>
+					</table>
+				</div>
+			</div>
 		</div>
+		
+		<br>
+		<div style="text-align: center"><button id="switchSettings">Fast Forward Settings &#8594;</button></div>
 		
 		<!-- scripts -->
 		<script src="popup_translation.js"></script>

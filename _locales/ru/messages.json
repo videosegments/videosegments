@@ -12,17 +12,17 @@
 	
 	
 	"autoPauseFirstLabel": {
-		"message": "Ждать до ",
+		"message": "Ждать сегменты до ",
 		"description": "Останавливать видео до загрузки сегментов"
 	},
 	
 	"autoPauseSecondLabel": {
-		"message": " секунд получения сегментов",
+		"message": " секунд(ы)",
 		"description": "Останавливать видео до загрузки сегментов"
 	},
 	
 	"progressBarLabel": {
-		"message": "Добавлять сегменты под прогресс просмотра видео",
+		"message": "Отображать сегменты в видео",
 		"description": "Добавлять сегменты под прогресс просмотра видео"
 	},
 	
@@ -75,11 +75,6 @@
 	
 	
 	
-	"playLabel": {
-		"message": "►",
-		"description": ""
-	},
-	
 	"segmentNameLabel": {
 		"message": "Сегмент",
 		"description": ""
@@ -90,23 +85,27 @@
 		"description": ""
 	},
 	
-	"segmentFastForwardLabel": {
-		"message": "Ускорение (для пропускаемых сегментов)",
+	
+	
+	"segmentLengthLabel": {
+		"message": "Длина, сек",
 		"description": ""
 	},
 	
-	"segmentFastForwardFirstLabel": {
-		"message": "При длине < ",
+	"segmentSpeedLabel": {
+		"message": "Скорость, %",
 		"description": ""
 	},
 	
-	"segmentFastForwardSecondLabel": {
-		"message": " сек. скорость ",
+	
+	
+	"segmentsToPlayLabel": {
+		"message": "Проигрываемые сегменты",
 		"description": ""
 	},
 	
-	"segmentFastForwardThirdLabel": {
-		"message": "%",
+	"segmentsToFastForwardLabel": {
+		"message": "Ускоренные сегменты",
 		"description": ""
 	},
 	

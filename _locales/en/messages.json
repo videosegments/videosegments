@@ -70,11 +70,6 @@
 	
 	
 	
-	"playLabel": {
-		"message": "Play",
-		"description": ""
-	},
-	
 	"segmentNameLabel": {
 		"message": "Segment",
 		"description": ""
@@ -85,23 +80,27 @@
 		"description": ""
 	},
 	
-	"segmentFastForwardLabel": {
-		"message": "Fast Forward (for skipping segments only)",
+	
+	
+	"segmentLengthLabel": {
+		"message": "Length, sec",
 		"description": ""
 	},
 	
-	"segmentFastForwardFirstLabel": {
-		"message": "If length < ",
+	"segmentSpeedLabel": {
+		"message": "Speed, %",
 		"description": ""
 	},
 	
-	"segmentFastForwardSecondLabel": {
-		"message": " seconds play on ",
+	
+	
+	"segmentsToPlayLabel": {
+		"message": "Playing Segments",
 		"description": ""
 	},
 	
-	"segmentFastForwardThirdLabel": {
-		"message": "%",
+	"segmentsToFastForwardLabel": {
+		"message": "Accelerated Playback",
 		"description": ""
 	},
 	

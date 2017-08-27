@@ -99,7 +99,30 @@ function notifyWrapper(preferenceName, preferenceSubname, preferenceValue)
 	});
 }
 
+function switchSettings()
+{
+	var p = document.getElementById('slider-body');
+	if ( p.classList.contains('slide-animation-right') ) {
+		p.classList.add('slide-animation-left');
+		p.classList.remove("slide-animation-right");
+		this.innerHTML = 'Fast Forward Settings &#8594;';
+	}
+	else {
+		p.classList.add('slide-animation-right');
+		p.classList.remove("slide-animation-left");
+		this.innerHTML = '&#8592; Playing Settings';
+	}
+}
+
 function restoreOptions() {
+	document.getElementById('switchSettings').addEventListener('click', switchSettings);
+	var inputs = document.getElementsByClassName('slide')[1].getElementsByTagName('input');
+	for ( let i = 0; i < inputs.length; ++i ) {
+		if ( inputs[i].type === 'text' ) {
+			inputs[i].addEventListener('click', function() { this.select() });
+		}
+	}
+	
 	browser.storage.local.get({
 		/* stop playing until segments are fetched */ 
 		autoPauseDuration: 	1,

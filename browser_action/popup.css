@@ -1,5 +1,7 @@
 body {
-	width: 550px;
+	width: 300px;
+	background-image: url("./background.jpg");
+	background-repeat: repeat;
 }
 
 #extensionName {
@@ -9,17 +11,23 @@ body {
 	border-bottom: 2px solid black;
 }
 
-#segmentsSettings table {
+label, span {
+	font-size: 11pt;
+	font-family: times;
+}
+
+table {
+	background-color: #ffffff;
 	border-collapse: collapse;
 	margin: 10px auto;
 }
 
-#segmentsSettings table th {
+table th {
 	border: 1px solid black;
 	padding: 2px 5px;
 }
 
-#segmentsSettings table td {
+table td {
 	border: 1px solid black;
 	text-align: center;
 	padding: 2px 5px;
@@ -44,4 +52,30 @@ body {
 	text-align: center; 
 	border: 0px solid black; 
 	border-bottom: 1px solid black;
+}
+
+#slider {
+	width: 300px;
+	/* border: 1px solid black; */
+	overflow: hidden;
+}
+
+#slider-body {
+	width: 610px;
+	-webkit-transition: -webkit-transform 0.2s linear;
+}
+
+.slide {
+	vertical-align: top;
+	display: inline-block;
+	/* border: 1px solid red; */
+	width: 300px;
+}
+
+.slide-animation-right {
+	-webkit-transform:translateX(-300px);
+}
+
+.slide-animation-left {
+	-webkit-transform:translateX(0px);
 }
