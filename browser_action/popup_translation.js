@@ -45,3 +45,16 @@ translateTextByClassName('segmentNameLabel');
 translateTextById('segmentColorLabel');
 translateTextById('segmentLengthLabel');
 translateTextById('segmentSpeedLabel');
+
+	
+var tooltips = document.querySelectorAll('[data-tip]');
+var t = browser.i18n.getMessage('speedWarningLabel')
+for ( i in tooltips ) {
+	// throws error but works
+	try {
+		tooltips[i].dataset.tip = t;
+	}
+	catch (e) {
+		
+	}
+}

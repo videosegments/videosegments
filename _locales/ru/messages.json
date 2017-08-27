@@ -111,6 +111,13 @@
 	
 	
 	
+	"speedWarningLabel": {
+		"message": "При скорости ниже 25% или выше 400% отключается звук",
+		"description": ""
+	},
+	
+	
+	
 	"requestSegmentationLabel": {
 		"message": "Запросить",
 		"description": ""

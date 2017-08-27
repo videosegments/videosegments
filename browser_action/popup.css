@@ -79,3 +79,50 @@ table td {
 .slide-animation-left {
 	-webkit-transform:translateX(0px);
 }
+
+[data-tip] {
+	position:relative;
+	display: inline;
+	font-size: 9pt;
+}
+
+[data-tip]:before {
+	content: '';
+	display: none;
+	content: '';
+	border-left: 5px solid transparent;
+	border-right: 5px solid transparent;
+	border-top: 5px solid #1a1a1a;	
+	position: absolute;
+	bottom: 20px;
+	left: 15px;
+	z-index: 1;
+	font-size: 0;
+	line-height: 0;
+	width: 0;
+	height: 0;
+}
+
+[data-tip]:after {
+	display: none;
+	content: attr(data-tip);
+	position: absolute;
+	bottom: 25px;
+	left: -150px;
+	padding: 5px 8px;
+	background: #1a1a1a;
+	color: #fff;
+	z-index: 2;
+	font-size: 0.75em;
+	height: 12px;
+	line-height: 12px;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	white-space: nowrap;
+	word-wrap: normal;
+}
+
+[data-tip]:hover:before, [data-tip]:hover:after {
+	display:block;
+}
