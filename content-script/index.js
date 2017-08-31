@@ -59,6 +59,8 @@ var mediaPlayerWrapper = {
 	/* segments bar */
 	segmentsBar: null,
 	
+	/* time of segments request */
+	requestTime: null,
 	/* timer for rewinding */
 	rewindTimer: null,
 	/* pause timer for loading */
@@ -91,6 +93,7 @@ var mediaPlayerWrapper = {
 		this.eventContexts.onPause = this.onPause.bind(this);
 		this.eventContexts.onRateChange = this.onRateChange.bind(this);
 		this.eventContexts.onSegmentsUpdated = this.onSegmentsUpdated.bind(this);
+		this.eventContexts.onCanPlay = this.onCanPlay.bind(this);
 		
 		// there is several events related to video status update:
 		// loadstart - duration is NaN for several browsers
@@ -98,6 +101,7 @@ var mediaPlayerWrapper = {
 		// other events being called later 
 		// listen for duration change
 		this.mediaPlayer.addEventListener("durationchange", this.eventContexts.onDurationChange);
+		this.mediaPlayer.addEventListener("canplay", this.eventContexts.onCanPlay);
 		// althrough loading of preferances can take time and video already playing 
 		// so in this case we have to start manually
 		// console.log('this.mediaPlayer.readyState:', this.mediaPlayer.readyState);
@@ -106,6 +110,10 @@ var mediaPlayerWrapper = {
 		}
 		
 		// console.log(this.mediaPlayer.duration + ' ' + this.mediaPlayer.baseURI + ' ' + this.url);
+	},
+	
+	onCanPlay: function() {
+		this.requestTime = this.mediaPlayer.currentTime.toFixed();
 	},
 	
 	onDurationChange: function() {
@@ -122,7 +130,7 @@ var mediaPlayerWrapper = {
 			return;
 		}
 		
-		// console.log('mediaPlayerWrapper::onDurationChange()');
+		console.log('mediaPlayerWrapper::onDurationChange()');
 		
 		// remove segment bar 
 		this.removeSegmentBar();
@@ -155,7 +163,7 @@ var mediaPlayerWrapper = {
 			/* request segments */
 			// 3th argument is current time because request will take time and 
 			// we may have to rewind it with rounding in case of first segment must be skipped
-			this.requestSegments(this.sourceInformation.domain, this.sourceInformation.id, this.mediaPlayer.currentTime.toFixed(2));
+			this.requestSegments(this.sourceInformation.domain, this.sourceInformation.id);
 			
 			document.removeEventListener('vssegmentsupdated', this.eventContexts.onSegmentsUpdated);
 			document.addEventListener('vssegmentsupdated', this.eventContexts.onSegmentsUpdated);
@@ -181,7 +189,7 @@ var mediaPlayerWrapper = {
 	/* 
 	 * request segments from database 
 	 */
-	requestSegments: function(domain, id, requestTime) {
+	requestSegments: function(domain, id) {
 		// console.log('mediaPlayerWrapper::requestSegments()');
 		
 		var self = this;
@@ -208,8 +216,12 @@ var mediaPlayerWrapper = {
 				if ( xhr.status == 200 ) {
 					// console.log(xhr.responseText);
 					
-					// these operations will take time so go back and round load time for rewind
-					self.mediaPlayer.currentTime = Math.floor(requestTime);
+					// prevent shivering on rewind to same time 
+					if ( self.requestTime != null && self.requestTime != self.mediaPlayer.currentTime ) {
+						// these operations will take time so go back and round load time for rewind
+						self.mediaPlayer.currentTime = self.requestTime;
+					}
+					self.requestTime = null;
 					
 					var jsonResponce = JSON.parse(xhr.responseText);
 					// if there are segments 
@@ -290,6 +302,11 @@ var mediaPlayerWrapper = {
 		if ( this.url != this.mediaPlayer.baseURI ) {
 			// console.log(this.url + ' ' + this.mediaPlayer.baseURI);
 			return;
+		}
+		
+		// if loading and user rewinds 
+		if ( this.requestTime !== null ) {
+			this.requestTime = this.mediaPlayer.currentTime.toFixed();
 		}
 		
 		// console.log('mediaPlayerWrapper::onPlay()');
