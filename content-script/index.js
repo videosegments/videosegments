@@ -218,6 +218,7 @@ var mediaPlayerWrapper = {
 		var xhr = new XMLHttpRequest();
 		xhr.open('GET', 'https://db.videosegments.org/get.php?domain=' + domain + '&' + 'id=' + id);
 		xhr.onreadystatechange = function() { 
+			// console.log(xhr);
 			if ( xhr.readyState == 4 ) {
 				if ( xhr.status == 200 ) {
 					// console.log(xhr.responseText);
@@ -225,6 +226,7 @@ var mediaPlayerWrapper = {
 					var jsonResponce = JSON.parse(xhr.responseText);
 					// if there are segments 
 					if ( typeof jsonResponce.timestamps != 'undefined' ) {
+					
 						// convert json-responce into object
 						self.segmentsData = jsonResponce;
 						
@@ -244,6 +246,32 @@ var mediaPlayerWrapper = {
 						// insert segment bar 
 						self.insertSegmentBar();
 						
+						// if user waiting for segments 
+						if ( self.pauseTimer ) {
+							// if video paused (and is not loading)
+							if ( self.mediaPlayer.paused ) {
+								clearTimeout(self.pauseTimer);
+								self.pauseTimer = null;
+								
+								self.mediaPlayer.play();
+							}
+						}
+						
+						// prevent shivering on rewind to same time 
+						// if ( self.requestTime != null && self.requestTime != self.mediaPlayer.currentTime ) {
+						if ( self.requestTime != null ) {
+							// these operations will take time so go back and round load time for rewind
+							self.mediaPlayer.currentTime = self.requestTime;
+							self.requestTime = null;
+						}
+						
+						// force call for play event due to bug 
+						// when it isn't fired sometimes
+						// and also because of this:
+						// https://stackoverflow.com/questions/36803176/
+						// changing order between pause and set currentTime fixed error
+						self.onPlay();
+						
 						// add listeners for events
 						self.mediaPlayer.addEventListener("play", self.eventContexts.onPlay);
 						self.mediaPlayer.addEventListener("pause", self.eventContexts.onPause);
@@ -260,26 +288,14 @@ var mediaPlayerWrapper = {
 								self.insertMenu(true);
 							}
 						}, 1000);
-					}
-					
-					// prevent shivering on rewind to same time 
-					// if ( self.requestTime != null && self.requestTime != self.mediaPlayer.currentTime ) {
-					console.log(self.requestTime, self.mediaPlayer.currentTime);
-					if ( self.requestTime != null ) {
-						// these operations will take time so go back and round load time for rewind
-						self.mediaPlayer.currentTime = self.requestTime;
-						self.requestTime = null;
-					}
-					
-					// if user waiting for segments 
-					if ( self.pauseTimer ) {
-						clearTimeout(self.pauseTimer);
-						self.pauseTimer = null;
-						self.mediaPlayer.play();
-					}
-					else {
-						// force call
-						self.onPlay();
+						
+						// due to rare bug where play event doesn't fire 
+						// separate timer check 
+						if ( self.pauseTimer ) {
+							clearTimeout(self.pauseTimer);
+							self.pauseTimer = null;
+							self.mediaPlayer.play();
+						}
 					}
 					
 					// create custom event for moderator tools
