@@ -4,6 +4,7 @@ document.getElementById('autoPauseDuration').addEventListener('change', 	functio
 document.getElementById('progressBar').addEventListener('change', 			function() { updatePreferenceBool(this.id); });
 
 document.getElementById('content').addEventListener('change', 				function() { updatePreferenceBool(this.id); });
+document.getElementById('adContent').addEventListener('change', 			function() { updatePreferenceBool(this.id); });
 document.getElementById('intro').addEventListener('change', 				function() { updatePreferenceBool(this.id); });
 document.getElementById('advertisement').addEventListener('change', 		function() { updatePreferenceBool(this.id); });
 document.getElementById('credits').addEventListener('change', 				function() { updatePreferenceBool(this.id); });
@@ -13,6 +14,7 @@ document.getElementById('offtop').addEventListener('change', 				function() { up
 document.getElementById('scam').addEventListener('change', 					function() { updatePreferenceBool(this.id); });
 
 document.getElementById('colorContent').addEventListener('change', 			function() { updatePreferenceColor(this.id, 'c'); });
+document.getElementById('colorAdContent').addEventListener('change', 		function() { updatePreferenceColor(this.id, 'ac'); });
 document.getElementById('colorIntro').addEventListener('change', 			function() { updatePreferenceColor(this.id, 'i'); });
 document.getElementById('colorAdvertisement').addEventListener('change', 	function() { updatePreferenceColor(this.id, 'a'); });
 document.getElementById('colorCredits').addEventListener('change', 			function() { updatePreferenceColor(this.id, 'c'); });
@@ -22,6 +24,7 @@ document.getElementById('colorOfftop').addEventListener('change', 			function() 
 document.getElementById('colorScam').addEventListener('change', 			function() { updatePreferenceColor(this.id, 's'); });
 
 document.getElementById('contentDuration').addEventListener('change', 		function() { updatePreferenceDuration(this.id, 'c'); });
+document.getElementById('adContentDuration').addEventListener('change', 	function() { updatePreferenceDuration(this.id, 'ac'); });
 document.getElementById('introDuration').addEventListener('change', 		function() { updatePreferenceDuration(this.id, 'i'); });
 document.getElementById('advertisementDuration').addEventListener('change', function() { updatePreferenceDuration(this.id, 'a'); });
 document.getElementById('creditsDuration').addEventListener('change', 		function() { updatePreferenceDuration(this.id, 'c'); });
@@ -31,6 +34,7 @@ document.getElementById('offtopDuration').addEventListener('change', 		function(
 document.getElementById('scamDuration').addEventListener('change', 			function() { updatePreferenceDuration(this.id, 's'); });
 
 document.getElementById('contentSpeed').addEventListener('change', 			function() { updatePreferenceSpeed(this.id, 'c'); });
+document.getElementById('adContentSpeed').addEventListener('change', 		function() { updatePreferenceSpeed(this.id, 'ac'); });
 document.getElementById('introSpeed').addEventListener('change', 			function() { updatePreferenceSpeed(this.id, 'i'); });
 document.getElementById('advertisementSpeed').addEventListener('change', 	function() { updatePreferenceSpeed(this.id, 'a'); });
 document.getElementById('creditsSpeed').addEventListener('change', 			function() { updatePreferenceSpeed(this.id, 'c'); });
@@ -131,6 +135,7 @@ function restoreOptions() {
 		
 		/* segments to play */ 
 		content:				true,
+		adContent:				true,
 		intro:					false,
 		advertisement:			false,
 		credits:				false,
@@ -141,6 +146,7 @@ function restoreOptions() {
 		
 		/* colors of segments */ 
 		colorContent:			'#00FF00',
+		colorAdContent:			'#008800',
 		colorIntro:				'#0000FF',
 		colorAdvertisement:		'#FF0000',
 		colorCredits:			'#FFFF00',
@@ -151,6 +157,7 @@ function restoreOptions() {
 			
 		/* fast forward settings */ 
 		contentDuration:		0.0,
+		adContentDuration:		0.0,
 		introDuration:			0.0,
 		advertisementDuration:	0.0,
 		creditsDuration:		0.0,
@@ -159,20 +166,22 @@ function restoreOptions() {
 		offtopDuration:			0.0,
 		scamDuration:			0.0,
 		
-		scamSpeed:				500,
-		offtopSpeed:			300,
-		cutsceneSpeed:			200,
-		interactiveSpeed:		500,
-		creditsSpeed:			500,
-		advertisementSpeed:		500,
-		introSpeed:				500,
 		contentSpeed:			100,
+		adContentSpeed:			100,
+		introSpeed:				500,
+		advertisementSpeed:		500,
+		creditsSpeed:			500,
+		interactiveSpeed:		500,
+		cutsceneSpeed:			200,
+		offtopSpeed:			300,
+		scamSpeed:				500,
 		
 	}, function(result) {
 		document.getElementById('autoPauseDuration').value = result.autoPauseDuration;
 		document.getElementById('progressBar').checked = result.progressBar;
 		
 		document.getElementById('content').checked = result.content;
+		document.getElementById('adContent').checked = result.adContent;
 		document.getElementById('intro').checked = result.intro;
 		document.getElementById('advertisement').checked = result.advertisement;
 		document.getElementById('cutscene').checked = result.cutscene;
@@ -182,6 +191,7 @@ function restoreOptions() {
 		document.getElementById('offtop').checked = result.offtop;
 		
 		document.getElementById('colorContent').jscolor.fromString(result.colorContent.substr(1));
+		document.getElementById('colorAdContent').jscolor.fromString(result.colorAdContent.substr(1));
 		document.getElementById('colorIntro').jscolor.fromString(result.colorIntro.substr(1));
 		document.getElementById('colorAdvertisement').jscolor.fromString(result.colorAdvertisement.substr(1));
 		document.getElementById('colorCutscene').jscolor.fromString(result.colorCutscene.substr(1));
@@ -191,6 +201,7 @@ function restoreOptions() {
 		document.getElementById('colorOfftop').jscolor.fromString(result.colorOfftop.substr(1));
 		
 		document.getElementById('contentDuration').value = result.contentDuration;
+		document.getElementById('adContentDuration').value = result.adContentDuration;
 		document.getElementById('introDuration').value = result.introDuration;
 		document.getElementById('advertisementDuration').value = result.advertisementDuration;
 		document.getElementById('creditsDuration').value = result.creditsDuration;
@@ -200,6 +211,7 @@ function restoreOptions() {
 		document.getElementById('scamDuration').value = result.scamDuration;
 		
 		document.getElementById('contentSpeed').value = result.contentSpeed;
+		document.getElementById('adContentSpeed').value = result.contentSpeed;
 		document.getElementById('introSpeed').value = result.introSpeed;
 		document.getElementById('advertisementSpeed').value = result.advertisementSpeed;
 		document.getElementById('creditsSpeed').value = result.creditsSpeed;

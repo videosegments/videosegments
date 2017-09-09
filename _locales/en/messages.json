@@ -27,9 +27,14 @@
 	},
 	
 	
-		
+	
 	"segmentContentLabel": {
 		"message": "Content",
+		"description": ""
+	},
+	
+	"segmentAdContentLabel": {
+		"message": "AdContent",
 		"description": ""
 	},
 	

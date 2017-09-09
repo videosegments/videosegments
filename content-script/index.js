@@ -88,7 +88,7 @@ var mediaPlayerWrapper = {
 		this.url = null;
 		
 		// bind contexts to remove them if unnesessary
-		this.eventContexts.onDurationChange = this.onDurationChange.bind(this);
+		// this.eventContexts.onDurationChange = this.onDurationChange.bind(this);
 		this.eventContexts.onPlay = this.onPlay.bind(this);
 		this.eventContexts.onPause = this.onPause.bind(this);
 		this.eventContexts.onRateChange = this.onRateChange.bind(this);
@@ -100,23 +100,26 @@ var mediaPlayerWrapper = {
 		// durationchange - may be called with NaN duration but will be called again with proper duration 
 		// other events being called later 
 		// listen for duration change
-		this.mediaPlayer.addEventListener("durationchange", this.eventContexts.onDurationChange);
+		// this.mediaPlayer.addEventListener("durationchange", this.eventContexts.onDurationChange);
 		this.mediaPlayer.addEventListener("canplay", this.eventContexts.onCanPlay);
 		// althrough loading of preferances can take time and video already playing 
 		// so in this case we have to start manually
 		// console.log('this.mediaPlayer.readyState:', this.mediaPlayer.readyState);
 		if ( this.mediaPlayer.readyState >= 3 ) {
-			this.onDurationChange();
+			console.log('Forcing canplay event');
+			this.onCanPlay();
+			// this.onDurationChange();
 		}
 		
 		// console.log(this.mediaPlayer.duration + ' ' + this.mediaPlayer.baseURI + ' ' + this.url);
 	},
 	
-	onCanPlay: function() {
-		this.requestTime = this.mediaPlayer.currentTime.toFixed();
-	},
+	// onDurationChange: function() {
+		// console.log('mediaPlayerWrapper::onDurationChange()', this.mediaPlayer.currentTime);
+		// this.requestTime = this.mediaPlayer.currentTime.toFixed();
+	// },
 	
-	onDurationChange: function() {
+	onCanPlay: function() {
 		// when video is changed baseURI changed too 
 		if ( this.mediaPlayer.baseURI == this.url ) {
 			// do nothing if urls matches 
@@ -130,7 +133,10 @@ var mediaPlayerWrapper = {
 			return;
 		}
 		
-		console.log('mediaPlayerWrapper::onDurationChange()');
+		// console.log('mediaPlayerWrapper::onCanPlay()');
+		if ( this.requestTime === null ) {
+			this.requestTime = this.mediaPlayer.currentTime.toFixed();
+		}
 		
 		// remove segment bar 
 		this.removeSegmentBar();
@@ -216,13 +222,6 @@ var mediaPlayerWrapper = {
 				if ( xhr.status == 200 ) {
 					// console.log(xhr.responseText);
 					
-					// prevent shivering on rewind to same time 
-					if ( self.requestTime != null && self.requestTime != self.mediaPlayer.currentTime ) {
-						// these operations will take time so go back and round load time for rewind
-						self.mediaPlayer.currentTime = self.requestTime;
-					}
-					self.requestTime = null;
-					
 					var jsonResponce = JSON.parse(xhr.responseText);
 					// if there are segments 
 					if ( typeof jsonResponce.timestamps != 'undefined' ) {
@@ -261,6 +260,15 @@ var mediaPlayerWrapper = {
 								self.insertMenu(true);
 							}
 						}, 1000);
+					}
+					
+					// prevent shivering on rewind to same time 
+					// if ( self.requestTime != null && self.requestTime != self.mediaPlayer.currentTime ) {
+					console.log(self.requestTime, self.mediaPlayer.currentTime);
+					if ( self.requestTime != null ) {
+						// these operations will take time so go back and round load time for rewind
+						self.mediaPlayer.currentTime = self.requestTime;
+						self.requestTime = null;
 					}
 					
 					// if user waiting for segments 
@@ -705,6 +713,7 @@ function loadSettings() {
 		
 		/* segments to play */ 
 		content:				true,
+		adContent:				true,
 		intro:					false,
 		advertisement:			false,
 		credits:				false,
@@ -715,6 +724,7 @@ function loadSettings() {
 		
 		/* colors of segments */ 
 		colorContent:			'#00ff00',
+		colorAdContent:			'#008800',
 		colorIntro:				'#0000ff',
 		colorAdvertisement:		'#ff0000',
 		colorCredits:			'#ffff00',
@@ -725,6 +735,7 @@ function loadSettings() {
 		
 		/* fast forward settings */ 
 		contentDuration:		0.0,
+		adContentDuration:		0.0,
 		introDuration:			0.0,
 		advertisementDuration:	0.0,
 		creditsDuration:		0.0,
@@ -733,14 +744,15 @@ function loadSettings() {
 		offtopDuration:			0.0,
 		scamDuration:			0.0,
 		
-		scamSpeed:				500,
-		offtopSpeed:			300,
-		cutsceneSpeed:			200,
-		interactiveSpeed:		500,
-		creditsSpeed:			500,
-		advertisementSpeed:		500,
-		introSpeed:				500,
+		adContentSpeed:			100,
 		contentSpeed:			100,
+		introSpeed:				500,
+		advertisementSpeed:		500,
+		creditsSpeed:			500,
+		interactiveSpeed:		500,
+		cutsceneSpeed:			200,
+		offtopSpeed:			300,
+		scamSpeed:				500,
 		
 	}, function(result) {
 		// save settings
@@ -753,6 +765,7 @@ function loadSettings() {
 		// invert play -> skip
 		settings.segmentsToSkip = {
 			'c': !result.content,
+			'ac': !result.adContent,
 			'i': !result.intro,
 			'a': !result.advertisement,
 			'cs': !result.cutscene,
@@ -764,6 +777,7 @@ function loadSettings() {
 		
 		settings.segmentsColors = {
 			'c': result.colorContent,
+			'ac': result.colorAdContent,
 			'i': result.colorIntro,
 			'a': result.colorAdvertisement,
 			'cs': result.colorCutscene,
@@ -775,6 +789,7 @@ function loadSettings() {
 		
 		settings.segmentsDuration = {
 			'c': result.contentDuration,
+			'ac': result.adContentDuration,
 			'i': result.introDuration,
 			'a': result.advertisementDuration,
 			'cs': result.cutsceneDuration,
@@ -787,6 +802,7 @@ function loadSettings() {
 		// % to float
 		settings.segmentsSpeed = {
 			'c': result.contentSpeed/100.0,
+			'ac': result.adContentSpeed/100.0,
 			'i': result.introSpeed/100.0,
 			'a': result.advertisementSpeed/100.0,
 			'cs': result.cutsceneSpeed/100.0,

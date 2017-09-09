@@ -38,6 +38,11 @@
 		"description": ""
 	},
 	
+	"segmentAdContentLabel": {
+		"message": "Рекл. Контент",
+		"description": ""
+	},
+	
 	"segmentIntroLabel": {
 		"message": "Вступление",
 		"description": ""

@@ -30,6 +30,7 @@ translateTextById('autoPauseSecondLabel');
 translateTextById('progressBarLabel');
 
 translateTextByClassName('segmentContentLabel');
+translateTextByClassName('segmentAdContentLabel');
 translateTextByClassName('segmentIntroLabel');
 translateTextByClassName('segmentAdvertisementLabel');
 translateTextByClassName('segmentCutsceneLabel');
