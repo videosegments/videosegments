@@ -109,12 +109,12 @@ function switchSettings()
 	if ( p.classList.contains('slide-animation-right') ) {
 		p.classList.add('slide-animation-left');
 		p.classList.remove("slide-animation-right");
-		this.innerHTML = 'Fast Forward Settings &#8594;';
+		this.innerHTML = browser.i18n.getMessage('switchSettings1Label');
 	}
 	else {
 		p.classList.add('slide-animation-right');
 		p.classList.remove("slide-animation-left");
-		this.innerHTML = '&#8592; Playing Settings';
+		this.innerHTML = browser.i18n.getMessage('switchSettings2Label');
 	}
 }
 

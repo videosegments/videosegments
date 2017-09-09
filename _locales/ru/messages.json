@@ -116,6 +116,18 @@
 	
 	
 	
+	"switchSettings1Label": {
+		"message": "Ускоренное проигрывание →",
+		"description": ""
+	},
+	
+	"switchSettings2Label": {
+		"message": "← Настройки сегментов",
+		"description": ""
+	},
+	
+	
+	
 	"speedWarningLabel": {
 		"message": "При скорости ниже 25% или выше 400% отключается звук",
 		"description": ""

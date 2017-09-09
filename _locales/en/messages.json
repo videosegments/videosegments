@@ -111,6 +111,18 @@
 	
 	
 	
+	"switchSettings1Label": {
+		"message": "Fast Forward Settings →",
+		"description": ""
+	},
+	
+	"switchSettings2Label": {
+		"message": "← Playing Settings",
+		"description": ""
+	},
+	
+	
+	
 	"speedWarningLabel": {
 		"message": "Speed less than 25% and more than 400% is muted",
 		"description": ""

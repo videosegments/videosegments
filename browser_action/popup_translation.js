@@ -47,6 +47,7 @@ translateTextById('segmentColorLabel');
 translateTextById('segmentLengthLabel');
 translateTextById('segmentSpeedLabel');
 
+translateTextByClassName('switchSettings1Label');
 	
 var tooltips = document.querySelectorAll('[data-tip]');
 var t = browser.i18n.getMessage('speedWarningLabel')
