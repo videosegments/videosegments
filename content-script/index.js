@@ -73,6 +73,7 @@ var mediaPlayerWrapper = {
 	/* number of previous segment */
 	previousSegment: null,
 	
+	
 	/* 
 	 * check if video hosted on supported domain 
 	 * and load user settings 
@@ -252,7 +253,6 @@ var mediaPlayerWrapper = {
 							if ( self.mediaPlayer.paused ) {
 								clearTimeout(self.pauseTimer);
 								self.pauseTimer = null;
-								
 								self.mediaPlayer.play();
 							}
 						}
@@ -269,13 +269,15 @@ var mediaPlayerWrapper = {
 						// when it isn't fired sometimes
 						// and also because of this:
 						// https://stackoverflow.com/questions/36803176/
-						// changing order between pause and set currentTime fixed error
+						// changing order between pause and set currentTime fixes error
 						self.onPlay();
 						
 						// add listeners for events
 						self.mediaPlayer.addEventListener("play", self.eventContexts.onPlay);
-						self.mediaPlayer.addEventListener("pause", self.eventContexts.onPause);
 						self.mediaPlayer.addEventListener("ratechange", self.eventContexts.onRateChange);
+						// chrome send "pause()" event with playbackRate change 
+						// idk why but this poor workaround seems to be working...
+						setTimeout(function() {self.mediaPlayer.addEventListener("pause", self.eventContexts.onPause);}, 100);
 					}
 					else {
 						setTimeout(function() {
@@ -290,7 +292,7 @@ var mediaPlayerWrapper = {
 						}, 1000);
 						
 						// due to rare bug where play event doesn't fire 
-						// separate timer check 
+						// timer check is separated
 						if ( self.pauseTimer ) {
 							clearTimeout(self.pauseTimer);
 							self.pauseTimer = null;
@@ -352,7 +354,7 @@ var mediaPlayerWrapper = {
 			return;
 		}
 		
-		// console.log('mediaPlayerWrapper::tryRewind()');
+		// console.log('mediaPlayerWrapper::tryRewind()', this.mediaPlayer.currentTime);
 		
 		// kill rewind timer
 		if ( this.rewindTimer ) {
@@ -493,20 +495,20 @@ var mediaPlayerWrapper = {
 	 * Called when player play speed was changed. Update rewind delay
 	 */
 	onRateChange: function() {
-		// console.log('mediaPlayerWrapper::onRateChange()', e.timeStamp);
+		// console.log('mediaPlayerWrapper::onRateChange()');
 		
 		if ( this.preventUpdate ) {
 			this.preventUpdate = false;
 		}
 		else {
 			// idk why but this event will be called on video change when playrate > 100% 
-			if ( this.mediaPlayer.currentTime != 0 ) {
+			if ( this.mediaPlayer.currentTime > 0.0 ) {
 				this.defaultSpeed = this.mediaPlayer.playbackRate;
 				// console.log('rt:', this.defaultSpeed);
 			}
 			
 			if ( !this.mediaPlayer.paused ) {
-				// get next segment to rewind (TODO: optimize)
+				// get next segment to rewind (TODO: optimize?)
 				var rewindSegment = this.getNextSegment(0);
 				if ( rewindSegment ) {
 					// try to rewind 
@@ -662,7 +664,7 @@ var mediaPlayerWrapper = {
 							xhr.onreadystatechange = function() { 
 								if ( xhr.readyState == 4 ) {
 									if ( xhr.status == 200 ) {
-										console.log(xhr.responseText);
+										// console.log(xhr.responseText);
 										
 										modal.style.display = "none";
 										modal.childNodes[0].childNodes[0].remove();
