@@ -80,6 +80,53 @@
 	
 	
 	
+	"contentDescriptionLabel": {
+		"message": "Настоящее содержимое видео",
+		"description": ""
+	},
+	
+	"adContentDescriptionLabel": {
+		"message": "Контент с рекламой. Реклама не может быть убрана без искажения смысла",
+		"description": ""
+	},
+	
+	"advertisementDescriptionLabel": {
+		"message": "Интегрированная реклама (включая просьбы лайков, подписок, и т.д.)",
+		"description": ""
+	},
+	
+	"introDescriptionLabel": {
+		"message": "Вступление: информация об авторах, канале, заставки, и т.д. в начале видео",
+		"description": ""
+	},
+	
+	"creditsDescriptionLabel": {
+		"message": "Титры: информация об авторах, канале, заставки, и т.д. в конце видео",
+		"description": ""
+	},
+	
+	"cutsceneDescriptionLabel": {
+		"message": "Едва относящийся к видео контент",
+		"description": ""
+	},
+	
+	"offtopDescriptionLabel": {
+		"message": "Абсолютно несвязанный с видео контент",
+		"description": ""
+	},
+	
+	"interactiveDescriptionLabel": {
+		"message": "Взаимодействие со зрителями: конкурсы, розыгрыши, т.д.",
+		"description": ""
+	},
+	
+	"scamDescriptionLabel": {
+		"message": "Явно ложная информация. Включает в себя лотереи, взломы сайтов, и т.д.",
+		"description": ""
+	},
+	
+	
+	
 	"segmentNameLabel": {
 		"message": "Сегмент",
 		"description": ""

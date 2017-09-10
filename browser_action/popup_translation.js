@@ -49,12 +49,22 @@ translateTextById('segmentSpeedLabel');
 
 translateTextByClassName('switchSettings1Label');
 	
-var tooltips = document.querySelectorAll('[data-tip]');
-var t = browser.i18n.getMessage('speedWarningLabel')
+var tooltips = document.querySelectorAll('[data-tip-speed]');
 for ( i in tooltips ) {
-	// throws error but works
+	// throws error but works???
 	try {
-		tooltips[i].dataset.tip = t;
+		tooltips[i].dataset.tipSpeed = browser.i18n.getMessage(tooltips[i].dataset.tipSpeed);
+	}
+	catch (e) {
+		
+	}
+}
+
+tooltips = document.querySelectorAll('[data-tip-segment-descr]');
+for ( i in tooltips ) {
+	// throws error but works???
+	try {
+		tooltips[i].dataset.tipSegmentDescr = browser.i18n.getMessage(tooltips[i].dataset.tipSegmentDescr);
 	}
 	catch (e) {
 		

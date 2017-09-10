@@ -75,6 +75,53 @@
 	
 	
 	
+	"contentDescriptionLabel": {
+		"message": "Actual Content",
+		"description": ""
+	},
+	
+	"adContentDescriptionLabel": {
+		"message": "Content fused with advertisement. It cannot be removed without losses",
+		"description": ""
+	},
+	
+	"advertisementDescriptionLabel": {
+		"message": "Integrated advertisement (may include requests for likes, subscriptions, etc)",
+		"description": ""
+	},
+	
+	"introDescriptionLabel": {
+		"message": "Intro in video: opening with information about authors, channel names, etc",
+		"description": ""
+	},
+	
+	"creditsDescriptionLabel": {
+		"message": "Credits in end of video: ending with information about authors, channel names, etc",
+		"description": ""
+	},
+	
+	"cutsceneDescriptionLabel": {
+		"message": "Barely related to video content",
+		"description": ""
+	},
+	
+	"offtopDescriptionLabel": {
+		"message": "Non related to video content",
+		"description": ""
+	},
+	
+	"interactiveDescriptionLabel": {
+		"message": "Interaction with viewers such as contests, etc",
+		"description": ""
+	},
+	
+	"scamDescriptionLabel": {
+		"message": "Intentionally wrong information. This applies to lotteries, websites hacking, etc.",
+		"description": ""
+	},
+	
+	
+	
 	"segmentNameLabel": {
 		"message": "Segment",
 		"description": ""

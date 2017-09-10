@@ -46,7 +46,7 @@
 								<input type="checkbox" id="content"/>
 							</td>
 							<td>
-								<span class="segmentContentLabel"></span>
+								<div data-tip-segment-descr="contentDescriptionLabel"><span class="segmentContentLabel"></span></div>
 							</td>
 							<td>
 								<input type="text" id="colorContent" class="jscolor {valueElement:null,value:'000000'} input-color" size="6">
@@ -58,7 +58,7 @@
 								<input type="checkbox" id="adContent"/>
 							</td>
 							<td>
-								<span class="segmentAdContentLabel"></span>
+								<div data-tip-segment-descr="adContentDescriptionLabel"><span class="segmentAdContentLabel"></span></div>
 							</td>
 							<td>
 								<input type="text" id="colorAdContent" class="jscolor {valueElement:null,value:'000000'} input-color" size="6">
@@ -70,7 +70,7 @@
 								<input type="checkbox" id="advertisement"/>
 							</td>
 							<td>
-								<span class="segmentAdvertisementLabel"></span>
+								<div data-tip-segment-descr="advertisementDescriptionLabel"><span class="segmentAdvertisementLabel"></span></div>
 							</td>
 							<td>
 								<input type="text" id="colorAdvertisement" class="jscolor {valueElement:null,value:'000000'} input-color" size="6">
@@ -82,7 +82,7 @@
 								<input type="checkbox" id="intro"/>
 							</td>
 							<td>
-								<span class="segmentIntroLabel"></span>
+								<div data-tip-segment-descr="introDescriptionLabel"><span class="segmentIntroLabel"></span></div>
 							</td>
 							<td>
 								<input type="text" id="colorIntro" class="jscolor {valueElement:null,value:'000000'} input-color" size="6">
@@ -94,7 +94,7 @@
 								<input type="checkbox" id="credits"/>
 							</td>
 							<td>
-								<span class="segmentCreditsLabel"></span>
+								<div data-tip-segment-descr="creditsDescriptionLabel"><span class="segmentCreditsLabel"></span></div>
 							</td>
 							<td>
 								<input type="text" id="colorCredits" class="jscolor {valueElement:null,value:'000000'} input-color" size="6">
@@ -106,7 +106,7 @@
 								<input type="checkbox" id="cutscene"/>
 							</td>
 							<td>
-								<span class="segmentCutsceneLabel"></span>
+								<div data-tip-segment-descr="cutsceneDescriptionLabel"><span class="segmentCutsceneLabel"></span></div>
 							</td>
 							<td>
 								<input type="text" id="colorCutscene" class="jscolor {valueElement:null,value:'000000'} input-color" size="6">
@@ -118,7 +118,7 @@
 								<input type="checkbox" id="offtop"/>
 							</td>
 							<td>
-								<span class="segmentOfftopLabel"></span>
+								<div data-tip-segment-descr="offtopDescriptionLabel"><span class="segmentOfftopLabel"></span></div>
 							</td>
 							<td>
 								<input type="text" id="colorOfftop" class="jscolor {valueElement:null,value:'000000'} input-color" size="6">
@@ -130,7 +130,7 @@
 								<input type="checkbox" id="interactive"/>
 							</td>
 							<td>
-								<span class="segmentInteractiveLabel"></span>
+								<div data-tip-segment-descr="interactiveDescriptionLabel"><span class="segmentInteractiveLabel"></span></div>
 							</td>
 							<td>
 								<input type="text" id="colorInteractive" class="jscolor {valueElement:null,value:'000000'} input-color" size="6">
@@ -142,7 +142,7 @@
 								<input type="checkbox" id="scam"/>
 							</td>
 							<td>
-								<span class="segmentScamLabel"></span>
+								<div data-tip-segment-descr="scamDescriptionLabel"><span class="segmentScamLabel"></span></div>
 							</td>
 							<td>
 								<input type="text" id="colorScam" class="jscolor {valueElement:null,value:'000000'} input-color" size="6">
@@ -168,47 +168,47 @@
 						<tr>
 							<td><span class="segmentContentLabel"></span></td>
 							<td><input id="contentDuration" class="fancy-input" size="5"></td>
-							<td><div data-tip="" style="font-size: 9pt"><input id="contentSpeed" class="fancy-input" size="5"></div>%</td>
+							<td><div data-tip-speed="speedWarningLabel" style="font-size: 9pt"><input id="contentSpeed" class="fancy-input" size="5"></div>%</td>
 						</tr>
 						<tr>
 							<td><span class="segmentAdContentLabel"></span></td>
 							<td><input id="adContentDuration" class="fancy-input" size="5"></td>
-							<td><div data-tip="" style="font-size: 9pt"><input id="adContentSpeed" class="fancy-input" size="5"></div>%</td>
+							<td><div data-tip-speed="speedWarningLabel" style="font-size: 9pt"><input id="adContentSpeed" class="fancy-input" size="5"></div>%</td>
 						</tr>
 						<tr>
 							<td><span class="segmentIntroLabel"></span></td>
 							<td><input id="introDuration" class="fancy-input" size="5"></td>
-							<td><div data-tip=""><input id="introSpeed" class="fancy-input" size="5"></div>%</td>
+							<td><div data-tip-speed="speedWarningLabel"><input id="introSpeed" class="fancy-input" size="5"></div>%</td>
 						</tr>
 						<tr>
 							<td><span class="segmentAdvertisementLabel"></span></td>
 							<td><input id="advertisementDuration" class="fancy-input" size="5"></td>
-							<td><div data-tip=""><input id="advertisementSpeed" class="fancy-input" size="5"></div>%</td>
+							<td><div data-tip-speed="speedWarningLabel"><input id="advertisementSpeed" class="fancy-input" size="5"></div>%</td>
 						</tr>
 						<tr>
 							<td><span class="segmentCreditsLabel"></span></td>
 							<td><input id="creditsDuration" class="fancy-input" size="5"></td>
-							<td><div data-tip=""><input id="creditsSpeed" class="fancy-input" size="5"></div>%</td>
+							<td><div data-tip-speed="speedWarningLabel"><input id="creditsSpeed" class="fancy-input" size="5"></div>%</td>
 						</tr>
 						<tr>
 							<td><span class="segmentCutsceneLabel"></span></td>
 							<td><input id="cutsceneDuration" class="fancy-input" size="5"></td>
-							<td><div data-tip=""><input id="cutsceneSpeed" class="fancy-input" size="5"></div>%</td>
+							<td><div data-tip-speed="speedWarningLabel"><input id="cutsceneSpeed" class="fancy-input" size="5"></div>%</td>
 						</tr>
 						<tr>
 							<td><span class="segmentOfftopLabel"></span></td>
 							<td><input id="offtopDuration" class="fancy-input" size="5"></td>
-							<td><div data-tip=""><input id="offtopSpeed" class="fancy-input" size="5"></div>%</td>
+							<td><div data-tip-speed="speedWarningLabel"><input id="offtopSpeed" class="fancy-input" size="5"></div>%</td>
 						</tr>
 						<tr>
 							<td><span class="segmentInteractiveLabel"></span></td>
 							<td><input id="interactiveDuration" class="fancy-input" size="5"></td>
-							<td><div data-tip=""><input id="interactiveSpeed" class="fancy-input" size="5"></div>%</td>
+							<td><div data-tip-speed="speedWarningLabel"><input id="interactiveSpeed" class="fancy-input" size="5"></div>%</td>
 						</tr>
 						<tr>
 							<td><span class="segmentScamLabel"></span></td>
 							<td><input id="scamDuration" class="fancy-input" size="5"></td>
-							<td><div data-tip=""><input id="scamSpeed" class="fancy-input" size="5"></div>%</td>
+							<td><div data-tip-speed="speedWarningLabel"><input id="scamSpeed" class="fancy-input" size="5"></div>%</td>
 						</tr>
 					</table>
 				</div>
