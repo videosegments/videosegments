@@ -109,12 +109,14 @@ function switchSettings()
 	if ( p.classList.contains('slide-animation-right') ) {
 		p.classList.add('slide-animation-left');
 		p.classList.remove("slide-animation-right");
-		this.innerHTML = browser.i18n.getMessage('switchSettings1Label');
+		this.removeChild(this.firstChild);
+		this.appendChild(document.createTextNode(browser.i18n.getMessage('switchSettings1Label')));
 	}
 	else {
 		p.classList.add('slide-animation-right');
 		p.classList.remove("slide-animation-left");
-		this.innerHTML = browser.i18n.getMessage('switchSettings2Label');
+		this.removeChild(this.firstChild);
+		this.appendChild(document.createTextNode(browser.i18n.getMessage('switchSettings2Label')));
 	}
 }
 
