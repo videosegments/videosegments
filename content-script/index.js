@@ -724,6 +724,9 @@ function loadSettings() {
 	
 	// request settings 
 	browser.storage.local.get({
+		/* first run (to disable it for those who already installed) */
+		firstRun:				0,
+		
 		/* stop playing until segments are fetched */ 
 		autoPauseDuration: 		1,
 		/* add segments below progress bar*/ 
@@ -829,6 +832,8 @@ function loadSettings() {
 			's': result.scamSpeed/100.0,
 			'o': result.offtopSpeed/100.0,
 		}
+		
+		browser.storage.local.set({firstRun: 1});
 		
 		tryFindMediaPlayer(settings);
 	});

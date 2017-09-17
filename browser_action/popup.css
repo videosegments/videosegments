@@ -2,6 +2,7 @@ body {
 	width: 300px;
 	background-image: url("./background.jpg");
 	background-repeat: repeat;
+	text-align: center;
 }
 
 #extensionName {
@@ -9,6 +10,16 @@ body {
 	font-size: 1.2em;
 	text-align: center;
 	border-bottom: 2px solid black;
+}
+
+#how-it-works {
+	text-align: center;
+	border-bottom: 1px solid black;
+}
+
+#how-it-works:hover {
+	background-color: lightgray;
+	cursor: pointer;
 }
 
 label, span {
@@ -31,6 +42,11 @@ table td {
 	border: 1px solid black;
 	text-align: center;
 	padding: 2px 5px;
+}
+
+#global-settings {
+	display: inline-block;
+	text-align: left;
 }
 
 .borderbot {
@@ -65,15 +81,20 @@ table td {
 	-webkit-transition: -webkit-transform 0.2s linear;
 }
 
+.slide-filler {
+	width: 20px;
+	display: inline-block;
+}
+
 .slide {
 	vertical-align: top;
 	display: inline-block;
 	/* border: 1px solid red; */
-	width: 300px;
+	width: 290px;
 }
 
 .slide-animation-right {
-	-webkit-transform:translateX(-300px);
+	-webkit-transform:translateX(-310px);
 }
 
 .slide-animation-left {
