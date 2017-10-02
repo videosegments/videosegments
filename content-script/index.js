@@ -235,7 +235,7 @@ var mediaPlayerWrapper = {
 	 * request segments from database 
 	 */
 	requestSegments: function(domain, id) {
-		console.log('mediaPlayerWrapper::requestSegments()');
+		// console.log('mediaPlayerWrapper::requestSegments()');
 		
 		var self = this;
 		// if user prefer to wait until segments are loaded 
