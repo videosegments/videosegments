@@ -635,7 +635,24 @@ var mediaPlayerWrapper = {
 			return;
 		}
 		
-		var prevMenuItem = document.getElementById('watch8-secondary-actions');
+		// old design 
+		var prevMenuItem = document.getElementById('watch8-secondary-actions'), buttonStyle = {}, css;
+		// new design 
+		if ( prevMenuItem ) {
+			buttonStyle.color = 'gray';
+			css = '#vs-request-segmentation-button:hover {cursor: pointer} #vs-request-segmentation-button:hover > span {color: black}';
+		}
+		else {
+			var container = document.getElementById('menu-container');
+			prevMenuItem = container.getElementsByClassName('style-scope ytd-menu-renderer force-icon-button style-default')[0];
+			buttonStyle.backgroundColor = 'white';
+			buttonStyle.color = 'rgb(150, 150, 150)';
+			buttonStyle.border = 'none';
+			buttonStyle.padding = '0 0 5px 0';
+			buttonStyle.margin = '0 10px 0 10px';
+			css = '#vs-request-segmentation-button:hover {cursor: pointer} #vs-request-segmentation-button:hover > span {color: black}';
+		}
+		
 		if ( prevMenuItem ) {
 			// create button 
 			var button = document.createElement('button');
@@ -667,7 +684,8 @@ var mediaPlayerWrapper = {
 			button.appendChild(img);
 			button.appendChild(span);
 			
-			button.style.color = 'gray';
+			Object.assign(button.style, buttonStyle);
+			console.log(button.style);
 			
 			if ( requested ) {
 				span.appendChild(document.createTextNode(browser.i18n.getMessage('segmentationRequestedLabel')));
@@ -676,9 +694,7 @@ var mediaPlayerWrapper = {
 				button.id = 'vs-request-segmentation-button';
 				
 				// add pseudorule :hover 
-				var css = '#vs-request-segmentation-button:hover {cursor: pointer} #vs-request-segmentation-button:hover > span {color: black}';
 				var style = document.createElement('style');
-
 				if ( style.styleSheet ) {
 					style.styleSheet.cssText = css;
 				} else {
