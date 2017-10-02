@@ -88,6 +88,8 @@ var mediaPlayerWrapper = {
 		// reset url
 		this.url = null;
 		
+		this.sourceInformation = {domain:null, id:null};
+		
 		// bind contexts to remove them if unnesessary
 		// this.eventContexts.onDurationChange = this.onDurationChange.bind(this);
 		this.eventContexts.onPlay = this.onPlay.bind(this);
@@ -223,12 +225,14 @@ var mediaPlayerWrapper = {
 	},
 	
 	getVideoUrl: function() {
-		if ( sourceInformation.domain === 'youtube' ) {
+		if ( this.sourceInformation.domain === 'youtube' ) {
 			// return this.mediaPlayer.baseURI;
 			// if video is in fullscreen mode baseURI will remain unchanged so as
 			// workaround url can be extracted from video title 
 			return document.getElementsByClassName('ytp-title-link')[0].href;
 		}
+		
+		return this.mediaPlayer.baseURI;
 	},
 	
 	/* 
