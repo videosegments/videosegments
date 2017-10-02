@@ -95,6 +95,7 @@ var mediaPlayerWrapper = {
 		this.eventContexts.onRateChange = this.onRateChange.bind(this);
 		this.eventContexts.onSegmentsUpdated = this.onSegmentsUpdated.bind(this);
 		this.eventContexts.onCanPlay = this.onCanPlay.bind(this);
+		// this.eventContexts.onDurationChange = this.onDurationChange.bind(this);
 		
 		// there is several events related to video status update:
 		// loadstart - duration is NaN for several browsers
@@ -107,7 +108,7 @@ var mediaPlayerWrapper = {
 		// so in this case we have to start manually
 		// console.log('this.mediaPlayer.readyState:', this.mediaPlayer.readyState);
 		if ( this.mediaPlayer.readyState >= 3 ) {
-			console.log('Forcing canplay event');
+			// console.log('Forcing canplay event');
 			this.onCanPlay();
 			// this.onDurationChange();
 		}
@@ -116,13 +117,40 @@ var mediaPlayerWrapper = {
 	},
 	
 	// onDurationChange: function() {
-		// console.log('mediaPlayerWrapper::onDurationChange()', this.mediaPlayer.currentTime);
+		// console.log('mediaPlayerWrapper::onDurationChange()', this.mediaPlayer.duration);
 		// this.requestTime = this.mediaPlayer.currentTime.toFixed();
+		
+		// var fullscreenElement = document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement;
+		// if ( fullscreenElement ) {
+			// if (document.exitFullscreen) {
+				// document.exitFullscreen();
+			// } else if (document.webkitExitFullscreen) {
+				// document.webkitExitFullscreen();
+			// } else if (document.mozCancelFullScreen) {
+				// document.mozCancelFullScreen();
+			// } else if (document.msExitFullscreen) {
+				// document.msExitFullscreen();
+			// }
+			
+			// console.log(fullscreenElement);
+			// setTimeout(function() {
+				// console.log(fullscreenElement);
+				// if (fullscreenElement.requestFullscreen) {
+					// fullscreenElement.requestFullscreen();
+				// } else if (fullscreenElement.mozRequestFullScreen) {
+					// fullscreenElement.mozRequestFullScreen();
+				// } else if (fullscreenElement.webkitRequestFullScreen) {
+					// fullscreenElement.webkitRequestFullScreen();
+				// } else if (fullscreenElement.msRequestFullscreen) {
+					// fullscreenElement.msRequestFullscreen();
+				// }
+			// }, 1000);
+		// }
 	// },
 	
 	onCanPlay: function() {
 		// when video is changed baseURI changed too 
-		if ( this.mediaPlayer.baseURI == this.url ) {
+		if ( this.url == this.getVideoUrl() ) {
 			// do nothing if urls matches 
 			return;
 		}
@@ -145,9 +173,6 @@ var mediaPlayerWrapper = {
 		// clear segments data 
 		this.segmentsData = null;
 		
-		// update url 
-		this.url = this.mediaPlayer.baseURI;
-		
 		if ( this.defaultSpeed ) {
 			this.preventUpdate = true;
 			this.mediaPlayer.playbackRate = this.defaultSpeed;
@@ -167,6 +192,10 @@ var mediaPlayerWrapper = {
 		
 		// if supported domain and id found
 		if ( this.sourceInformation ) {
+			// update url 
+			// this.url = this.mediaPlayer.baseURI;
+			this.url = this.getVideoUrl();
+			
 			/* request segments */
 			// 3th argument is current time because request will take time and 
 			// we may have to rewind it with rounding in case of first segment must be skipped
@@ -185,7 +214,7 @@ var mediaPlayerWrapper = {
 		// console.log('mediaPlayerWrapper::getVideoSourceInformation()');
 		
 		// youtube
-		var match = this.mediaPlayer.baseURI.match(/^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/);
+		var match = this.getVideoUrl().match(/^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/);
 		if ( match && match[7].length == 11 /* youtube video id length == 11 */ ) {
 			return {domain: 'youtube', id: match[7]};
 		}
@@ -193,11 +222,20 @@ var mediaPlayerWrapper = {
 		return null;
 	},
 	
+	getVideoUrl: function() {
+		if ( sourceInformation.domain === 'youtube' ) {
+			// return this.mediaPlayer.baseURI;
+			// if video is in fullscreen mode baseURI will remain unchanged so as
+			// workaround url can be extracted from video title 
+			return document.getElementsByClassName('ytp-title-link')[0].href;
+		}
+	},
+	
 	/* 
 	 * request segments from database 
 	 */
 	requestSegments: function(domain, id) {
-		// console.log('mediaPlayerWrapper::requestSegments()');
+		console.log('mediaPlayerWrapper::requestSegments()');
 		
 		var self = this;
 		// if user prefer to wait until segments are loaded 
@@ -325,7 +363,7 @@ var mediaPlayerWrapper = {
 	 */
 	onPlay: function() {
 		// this event is called before "durationchange" event during ajax redirection so we have to stop it manually
-		if ( this.url != this.mediaPlayer.baseURI ) {
+		if ( this.url != this.getVideoUrl() ) {
 			// console.log(this.url + ' ' + this.mediaPlayer.baseURI);
 			return;
 		}
@@ -350,7 +388,7 @@ var mediaPlayerWrapper = {
 	 */
 	tryRewind: function(rewindSegment) {
 		// firefox will call it on video change
-		if ( this.url != this.mediaPlayer.baseURI ) {
+		if ( this.url != this.getVideoUrl() ) {
 			return;
 		}
 		
@@ -497,6 +535,7 @@ var mediaPlayerWrapper = {
 	onRateChange: function() {
 		// console.log('mediaPlayerWrapper::onRateChange()');
 		
+		// do not update on playback increase 
 		if ( this.preventUpdate ) {
 			this.preventUpdate = false;
 		}
