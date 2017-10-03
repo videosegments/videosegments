@@ -216,9 +216,10 @@ var mediaPlayerWrapper = {
 		// console.log('mediaPlayerWrapper::getVideoSourceInformation()');
 		
 		// youtube
-		var match = this.getVideoUrl().match(/^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/);
-		if ( match && match[7].length == 11 /* youtube video id length == 11 */ ) {
-			return {domain: 'youtube', id: match[7]};
+		var match = this.getVideoUrl().match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/ ]{11})/i);
+		console.log(match[1]);
+		if ( match && match[1].length == 11 /* youtube video id length == 11 */ ) {
+			return {domain: 'youtube', id: match[1]};
 		}
 		
 		return null;
@@ -685,7 +686,6 @@ var mediaPlayerWrapper = {
 			button.appendChild(span);
 			
 			Object.assign(button.style, buttonStyle);
-			console.log(button.style);
 			
 			if ( requested ) {
 				span.appendChild(document.createTextNode(browser.i18n.getMessage('segmentationRequestedLabel')));
