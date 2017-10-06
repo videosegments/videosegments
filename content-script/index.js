@@ -20,8 +20,8 @@
 
 /**
  * test urls
- * content - credits https://www.youtube.com/watch?v=OLqeAH5D1uo
  * cutscene - content - cutscene https://www.youtube.com/watch?v=QIedr_9_9hA
+ * content - credits https://www.youtube.com/watch?v=OLqeAH5D1uo
  *
  * github: https://github.com/videosegments/videosegments
  */
@@ -110,7 +110,7 @@ var mediaPlayerWrapper = {
 		// so in this case we have to start manually
 		// console.log('this.mediaPlayer.readyState:', this.mediaPlayer.readyState);
 		if ( this.mediaPlayer.readyState >= 3 ) {
-			// console.log('Forcing canplay event');
+			console.log('Forcing canplay event');
 			this.onCanPlay();
 			// this.onDurationChange();
 		}
@@ -151,6 +151,8 @@ var mediaPlayerWrapper = {
 	// },
 	
 	onCanPlay: function() {
+		// console.log('mediaPlayerWrapper::onCanPlay()');
+		
 		// when video is changed baseURI changed too 
 		if ( this.url == this.getVideoUrl() ) {
 			// do nothing if urls matches 
@@ -164,7 +166,7 @@ var mediaPlayerWrapper = {
 			return;
 		}
 		
-		// console.log('mediaPlayerWrapper::onCanPlay()');
+		console.log('mediaPlayerWrapper::onCanPlay()');
 		if ( this.requestTime === null ) {
 			this.requestTime = this.mediaPlayer.currentTime.toFixed();
 		}
@@ -215,9 +217,8 @@ var mediaPlayerWrapper = {
 	getVideoSourceInformation: function() {
 		// console.log('mediaPlayerWrapper::getVideoSourceInformation()');
 		
-		// youtube
+		// youtube https://stackoverflow.com/a/6904504
 		var match = this.getVideoUrl().match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/ ]{11})/i);
-		console.log(match[1]);
 		if ( match && match[1].length == 11 /* youtube video id length == 11 */ ) {
 			return {domain: 'youtube', id: match[1]};
 		}
@@ -290,6 +291,11 @@ var mediaPlayerWrapper = {
 						// insert segment bar 
 						self.insertSegmentBar();
 						
+						self.mediaPlayer.addEventListener("play", self.eventContexts.onPlay);
+						if ( !self.mediaPlayer.paused ) {
+							self.onPlay();
+						}
+						
 						// if user waiting for segments 
 						if ( self.pauseTimer ) {
 							// if video paused (and is not loading)
@@ -313,14 +319,14 @@ var mediaPlayerWrapper = {
 						// and also because of this:
 						// https://stackoverflow.com/questions/36803176/
 						// changing order between pause and set currentTime fixes error
-						self.onPlay();
 						
 						// add listeners for events
-						self.mediaPlayer.addEventListener("play", self.eventContexts.onPlay);
 						self.mediaPlayer.addEventListener("ratechange", self.eventContexts.onRateChange);
 						// chrome send "pause()" event with playbackRate change 
 						// idk why but this poor workaround seems to be working...
-						setTimeout(function() {self.mediaPlayer.addEventListener("pause", self.eventContexts.onPause);}, 100);
+						// setTimeout(function() {
+							self.mediaPlayer.addEventListener("pause", self.eventContexts.onPause);
+						// }, 100);
 					}
 					else {
 						setTimeout(function() {
@@ -378,7 +384,7 @@ var mediaPlayerWrapper = {
 			this.requestTime = this.mediaPlayer.currentTime.toFixed();
 		}
 		
-		// console.log('mediaPlayerWrapper::onPlay()');
+		console.log('mediaPlayerWrapper::onPlay()', this.mediaPlayer.playbackRate);
 		
 		// find segment to rewind
 		var rewindSegment = this.getNextSegment(0);
@@ -514,7 +520,7 @@ var mediaPlayerWrapper = {
 	 * Called when player paused. Kill rewind timer
 	 */
 	onPause: function() {
-		// console.log('mediaPlayerWrapper::onPause()');
+		console.log('mediaPlayerWrapper::onPause()', this.mediaPlayer.playbackRate);
 		
 		if ( this.rewindTimer ) {
 			clearTimeout(this.rewindTimer);
@@ -538,7 +544,7 @@ var mediaPlayerWrapper = {
 	 * Called when player play speed was changed. Update rewind delay
 	 */
 	onRateChange: function() {
-		// console.log('mediaPlayerWrapper::onRateChange()');
+		console.log('mediaPlayerWrapper::onRateChange()', this.mediaPlayer.playbackRate);
 		
 		// do not update on playback increase 
 		if ( this.preventUpdate ) {
@@ -645,13 +651,15 @@ var mediaPlayerWrapper = {
 		}
 		else {
 			var container = document.getElementById('menu-container');
-			prevMenuItem = container.getElementsByClassName('style-scope ytd-menu-renderer force-icon-button style-default')[0];
-			buttonStyle.backgroundColor = 'white';
-			buttonStyle.color = 'rgb(150, 150, 150)';
-			buttonStyle.border = 'none';
-			buttonStyle.padding = '0 0 5px 0';
-			buttonStyle.margin = '0 10px 0 10px';
-			css = '#vs-request-segmentation-button:hover {cursor: pointer} #vs-request-segmentation-button:hover > span {color: black}';
+			if ( container ) {
+				prevMenuItem = container.getElementsByClassName('style-scope ytd-menu-renderer force-icon-button style-default')[0];
+				buttonStyle.backgroundColor = 'white';
+				buttonStyle.color = 'rgb(150, 150, 150)';
+				buttonStyle.border = 'none';
+				buttonStyle.padding = '0 0 5px 0';
+				buttonStyle.margin = '0 10px 0 10px';
+				css = '#vs-request-segmentation-button:hover {cursor: pointer} #vs-request-segmentation-button:hover > span {color: black}';
+			}
 		}
 		
 		if ( prevMenuItem ) {
@@ -942,14 +950,29 @@ function tryFindMediaPlayer(settings)
 		// called when mutation occurs
 		function onMutation(mutations) {
 			mutations.forEach(function(mutation) {
-				// console.log(mutation.target.className);
-				if ( mutation.target.className.indexOf('playing-mode') !== -1 && !hooked ) {
+				// console.log(mutation.target.tagName.toLowerCase().indexOf('video'));
+				
+				// if ( mutation.target.tagName.toLowerCase().indexOf('video') !== -1 ) {
+					// console.log(mutation.target);
+				// }
+				
+				// sometime video is inside another element so we have to look deeper 
+				if ( mutation.target.getElementsByTagName('video')[0] && !hooked ) {
 					// console.log(mutation);
 					hooked = true;
 					
 					tryFindMediaPlayer(settings);
 					observer.disconnect();
 				}
+				
+				// console.log(mutation.target.className.indexOf);
+				// if ( mutation.target.className.indexOf && mutation.target.className.indexOf('playing-mode') !== -1 && !hooked ) {
+					// console.log(mutation);
+					// hooked = true;
+					
+					// tryFindMediaPlayer(settings);
+					// observer.disconnect();
+				// }
 			});
 		}
 	}
