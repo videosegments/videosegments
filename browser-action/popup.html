@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+
+<html>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="popup.css">
+	
+	<body>
+		<script src="jscolor.js"></script>
+		
+		<div id="tabs">
+			<button id="tab-playback" class="tab active-tab">
+				<span class="translate-me">tabPlayback</span>
+			</button><!-- 
+			--><button id="tab-acceleration" class="tab">
+				<span class="translate-me">tabAcceleration</span>
+			</button><!-- 
+			--><button id="tab-settings" class="tab">
+				<span class="translate-me">tabSettings</span>
+			</button>
+		</div>
+		
+		<div id="footer">
+			<span class="translate-me">extensionName</span>
+		</div>
+		
+		<!-- <div id="playback" class="tab-content" style="display: none;"> -->
+		<div id="playback" class="tab-content">
+			<table id="playback-settings">
+				<tr id="segment-c">
+					<td><select><option value="0"><span class="translate-me">play</span></option><option value="1"><span class="translate-me">skip</span></option></select></td>
+					<td><span class="translate-me">content</span></td>
+					<td><input class="jscolor" size="6"></td>
+				</tr>
+				<tr id="segment-ac">
+					<td><select><option value="0"><span class="translate-me">play</span></option><option value="1"><span class="translate-me">skip</span></option></select></td>
+					<td><span class="translate-me">adcontent</span></td>
+					<td><input class="jscolor" size="6"></td>
+				</tr>
+				<tr id="segment-a">
+					<td><select><option value="0"><span class="translate-me">play</span></option><option value="1"><span class="translate-me">skip</span></option></select></td>
+					<td><span class="translate-me">advertisement</span></td>
+					<td><input class="jscolor" size="6"></td>
+				</tr>
+				<tr id="segment-i">
+					<td><select><option value="0"><span class="translate-me">play</span></option><option value="1"><span class="translate-me">skip</span></option></select></td>
+					<td><span class="translate-me">intro</span></td>
+					<td><input class="jscolor" size="6"></td>
+				</tr>
+				<tr id="segment-cr">
+					<td><select><option value="0"><span class="translate-me">play</span></option><option value="1"><span class="translate-me">skip</span></option></select></td>
+					<td><span class="translate-me">credits</span></td>
+					<td><input class="jscolor" size="6"></td>
+				</tr>
+				<tr id="segment-cs">
+					<td><select><option value="0"><span class="translate-me">play</span></option><option value="1"><span class="translate-me">skip</span></option></select></td>
+					<td><span class="translate-me">cutscene</span></td>
+					<td><input class="jscolor" size="6"></td>
+				</tr>
+				<tr id="segment-o">
+					<td><select><option value="0"><span class="translate-me">play</span></option><option value="1"><span class="translate-me">skip</span></option></select></td>
+					<td><span class="translate-me">offtop</span></td>
+					<td><input class="jscolor" size="6"></td>
+				</tr>
+				<tr id="segment-i">
+					<td><select><option value="0"><span class="translate-me">play</span></option><option value="1"><span class="translate-me">skip</span></option></select></td>
+					<td><span class="translate-me">interactive</span></td>
+					<td><input class="jscolor" size="6"></td>
+				</tr>
+				<tr id="segment-s">
+					<td><select><option value="0"><span class="translate-me">play</span></option><option value="1"><span class="translate-me">skip</span></option></select></td>
+					<td><span class="translate-me">scam</span></td>
+					<td><input class="jscolor" size="6"></td>
+				</tr>
+			</table>
+			
+			<div style="display: inline-block; text-align: left;">
+				<span class="translate-me">adcontentDescription</span>
+			</div>
+		</div>
+		<div id="acceleration" class="tab-content" style="display: none;">
+			<table id="acceleration-settings">
+				<tr>
+					<th>
+						<span class="translate-me">segment</span>
+					</th>
+					<th>
+						<span class="translate-me">length</span>
+					</th>
+					<th>
+						<span class="translate-me">speed</span>
+					</th>
+				</tr>
+				<tr id="segment-c">
+					<td>Content</td>
+					<td><input size="5"></td>					
+					<td><input size="5"></td>
+				</tr>
+				<tr id="segment-ac">
+					<td>AdContent</td>
+					<td><input size="5"></td>					
+					<td><input size="5"></td>
+				</tr>
+				<tr id="segment-a">
+					<td>Advertisement</td>
+					<td><input size="5"></td>					
+					<td><input size="5"></td>
+				</tr>
+				<tr id="segment-i">
+					<td>Intro</td>
+					<td><input size="5"></td>					
+					<td><input size="5"></td>
+				</tr>
+				<tr id="segment-cr">
+					<td>Credits</td>
+					<td><input size="5"></td>					
+					<td><input size="5"></td>
+				</tr>
+				<tr id="segment-cs">
+					<td>Cutscene</td>
+					<td><input size="5"></td>					
+					<td><input size="5"></td>
+				</tr>
+				<tr id="segment-o">
+					<td>Offtop</td>
+					<td><input size="5"></td>					
+					<td><input size="5"></td>
+				</tr>
+				<tr id="segment-ia">
+					<td>Interactive</td>
+					<td><input size="5"></td>					
+					<td><input size="5"></td>
+				</tr>
+				<tr id="segment-s">
+					<td>Scam</td>
+					<td><input size="5"></td>					
+					<td><input size="5"></td>
+				</tr>
+			</table>
+			
+			<div style="display: inline-block; text-align: left;">
+				<span class="translate-me">lengthDescription</span><br>
+				<span class="translate-me">speedDescription</span>
+			</div>
+		</div>
+		<div id="settings" class="tab-content" style="display: none;">
+			<div style="display: inline-block; text-align: left;">
+				<label><input type="checkbox" id="showSegmentsbar"><span class="translate-me">showSegmentsBar</span><br></label><br>
+				<label><input type="checkbox" id="showSegmentationTools"><span class="translate-me">showSegmentationTools</span></label><br>
+				<span class="translate-me">wait</span><input size="3" id="autoPauseDuration"><span class="translate-me">secondsForSegments</span><br>
+			</div>
+			<br>
+			<br>
+			<div id="settings-login" style="display: none;">
+				<iframe id="settings-iframe" width="300" height="165" src="http://auth.videosegments.org/" style="border: 1px solid black"></iframe>
+			</div>
+			<div id="settings-database" style="display: none; border: 1px solid black; width: 300px; height: 165px; margin: auto">
+				<br>
+				<label><input type="checkbox" id="sendToDatabase"><span class="translate-me">sendSegmentation</span><br></label><br>
+				<br>
+				<div id="settings-database-admin" style="display: none">
+					<div style="width: 49%; text-align: center; display: inline-block">
+						<button style="width: 90%"><span class="translate-me">nextSegmentation</span></button>
+					</div>
+					<div style="width: 49%; text-align: center; display: inline-block">
+						<button style="width: 90%"><span class="translate-me">nextRequest</span></button>
+					</div>
+					<br>
+					<br>
+					<label><input type="checkbox" id="displayPending"><span class="translate-me">displayPending</span><br></label>
+				</div>
+				<br>
+				<div style="text-align: center">
+					<button><span class="translate-me">logout</span></button>
+				</div>
+			</div>
+		</div>
+		
+		<script src="popup.js"></script>
+		<script src="translate.js"></script>
+	</body>
+</html>

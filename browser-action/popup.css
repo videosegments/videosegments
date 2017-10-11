@@ -1,0 +1,153 @@
+* {
+	font-size: 12px;
+	font-family: "Segoe UI", Tahoma, sans-serif;
+}
+
+body {
+	height: 500px;
+	width: 400px;
+	margin: 0;
+	padding: 0;
+}
+
+#tabs {
+	margin: 0;
+	padding: 0;
+}
+
+#footer {
+	position: fixed;
+	bottom: 0;
+	width: 100%;
+	padding: 10px 0 10px 0;
+	text-align: center;
+	font-size: 3ex;
+	color: white;
+	background-color: #333;
+}
+
+#footer > span {
+	font-size: 20px;
+}
+
+.tab {
+	display: inline-block;
+	width: 33.3%;
+	margin: 0;
+	padding: 10px 0 10px 0;
+	text-align: center;
+	font-weight: bold;
+	background-color: white;
+	color: black;
+	cursor: pointer;
+	outline:none;
+	border: none;
+    text-decoration: none;
+}
+
+.tab:not(.active-tab):hover {
+	background-color: #666;
+	color: white;
+}
+
+.active-tab {
+	background-color: #222;
+	color: white;
+}
+
+.tab-content {
+	margin: 10px;
+	text-align: center;
+}
+
+.jscolor {
+	border: 1px solid black;
+}
+
+table {
+	margin: 20px auto;
+	border-collapse: collapse;
+}
+
+table th {
+	text-align: center;
+}
+
+#playback-settings td {
+	border-top: 1px solid black;
+	border-bottom: 1px solid black;
+	padding: 10px;
+}
+
+#playback-settings td:first-child {
+	/* border-left: 1px solid black; */
+	padding: 5px;
+}
+
+#playback-settings td:last-child {
+	/* border-right: 1px solid black; */
+	padding: 5px;
+}
+
+#acceleration-settings th {
+	border: 1px solid black;
+	padding: 2px;
+}
+
+#acceleration-settings td {
+	border: 1px solid black;
+	padding: 5px;
+}
+
+#acceleration-settings input {
+	border: none;
+	border-bottom: 1px solid black;
+}
+
+label {
+  display: inline-block;
+  vertical-align: top;
+  padding-left: 25px;
+  position: relative;
+}
+
+input {
+	font-family: courier; 
+	text-align: center;
+	border: none;
+	border-bottom: 1px solid black;
+}
+
+label input {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.icon-play {
+	width: 0;
+    height: 0;
+    border-width: 10px 0 10px 16px;
+    border-style: solid;
+    border-top-color: transparent;
+    border-bottom-color: transparent;
+    margin: 7px 9px
+}
+
+.icon-rewind {
+    width: 0;
+    height: 0;
+    border: 10px solid transparent;
+    border-left: 10px solid;
+    margin: 7px;
+}
+
+.icon-rewind :before {
+    position: absolute;
+    left: 0;
+    top: -10px;
+    width: 0;
+    height: 0;
+    border: 10px solid transparent;
+    border-left: 10px solid;
+}

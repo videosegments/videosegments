@@ -1,0 +1,231 @@
+'use strict';
+
+// crossbrowser support
+if ( typeof this.chrome != 'undefined' ) {
+	this.browser = this.chrome;
+}
+
+document.addEventListener('DOMContentLoaded', domContentLoaded);
+
+function domContentLoaded()
+{
+	var tabs = document.getElementById('tabs');
+	// hook clicks on tab
+	var buttons = tabs.getElementsByTagName('button');
+	for ( let i = 0; i < buttons.length; ++i ) {
+		buttons[i].addEventListener('click', switchTab);
+	}
+	
+	// check if user is logged in 
+	checkLogin();
+	
+	// load settings 
+	loadSettings();
+}
+
+function switchTab()
+{
+	// remove old active tab class 
+	var tab = document.getElementsByClassName('active-tab')[0];
+	tab.classList.remove('active-tab');
+	
+	// change active tab class 
+	this.classList.add('active-tab');
+	
+	// open tab content  
+	openTab(this.id.slice(4));
+}
+
+function openTab(tabName)
+{
+	// close all tabs 
+	var tabs = document.getElementsByClassName('tab-content');
+	for ( let i = 0; i < tabs.length; ++i ) {
+		tabs[i].style.display = 'none';
+	}
+	
+	// show desired
+	var tab = document.getElementById(tabName);
+	tab.style.display = 'block';
+}
+
+function checkLogin()
+{
+	var xhr = new XMLHttpRequest();
+	xhr.open('GET', 'https://auth.videosegments.org/status.php');
+	xhr.onreadystatechange = function() { 
+		// console.log(xhr);
+		if ( xhr.readyState == 4 ) {
+			if ( xhr.status == 200 ) {
+				// console.log(xhr.responseText);
+				var response = JSON.parse(xhr.responseText);
+				if ( response.authType ) {
+					var element = document.getElementById('settings-database');
+					element.style.display = 'block';
+					
+					if ( response.admin ) {
+						var element = document.getElementById('settings-database-admin');
+						element.style.display = 'block';
+					}
+				}
+				else {
+					var element = document.getElementById('settings-login');
+					element.style.display = 'block';
+				}
+			}
+		}
+	}
+	
+	xhr.setRequestHeader("content-type", "application/x-www-form-urlencoded");
+	xhr.send();
+}
+
+function loadSettings()
+{
+	// default extension settings 
+	var defaultSettings = {
+		// segments configuration
+		segments: {
+			// content 
+			c: 	{ skip: false, color: '#00ff00', duration: 0.0, speed: 1.0 },
+			// adcontent 
+			ac: { skip: false, color: '#008800', duration: 0.0, speed: 1.0 },
+			// advertisement 
+			a: 	{ skip: true,  color: '#ff0000', duration: 0.0, speed: 5.0 },
+			// intro 
+			i: 	{ skip: true,  color: '#0000ff', duration: 0.0, speed: 5.0 },
+			// credits 
+			cr: { skip: true,  color: '#ffff00', duration: 0.0, speed: 5.0 },
+			// cutscene 
+			cs: { skip: true,  color: '#808080', duration: 0.0, speed: 2.0 },
+			// offtop 
+			o: 	{ skip: true,  color: '#ff00ff', duration: 0.0, speed: 3.0 },
+			// interactive 
+			ia: { skip: true,  color: '#00ffff', duration: 0.0, speed: 4.0 },
+			// scam 
+			s:	{ skip: true,  color: '#008080', duration: 0.0, speed: 5.0 },
+		},
+		
+		// global settings 
+		autoPauseDuration: 1,
+		showSegmentsbar: true,
+		showSegmentationTools: false,
+		
+		// segmentation settings 
+		sendToDatabase: false,
+		displayPending: false,
+	}
+	
+	browser.storage.local.get({
+			settings: defaultSettings
+		}, function(result) {
+			restoreOptions(result.settings);
+		}
+	);
+}
+	
+function restoreOptions(settings) 
+{
+	// playback settings 
+	var playback = document.getElementById('playback-settings');
+	var tr = playback.getElementsByTagName('tr');
+	for ( let i = 0; i < tr.length; ++i ) {
+		let segment = tr[i].id.slice(8);
+		
+		var select = tr[i].getElementsByTagName('select')[0];
+		select.value = settings.segments[segment].skip ? '1' : '0';
+		select.addEventListener('change', function() { updatePlayback(this, settings, segment); });
+		
+		var input = tr[i].getElementsByTagName('input')[0];
+		input.jscolor.fromString(settings.segments[segment].color);
+		input.addEventListener('change', function() { updateColor(this, settings, segment); });
+	}
+	
+	// acceleration settings 
+	var acceleration = document.getElementById('acceleration-settings');
+	var tr = acceleration.getElementsByTagName('tr');
+	for ( let i = 1; i < tr.length; ++i ) {
+		let segment = tr[i].id.slice(8);
+		
+		var inputs = tr[i].getElementsByTagName('input');
+		inputs[0].value = settings.segments[segment].duration;
+		inputs[1].value = settings.segments[segment].speed*100;
+		
+		inputs[0].addEventListener('change', function() { updateAccelerationDuration(this, settings, segment); });
+		inputs[1].addEventListener('change', function() { updateAccelerationSpeed(this, settings, segment); });
+	}
+	
+	// global settings 
+	var element;
+	
+	element = document.getElementById('autoPauseDuration');
+	element.value = settings.autoPauseDuration;
+	element.addEventListener('change', function() { updateGlobalValue(this, settings, 'autoPauseDuration'); });
+	
+	element = document.getElementById('showSegmentsbar')
+	element.checked = settings.showSegmentsbar;
+	element.addEventListener('change', function() { updateGlobalBool(this, settings, 'showSegmentsbar'); });
+	
+	element = document.getElementById('showSegmentationTools')
+	element.checked = settings.showSegmentationTools;
+	element.addEventListener('change', function() { updateGlobalBool(this, settings, 'showSegmentationTools'); });
+	
+	element = document.getElementById('sendToDatabase')
+	element.checked = settings.sendToDatabase;
+	element.addEventListener('change', function() { updateGlobalBool(this, settings, 'sendToDatabase'); });
+	
+	element = document.getElementById('displayPending')
+	element.checked = settings.displayPending;
+	element.addEventListener('change', function() { updateGlobalBool(this, settings, 'displayPending'); });
+}
+
+function updatePlayback(element, settings, segment)
+{
+	settings.segments[segment].skip = element.value == '1' ? true : false;
+	browser.storage.local.set({ settings: settings });
+	notifyMediaPlayerWrapper(settings);
+}
+
+function updateColor(element, settings, segment)
+{
+	settings.segments[segment].color = element.jscolor.toHEXString();
+	browser.storage.local.set({ settings: settings });
+	notifyMediaPlayerWrapper(settings);
+}
+
+function updateAccelerationDuration(element, settings, segment)
+{
+	settings.segments[segment].duration = element.value;
+	browser.storage.local.set({ settings: settings });
+	notifyMediaPlayerWrapper(settings);
+}
+
+function updateAccelerationSpeed(element, settings, segment)
+{
+	settings.segments[segment].speed = element.value / 100.0; 
+	browser.storage.local.set({ settings: settings });
+	notifyMediaPlayerWrapper(settings);
+}
+
+function updateGlobalValue(element, settings, field)
+{
+	settings[field] = element.value;
+	browser.storage.local.set({ settings: settings });
+	notifyMediaPlayerWrapper(settings);
+}
+
+function updateGlobalBool(element, settings, field)
+{
+	settings[field] = element.checked;
+	browser.storage.local.set({ settings: settings });
+	notifyMediaPlayerWrapper(settings);
+}
+
+function notifyMediaPlayerWrapper(settings)
+{
+	browser.tabs.query({}, function(tabs) {
+		for ( let i = 0; i < tabs.length; ++i ) {
+			browser.tabs.sendMessage(tabs[i].id, { settings: settings });
+		}
+	});
+}

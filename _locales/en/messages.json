@@ -9,6 +9,130 @@
 		"description": "Description of the extension."
 	},
 	
+	"tabPlayback": {
+		"message": "Playback",
+		"description": ""
+	},
+	"tabAcceleration": {
+		"message": "Acceleration",
+		"description": ""
+	},
+	"tabSettings": {
+		"message": "Settings",
+		"description": ""
+	},
+	
+	"play": {
+		"message": "play",
+		"description": ""
+	},
+	"skip": {
+		"message": "skip",
+		"description": ""
+	},
+	
+	"content": {
+		"message": "Content",
+		"description": ""
+	},
+	"adcontent": {
+		"message": "AdContent",
+		"description": ""
+	},
+	"advertisement": {
+		"message": "Advertisement",
+		"description": ""
+	},
+	"intro": {
+		"message": "Intro",
+		"description": ""
+	},
+	"credits": {
+		"message": "Credits",
+		"description": ""
+	},
+	"cutscene": {
+		"message": "Cutscene",
+		"description": ""
+	},
+	"offtop": {
+		"message": "Offtop",
+		"description": ""
+	},
+	"interactive": {
+		"message": "Interactive",
+		"description": ""
+	},
+	"scam": {
+		"message": "Scam",
+		"description": ""
+	},
+	
+	"adcontentDescription": {
+		"message": "AdContent is content and advertisement at same time",
+		"description": ""
+	},
+	
+	"lengthDescription": {
+		"message": "Length is a maximum duration of segment for acceleration",
+		"description": ""
+	},
+	"speedDescription": {
+		"message": "Speed less than 25% and more than 400% is muted by player",
+		"description": ""
+	},
+	
+	"segment": {
+		"message": "Segment",
+		"description": ""
+	},
+	"length": {
+		"message": "Length, s",
+		"description": ""
+	},
+	"speed": {
+		"message": "Speed, %",
+		"description": ""
+	},
+	
+	"showSegmentsBar": {
+		"message": "Show segmentbar",
+		"description": ""
+	},
+	"showSegmentationTools": {
+		"message": "Show segmentation tools",
+		"description": ""
+	},
+	"wait": {
+		"message": "Wait ",
+		"description": ""
+	},
+	"secondsForSegments": {
+		"message": " seconds for segments",
+		"description": ""
+	},
+	
+	"sendSegmentation": {
+		"message": " Send segmentation to official database",
+		"description": ""
+	},
+	"nextSegmentation": {
+		"message": " Next segmentation",
+		"description": ""
+	},
+	"nextRequest": {
+		"message": " Next request",
+		"description": ""
+	},
+	"displayPending": {
+		"message": " Display pending requests",
+		"description": ""
+	},
+	"logout": {
+		"message": " Logout",
+		"description": ""
+	},
+	
 	
 		
 	"autoPauseFirstLabel": {

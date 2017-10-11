@@ -110,7 +110,7 @@ var mediaPlayerWrapper = {
 		// so in this case we have to start manually
 		// console.log('this.mediaPlayer.readyState:', this.mediaPlayer.readyState);
 		if ( this.mediaPlayer.readyState >= 3 ) {
-			console.log('Forcing canplay event');
+			// console.log('Forcing canplay event');
 			this.onCanPlay();
 			// this.onDurationChange();
 		}
@@ -166,7 +166,7 @@ var mediaPlayerWrapper = {
 			return;
 		}
 		
-		console.log('mediaPlayerWrapper::onCanPlay()');
+		// console.log('mediaPlayerWrapper::onCanPlay()');
 		if ( this.requestTime === null ) {
 			this.requestTime = this.mediaPlayer.currentTime.toFixed();
 		}
@@ -203,6 +203,7 @@ var mediaPlayerWrapper = {
 			/* request segments */
 			// 3th argument is current time because request will take time and 
 			// we may have to rewind it with rounding in case of first segment must be skipped
+			// now handled by variable 
 			this.requestSegments(this.sourceInformation.domain, this.sourceInformation.id);
 			
 			document.removeEventListener('vssegmentsupdated', this.eventContexts.onSegmentsUpdated);
@@ -291,6 +292,14 @@ var mediaPlayerWrapper = {
 						// insert segment bar 
 						self.insertSegmentBar();
 						
+						// prevent shivering on rewind to same time 
+						// if ( self.requestTime != null && self.requestTime != self.mediaPlayer.currentTime ) {
+						if ( self.requestTime != null ) {
+							// these operations will take time so go back and round load time for rewind
+							self.mediaPlayer.currentTime = self.requestTime;
+							self.requestTime = null;
+						}
+						
 						self.mediaPlayer.addEventListener("play", self.eventContexts.onPlay);
 						if ( !self.mediaPlayer.paused ) {
 							self.onPlay();
@@ -304,14 +313,6 @@ var mediaPlayerWrapper = {
 								self.pauseTimer = null;
 								self.mediaPlayer.play();
 							}
-						}
-						
-						// prevent shivering on rewind to same time 
-						// if ( self.requestTime != null && self.requestTime != self.mediaPlayer.currentTime ) {
-						if ( self.requestTime != null ) {
-							// these operations will take time so go back and round load time for rewind
-							self.mediaPlayer.currentTime = self.requestTime;
-							self.requestTime = null;
 						}
 						
 						// force call for play event due to bug 
@@ -384,7 +385,7 @@ var mediaPlayerWrapper = {
 			this.requestTime = this.mediaPlayer.currentTime.toFixed();
 		}
 		
-		console.log('mediaPlayerWrapper::onPlay()', this.mediaPlayer.playbackRate);
+		// console.log('mediaPlayerWrapper::onPlay()', this.mediaPlayer.playbackRate);
 		
 		// find segment to rewind
 		var rewindSegment = this.getNextSegment(0);
@@ -449,7 +450,7 @@ var mediaPlayerWrapper = {
 		}
 		else {
 			var segmentLength = this.segmentsData.timestamps[rewindSegment+1] - this.mediaPlayer.currentTime;
-			if ( segmentLength > this.settings.segmentsDuration[this.segmentsData.types[rewindSegment]] ) {
+			if ( segmentLength > this.settings.segments[this.segmentsData.types[rewindSegment]].duration ) {
 				if ( this.defaultSpeed ) {
 					this.preventUpdate = true;
 					this.mediaPlayer.playbackRate = this.defaultSpeed;
@@ -471,13 +472,13 @@ var mediaPlayerWrapper = {
 			}
 			else {
 				// if current playing speed is slower than desired fast forward speed
-				if ( this.defaultSpeed < this.settings.segmentsSpeed[this.segmentsData.types[rewindSegment]] ) {
+				if ( this.defaultSpeed < this.settings.segments[this.segmentsData.types[rewindSegment]].speed ) {
 					if ( this.defaultSpeed == null ) {
 						this.defaultSpeed = this.mediaPlayer.playbackRate;
 					}
 					
 					this.preventUpdate = true;
-					this.mediaPlayer.playbackRate = this.settings.segmentsSpeed[this.segmentsData.types[rewindSegment]];
+					this.mediaPlayer.playbackRate = this.settings.segments[this.segmentsData.types[rewindSegment]].speed;
 				}
 				this.previousSegment = rewindSegment;
 				
@@ -502,12 +503,10 @@ var mediaPlayerWrapper = {
 		
 		// console.log('mediaPlayerWrapper::getNextSegment()');
 		
-		// segments count
-		var segments = this.segmentsData.timestamps.length;
 		// for each segment from initial segment
-		for ( let i = startSegment; i < segments; ++i ) {
+		for ( let i = startSegment; i < this.segmentsData.types.length; ++i ) {
 			// if requirements met
-			if ( this.settings.segmentsToSkip[this.segmentsData.types[i]] == true && this.segmentsData.timestamps[i] >= this.mediaPlayer.currentTime ) {
+			if ( this.settings.segments[this.segmentsData.types[i]].skip == true && this.segmentsData.timestamps[i] >= this.mediaPlayer.currentTime.toFixed(2) ) {
 				// return segment number
 				return i;
 			}
@@ -520,7 +519,7 @@ var mediaPlayerWrapper = {
 	 * Called when player paused. Kill rewind timer
 	 */
 	onPause: function() {
-		console.log('mediaPlayerWrapper::onPause()', this.mediaPlayer.playbackRate);
+		// console.log('mediaPlayerWrapper::onPause()', this.mediaPlayer.playbackRate);
 		
 		if ( this.rewindTimer ) {
 			clearTimeout(this.rewindTimer);
@@ -544,7 +543,7 @@ var mediaPlayerWrapper = {
 	 * Called when player play speed was changed. Update rewind delay
 	 */
 	onRateChange: function() {
-		console.log('mediaPlayerWrapper::onRateChange()', this.mediaPlayer.playbackRate);
+		// console.log('mediaPlayerWrapper::onRateChange()', this.mediaPlayer.playbackRate);
 		
 		// do not update on playback increase 
 		if ( this.preventUpdate ) {
@@ -575,7 +574,7 @@ var mediaPlayerWrapper = {
 		// console.log('mediaPlayerWrapper::insertSegmentBar()');
 		
 		// if user doesn't want to see progress bar 
-		if ( !this.settings.progressBar ) {
+		if ( !this.settings.showSegmentsbar ) {
 			// do nothing 
 			return;
 		}
@@ -601,7 +600,7 @@ var mediaPlayerWrapper = {
 			// set div style
 			// 0.12 - some kind of manual-found offset, 
 			// isn't perfect but fine for now 
-			div.style = 'position: absolute; left: ' + (left-0.12) + '%; width: ' + width + '%; height: 50%; background-color: ' + this.settings.segmentsColors[this.segmentsData.types[i]] + '; border: solid 1px black;';
+			div.style = 'position: absolute; left: ' + (left-0.12) + '%; width: ' + width + '%; height: 50%; background-color: ' + this.settings.segments[this.segmentsData.types[i]].color + '; border: solid 1px black;';
 			
 			// insert to end of progress bar
 			segmentsBar.insertAdjacentElement("afterEnd", div);
@@ -787,122 +786,45 @@ var mediaPlayerWrapper = {
 };
 
 function loadSettings() {
-	// console.log('loadSettings()');
+	// default extension settings 
+	var defaultSettings = {
+		// segments configuration
+		segments: {
+			// content 
+			c: 	{ skip: false, color: '#00ff00', duration: 0.0, speed: 1.0 },
+			// adcontent 
+			ac: { skip: false, color: '#008800', duration: 0.0, speed: 1.0 },
+			// advertisement 
+			a: 	{ skip: true,  color: '#ff0000', duration: 0.0, speed: 5.0 },
+			// intro 
+			i: 	{ skip: true,  color: '#0000ff', duration: 0.0, speed: 5.0 },
+			// credits 
+			cr: { skip: true,  color: '#ffff00', duration: 0.0, speed: 5.0 },
+			// cutscene 
+			cs: { skip: true,  color: '#808080', duration: 0.0, speed: 2.0 },
+			// offtop 
+			o: 	{ skip: true,  color: '#ff00ff', duration: 0.0, speed: 3.0 },
+			// interactive 
+			ia: { skip: true,  color: '#00ffff', duration: 0.0, speed: 4.0 },
+			// scam 
+			s:	{ skip: true,  color: '#008080', duration: 0.0, speed: 5.0 },
+		},
+		
+		// global settings 
+		autoPauseDuration: 1,
+		showSegmentsbar: true,
+		showSegmentationTools: false,
+		
+		// segmentation settings 
+		sendToDatabase: false,
+		displayPending: false,
+	}
 	
 	// request settings 
 	browser.storage.local.get({
-		/* first run (to disable it for those who already installed) */
-		firstRun:				0,
-		
-		/* stop playing until segments are fetched */ 
-		autoPauseDuration: 		1,
-		/* add segments below progress bar*/ 
-		progressBar: 			true,
-		
-		/* segments to play */ 
-		content:				true,
-		adContent:				true,
-		intro:					false,
-		advertisement:			false,
-		credits:				false,
-		interactive:			false,
-		cutscene:				false,
-		offtop:					false,
-		scam:					false,
-		
-		/* colors of segments */ 
-		colorContent:			'#00ff00',
-		colorAdContent:			'#008800',
-		colorIntro:				'#0000ff',
-		colorAdvertisement:		'#ff0000',
-		colorCredits:			'#ffff00',
-		colorInteractive:		'#00ffff',
-		colorCutscene:			'#808080',
-		colorOfftop:			'#ff00ff',
-		colorScam:				'#008080',
-		
-		/* fast forward settings */ 
-		contentDuration:		0.0,
-		adContentDuration:		0.0,
-		introDuration:			0.0,
-		advertisementDuration:	0.0,
-		creditsDuration:		0.0,
-		interactiveDuration:	0.0,
-		cutsceneDuration:		0.0,
-		offtopDuration:			0.0,
-		scamDuration:			0.0,
-		
-		adContentSpeed:			100,
-		contentSpeed:			100,
-		introSpeed:				500,
-		advertisementSpeed:		500,
-		creditsSpeed:			500,
-		interactiveSpeed:		500,
-		cutsceneSpeed:			200,
-		offtopSpeed:			300,
-		scamSpeed:				500,
-		
+		settings: defaultSettings
 	}, function(result) {
-		// save settings
-		var settings = {};
-		
-		// global settings 
-		settings.autoPauseDuration = result.autoPauseDuration;
-		settings.progressBar = result.progressBar;
-		
-		// invert play -> skip
-		settings.segmentsToSkip = {
-			'c': !result.content,
-			'ac': !result.adContent,
-			'i': !result.intro,
-			'a': !result.advertisement,
-			'cs': !result.cutscene,
-			'ia': !result.interactive,
-			'cr': !result.credits,
-			's': !result.scam,
-			'o': !result.offtop,
-		};
-		
-		settings.segmentsColors = {
-			'c': result.colorContent,
-			'ac': result.colorAdContent,
-			'i': result.colorIntro,
-			'a': result.colorAdvertisement,
-			'cs': result.colorCutscene,
-			'ia': result.colorInteractive,
-			'cr': result.colorCredits,
-			's': result.colorScam,
-			'o': result.colorOfftop,
-		};
-		
-		settings.segmentsDuration = {
-			'c': result.contentDuration,
-			'ac': result.adContentDuration,
-			'i': result.introDuration,
-			'a': result.advertisementDuration,
-			'cs': result.cutsceneDuration,
-			'ia': result.interactiveDuration,
-			'cr': result.creditsDuration,
-			's': result.scamDuration,
-			'o': result.offtopDuration,
-		};
-		
-		// % to float
-		settings.segmentsSpeed = {
-			'c': result.contentSpeed/100.0,
-			'ac': result.adContentSpeed/100.0,
-			'i': result.introSpeed/100.0,
-			'a': result.advertisementSpeed/100.0,
-			'cs': result.cutsceneSpeed/100.0,
-			'ia': result.interactiveSpeed/100.0,
-			'cr': result.creditsSpeed/100.0,
-			's': result.scamSpeed/100.0,
-			'o': result.offtopSpeed/100.0,
-		}
-		
-		browser.storage.local.set({firstRun: 1});
-		
-		tryFindMediaPlayer(settings);
+		tryFindMediaPlayer(result.settings);
 	});
 }
 
@@ -913,17 +835,16 @@ var wrapper;
 function tryFindMediaPlayer(settings) 
 {
 	// find media player on page 
-	var collection = document.getElementsByTagName("video");
-
+	var mediaPlayer = document.getElementsByTagName('video')[0];
 	// if media player exists
-	if ( collection[0] ) {
+	if ( mediaPlayer ) {
 		// remove click callback
 		document.onclick = null;
 		
 		// create wrapper 
 		wrapper = Object.create(mediaPlayerWrapper);
 		// initialize wrapper 
-		wrapper.init(collection[0], settings);
+		wrapper.init(mediaPlayer, settings);
 	}
 	else {
 		// listen for click on page (ajax redirections)
@@ -956,7 +877,7 @@ function tryFindMediaPlayer(settings)
 					// console.log(mutation.target);
 				// }
 				
-				// sometime video is inside another element so we have to look deeper 
+				// sometime video is netsed so we have to look deeper 
 				if ( mutation.target.getElementsByTagName('video')[0] && !hooked ) {
 					// console.log(mutation);
 					hooked = true;
@@ -978,22 +899,17 @@ function tryFindMediaPlayer(settings)
 	}
 }
 
-// load settings, look for media player on page
+// load settings then start search of media player
 loadSettings(tryFindMediaPlayer);
 
 // on settings update
 browser.runtime.onMessage.addListener(
 	function(request, sender, sendResponse) {
 		if ( wrapper ) {
-			if ( request.preferenceSubname ) {
-				wrapper.settings[request.preferenceName][request.preferenceSubname] = request.preferenceValue;
-			}
-			else {
-				wrapper.settings[request.preferenceName] = request.preferenceValue;
-			}
+			wrapper.settings = request.settings;
 			
 			wrapper.removeSegmentBar();
-			if ( wrapper.settings.progressBar ) {
+			if ( wrapper.settings.showSegmentsbar ) {
 				wrapper.insertSegmentBar();
 			}
 			
