@@ -1,6 +1,6 @@
 /**
- * VideoSegments. Addon for browsers to skip automatically unwanted content in videos
- * Copyright (C) 2017  Alex Lys
+ * VideoSegments. Browser extension to skip automatically unwanted content in videos
+ * Copyright (C) 2017  VideoSegments Team
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -73,6 +73,8 @@ var mediaPlayerWrapper = {
 	/* number of previous segment */
 	previousSegment: null,
 	
+	/* segmentation tools */
+	editor: null,
 	
 	/* 
 	 * check if video hosted on supported domain 
@@ -89,13 +91,14 @@ var mediaPlayerWrapper = {
 		this.url = null;
 		
 		this.sourceInformation = {domain:null, id:null};
+		this.editor = Object.create(editorWrapper);
 		
 		// bind contexts to remove them if unnesessary
 		// this.eventContexts.onDurationChange = this.onDurationChange.bind(this);
 		this.eventContexts.onPlay = this.onPlay.bind(this);
 		this.eventContexts.onPause = this.onPause.bind(this);
 		this.eventContexts.onRateChange = this.onRateChange.bind(this);
-		this.eventContexts.onSegmentsUpdated = this.onSegmentsUpdated.bind(this);
+		// this.eventContexts.onSegmentsUpdated = this.onSegmentsUpdated.bind(this);
 		this.eventContexts.onCanPlay = this.onCanPlay.bind(this);
 		// this.eventContexts.onDurationChange = this.onDurationChange.bind(this);
 		
@@ -206,8 +209,8 @@ var mediaPlayerWrapper = {
 			// now handled by variable 
 			this.requestSegments(this.sourceInformation.domain, this.sourceInformation.id);
 			
-			document.removeEventListener('vssegmentsupdated', this.eventContexts.onSegmentsUpdated);
-			document.addEventListener('vssegmentsupdated', this.eventContexts.onSegmentsUpdated);
+			// document.removeEventListener('vssegmentsupdated', this.eventContexts.onSegmentsUpdated);
+			// document.addEventListener('vssegmentsupdated', this.eventContexts.onSegmentsUpdated);
 		}
 	},
 	
@@ -260,6 +263,7 @@ var mediaPlayerWrapper = {
 		}
 		
 		// console.log('request: https://db.videosegments.org/get_segments.php?domain=' + domain + '&' + 'video_id=' + id);
+		this.editor.destroy();
 		
 		var xhr = new XMLHttpRequest();
 		xhr.open('GET', 'https://db.videosegments.org/get.php?domain=' + domain + '&' + 'id=' + id);
@@ -269,105 +273,131 @@ var mediaPlayerWrapper = {
 				if ( xhr.status == 200 ) {
 					// console.log(xhr.responseText);
 					
-					var jsonResponce = JSON.parse(xhr.responseText);
-					// if there are segments 
-					if ( typeof jsonResponce.timestamps != 'undefined' ) {
-					
-						// convert json-responce into object
-						self.segmentsData = jsonResponce;
-						
-						// add 0 and duration to json array of timestamps (db doesn't contain this information)
-						// if there is more than one segment
-						if ( self.segmentsData.timestamps[0] != 0.0 ) {
-							// database doesn't contain first segment start time 
-							self.segmentsData.timestamps.unshift(0.0);
-							//  and last segment end time 
-							self.segmentsData.timestamps.push(self.mediaPlayer.duration);
-						}
-						else {
-							// if there is only one segment exists
-							self.segmentsData.timestamps = [0.0, self.mediaPlayer.duration];
-						}
-						
-						// insert segment bar 
-						self.insertSegmentBar();
-						
-						// prevent shivering on rewind to same time 
-						// if ( self.requestTime != null && self.requestTime != self.mediaPlayer.currentTime ) {
-						if ( self.requestTime != null ) {
-							// these operations will take time so go back and round load time for rewind
-							self.mediaPlayer.currentTime = self.requestTime;
-							self.requestTime = null;
-						}
-						
-						self.mediaPlayer.addEventListener("play", self.eventContexts.onPlay);
-						if ( !self.mediaPlayer.paused ) {
-							self.onPlay();
-						}
-						
-						// if user waiting for segments 
-						if ( self.pauseTimer ) {
-							// if video paused (and is not loading)
-							if ( self.mediaPlayer.paused ) {
-								clearTimeout(self.pauseTimer);
-								self.pauseTimer = null;
-								self.mediaPlayer.play();
-							}
-						}
-						
-						// force call for play event due to bug 
-						// when it isn't fired sometimes
-						// and also because of this:
-						// https://stackoverflow.com/questions/36803176/
-						// changing order between pause and set currentTime fixes error
-						
-						// add listeners for events
-						self.mediaPlayer.addEventListener("ratechange", self.eventContexts.onRateChange);
-						// chrome send "pause()" event with playbackRate change 
-						// idk why but this poor workaround seems to be working...
-						// setTimeout(function() {
-							self.mediaPlayer.addEventListener("pause", self.eventContexts.onPause);
-						// }, 100);
+					var response = JSON.parse(xhr.responseText);
+					// if no official segmentation 
+					if ( typeof response.timestamps == 'undefined' ) {
+						// try to find local segmentation
+						var video_id = self.sourceInformation.domain + '-' + self.sourceInformation.id;
+						browser.storage.local.get({ [video_id]: '' }, function(result) {
+							response = result[video_id];
+							self.onGotSegments(response, 'localDatabase');
+						});
 					}
 					else {
-						setTimeout(function() {
-							if ( jsonResponce.votes == 0 ) {
-								// insert request segmentation button 
-								self.insertMenu(false);
-							}
-							else {
-								// insert request segmentation button 
-								self.insertMenu(true);
-							}
-						}, 1000);
-						
-						// due to rare bug where play event doesn't fire 
-						// timer check is separated
-						if ( self.pauseTimer ) {
-							clearTimeout(self.pauseTimer);
-							self.pauseTimer = null;
-							self.mediaPlayer.play();
-						}
+						self.onGotSegments(response, 'officialDatabase');
 					}
-					
-					// create custom event for moderator tools
-					// https://bugzilla.mozilla.org/show_bug.cgi?id=999586
-					// same issue "Permission denied to access property", bypass by JSON
-					var event = new CustomEvent('vsgotsegments', { 
-						detail: JSON.stringify({
-							segmentsData: self.segmentsData,
-							settings: self.settings,
-							domain: domain,
-							id: id
-						})
-					});
-					document.dispatchEvent(event);
 				}
 			}
 		}
 		
 		xhr.setRequestHeader("content-type", "application/x-www-form-urlencoded");
 		xhr.send();
+	},
+	
+	onGotSegments: function(response, origin) {
+		var self = this;
+		
+		// if there are segments 
+		if ( response.types && response.types.length !== 0 ) {
+			// convert json-response into object
+			this.segmentsData = response;
+			this.segmentsData.origin = origin;
+			
+			// add 0 and duration to json array of timestamps (db doesn't contain this information)
+			// if there is more than one segment
+			if ( this.segmentsData.timestamps[0] != 0.0 ) {
+				// database doesn't contain first segment start time 
+				this.segmentsData.timestamps.unshift(0.0);
+				//  and last segment end time 
+				this.segmentsData.timestamps.push(this.mediaPlayer.duration);
+			}
+			else {
+				// if there is only one segment exists
+				this.segmentsData.timestamps = [0.0, this.mediaPlayer.duration];
+			}
+			
+			// insert segment bar 
+			this.insertSegmentBar();
+			
+			// prevent shivering on rewind to same time 
+			// if ( self.requestTime != null && self.requestTime != self.mediaPlayer.currentTime ) {
+			if ( this.requestTime != null ) {
+				// these operations will take time so go back and round load time for rewind
+				this.mediaPlayer.currentTime = this.requestTime;
+				this.requestTime = null;
+			}
+			
+			this.mediaPlayer.addEventListener("play", this.eventContexts.onPlay);
+			if ( !this.mediaPlayer.paused ) {
+				this.onPlay();
+			}
+			
+			// if user waiting for segments 
+			if ( this.pauseTimer ) {
+				// if video paused (and is not loading)
+				if ( this.mediaPlayer.paused ) {
+					clearTimeout(this.pauseTimer);
+					this.pauseTimer = null;
+					this.mediaPlayer.play();
+				}
+			}
+			
+			// force call for play event due to bug 
+			// when it isn't fired sometimes
+			// and also because of this:
+			// https://stackoverflow.com/questions/36803176/
+			// changing order between pause and set currentTime fixes error
+			
+			// add listeners for events
+			this.mediaPlayer.addEventListener("ratechange", this.eventContexts.onRateChange);
+			// chrome send "pause()" event with playbackRate change 
+			// idk why but this poor workaround seems to be working...
+			// setTimeout(function() {
+				this.mediaPlayer.addEventListener("pause", this.eventContexts.onPause);
+			// }, 100);
+		}
+		else {
+			this.segmentsData = null;
+			
+			setTimeout(function() {
+				if ( response.votes == 0 ) {
+					// insert request segmentation button 
+					self.insertMenu(false);
+				}
+				else {
+					// insert request segmentation button 
+					self.insertMenu(true);
+				}
+			}, 1000);
+			
+			// due to rare bug where play event doesn't fire 
+			// timer check is separated
+			if ( this.pauseTimer ) {
+				clearTimeout(this.pauseTimer);
+				this.pauseTimer = null;
+				this.mediaPlayer.play();
+			}
+		}
+		
+		if ( this.settings.showSegmentationTools ) {
+			// initialize editor with delay 
+			setTimeout(function() {
+				self.editor.init(self, self.segmentsData, self.settings, self.sourceInformation.domain, self.sourceInformation.id);
+			}, 1000);
+		}
+		
+		// create custom event for moderator tools
+		// https://bugzilla.mozilla.org/show_bug.cgi?id=999586
+		// same issue "Permission denied to access property", bypass by JSON
+		// var event = new CustomEvent('vsgotsegments', { 
+			// detail: JSON.stringify({
+				// segmentsData: self.segmentsData,
+				// settings: self.settings,
+				// domain: domain,
+				// id: id
+			// })
+		// });
+		// document.dispatchEvent(event);
 	},
 	
 	/*
@@ -579,10 +609,15 @@ var mediaPlayerWrapper = {
 			return;
 		}
 		
+		// if segments doesn't exists 
+		if ( !this.segmentsData ) {
+			return;
+		}
+		
 		// get youtube progress bar
 		var segmentsBar = document.getElementsByClassName("ytp-progress-list")[0];
 		// get segments count
-		var segmentsCount = this.segmentsData.timestamps.length - 1;
+		var segmentsCount = this.segmentsData.types.length;
 		
 		// bar width  
 		var width = 0;
@@ -771,7 +806,7 @@ var mediaPlayerWrapper = {
 	/*
 	 * Called when segments in editor were changed
 	 */ 
-	onSegmentsUpdated: function(event) 
+	updateSegmentsData: function(segmentsData) 
 	{
 		if ( !this.segmentsData ) {
 			this.mediaPlayer.addEventListener("play", this.eventContexts.onPlay);
@@ -779,9 +814,28 @@ var mediaPlayerWrapper = {
 			this.mediaPlayer.addEventListener("ratechange", this.eventContexts.onRateChange);
 		}
 		
+		// update visual part 
 		this.removeSegmentBar();
-		this.segmentsData = JSON.parse(event.detail).segmentsData;
+		this.segmentsData = segmentsData;
 		this.insertSegmentBar();
+		
+		// save locally 
+		var video_id = this.sourceInformation.domain + '-' + this.sourceInformation.id;
+		// if segmentation doesn't exists 
+		if ( segmentsData.types.length == 0 ) {
+			// remove it from local database 
+			browser.storage.local.removeItem(video_id);
+		}
+		else {
+			// save locally
+			var temp = JSON.parse(JSON.stringify(segmentsData)); // break link between segments data and saved data 
+			temp.timestamps.shift(); // remove first 
+			temp.timestamps.pop(); // remove last 
+			
+			browser.storage.local.set({
+				[video_id]: temp
+			});
+		}
 	}
 };
 
@@ -813,7 +867,7 @@ function loadSettings() {
 		// global settings 
 		autoPauseDuration: 1,
 		showSegmentsbar: true,
-		showSegmentationTools: false,
+		showSegmentationTools: true,
 		
 		// segmentation settings 
 		sendToDatabase: false,
@@ -913,6 +967,11 @@ browser.runtime.onMessage.addListener(
 				wrapper.insertSegmentBar();
 			}
 			
+			wrapper.editor.destroy();
+			if ( wrapper.settings.showSegmentationTools ) {
+				wrapper.editor.init(wrapper, wrapper.segmentsData, wrapper.settings, wrapper.sourceInformation.domain, wrapper.sourceInformation.id);
+			}
+			
 			if ( !wrapper.mediaPlayer.paused ) {
 				wrapper.mediaPlayer.pause();
 				wrapper.mediaPlayer.play();
@@ -920,3 +979,572 @@ browser.runtime.onMessage.addListener(
 		}
 	}
 );
+
+var editorWrapper = {
+	/* media player wrapper */
+	mediaPlayerWrapper: null,
+	/* media player */
+	mediaPlayer: null,
+	/* DOM-element of editor */
+	editorDiv: null,
+	/* user preferences */
+	settings: null,
+	/* current video domain */
+	domain: null,
+	/* current video id */
+	id: null,
+	/* translation of segments names */
+	segmentsNames: null,
+	/* modal window for captcha */
+	modal: null,
+	
+	/*
+	 * Initializes class variables, create UI 
+	 */
+	init: function(mediaPlayerWrapper, segmentsData, settings, domain, id) {
+		// console.log('editorWrapper::init()');
+		
+		// for iframe this will be undefined
+		var watchHeader = document.getElementById('info-contents');
+		if ( !watchHeader ) {
+			// console.log('watch-header not found');
+			
+			// old desing
+			watchHeader = document.getElementById('watch-header');
+			if ( !watchHeader ) {
+				return;
+			}
+		}
+		
+		// save variables
+		this.mediaPlayerWrapper = mediaPlayerWrapper;
+		this.mediaPlayer = this.mediaPlayerWrapper.mediaPlayer;
+		this.settings = settings;
+		this.domain = domain;
+		this.id = id;
+		
+		var self = this;
+		
+		// create div for editor
+		this.editorDiv = document.createElement('div');
+		this.editorDiv.id = 'vs-editor';
+		this.editorDiv.style = 'text-align: center; background: white; box-shadow: 0 1px 2px rgba(0,0,0,.1); padding: 10px;';
+		
+		// div for segments data 
+		var segmentsEditor = document.createElement('div');
+		segmentsEditor.id = 'vs-editor-entries';
+		
+		// create buttons for each type of segments 
+		// c  - content 
+		// ac - adcontent 
+		// a  - advertisement 
+		// i  - intro 
+		// cs - cutscene 
+		// ia - interactive
+		// cr - credits 
+		// o  - offtop 
+		// s  - scam		
+		var segmentsButtons = document.createElement('div');
+		segmentsButtons.id = 'vs-segments-buttons';
+		segmentsButtons.style = 'display: flex; justify-content: space-between;';
+		var segmentsTypes = ['c', 'ac', 'a', 'i', 'cs', 'ia', 'cr', 'o', 's'];
+		this.segmentsNames = ['content', 'adcontent', 'advertisement', 'intro', 'cutscene', 'interactive', 'credits', 'offtop', 'scam'];
+				
+		// translate button captions
+		for ( let i = 0; i < this.segmentsNames.length; ++i ) {
+			this.segmentsNames[i] = browser.i18n.getMessage(this.segmentsNames[i]);
+		}
+		
+		for ( let i = 0; i < segmentsTypes.length; ++i ) {
+			// define is color dark or light  
+			// https://stackoverflow.com/a/12043228
+			var c = this.settings.segments[segmentsTypes[i]].color.slice(1);
+			var rgb = parseInt(c, 16);   // convert rrggbb to decimal
+			var r = (rgb >> 16) & 0xff;  // extract red
+			var g = (rgb >>  8) & 0xff;  // extract green
+			var b = (rgb >>  0) & 0xff;  // extract blue
+			
+			var textColor;
+			var light = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+			if (light < 60) {
+				textColor = 'white';
+			}
+			else {
+				textColor = 'black';
+			}
+			
+			// add segment from previos to current time 
+			var buttonCurrentPos = this.createButton(segmentsTypes[i], this.segmentsNames[i], function() {
+				var entries = self.editorDiv.getElementsByClassName('vs-editor-entry');
+				if ( entries.length == 0 ) {
+					self.addSegmentEntry(segmentsEditor, 0.0, self.mediaPlayer.currentTime, this.name);
+				}
+				else {
+					var entry, j;
+					for ( j = 0; j < entries.length; ++j ) {
+						entry = entries[j];
+						if ( entry.getElementsByClassName('vs-editor-end-time')[0].value > self.mediaPlayer.currentTime ) {
+							break;
+						}
+					}
+					
+					console.log(j);
+					if ( j == 0 ) {
+						self.insertBeforeSegmentEntry(entry, 0, self.mediaPlayer.currentTime, this.name);
+						entry.getElementsByClassName('vs-editor-start-time')[0].value = self.mediaPlayer.currentTime.toFixed(2);
+					}
+					else {
+						self.insertSegmentEntry(entries[j-1], parseFloat(entries[j-1].getElementsByClassName('vs-editor-end-time')[0].value), self.mediaPlayer.currentTime, this.name);
+						entry.getElementsByClassName('vs-editor-start-time')[0].value = self.mediaPlayer.currentTime.toFixed(2);
+					}
+				}
+				self.updatePreview();
+			}, 'width: 80%; padding: 0; margin-right: 0; background-color: ' + this.settings.segments[segmentsTypes[i]].color + '; border: none; cursor: pointer; color: ' + textColor + ';');
+			
+			// add segment from current time to end 
+			var buttonLastPos = this.createButton(segmentsTypes[i], '>', function() {
+				// console.log(this.name);
+				var entries = self.editorDiv.getElementsByClassName('vs-editor-entry');
+				// if there is no entries
+				if ( entries.length == 0 ) {
+					// add first
+					self.addSegmentEntry(segmentsEditor, 0.0, self.mediaPlayer.duration, this.name);
+				}
+				else {
+					if ( entries.length > 1 ) {
+						// find position to insert
+						var entry, j;
+						for ( j = 0; j < entries.length; ++j ) {
+							entry = entries[j];
+							if ( entry.getElementsByClassName('vs-editor-end-time')[0].value > self.mediaPlayer.currentTime ) {
+								break;
+							}
+						}
+						
+						// if end then append
+						if ( j == entries.length-1 ) {
+							self.addSegmentEntry(segmentsEditor, self.mediaPlayer.currentTime, self.mediaPlayer.duration, this.name);
+							entry.getElementsByClassName('vs-editor-end-time')[0].value = self.mediaPlayer.currentTime.toFixed(2);
+						}
+						// else insert 
+						else {
+							self.insertSegmentEntry(entry, self.mediaPlayer.currentTime, parseFloat(entry.getElementsByClassName('vs-editor-end-time')[0].value), this.name);
+							entry.getElementsByClassName('vs-editor-end-time')[0].value = self.mediaPlayer.currentTime.toFixed(2);
+						}
+					}
+					// it will be removed later
+					else {
+						var prevEntry = entries[entries.length-1];
+						prevEntry.getElementsByClassName('vs-editor-end-time')[0].value = self.mediaPlayer.currentTime.toFixed(2);
+						self.addSegmentEntry(segmentsEditor, self.mediaPlayer.currentTime, self.mediaPlayer.duration, this.name);
+					}
+				}
+				
+				// update preview 
+				self.updatePreview();
+				// }
+			}, 'width: 20%; padding: 0; margin-left: 0; background-color: ' + this.settings.segments[segmentsTypes[i]].color + '; border: none; border-left: 1px solid black; cursor: pointer; color: ' + textColor + ';');
+			
+			// add buttons and define thier behavior 
+			var container = document.createElement('div');
+			container.style.width = '10.5%';
+			container.style.display = 'inline-block';
+			container.appendChild(buttonCurrentPos);
+			container.appendChild(buttonLastPos);
+			segmentsButtons.appendChild(container);
+		}
+		
+		// add buttons 
+		this.editorDiv.appendChild(segmentsButtons);
+		this.editorDiv.appendChild(document.createElement('br'));
+		
+		// if segments already exists
+		if ( segmentsData ) {
+			// create lines based on this data 
+			var segments = segmentsData.timestamps.length;
+			for ( let i = 0; i < segments-1; ++i ) {
+				this.addSegmentEntry(segmentsEditor, segmentsData.timestamps[i], segmentsData.timestamps[i+1], segmentsData.types[i]);
+			}
+		}
+		// create default line 
+		else {
+			// this.addSegmentEntry(segmentsEditor, 0.0, this.mediaPlayerWrapper.mediaPlayer.duration, 'c');
+		}
+		this.editorDiv.appendChild(segmentsEditor);
+		this.editorDiv.appendChild(document.createElement('br'));
+		
+		var controlButtons = document.createElement('div');
+		controlButtons.id = 'vs-control-buttons';
+		controlButtons.style.textAlign = 'left';
+		
+		// hide segmentation button 
+		var container = document.createElement('div');
+		container.style.width = '31%';
+		container.style.margin = '1%';
+		container.style.padding = '0';
+		container.style.display = 'inline-block';
+		container.style.textAlign = 'left';
+		
+		container.appendChild(this.createButton('', browser.i18n.getMessage('hideSegmentationTools'), function() {
+			self.settings.showSegmentationTools = false;
+			browser.storage.local.set({ settings: self.settings });
+			self.destroy();
+		}, 'width: 90%; padding: 0; height: 30px'));
+		controlButtons.appendChild(container);
+		
+		// segments origin 
+		container = document.createElement('div');
+		container.style.width = '31%';
+		container.style.margin = '1%';
+		container.style.padding = '0';
+		container.style.display = 'inline-block';
+		container.style.textAlign = 'center';
+		if ( segmentsData && segmentsData.origin ) {
+			container.appendChild(document.createTextNode(browser.i18n.getMessage('origin') + browser.i18n.getMessage(segmentsData.origin)));
+		}
+		else {
+			container.appendChild(document.createTextNode(browser.i18n.getMessage('origin') + browser.i18n.getMessage('noSegmentation')));
+		}
+		controlButtons.appendChild(container);
+		
+		container = document.createElement('div');
+		container.style.width = '31%';
+		container.style.margin = '1%';
+		container.style.padding = '0';
+		container.style.display = 'inline-block';
+		container.style.textAlign = 'right';
+		
+		// create send button 
+		if ( this.settings.sendToDatabase ) {
+			container.appendChild(this.createButton('', browser.i18n.getMessage('sendSegmentation'), function() {self.sendSegmentsData()}, 'width: 90%; padding: 0; height: 30px'));
+		}
+		controlButtons.appendChild(container);
+		
+		this.editorDiv.appendChild(controlButtons);
+		
+		// add editor div to watch header
+		watchHeader.insertAdjacentElement('afterBegin', this.editorDiv);
+		this.editorDiv.insertAdjacentElement('afterEnd', document.createElement('br'));
+		
+		// modal for captcha 
+		this.modal = document.createElement('div');
+		var modalContent = document.createElement('div');
+		
+		this.modal.id = 'vs-captcha-modal';
+		this.modal.style = 'display: none; position: fixed; z-index: 2000000000; padding-top: 100px; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgb(0,0,0); background-color: rgba(0,0,0,0.8);';
+		modalContent.style = 'background-color: #fefefe; margin: auto; border: 1px solid #888; width: 350px';
+		
+		this.modal.appendChild(modalContent);
+		this.editorDiv.appendChild(this.modal);
+	},
+	
+	/*
+	 * Creates line with segment information
+	 */
+	createSegmentEntry: function(startTime, endTime, type) {
+		// container for row 
+		var editorEntry = document.createElement('div');
+		editorEntry.className = 'vs-editor-entry';
+		
+		// start time 
+		var inputStartTime = document.createElement('input');
+		inputStartTime.type = 'text';
+		inputStartTime.className = 'vs-editor-start-time';
+		inputStartTime.value = startTime.toFixed(2);
+		inputStartTime.size = 6;
+		inputStartTime.style = 'text-align: center';
+		
+		// end time 
+		var inputEndTime = document.createElement('input');
+		inputEndTime.type = 'text';
+		inputEndTime.className = 'vs-editor-end-time';
+		inputEndTime.value = endTime.toFixed(2);
+		inputEndTime.size = 6;
+		inputEndTime.style = 'text-align: center';
+		// update next segment start time
+		inputEndTime.onkeyup = function() {
+			var nextEntry = this.parentNode.nextSibling;
+			if ( nextEntry ) {
+				var nextInput = nextEntry.getElementsByClassName('vs-editor-start-time')[0];
+				nextInput.value = this.value;
+			}
+			self.updatePreview();
+		};
+		
+		// type of segment 
+		var selectSegmentType = document.createElement('select');
+		selectSegmentType.className = 'vs-editor-segment-type';
+		
+		// add segment types 
+		var segmentsTypes = ['c', 'ac', 'a', 'i', 'cs', 'ia', 'cr', 'o', 's'];
+		for ( var i = 0; i < segmentsTypes.length; ++i ) {
+			var optionSegmentType = document.createElement('option');
+			optionSegmentType.value = segmentsTypes[i];
+			optionSegmentType.text = this.segmentsNames[i];
+			selectSegmentType.appendChild(optionSegmentType);
+		}
+		selectSegmentType.value = type;
+		selectSegmentType.onchange = function() {
+			self.updatePreview();
+		}
+		
+		// format and display 
+		var self = this;
+		editorEntry.appendChild(this.createButton('', browser.i18n.getMessage('goTo'), function() {self.goTo(inputStartTime.value);}, 'width: 8%; padding: 0;'));
+		editorEntry.appendChild(document.createTextNode('\u00A0')); // &nbsp;
+		editorEntry.appendChild(inputStartTime);
+		editorEntry.appendChild(document.createTextNode('\u00A0:\u00A0'));
+		editorEntry.appendChild(inputEndTime);
+		editorEntry.appendChild(document.createTextNode('\u00A0'));
+		editorEntry.appendChild(this.createButton('', browser.i18n.getMessage('currentTime'), function() {self.setCurrentTime(inputEndTime);}, 'width: 8%; padding: 0;'));
+		editorEntry.appendChild(document.createTextNode('\u00A0'));
+		editorEntry.appendChild(selectSegmentType);
+		editorEntry.appendChild(document.createTextNode('\u00A0'));
+		
+		// remove button 
+		editorEntry.appendChild(this.createButton('', browser.i18n.getMessage('remove'), function() { 
+			// look for next and previous rows 
+			var prevEntry = this.parentNode.previousSibling;
+			var nextEntry = this.parentNode.nextSibling;
+			// if previous row found 
+			if ( prevEntry ) {
+				// and next too 
+				if ( nextEntry ) {
+					// connect previous with next 
+					prevEntry.getElementsByClassName('vs-editor-end-time')[0].value = nextEntry.getElementsByClassName('vs-editor-start-time')[0].value;
+				}
+				else {
+					// update previous row 
+					prevEntry.getElementsByClassName('vs-editor-end-time')[0].value = self.mediaPlayer.duration.toFixed(2);
+				}
+			}
+			// only next row exists 
+			else if ( nextEntry ) {
+				// set start time to zero 
+				var buffer = 0;
+				nextEntry.getElementsByClassName('vs-editor-start-time')[0].value = buffer.toFixed(2);
+			}
+			// nothing found, create default line 
+			// else {
+				// self.addSegmentEntry(segmentsEditor, 0.0, self.mediaPlayerWrapper.mediaPlayer.duration, 'c');
+			// }
+			
+			// remove node 
+			this.parentNode.remove(); 
+			self.updatePreview();
+		}, 'width: 8%; padding: 0;'));
+		
+		return editorEntry;
+	},
+	
+	/*
+	 * Adds segment information to end of editor 
+	 */ 
+	addSegmentEntry: function(segmentsEditor, startTime, endTime, type) {
+		segmentsEditor.appendChild(this.createSegmentEntry(startTime, endTime, type));
+	},
+	
+	/*
+	 * Inserts segment information to given position 
+	 */ 
+	insertSegmentEntry: function(prevElement, startTime, endTime, type) {
+		prevElement.insertAdjacentElement('AfterEnd', this.createSegmentEntry(startTime, endTime, type));
+	},
+	
+	/*
+	 * Inserts segment information to given position 
+	 */ 
+	insertBeforeSegmentEntry: function(prevElement, startTime, endTime, type) {
+		prevElement.insertAdjacentElement('BeforeBegin', this.createSegmentEntry(startTime, endTime, type));
+	},
+	
+	/*
+	 * Updates preview of segments
+	 */ 
+	updatePreview: function() {
+		// console.log('editorWrapper::updatePreview()');
+		var entries = this.editorDiv.getElementsByClassName('vs-editor-entry');
+		
+		var segmentsData = {};
+		segmentsData.timestamps = [];
+		segmentsData.types = [];
+		
+		// update timestamps and types 
+		segmentsData.timestamps[0] = 0.0;
+		for ( let i = 0; i < entries.length; ++i ) {
+			segmentsData.timestamps[i+1] = parseFloat(entries[i].getElementsByClassName('vs-editor-end-time')[0].value);
+			segmentsData.types[i] = entries[i].getElementsByClassName('vs-editor-segment-type')[0].value;
+		}
+		
+		this.mediaPlayerWrapper.updateSegmentsData(segmentsData);
+		
+		// var event = new CustomEvent('vssegmentsupdated', { 
+			// detail: JSON.stringify({
+				// segmentsData: segmentsData
+			// })
+		// });
+		// document.dispatchEvent(event);
+		// this.hasChanges = true;
+	},
+	
+	/*
+	 * Create button 
+	 */
+	createButton: function(name, text, onclick, style) {
+		var button = document.createElement('input');
+		button.name = name;
+		button.type = 'button';
+		button.value = text;
+		button.style = style;
+		button.onclick = onclick;
+		return button;
+	},
+	
+	/*
+	 * Set input as current time based on media player 
+	 */
+	setCurrentTime: function(input) {
+		// console.log('editorWrapper::setCurrentTime()');
+		
+		// update time on next entiry 
+		input.value = this.mediaPlayer.currentTime.toFixed(2);
+		input.onkeyup();
+	},
+	
+	/*
+	 * Rewind player to time of segment 
+	 */
+	goTo: function(value) {
+		// console.log('editorWrapper::goTo()');
+		
+		this.mediaPlayer.currentTime = value;
+	},
+	
+	/*
+	 * Send segments data to database 
+	 */
+	sendSegmentsData: function() {
+		// console.log('editorWrapper::sendSegmentsData()');
+		
+		// format as json 
+		var editorEntries = document.getElementsByClassName('vs-editor-entry');
+		var timestamps = '', types = '';
+		
+		if ( editorEntries.length > 0 ) {
+			var lastSegmentIndex = editorEntries.length-1;
+			for ( let i = 0; i < lastSegmentIndex; ++i ) {
+				timestamps += editorEntries[i].getElementsByClassName('vs-editor-end-time')[0].value + ',';
+				types += editorEntries[i].getElementsByClassName('vs-editor-segment-type')[0].value + ',';
+			}
+			
+			// format last segment type manually 
+			timestamps = timestamps.slice(0, -1);
+			types += editorEntries[lastSegmentIndex].getElementsByClassName('vs-editor-segment-type')[0].value;
+		}
+		else {
+			types = 'c';
+		}
+		
+		var self = this;		
+		var xhr = new XMLHttpRequest();
+		xhr.open('POST', 'https://auth.videosegments.org/send_auth.php');
+		xhr.onreadystatechange = function() { 
+			if ( xhr.readyState == 4 ) {
+				if ( xhr.status == 200 ) {
+					console.log('response: ', xhr.responseText);
+					var jsonResponse = JSON.parse(xhr.responseText);
+					
+					if ( jsonResponse.message === 'captcha' ) {
+						self.modal.style.display = "block";
+						
+						var iframe = document.createElement("iframe");
+						iframe.src = 'https://db.videosegments.org/captcha.php';
+						iframe.width  = 350;
+						iframe.height = 500;
+						iframe.id = 'vs-captcha-iframe';
+						self.modal.childNodes[0].appendChild(iframe);
+						
+						var messageContext = function(event) { 
+							self.checkCaptcha(event, timestamps, types, messageContext, clickContext); 
+						}
+						
+						var clickContext = function(event) { 
+							if ( event.target == self.modal ) {
+								self.modal.style.display = "none";
+								self.modal.childNodes[0].childNodes[0].remove();
+								window.removeEventListener('message', messageContext);
+								window.removeEventListener('click', clickContext);
+							}
+						}
+						
+						window.addEventListener('message', messageContext);
+						window.addEventListener('click', clickContext);
+					}
+					else {
+						if ( jsonResponse.message === 'updated' || jsonResponse.message === 'added' || jsonResponse.message === 'overwritten' ) {
+							setTimeout(function() {
+								window.location.reload();
+							}, 100);
+						}
+						else {
+							window.alert('VideoSegments: ' + jsonResponse.message);
+						}
+					}
+				}
+			}
+		};
+		
+		var post = 'domain='+this.domain+'&id='+this.id+'&timestamps='+timestamps+'&types='+types;
+		xhr.setRequestHeader("content-type", "application/x-www-form-urlencoded");
+		xhr.send(post);
+	},
+	
+	checkCaptcha: function(event, timestamps, types, messageContext, clickContext)
+	{
+		if ( event.origin === 'https://db.videosegments.org' ) {
+			var self = this;
+			var xhr = new XMLHttpRequest();
+			xhr.open('POST', 'https://auth.videosegments.org/send_auth.php');
+			
+			xhr.onreadystatechange = function() { 
+				if ( xhr.readyState == 4 ) {
+					if ( xhr.status == 200 ) {
+						console.log('response: ', xhr.responseText);
+						
+						var jsonResponse = JSON.parse(xhr.responseText);
+						if ( jsonResponse.message === 'added' || jsonResponse.message === 'updated' || jsonResponse.message === 'overwritten' ) {
+							setTimeout(function() {
+								window.location.reload();
+							}, 100);
+						}
+						else {
+							window.alert('VideoSegments: ' + jsonResponse.message);
+						}
+					}
+					
+					self.modal.style.display = 'none';
+					self.modal.childNodes[0].childNodes[0].remove();
+				}
+			};
+			
+			var post = 'domain='+this.domain+'&id='+this.id+'&timestamps='+timestamps+'&types='+types+'&captcha='+event.data;
+			// console.log(post);
+			
+			xhr.setRequestHeader("content-type", "application/x-www-form-urlencoded");
+			xhr.send(post);
+			
+			window.removeEventListener('message', messageContext);
+			window.removeEventListener('click', clickContext);
+		}
+	},
+	
+	/*
+	 * Remove editor div's from page 
+	 */
+	destroy: function() {
+		// console.log('editorWrapper::destroy()');
+		if ( this.editorDiv ) {
+			this.editorDiv.remove();
+		}
+	},
+};

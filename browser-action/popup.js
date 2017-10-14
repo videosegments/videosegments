@@ -21,6 +21,9 @@ function domContentLoaded()
 	
 	// load settings 
 	loadSettings();
+	
+	// disable temporary acceleration settings for chrome and opera 
+	// document.getElementById('tab-acceleration').disabled = true;
 }
 
 function switchTab()
@@ -59,13 +62,14 @@ function checkLogin()
 			if ( xhr.status == 200 ) {
 				// console.log(xhr.responseText);
 				var response = JSON.parse(xhr.responseText);
-				if ( response.authType ) {
+				if ( response.auth ) {
 					var element = document.getElementById('settings-database');
 					element.style.display = 'block';
 					
 					if ( response.admin ) {
 						var element = document.getElementById('settings-database-admin');
 						element.style.display = 'block';
+						updateRequestsCount();
 					}
 				}
 				else {
@@ -78,6 +82,36 @@ function checkLogin()
 	
 	xhr.setRequestHeader("content-type", "application/x-www-form-urlencoded");
 	xhr.send();
+}
+
+function updateRequestsCount()
+{
+	var xhr = new XMLHttpRequest();
+	xhr.open('POST', 'https://auth.videosegments.org/requests.php');
+	xhr.onreadystatechange = function() { 
+		if ( xhr.readyState == 4 ) {
+			if ( xhr.status == 200 ) {
+				// console.log('xhr.responseText', xhr.responseText);
+				
+				var response = JSON.parse(xhr.responseText);
+				if ( response.requests != 'undefined' && response.pending != 'undefined' ) {
+					var span;
+					
+					span = document.getElementById('segmentations-count');
+					span.removeChild(span.firstChild);
+					span.appendChild(document.createTextNode(response.pending));
+					
+					span = document.getElementById('requests-count');
+					span.removeChild(span.firstChild);
+					span.appendChild(document.createTextNode(response.requests));
+				}
+			}
+		}
+	}
+	
+	var post = '';
+	xhr.setRequestHeader("content-type", "application/x-www-form-urlencoded");
+	xhr.send(post);
 }
 
 function loadSettings()
@@ -109,7 +143,7 @@ function loadSettings()
 		// global settings 
 		autoPauseDuration: 1,
 		showSegmentsbar: true,
-		showSegmentationTools: false,
+		showSegmentationTools: true,
 		
 		// segmentation settings 
 		sendToDatabase: false,
@@ -119,6 +153,7 @@ function loadSettings()
 	browser.storage.local.get({
 			settings: defaultSettings
 		}, function(result) {
+			console.log(result);
 			restoreOptions(result.settings);
 		}
 	);
@@ -176,7 +211,7 @@ function restoreOptions(settings)
 	
 	element = document.getElementById('displayPending')
 	element.checked = settings.displayPending;
-	element.addEventListener('change', function() { updateGlobalBool(this, settings, 'displayPending'); });
+	element.addEventListener('change', function() { updateGlobalBool(this, settings, 'displayPending'); browser.runtime.sendMessage( {'displayPending': this.checked }); });
 }
 
 function updatePlayback(element, settings, segment)

@@ -113,23 +113,57 @@
 	},
 	
 	"sendSegmentation": {
-		"message": " Send segmentation to official database",
+		"message": "Send segmentation to official database",
 		"description": ""
 	},
 	"nextSegmentation": {
-		"message": " Next segmentation",
+		"message": "Next segmentation",
 		"description": ""
 	},
 	"nextRequest": {
-		"message": " Next request",
+		"message": "Next request",
 		"description": ""
 	},
 	"displayPending": {
-		"message": " Display pending requests",
+		"message": "Display pending requests",
 		"description": ""
 	},
 	"logout": {
-		"message": " Logout",
+		"message": "Logout",
+		"description": ""
+	},
+	
+	"goTo": {
+		"message": "Go to",
+		"description": ""
+	},
+	"currentTime": {
+		"message": "Current",
+		"description": ""
+	},
+	"remove": {
+		"message": "Remove",
+		"description": ""
+	},
+	
+	"hideSegmentationTools": {
+		"message": "Hide segmentation tools",
+		"description": ""
+	},
+	"origin": {
+		"message": "Origin: ",
+		"description": ""
+	},
+	"localDatabase": {
+		"message": "local database",
+		"description": ""
+	},
+	"officialDatabase": {
+		"message": "official database",
+		"description": ""
+	},
+	"noSegmentation": {
+		"message": "no segmentation",
 		"description": ""
 	},
 	
