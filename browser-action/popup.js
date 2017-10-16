@@ -23,7 +23,20 @@ function domContentLoaded()
 	loadSettings();
 	
 	// disable temporary acceleration settings for chrome and opera 
-	// document.getElementById('tab-acceleration').disabled = true;
+	// did not found better way to do it 
+	if ( browser.runtime.getBrowserInfo == undefined ) {
+		var tab = document.getElementById('tab-acceleration');
+		tab.disabled = true;
+		
+		var span = tab.getElementsByTagName('span')[0];
+		span.innerHTML = 'tabDisabled';
+	}
+	
+	var button;
+	button = document.getElementById('next-segmentation');
+	button.addEventListener('click', openNextSegmentationRequest);
+	button = document.getElementById('next-request');
+	button.addEventListener('click', openNextRequest);
 }
 
 function switchTab()
@@ -114,6 +127,55 @@ function updateRequestsCount()
 	xhr.send(post);
 }
 
+function openNextSegmentationRequest()
+{
+	var xhr = new XMLHttpRequest();
+	xhr.open('POST', 'https://auth.videosegments.org/requests.php');
+	xhr.onreadystatechange = function() { 
+		if ( xhr.readyState == 4 ) {
+			if ( xhr.status == 200 ) {
+				// console.log('xhr.responseText', xhr.responseText);
+				
+				var response = JSON.parse(xhr.responseText);
+				if ( response.id ) {
+					var pending = {
+						timestamps: response.timestamps,
+						types: response.types
+					};
+					
+					browser.storage.local.set({ pending: pending }, function() {
+						browser.tabs.create( {url: 'https://www.youtube.com/watch?v=' + encodeURIComponent(response.id)} );
+					});
+				}
+			}
+		}
+	}
+	
+	var post = 'get_pending=1';
+	xhr.setRequestHeader("content-type", "application/x-www-form-urlencoded");
+	xhr.send(post);
+}
+
+function openNextRequest()
+{
+	var xhr = new XMLHttpRequest();
+	xhr.open('POST', 'https://auth.videosegments.org/requests.php');
+	xhr.onreadystatechange = function() { 
+		if ( xhr.readyState == 4 ) {
+			if ( xhr.status == 200 ) {
+				var response = JSON.parse(xhr.responseText);
+				if ( response.id ) {
+					browser.tabs.create( {url: 'https://www.youtube.com/watch?v=' + encodeURIComponent(response.id)} );
+				}
+			}
+		}
+	}
+	
+	var post = 'get_request=1';
+	xhr.setRequestHeader("content-type", "application/x-www-form-urlencoded");
+	xhr.send(post);
+}
+
 function loadSettings()
 {
 	// default extension settings 
@@ -153,7 +215,6 @@ function loadSettings()
 	browser.storage.local.get({
 			settings: defaultSettings
 		}, function(result) {
-			console.log(result);
 			restoreOptions(result.settings);
 		}
 	);

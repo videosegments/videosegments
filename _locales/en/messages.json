@@ -1,13 +1,15 @@
 {
 	"extensionName": {
 		"message": "VideoSegments",
-		"description": "Name of the extension."
+		"description": ""
 	},
 
 	"extensionDescription": {
 		"message": "Skips automatically advertisement, intros, credits, etc in videos (based on preferences) which was segmented by addon's moderators.",
-		"description": "Description of the extension."
+		"description": ""
 	},
+	
+	
 	
 	"tabPlayback": {
 		"message": "Playback",
@@ -21,6 +23,12 @@
 		"message": "Settings",
 		"description": ""
 	},
+	"tabDisabled": {
+		"message": "[in development]",
+		"description": ""
+	},
+	
+	
 	
 	"play": {
 		"message": "play",
@@ -30,6 +38,8 @@
 		"message": "skip",
 		"description": ""
 	},
+	
+	
 	
 	"content": {
 		"message": "Content",
@@ -68,11 +78,12 @@
 		"description": ""
 	},
 	
+	
+	
 	"adcontentDescription": {
 		"message": "AdContent is content and advertisement at same time",
 		"description": ""
 	},
-	
 	"lengthDescription": {
 		"message": "Length is a maximum duration of segment for acceleration",
 		"description": ""
@@ -81,6 +92,8 @@
 		"message": "Speed less than 25% and more than 400% is muted by player",
 		"description": ""
 	},
+	
+	
 	
 	"segment": {
 		"message": "Segment",
@@ -94,6 +107,8 @@
 		"message": "Speed, %",
 		"description": ""
 	},
+	
+	
 	
 	"showSegmentsBar": {
 		"message": "Show segmentbar",
@@ -111,6 +126,8 @@
 		"message": " seconds for segments",
 		"description": ""
 	},
+	
+	
 	
 	"sendSegmentation": {
 		"message": "Send segmentation to official database",
@@ -133,6 +150,8 @@
 		"description": ""
 	},
 	
+	
+	
 	"goTo": {
 		"message": "Go to",
 		"description": ""
@@ -145,6 +164,8 @@
 		"message": "Remove",
 		"description": ""
 	},
+	
+	
 	
 	"hideSegmentationTools": {
 		"message": "Hide segmentation tools",
@@ -162,174 +183,12 @@
 		"message": "official database",
 		"description": ""
 	},
+	"pendingDatabase": {
+		"message": "pending database",
+		"description": ""
+	},
 	"noSegmentation": {
 		"message": "no segmentation",
-		"description": ""
-	},
-	
-	
-		
-	"autoPauseFirstLabel": {
-		"message": "Wait segments loading for ",
-		"description": "Pause video while segments is loading"
-	},
-	
-	"autoPauseSecondLabel": {
-		"message": " seconds max",
-		"description": "Pause video while segments is loading"
-	},
-	
-	"progressBarLabel": {
-		"message": "Add segmentsbar to progress bar",
-		"description": "Add segmentsbar to progress bar"
-	},
-	
-	
-	
-	"segmentContentLabel": {
-		"message": "Content",
-		"description": ""
-	},
-	
-	"segmentAdContentLabel": {
-		"message": "AdContent",
-		"description": ""
-	},
-	
-	"segmentIntroLabel": {
-		"message": "Intro",
-		"description": ""
-	},
-	
-	"segmentAdvertisementLabel": {
-		"message": "Advertisement",
-		"description": ""
-	},
-	
-	"segmentCutsceneLabel": {
-		"message": "Cutscene",
-		"description": ""
-	},
-	
-	"segmentInteractiveLabel": {
-		"message": "Interactive",
-		"description": ""
-	},
-	
-	"segmentCreditsLabel": {
-		"message": "Credits",
-		"description": ""
-	},
-	
-	"segmentScamLabel": {
-		"message": "Scam",
-		"description": ""
-	},
-	
-	"segmentOfftopLabel": {
-		"message": "Offtop",
-		"description": ""
-	},
-	
-	
-	
-	"contentDescriptionLabel": {
-		"message": "Actual Content",
-		"description": ""
-	},
-	
-	"adContentDescriptionLabel": {
-		"message": "Content fused with advertisement. It cannot be removed without losses",
-		"description": ""
-	},
-	
-	"advertisementDescriptionLabel": {
-		"message": "Integrated advertisement (may include requests for likes, subscriptions, etc)",
-		"description": ""
-	},
-	
-	"introDescriptionLabel": {
-		"message": "Intro in video: opening with information about authors, channel names, etc",
-		"description": ""
-	},
-	
-	"creditsDescriptionLabel": {
-		"message": "Credits in end of video: ending with information about authors, channel names, etc",
-		"description": ""
-	},
-	
-	"cutsceneDescriptionLabel": {
-		"message": "Barely related to video content",
-		"description": ""
-	},
-	
-	"offtopDescriptionLabel": {
-		"message": "Non related to video content",
-		"description": ""
-	},
-	
-	"interactiveDescriptionLabel": {
-		"message": "Interaction with viewers such as contests, etc",
-		"description": ""
-	},
-	
-	"scamDescriptionLabel": {
-		"message": "Intentionally wrong information. This applies to lotteries, websites hacking, etc.",
-		"description": ""
-	},
-	
-	
-	
-	"segmentNameLabel": {
-		"message": "Segment",
-		"description": ""
-	},
-	
-	"segmentColorLabel": {
-		"message": "Color",
-		"description": ""
-	},
-	
-	
-	
-	"segmentLengthLabel": {
-		"message": "Length, sec",
-		"description": ""
-	},
-	
-	"segmentSpeedLabel": {
-		"message": "Speed, %",
-		"description": ""
-	},
-	
-	
-	
-	"segmentsToPlayLabel": {
-		"message": "Playing Segments",
-		"description": ""
-	},
-	
-	"segmentsToFastForwardLabel": {
-		"message": "Accelerated Playback",
-		"description": ""
-	},
-	
-	
-	
-	"switchSettings1Label": {
-		"message": "Fast Forward Settings →",
-		"description": ""
-	},
-	
-	"switchSettings2Label": {
-		"message": "← Playing Settings",
-		"description": ""
-	},
-	
-	
-	
-	"speedWarningLabel": {
-		"message": "Speed less than 25% and more than 400% is muted",
 		"description": ""
 	},
 	

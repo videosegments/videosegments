@@ -1,182 +1,190 @@
 {
 	"extensionName": {
 		"message": "VideoSegments",
-		"description": "Имя расширения."
+		"description": ""
 	},
 
 	"extensionDescription": {
-		"message": "Автоматически перематывает нежелательные отрезки видео (рекламу, вступления, титры, и т.д.) в видео, сегментированных модераторами расширения.",
-		"description": "Описание расширения."
+		"message": "Автоматически пропускает рекламу, интро, титры, и т.д. в видео (по желанию), которые были обработаны модераторами расширения.",
+		"description": ""
 	},
 	
 	
 	
-	"autoPauseFirstLabel": {
-		"message": "Ждать сегменты до ",
-		"description": "Останавливать видео до загрузки сегментов"
+	"tabPlayback": {
+		"message": "Воспроизведение",
+		"description": ""
+	},
+	"tabAcceleration": {
+		"message": "Ускорение",
+		"description": ""
+	},
+	"tabSettings": {
+		"message": "Настройки",
+		"description": ""
+	},
+	"tabDisabled": {
+		"message": "[не работает]",
+		"description": ""
 	},
 	
-	"autoPauseSecondLabel": {
-		"message": " секунд(ы)",
-		"description": "Останавливать видео до загрузки сегментов"
+	
+	
+	"play": {
+		"message": "играть",
+		"description": ""
+	},
+	"skip": {
+		"message": "пропуск",
+		"description": ""
 	},
 	
-	"progressBarLabel": {
-		"message": "Отображать сегменты в видео",
-		"description": "Добавлять сегменты под прогресс просмотра видео"
-	},
 	
 	
-	
-	"settingsSegmentsToPlay": {
-		"message": "Сегменты для проигрывания:",
-		"description": "Какие сегменты пользователь хочет смотреть."
-	},
-	
-	"segmentContentLabel": {
+	"content": {
 		"message": "Контент",
 		"description": ""
 	},
-	
-	"segmentAdContentLabel": {
-		"message": "Рекл. Контент",
+	"adcontent": {
+		"message": "Рекламный контент",
 		"description": ""
 	},
-	
-	"segmentIntroLabel": {
-		"message": "Вступление",
-		"description": ""
-	},
-	
-	"segmentAdvertisementLabel": {
+	"advertisement": {
 		"message": "Реклама",
 		"description": ""
 	},
-	
-	"segmentCutsceneLabel": {
-		"message": "Вставка",
+	"intro": {
+		"message": "Вступление",
 		"description": ""
 	},
-	
-	"segmentInteractiveLabel": {
-		"message": "Интерактив",
-		"description": ""
-	},
-	
-	"segmentCreditsLabel": {
+	"credits": {
 		"message": "Титры",
 		"description": ""
 	},
-	
-	"segmentScamLabel": {
-		"message": "Обман",
+	"cutscene": {
+		"message": "Катсцена",
 		"description": ""
 	},
-	
-	"segmentOfftopLabel": {
+	"offtop": {
 		"message": "Оффтоп",
 		"description": ""
 	},
-	
-	
-	
-	"contentDescriptionLabel": {
-		"message": "Настоящее содержимое видео",
+	"interactive": {
+		"message": "Интерактив",
 		"description": ""
 	},
-	
-	"adContentDescriptionLabel": {
-		"message": "Контент с рекламой. Реклама не может быть убрана без искажения смысла",
-		"description": ""
-	},
-	
-	"advertisementDescriptionLabel": {
-		"message": "Интегрированная реклама (включая просьбы лайков, подписок, и т.д.)",
-		"description": ""
-	},
-	
-	"introDescriptionLabel": {
-		"message": "Вступление: информация об авторах, канале, заставки, и т.д. в начале видео",
-		"description": ""
-	},
-	
-	"creditsDescriptionLabel": {
-		"message": "Титры: информация об авторах, канале, заставки, и т.д. в конце видео",
-		"description": ""
-	},
-	
-	"cutsceneDescriptionLabel": {
-		"message": "Едва относящийся к видео контент",
-		"description": ""
-	},
-	
-	"offtopDescriptionLabel": {
-		"message": "Абсолютно несвязанный с видео контент",
-		"description": ""
-	},
-	
-	"interactiveDescriptionLabel": {
-		"message": "Взаимодействие со зрителями: конкурсы, розыгрыши, т.д.",
-		"description": ""
-	},
-	
-	"scamDescriptionLabel": {
-		"message": "Явно ложная информация. Включает в себя лотереи, взломы сайтов, и т.д.",
+	"scam": {
+		"message": "Мусор",
 		"description": ""
 	},
 	
 	
 	
-	"segmentNameLabel": {
+	"adcontentDescription": {
+		"message": "Рекламный контент это одновременно контент и реклама",
+		"description": ""
+	},
+	"lengthDescription": {
+		"message": "Длина - максимальная продолжительность сегмента для ускорения",
+		"description": ""
+	},
+	"speedDescription": {
+		"message": "При скорости ниже 25% и выше 400% звук отключается проигрывателем",
+		"description": ""
+	},
+	
+	
+	
+	"segment": {
 		"message": "Сегмент",
 		"description": ""
 	},
-	
-	"segmentColorLabel": {
-		"message": "Цвет",
+	"length": {
+		"message": "Длина, s",
 		"description": ""
 	},
-	
-	
-	
-	"segmentLengthLabel": {
-		"message": "Длина, сек",
-		"description": ""
-	},
-	
-	"segmentSpeedLabel": {
+	"speed": {
 		"message": "Скорость, %",
 		"description": ""
 	},
 	
 	
 	
-	"segmentsToPlayLabel": {
-		"message": "Проигрываемые сегменты",
+	"showSegmentsBar": {
+		"message": "Показывать сегменты под видео",
 		"description": ""
 	},
-	
-	"segmentsToFastForwardLabel": {
-		"message": "Ускоренные сегменты",
+	"showSegmentationTools": {
+		"message": "Показать панель сегментации",
 		"description": ""
 	},
-	
-	
-	
-	"switchSettings1Label": {
-		"message": "Ускоренное проигрывание →",
+	"wait": {
+		"message": "Ждать максимум ",
 		"description": ""
 	},
-	
-	"switchSettings2Label": {
-		"message": "← Настройки сегментов",
+	"secondsForSegments": {
+		"message": " секунд(у) получения сегментов",
 		"description": ""
 	},
 	
 	
 	
-	"speedWarningLabel": {
-		"message": "При скорости ниже 25% или выше 400% отключается звук",
+	"sendSegmentation": {
+		"message": "Отправить сегментацию в официальную базу данных",
+		"description": ""
+	},
+	"nextSegmentation": {
+		"message": "Следующая сегментация",
+		"description": ""
+	},
+	"nextRequest": {
+		"message": "Следующий запрос",
+		"description": ""
+	},
+	"displayPending": {
+		"message": "Показывать число запросов",
+		"description": ""
+	},
+	"logout": {
+		"message": "Выйти",
+		"description": ""
+	},
+	
+	
+	
+	"goTo": {
+		"message": "Перейти",
+		"description": ""
+	},
+	"currentTime": {
+		"message": "Текущий",
+		"description": ""
+	},
+	"remove": {
+		"message": "Удалить",
+		"description": ""
+	},
+	
+	
+	
+	"hideSegmentationTools": {
+		"message": "Скрыть панель сегментации",
+		"description": ""
+	},
+	"origin": {
+		"message": "Источник: ",
+		"description": ""
+	},
+	"localDatabase": {
+		"message": "локальная база данных",
+		"description": ""
+	},
+	"officialDatabase": {
+		"message": "официальная база данных",
+		"description": ""
+	},
+	"noSegmentation": {
+		"message": "без сегментации",
 		"description": ""
 	},
 	

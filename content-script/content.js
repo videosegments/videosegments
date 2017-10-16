@@ -75,6 +75,10 @@ var mediaPlayerWrapper = {
 	
 	/* segmentation tools */
 	editor: null,
+	/* fullscreen URI */
+	fullScreenURI: null,
+	/* was created after fullscreen */
+	afterFullScreen: null,
 	
 	/* 
 	 * check if video hosted on supported domain 
@@ -92,6 +96,7 @@ var mediaPlayerWrapper = {
 		
 		this.sourceInformation = {domain:null, id:null};
 		this.editor = Object.create(editorWrapper);
+		this.afterFullScreen = false;
 		
 		// bind contexts to remove them if unnesessary
 		// this.eventContexts.onDurationChange = this.onDurationChange.bind(this);
@@ -118,43 +123,34 @@ var mediaPlayerWrapper = {
 			// this.onDurationChange();
 		}
 		
+		var fullscreenEvent;
+		if ( browser.runtime.getBrowserInfo == undefined ) {
+			fullscreenEvent = 'webkitfullscreenchange';
+		}
+		else {
+			fullscreenEvent = 'mozfullscreenchange';
+		}
+		
+		var self = this;
+		document.addEventListener(fullscreenEvent, function() {
+			var isFullScreen = document.fullScreen || document.mozFullScreen || document.webkitIsFullScreen;
+			if ( !isFullScreen ) {
+				self.fullScreenURI = self.mediaPlayer.baseURI;
+			}
+		});
+		
 		// console.log(this.mediaPlayer.duration + ' ' + this.mediaPlayer.baseURI + ' ' + this.url);
 	},
 	
-	// onDurationChange: function() {
-		// console.log('mediaPlayerWrapper::onDurationChange()', this.mediaPlayer.duration);
-		// this.requestTime = this.mediaPlayer.currentTime.toFixed();
-		
-		// var fullscreenElement = document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement;
-		// if ( fullscreenElement ) {
-			// if (document.exitFullscreen) {
-				// document.exitFullscreen();
-			// } else if (document.webkitExitFullscreen) {
-				// document.webkitExitFullscreen();
-			// } else if (document.mozCancelFullScreen) {
-				// document.mozCancelFullScreen();
-			// } else if (document.msExitFullscreen) {
-				// document.msExitFullscreen();
-			// }
-			
-			// console.log(fullscreenElement);
-			// setTimeout(function() {
-				// console.log(fullscreenElement);
-				// if (fullscreenElement.requestFullscreen) {
-					// fullscreenElement.requestFullscreen();
-				// } else if (fullscreenElement.mozRequestFullScreen) {
-					// fullscreenElement.mozRequestFullScreen();
-				// } else if (fullscreenElement.webkitRequestFullScreen) {
-					// fullscreenElement.webkitRequestFullScreen();
-				// } else if (fullscreenElement.msRequestFullscreen) {
-					// fullscreenElement.msRequestFullscreen();
-				// }
-			// }, 1000);
-		// }
-	// },
-	
 	onCanPlay: function() {
-		// console.log('mediaPlayerWrapper::onCanPlay()');
+		console.log('mediaPlayerWrapper::onCanPlay()', this.fullScreenURI != this.mediaPlayer.baseURI);
+		
+		// if video changed during fullscreen 
+		if ( this.settings.showSegmentationTools && this.fullScreenURI && this.fullScreenURI != this.mediaPlayer.baseURI ) {
+			this.createSegmentationTools();
+			this.fullScreenURI = null;
+			this.afterFullScreen = true;
+		}
 		
 		// when video is changed baseURI changed too 
 		if ( this.url == this.getVideoUrl() ) {
@@ -208,9 +204,6 @@ var mediaPlayerWrapper = {
 			// we may have to rewind it with rounding in case of first segment must be skipped
 			// now handled by variable 
 			this.requestSegments(this.sourceInformation.domain, this.sourceInformation.id);
-			
-			// document.removeEventListener('vssegmentsupdated', this.eventContexts.onSegmentsUpdated);
-			// document.addEventListener('vssegmentsupdated', this.eventContexts.onSegmentsUpdated);
 		}
 	},
 	
@@ -276,12 +269,34 @@ var mediaPlayerWrapper = {
 					var response = JSON.parse(xhr.responseText);
 					// if no official segmentation 
 					if ( typeof response.timestamps == 'undefined' ) {
-						// try to find local segmentation
-						var video_id = self.sourceInformation.domain + '-' + self.sourceInformation.id;
-						browser.storage.local.get({ [video_id]: '' }, function(result) {
-							response = result[video_id];
-							self.onGotSegments(response, 'localDatabase');
-						});
+						// if sharing enabled look for pending requests 
+						if ( self.settings.showSegmentationTools ) {
+							browser.storage.local.get({ pending: '' }, function(result) {
+								if ( result.pending ) {
+									response = result.pending;
+									response.timestamps = response.timestamps.split(',').map(parseFloat);
+									response.types = response.types.split(',');
+									browser.storage.local.remove(['pending']);
+									self.onGotSegments(response, 'pendingDatabase');
+								}
+								else {
+									// try to find local segmentation
+									var video_id = self.sourceInformation.domain + '-' + self.sourceInformation.id;
+									browser.storage.local.get({ [video_id]: '' }, function(result) {
+										response = result[video_id];
+										self.onGotSegments(response, 'localDatabase');
+									});
+								}
+							});
+						}
+						else {
+							// try to find local segmentation
+							var video_id = self.sourceInformation.domain + '-' + self.sourceInformation.id;
+							browser.storage.local.get({ [video_id]: '' }, function(result) {
+								response = result[video_id];
+								self.onGotSegments(response, 'localDatabase');
+							});
+						}
 					}
 					else {
 						self.onGotSegments(response, 'officialDatabase');
@@ -299,6 +314,8 @@ var mediaPlayerWrapper = {
 		
 		// if there are segments 
 		if ( response.types && response.types.length !== 0 ) {
+			// console.log(response);
+			
 			// convert json-response into object
 			this.segmentsData = response;
 			this.segmentsData.origin = origin;
@@ -319,6 +336,16 @@ var mediaPlayerWrapper = {
 			// insert segment bar 
 			this.insertSegmentBar();
 			
+			// if user waiting for segments 
+			if ( this.pauseTimer ) {
+				// if video paused (and is not loading)
+				if ( this.mediaPlayer.paused ) {
+					clearTimeout(this.pauseTimer);
+					this.pauseTimer = null;
+					this.mediaPlayer.play();
+				}
+			}
+			
 			// prevent shivering on rewind to same time 
 			// if ( self.requestTime != null && self.requestTime != self.mediaPlayer.currentTime ) {
 			if ( this.requestTime != null ) {
@@ -330,16 +357,6 @@ var mediaPlayerWrapper = {
 			this.mediaPlayer.addEventListener("play", this.eventContexts.onPlay);
 			if ( !this.mediaPlayer.paused ) {
 				this.onPlay();
-			}
-			
-			// if user waiting for segments 
-			if ( this.pauseTimer ) {
-				// if video paused (and is not loading)
-				if ( this.mediaPlayer.paused ) {
-					clearTimeout(this.pauseTimer);
-					this.pauseTimer = null;
-					this.mediaPlayer.play();
-				}
 			}
 			
 			// force call for play event due to bug 
@@ -379,31 +396,53 @@ var mediaPlayerWrapper = {
 			}
 		}
 		
-		if ( this.settings.showSegmentationTools ) {
-			// initialize editor with delay 
-			setTimeout(function() {
-				self.editor.init(self, self.segmentsData, self.settings, self.sourceInformation.domain, self.sourceInformation.id);
-			}, 1000);
+		if ( this.afterFullScreen ) {
+			this.afterFullScreen = false;
 		}
+		else {
+			this.createSegmentationTools();
+		}
+	},
+	
+	/*
+	 * Create segmentation tools 
+	 */
+	createSegmentationTools: function() {
+		var self = this;
 		
-		// create custom event for moderator tools
-		// https://bugzilla.mozilla.org/show_bug.cgi?id=999586
-		// same issue "Permission denied to access property", bypass by JSON
-		// var event = new CustomEvent('vsgotsegments', { 
-			// detail: JSON.stringify({
-				// segmentsData: self.segmentsData,
-				// settings: self.settings,
-				// domain: domain,
-				// id: id
-			// })
-		// });
-		// document.dispatchEvent(event);
+		if ( this.settings.showSegmentationTools ) {
+			// if it's not iframe 
+			if ( window.parent === window ) {
+				// very hardcoded 
+				var subtimer = setInterval(function() {
+					var attachTo;
+					attachTo = document.getElementById('info-contents');
+					if ( attachTo ) {
+						setTimeout(function() {
+							self.editor.init(self, self.segmentsData, self.settings, self.sourceInformation.domain, self.sourceInformation.id);
+						}, 500);
+						clearInterval(subtimer);
+					}
+					else {
+						// old desing
+						attachTo = document.getElementById('watch-header');
+						if ( attachTo ) {
+							setTimeout(function() {
+								self.editor.init(self, self.segmentsData, self.settings, self.sourceInformation.domain, self.sourceInformation.id);
+							}, 500);
+							clearInterval(subtimer);
+						}
+					}
+				}, 100);
+			}
+		}
 	},
 	
 	/*
 	 * Called when player start to play or after seeking (called before many events)
 	 */
 	onPlay: function() {
+		// console.log('mediaPlayerWrapper::onPlay()', this.mediaPlayer.playbackRate);
 		// this event is called before "durationchange" event during ajax redirection so we have to stop it manually
 		if ( this.url != this.getVideoUrl() ) {
 			// console.log(this.url + ' ' + this.mediaPlayer.baseURI);
@@ -626,7 +665,7 @@ var mediaPlayerWrapper = {
 		// for each segment
 		for ( let i = 0; i < segmentsCount; ++i ) {
 			// calculate width 
-			width = (this.segmentsData.timestamps[i+1] - this.segmentsData.timestamps[i]) / this.segmentsData.timestamps[segmentsCount] * 100;
+			width = (this.segmentsData.timestamps[i+1] - this.segmentsData.timestamps[i]) / this.mediaPlayer.duration * 100;
 			
 			// create div element
 			var div = document.createElement('div');
@@ -824,7 +863,7 @@ var mediaPlayerWrapper = {
 		// if segmentation doesn't exists 
 		if ( segmentsData.types.length == 0 ) {
 			// remove it from local database 
-			browser.storage.local.removeItem(video_id);
+			browser.storage.local.remove([video_id]);
 		}
 		else {
 			// save locally
@@ -901,18 +940,6 @@ function tryFindMediaPlayer(settings)
 		wrapper.init(mediaPlayer, settings);
 	}
 	else {
-		// listen for click on page (ajax redirections)
-		// there is spf* methods on youtube but 
-		// this solution is domain-independent and may work 
-		// on different domains (maybe will be changed if 
-		// only youtube use ajax redirection)
-		
-		// do this check again 
-		// document.onclick = function() {
-			// tryFindMediaPlayer(settings);
-			// console.log('click');
-		// };
-		
 		// prevent multiple hooks
 		var hooked = false;
 		// listen for mutations on page 
@@ -925,12 +952,6 @@ function tryFindMediaPlayer(settings)
 		// called when mutation occurs
 		function onMutation(mutations) {
 			mutations.forEach(function(mutation) {
-				// console.log(mutation.target.tagName.toLowerCase().indexOf('video'));
-				
-				// if ( mutation.target.tagName.toLowerCase().indexOf('video') !== -1 ) {
-					// console.log(mutation.target);
-				// }
-				
 				// sometime video is netsed so we have to look deeper 
 				if ( mutation.target.getElementsByTagName('video')[0] && !hooked ) {
 					// console.log(mutation);
@@ -939,15 +960,6 @@ function tryFindMediaPlayer(settings)
 					tryFindMediaPlayer(settings);
 					observer.disconnect();
 				}
-				
-				// console.log(mutation.target.className.indexOf);
-				// if ( mutation.target.className.indexOf && mutation.target.className.indexOf('playing-mode') !== -1 && !hooked ) {
-					// console.log(mutation);
-					// hooked = true;
-					
-					// tryFindMediaPlayer(settings);
-					// observer.disconnect();
-				// }
 			});
 		}
 	}
@@ -980,6 +992,11 @@ browser.runtime.onMessage.addListener(
 	}
 );
 
+/**
+ * Main class to handle segmentation. 
+ * Should be rewritten for better look. 
+ * Right now too much hardcoded
+ */
 var editorWrapper = {
 	/* media player wrapper */
 	mediaPlayerWrapper: null,
@@ -1122,7 +1139,12 @@ var editorWrapper = {
 						}
 						
 						// if end then append
-						if ( j == entries.length-1 ) {
+						if ( j >= entries.length ) {
+							console.log(entry.getElementsByClassName('vs-editor-end-time')[0].value);
+							self.addSegmentEntry(segmentsEditor, parseFloat(entry.getElementsByClassName('vs-editor-end-time')[0].value), self.mediaPlayer.duration, this.name);
+						}
+						// if near end then append
+						else if ( j == entries.length-1 ) {
 							self.addSegmentEntry(segmentsEditor, self.mediaPlayer.currentTime, self.mediaPlayer.duration, this.name);
 							entry.getElementsByClassName('vs-editor-end-time')[0].value = self.mediaPlayer.currentTime.toFixed(2);
 						}
@@ -1221,6 +1243,10 @@ var editorWrapper = {
 		controlButtons.appendChild(container);
 		
 		this.editorDiv.appendChild(controlButtons);
+		
+		this.editorDiv.addEventListener('destroy', function() {
+			console.log('im removed');
+		});
 		
 		// add editor div to watch header
 		watchHeader.insertAdjacentElement('afterBegin', this.editorDiv);
@@ -1377,14 +1403,6 @@ var editorWrapper = {
 		}
 		
 		this.mediaPlayerWrapper.updateSegmentsData(segmentsData);
-		
-		// var event = new CustomEvent('vssegmentsupdated', { 
-			// detail: JSON.stringify({
-				// segmentsData: segmentsData
-			// })
-		// });
-		// document.dispatchEvent(event);
-		// this.hasChanges = true;
 	},
 	
 	/*
