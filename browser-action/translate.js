@@ -9,7 +9,6 @@ document.addEventListener('DOMContentLoaded', function() {
 	for ( var i = 0; i < elements.length; ++i ) {
 		var element = elements[i];
 		
-		console.log(element.innerHTML);
 		// get translation
 		var text = document.createTextNode(browser.i18n.getMessage(element.innerHTML));
 		// remove previous text 

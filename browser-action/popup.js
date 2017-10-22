@@ -37,6 +37,12 @@ function domContentLoaded()
 	button.addEventListener('click', openNextSegmentationRequest);
 	button = document.getElementById('next-request');
 	button.addEventListener('click', openNextRequest);
+	
+	button = document.getElementById('logout');
+	button.addEventListener('click', function() {
+		window.open('https://db.videosegments.org/logout.php'); 
+		setTimeout(function() {window.close();}, 100);
+	});
 }
 
 function switchTab()
@@ -68,7 +74,7 @@ function openTab(tabName)
 function checkLogin()
 {
 	var xhr = new XMLHttpRequest();
-	xhr.open('GET', 'https://auth.videosegments.org/status.php');
+	xhr.open('GET', 'https://db.videosegments.org/status.php');
 	xhr.onreadystatechange = function() { 
 		// console.log(xhr);
 		if ( xhr.readyState == 4 ) {
@@ -76,7 +82,9 @@ function checkLogin()
 				// console.log(xhr.responseText);
 				var response = JSON.parse(xhr.responseText);
 				if ( response.auth ) {
-					var element = document.getElementById('settings-database');
+					// var element = document.getElementById('settings-database');
+					// element.style.display = 'block';
+					var element = document.getElementById('settings-logout');
 					element.style.display = 'block';
 					
 					if ( response.admin ) {
@@ -100,7 +108,7 @@ function checkLogin()
 function updateRequestsCount()
 {
 	var xhr = new XMLHttpRequest();
-	xhr.open('POST', 'https://auth.videosegments.org/requests.php');
+	xhr.open('POST', 'https://db.videosegments.org/requests.php');
 	xhr.onreadystatechange = function() { 
 		if ( xhr.readyState == 4 ) {
 			if ( xhr.status == 200 ) {
@@ -130,7 +138,7 @@ function updateRequestsCount()
 function openNextSegmentationRequest()
 {
 	var xhr = new XMLHttpRequest();
-	xhr.open('POST', 'https://auth.videosegments.org/requests.php');
+	xhr.open('POST', 'https://db.videosegments.org/requests.php');
 	xhr.onreadystatechange = function() { 
 		if ( xhr.readyState == 4 ) {
 			if ( xhr.status == 200 ) {
@@ -144,7 +152,9 @@ function openNextSegmentationRequest()
 					};
 					
 					browser.storage.local.set({ pending: pending }, function() {
-						browser.tabs.create( {url: 'https://www.youtube.com/watch?v=' + encodeURIComponent(response.id)} );
+						browser.tabs.query({currentWindow: true, active: true}, function (tab) {
+							browser.tabs.update(tab.id, {url: 'https://www.youtube.com/watch?v=' + encodeURIComponent(response.id)} );
+						});
 					});
 				}
 			}
@@ -159,13 +169,17 @@ function openNextSegmentationRequest()
 function openNextRequest()
 {
 	var xhr = new XMLHttpRequest();
-	xhr.open('POST', 'https://auth.videosegments.org/requests.php');
+	xhr.open('POST', 'https://db.videosegments.org/requests.php');
 	xhr.onreadystatechange = function() { 
 		if ( xhr.readyState == 4 ) {
 			if ( xhr.status == 200 ) {
 				var response = JSON.parse(xhr.responseText);
 				if ( response.id ) {
-					browser.tabs.create( {url: 'https://www.youtube.com/watch?v=' + encodeURIComponent(response.id)} );
+					browser.storage.local.set({ request: '1' }, function() {
+						browser.tabs.query({currentWindow: true, active: true}, function (tab) {
+							browser.tabs.update(tab.id, {url: 'https://www.youtube.com/watch?v=' + encodeURIComponent(response.id)} );
+						});
+					});
 				}
 			}
 		}

@@ -124,7 +124,7 @@ var mediaPlayerWrapper = {
 		}
 		
 		var fullscreenEvent;
-		if ( browser.runtime.getBrowserInfo == undefined ) {
+		if ( typeof InstallTrigger == 'undefined' ) {
 			fullscreenEvent = 'webkitfullscreenchange';
 		}
 		else {
@@ -143,12 +143,15 @@ var mediaPlayerWrapper = {
 	},
 	
 	onCanPlay: function() {
-		console.log('mediaPlayerWrapper::onCanPlay()', this.fullScreenURI != this.mediaPlayer.baseURI);
+		// console.log('mediaPlayerWrapper::onCanPlay()', this.settings.showSegmentationTools, this.fullScreenURI, this.fullScreenURI != this.mediaPlayer.baseURI);
 		
+		// reset fullscreen state 
+		this.afterFullScreen = false;
 		// if video changed during fullscreen 
 		if ( this.settings.showSegmentationTools && this.fullScreenURI && this.fullScreenURI != this.mediaPlayer.baseURI ) {
 			this.createSegmentationTools();
 			this.fullScreenURI = null;
+			// prevent second segmentation tools after video change in fullscreen 
 			this.afterFullScreen = true;
 		}
 		
@@ -267,6 +270,7 @@ var mediaPlayerWrapper = {
 					// console.log(xhr.responseText);
 					
 					var response = JSON.parse(xhr.responseText);
+					var votes = response.votes;
 					// if no official segmentation 
 					if ( typeof response.timestamps == 'undefined' ) {
 						// if sharing enabled look for pending requests 
@@ -274,17 +278,27 @@ var mediaPlayerWrapper = {
 							browser.storage.local.get({ pending: '' }, function(result) {
 								if ( result.pending ) {
 									response = result.pending;
-									response.timestamps = response.timestamps.split(',').map(parseFloat);
+									if ( response.timestamps.indexOf(',') > 0 ) {
+										response.timestamps = response.timestamps.split(',').map(parseFloat);
+									}
+									else {
+										if ( response.timestamps === '' ) {
+											response.timestamps = [];
+										}
+										else {
+											response.timestamps = [parseFloat(response.timestamps)];
+										}
+									}
 									response.types = response.types.split(',');
 									browser.storage.local.remove(['pending']);
-									self.onGotSegments(response, 'pendingDatabase');
+									self.onGotSegments(response, 'pendingDatabase', votes);
 								}
 								else {
 									// try to find local segmentation
 									var video_id = self.sourceInformation.domain + '-' + self.sourceInformation.id;
 									browser.storage.local.get({ [video_id]: '' }, function(result) {
 										response = result[video_id];
-										self.onGotSegments(response, 'localDatabase');
+										self.onGotSegments(response, 'localDatabase', votes);
 									});
 								}
 							});
@@ -294,12 +308,12 @@ var mediaPlayerWrapper = {
 							var video_id = self.sourceInformation.domain + '-' + self.sourceInformation.id;
 							browser.storage.local.get({ [video_id]: '' }, function(result) {
 								response = result[video_id];
-								self.onGotSegments(response, 'localDatabase');
+								self.onGotSegments(response, 'localDatabase', votes);
 							});
 						}
 					}
 					else {
-						self.onGotSegments(response, 'officialDatabase');
+						self.onGotSegments(response, 'officialDatabase', votes);
 					}
 				}
 			}
@@ -309,12 +323,13 @@ var mediaPlayerWrapper = {
 		xhr.send();
 	},
 	
-	onGotSegments: function(response, origin) {
+	onGotSegments: function(response, origin, votes) {
+		// console.log('onGotSegments');
 		var self = this;
 		
 		// if there are segments 
 		if ( response.types && response.types.length !== 0 ) {
-			// console.log(response);
+			//console.log(response);
 			
 			// convert json-response into object
 			this.segmentsData = response;
@@ -376,17 +391,6 @@ var mediaPlayerWrapper = {
 		else {
 			this.segmentsData = null;
 			
-			setTimeout(function() {
-				if ( response.votes == 0 ) {
-					// insert request segmentation button 
-					self.insertMenu(false);
-				}
-				else {
-					// insert request segmentation button 
-					self.insertMenu(true);
-				}
-			}, 1000);
-			
 			// due to rare bug where play event doesn't fire 
 			// timer check is separated
 			if ( this.pauseTimer ) {
@@ -400,14 +404,15 @@ var mediaPlayerWrapper = {
 			this.afterFullScreen = false;
 		}
 		else {
-			this.createSegmentationTools();
+			this.createSegmentationTools(votes);
 		}
 	},
 	
 	/*
 	 * Create segmentation tools 
 	 */
-	createSegmentationTools: function() {
+	createSegmentationTools: function(votes) {
+		// console.log('createSegmentationTools');
 		var self = this;
 		
 		if ( this.settings.showSegmentationTools ) {
@@ -420,6 +425,17 @@ var mediaPlayerWrapper = {
 					if ( attachTo ) {
 						setTimeout(function() {
 							self.editor.init(self, self.segmentsData, self.settings, self.sourceInformation.domain, self.sourceInformation.id);
+							setTimeout(function() {
+								if ( votes == 0 ) {
+									// insert request segmentation button 
+									self.insertMenu(false);
+								}
+								else {
+									// insert request segmentation button 
+									self.insertMenu(true);
+								}
+							}, 500);
+							
 						}, 500);
 						clearInterval(subtimer);
 					}
@@ -429,6 +445,17 @@ var mediaPlayerWrapper = {
 						if ( attachTo ) {
 							setTimeout(function() {
 								self.editor.init(self, self.segmentsData, self.settings, self.sourceInformation.domain, self.sourceInformation.id);
+								setTimeout(function() {
+									if ( votes == 0 ) {
+										// insert request segmentation button 
+										self.insertMenu(false);
+									}
+									else {
+										// insert request segmentation button 
+										self.insertMenu(true);
+									}
+								}, 500);
+								
 							}, 500);
 							clearInterval(subtimer);
 						}
@@ -791,7 +818,7 @@ var mediaPlayerWrapper = {
 					modal.style.display = "block";
 							
 					var iframe = document.createElement("iframe");
-					iframe.src = 'https://db.videosegments.org/captcha.php';
+					iframe.src = 'https://db.videosegments.org/captcha2.php';
 					iframe.width  = 350;
 					iframe.height = 500;
 					iframe.id = 'vs-captcha-iframe';
@@ -1105,7 +1132,6 @@ var editorWrapper = {
 						}
 					}
 					
-					console.log(j);
 					if ( j == 0 ) {
 						self.insertBeforeSegmentEntry(entry, 0, self.mediaPlayer.currentTime, this.name);
 						entry.getElementsByClassName('vs-editor-start-time')[0].value = self.mediaPlayer.currentTime.toFixed(2);
@@ -1116,7 +1142,7 @@ var editorWrapper = {
 					}
 				}
 				self.updatePreview();
-			}, 'width: 80%; padding: 0; margin-right: 0; background-color: ' + this.settings.segments[segmentsTypes[i]].color + '; border: none; cursor: pointer; color: ' + textColor + ';');
+			}, 'width: 80%; padding: 0; margin-right: 0; background-color: ' + this.settings.segments[segmentsTypes[i]].color + '; border: none; height: 2em; cursor: pointer; color: ' + textColor + ';');
 			
 			// add segment from current time to end 
 			var buttonLastPos = this.createButton(segmentsTypes[i], '>', function() {
@@ -1140,7 +1166,7 @@ var editorWrapper = {
 						
 						// if end then append
 						if ( j >= entries.length ) {
-							console.log(entry.getElementsByClassName('vs-editor-end-time')[0].value);
+							// console.log(entry.getElementsByClassName('vs-editor-end-time')[0].value);
 							self.addSegmentEntry(segmentsEditor, parseFloat(entry.getElementsByClassName('vs-editor-end-time')[0].value), self.mediaPlayer.duration, this.name);
 						}
 						// if near end then append
@@ -1165,7 +1191,7 @@ var editorWrapper = {
 				// update preview 
 				self.updatePreview();
 				// }
-			}, 'width: 20%; padding: 0; margin-left: 0; background-color: ' + this.settings.segments[segmentsTypes[i]].color + '; border: none; border-left: 1px solid black; cursor: pointer; color: ' + textColor + ';');
+			}, 'width: 20%; padding: 0; margin-left: 0; background-color: ' + this.settings.segments[segmentsTypes[i]].color + '; border: none; height: 2em; border-left: 1px solid black; cursor: pointer; color: ' + textColor + ';');
 			
 			// add buttons and define thier behavior 
 			var container = document.createElement('div');
@@ -1238,19 +1264,34 @@ var editorWrapper = {
 		
 		// create send button 
 		if ( this.settings.sendToDatabase ) {
-			container.appendChild(this.createButton('', browser.i18n.getMessage('sendSegmentation'), function() {self.sendSegmentsData()}, 'width: 90%; padding: 0; height: 30px'));
+			if ( segmentsData && segmentsData.origin === 'pendingDatabase' ) {
+				container.appendChild(this.createButton('', browser.i18n.getMessage('declineSegmentation'), function() {self.sendSegmentsData(true)}, 'width: 40%; padding: 0; height: 30px; margin-right: 5%;'));
+				container.appendChild(this.createButton('', browser.i18n.getMessage('acceptSegmentation'), function() {self.sendSegmentsData(false)}, 'width: 40%; padding: 0; height: 30px'));
+			}
+			else {
+				browser.storage.local.get({ request: '0' }, function(result) {
+					if ( result.request == '1' ) {
+						browser.storage.local.remove(['request']);
+						container.appendChild(self.createButton('', browser.i18n.getMessage('declineSegmentation'), function() {self.sendSegmentsData(true)}, 'width: 40%; padding: 0; height: 30px; margin-right: 5%;'));
+						container.appendChild(self.createButton('', browser.i18n.getMessage('sendSegmentation'), function() {self.sendSegmentsData(false)}, 'width: 40%; padding: 0; height: 30px'));
+					}
+					else {
+						container.appendChild(self.createButton('', browser.i18n.getMessage('sendSegmentationToOfficialDatabase'), function() {self.sendSegmentsData(false)}, 'width: 90%; padding: 0; height: 30px'));
+					}
+				});
+			}
 		}
 		controlButtons.appendChild(container);
 		
 		this.editorDiv.appendChild(controlButtons);
 		
-		this.editorDiv.addEventListener('destroy', function() {
-			console.log('im removed');
-		});
+		// this.editorDiv.addEventListener('destroy', function() {
+			// console.log('im removed');
+		// });
 		
 		// add editor div to watch header
 		watchHeader.insertAdjacentElement('afterBegin', this.editorDiv);
-		this.editorDiv.insertAdjacentElement('afterEnd', document.createElement('br'));
+		// this.editorDiv.insertAdjacentElement('beforeEnd', document.createElement('br'));
 		
 		// modal for captcha 
 		this.modal = document.createElement('div');
@@ -1441,7 +1482,7 @@ var editorWrapper = {
 	/*
 	 * Send segments data to database 
 	 */
-	sendSegmentsData: function() {
+	sendSegmentsData: function(decline) {
 		// console.log('editorWrapper::sendSegmentsData()');
 		
 		// format as json 
@@ -1465,7 +1506,7 @@ var editorWrapper = {
 		
 		var self = this;		
 		var xhr = new XMLHttpRequest();
-		xhr.open('POST', 'https://auth.videosegments.org/send_auth.php');
+		xhr.open('POST', 'https://db.videosegments.org/send_auth.php');
 		xhr.onreadystatechange = function() { 
 			if ( xhr.readyState == 4 ) {
 				if ( xhr.status == 200 ) {
@@ -1502,6 +1543,7 @@ var editorWrapper = {
 						if ( jsonResponse.message === 'updated' || jsonResponse.message === 'added' || jsonResponse.message === 'overwritten' ) {
 							setTimeout(function() {
 								window.location.reload();
+								self.updateBadge();
 							}, 100);
 						}
 						else {
@@ -1513,6 +1555,11 @@ var editorWrapper = {
 		};
 		
 		var post = 'domain='+this.domain+'&id='+this.id+'&timestamps='+timestamps+'&types='+types;
+		if ( decline ) {
+			post += '&decline=1';
+		}
+		
+		// console.log(post);
 		xhr.setRequestHeader("content-type", "application/x-www-form-urlencoded");
 		xhr.send(post);
 	},
@@ -1522,7 +1569,7 @@ var editorWrapper = {
 		if ( event.origin === 'https://db.videosegments.org' ) {
 			var self = this;
 			var xhr = new XMLHttpRequest();
-			xhr.open('POST', 'https://auth.videosegments.org/send_auth.php');
+			xhr.open('POST', 'https://db.videosegments.org/send_auth.php');
 			
 			xhr.onreadystatechange = function() { 
 				if ( xhr.readyState == 4 ) {
@@ -1533,6 +1580,7 @@ var editorWrapper = {
 						if ( jsonResponse.message === 'added' || jsonResponse.message === 'updated' || jsonResponse.message === 'overwritten' ) {
 							setTimeout(function() {
 								window.location.reload();
+								self.updateBadge();
 							}, 100);
 						}
 						else {
@@ -1554,6 +1602,10 @@ var editorWrapper = {
 			window.removeEventListener('message', messageContext);
 			window.removeEventListener('click', clickContext);
 		}
+	},
+	
+	updateBadge: function() {
+		browser.runtime.sendMessage( {'updateBadge': true } );
 	},
 	
 	/*

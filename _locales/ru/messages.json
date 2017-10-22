@@ -74,7 +74,7 @@
 		"description": ""
 	},
 	"scam": {
-		"message": "Мусор",
+		"message": "Обман",
 		"description": ""
 	},
 	
@@ -100,7 +100,7 @@
 		"description": ""
 	},
 	"length": {
-		"message": "Длина, s",
+		"message": "Длина, с",
 		"description": ""
 	},
 	"speed": {
@@ -115,7 +115,7 @@
 		"description": ""
 	},
 	"showSegmentationTools": {
-		"message": "Показать панель сегментации",
+		"message": "Показывать панель сегментации",
 		"description": ""
 	},
 	"wait": {
@@ -126,19 +126,31 @@
 		"message": " секунд(у) получения сегментов",
 		"description": ""
 	},
+	"loginToRemoveCaptcha": {
+		"message": "Войдите, чтобы убрать капчу при отправке сегментации",
+		"description": ""
+	},
 	
 	
 	
+	"sendSegmentationSetting": {
+		"message": "Отправлять сегментацию в офиц. базу данных",
+		"description": ""
+	},
+	"sendSegmentationToOfficialDatabase": {
+		"message": "Отправить сегментацию в офиц. базу данных",
+		"description": ""
+	},
 	"sendSegmentation": {
-		"message": "Отправить сегментацию в официальную базу данных",
+		"message": "Отправить",
 		"description": ""
 	},
 	"nextSegmentation": {
-		"message": "Следующая сегментация",
+		"message": "Сл. сегментация",
 		"description": ""
 	},
 	"nextRequest": {
-		"message": "Следующий запрос",
+		"message": "Сл. запрос",
 		"description": ""
 	},
 	"displayPending": {
@@ -147,6 +159,14 @@
 	},
 	"logout": {
 		"message": "Выйти",
+		"description": ""
+	},
+	"acceptSegmentation": {
+		"message": "Принять",
+		"description": ""
+	},
+	"declineSegmentation": {
+		"message": "Отклонить",
 		"description": ""
 	},
 	

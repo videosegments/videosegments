@@ -91,47 +91,47 @@
 					</th>
 				</tr>
 				<tr id="segment-c">
-					<td>Content</td>
+					<td><span class="translate-me">content</span></td>
 					<td><input size="5"></td>					
 					<td><input size="5"></td>
 				</tr>
 				<tr id="segment-ac">
-					<td>AdContent</td>
+					<td><span class="translate-me">adcontent</span></td>
 					<td><input size="5"></td>					
 					<td><input size="5"></td>
 				</tr>
 				<tr id="segment-a">
-					<td>Advertisement</td>
+					<td><span class="translate-me">advertisement</span></td>
 					<td><input size="5"></td>					
 					<td><input size="5"></td>
 				</tr>
 				<tr id="segment-i">
-					<td>Intro</td>
+					<td><span class="translate-me">intro</span></td>
 					<td><input size="5"></td>					
 					<td><input size="5"></td>
 				</tr>
 				<tr id="segment-cr">
-					<td>Credits</td>
+					<td><span class="translate-me">credits</span></td>
 					<td><input size="5"></td>					
 					<td><input size="5"></td>
 				</tr>
 				<tr id="segment-cs">
-					<td>Cutscene</td>
+					<td><span class="translate-me">cutscene</span></td>
 					<td><input size="5"></td>					
 					<td><input size="5"></td>
 				</tr>
 				<tr id="segment-o">
-					<td>Offtop</td>
+					<td><span class="translate-me">offtop</span></td>
 					<td><input size="5"></td>					
 					<td><input size="5"></td>
 				</tr>
 				<tr id="segment-ia">
-					<td>Interactive</td>
+					<td><span class="translate-me">interactive</span></td>
 					<td><input size="5"></td>					
 					<td><input size="5"></td>
 				</tr>
 				<tr id="segment-s">
-					<td>Scam</td>
+					<td><span class="translate-me">scam</span></td>
 					<td><input size="5"></td>					
 					<td><input size="5"></td>
 				</tr>
@@ -144,19 +144,20 @@
 		</div>
 		<div id="settings" class="tab-content" style="display: none;">
 			<div style="display: inline-block; text-align: left;">
-				<label><input type="checkbox" id="showSegmentsbar"><span class="translate-me">showSegmentsBar</span><br></label><br>
+				<label><input type="checkbox" id="showSegmentsbar"><span class="translate-me">showSegmentsBar</span><br></label>
 				<label><input type="checkbox" id="showSegmentationTools"><span class="translate-me">showSegmentationTools</span></label><br>
 				<span class="translate-me">wait</span><input size="3" id="autoPauseDuration"><span class="translate-me">secondsForSegments</span><br>
 			</div>
 			<br>
 			<br>
+			<label><input type="checkbox" id="sendToDatabase"><span class="translate-me">sendSegmentationSetting</span><br></label><br>
 			<div id="settings-login" style="display: none;">
-				<iframe id="settings-iframe" width="300" height="165" src="http://auth.videosegments.org/" style="border: 1px solid black"></iframe>
+				<span class="translate-me">loginToRemoveCaptcha</span>
+				<br>
+				<br>
+				<iframe id="settings-iframe" width="300" height="165" src="http://db.videosegments.org/" style="border: none"></iframe>
 			</div>
-			<div id="settings-database" style="display: none; border: 1px solid black; width: 300px; height: 165px; margin: auto">
-				<br>
-				<label><input type="checkbox" id="sendToDatabase"><span class="translate-me">sendSegmentation</span><br></label><br>
-				<br>
+			<!-- <div id="settings-database" style="display: none; border: 1px solid black; width: 300px; height: 165px; margin: auto"> -->
 				<div id="settings-database-admin" style="display: none">
 					<div style="width: 49%; text-align: center; display: inline-block">
 						<span id="segmentations-count">loading</span>
@@ -174,11 +175,14 @@
 					<br>
 					<br>
 					<label><input type="checkbox" id="displayPending"><span class="translate-me">displayPending</span><br></label>
+					<br>
 				</div>
-				<br>
-				<div style="text-align: center">
-					<a href="http://auth.videosegments.org/logout.php"><span class="translate-me">logout</span></button>
-				</div>
+			<!-- </div> -->
+			
+			<br>
+			<br>
+			<div id="settings-logout" style="display: none;">
+				<a href="#" id="logout"><span class="translate-me">logout</span></a>
 			</div>
 		</div>
 		

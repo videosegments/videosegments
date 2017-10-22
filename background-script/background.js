@@ -35,16 +35,18 @@ browser.storage.local.get({
 );
 
 var checkContext = function() { 
+	// console.log('checkContext');
+	
 	if ( doCheck ) {
 		var xhr = new XMLHttpRequest();
-		xhr.open('POST', 'https://auth.videosegments.org/requests.php');
+		xhr.open('POST', 'https://db.videosegments.org/requests.php');
 		xhr.onreadystatechange = function() { 
 			if ( xhr.readyState == 4 ) {
 				if ( xhr.status == 200 ) {
 					// console.log('xhr.responseText', xhr.responseText);
 					
 					var response = JSON.parse(xhr.responseText);
-					if ( response.requests != 'undefined' && response.pending != 'undefined' ) {
+					if ( typeof response.requests !== 'undefined' && typeof response.pending !== 'undefined' ) {
 						var count = parseInt(response.requests) + parseInt(response.pending);
 						browser.browserAction.setBadgeText( { text: count.toString() } );
 					}
@@ -66,7 +68,7 @@ var checkContext = function() {
 }
 
 browser.runtime.onMessage.addListener(function(message) {
-	if ( message.displayPending != 'undefined' ) {
+	if ( typeof message.displayPending !== 'undefined' ) {
 		if ( message.displayPending ) {
 			doCheck = true;
 			checkContext();
@@ -77,5 +79,8 @@ browser.runtime.onMessage.addListener(function(message) {
 			browser.browserAction.setBadgeText({text: ''});
 			clearInterval(timer);
 		}
+	}
+	else if ( typeof message.updateBadge !== 'undefined' ) {
+		checkContext();
 	}
 });

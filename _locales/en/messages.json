@@ -126,11 +126,23 @@
 		"message": " seconds for segments",
 		"description": ""
 	},
+	"loginToRemoveCaptcha": {
+		"message": "Login to remove captcha on segmentation send",
+		"description": ""
+	},
 	
 	
 	
-	"sendSegmentation": {
+	"sendSegmentationSetting": {
 		"message": "Send segmentation to official database",
+		"description": ""
+	},
+	"sendSegmentationToOfficialDatabase": {
+		"message": "Send segmentation to official database",
+		"description": ""
+	},
+	"sendSegmentation": {
+		"message": "Send",
 		"description": ""
 	},
 	"nextSegmentation": {
@@ -147,6 +159,14 @@
 	},
 	"logout": {
 		"message": "Logout",
+		"description": ""
+	},
+	"acceptSegmentation": {
+		"message": "Accept",
+		"description": ""
+	},
+	"declineSegmentation": {
+		"message": "Decline",
 		"description": ""
 	},
 	
