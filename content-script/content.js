@@ -1573,8 +1573,11 @@ var editorWrapper = {
 			
 			xhr.onreadystatechange = function() { 
 				if ( xhr.readyState == 4 ) {
+					self.modal.style.display = 'none';
+					self.modal.childNodes[0].childNodes[0].remove();
+					
 					if ( xhr.status == 200 ) {
-						console.log('response: ', xhr.responseText);
+						// console.log('response: ', xhr.responseText);
 						
 						var jsonResponse = JSON.parse(xhr.responseText);
 						if ( jsonResponse.message === 'added' || jsonResponse.message === 'updated' || jsonResponse.message === 'overwritten' ) {
@@ -1587,9 +1590,6 @@ var editorWrapper = {
 							window.alert('VideoSegments: ' + jsonResponse.message);
 						}
 					}
-					
-					self.modal.style.display = 'none';
-					self.modal.childNodes[0].childNodes[0].remove();
 				}
 			};
 			
