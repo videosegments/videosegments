@@ -25,12 +25,30 @@ var timer;
 var doCheck = false;
 
 browser.storage.local.get({ 
-	settings: false 
+		settings: false,
+		messages: {
+			segmentation: false,
+		}
 	}, function(result) {
-		doCheck = result.settings.displayPending;
+		console.log(result);
 		
-		checkContext();
-		timer = setInterval(checkContext, 60000);
+		if ( result.settings ) {
+			doCheck = result.settings.displayPending;
+			
+			checkContext();
+			timer = setInterval(checkContext, 60000);
+		}
+		
+		if ( result.messages.segmentation === false ) {
+			browser.storage.local.set({
+				messages: {
+					segmentation: true,
+				}
+			}, function() {
+				browser.tabs.create({url: 'http://www.videosegments.org/segmentation.php'});
+				console.log();
+			});
+		}
 	}
 );
 

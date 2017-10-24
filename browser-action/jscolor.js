@@ -60,7 +60,7 @@ var jsc = {
 				var opts = {};
 				if (optsStr) {
 					try {
-						opts = (new Function ('return (' + optsStr + ')'))();
+						// opts = (new Function ('return (' + optsStr + ')'))();
 					} catch(eParseError) {
 						jsc.warn('Error parsing jscolor options: ' + eParseError + ':\n' + optsStr);
 					}
@@ -682,7 +682,7 @@ var jsc = {
 		if (thisObj.onFineChange) {
 			var callback;
 			if (typeof thisObj.onFineChange === 'string') {
-				callback = new Function (thisObj.onFineChange);
+// ]				callback = new Function (thisObj.onFineChange);
 			} else {
 				callback = thisObj.onFineChange;
 			}
@@ -1100,7 +1100,7 @@ var jsc = {
 				if (jsc.isElementType(this.valueElement, 'input')) {
 					this.valueElement.value = value;
 				} else {
-					this.valueElement.innerHTML = value;
+					// this.valueElement.innerHTML = value;
 				}
 			}
 			if (!(flags & jsc.leaveStyle)) {

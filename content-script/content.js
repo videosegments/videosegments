@@ -1134,15 +1134,15 @@ var editorWrapper = {
 					
 					if ( j == 0 ) {
 						self.insertBeforeSegmentEntry(entry, 0, self.mediaPlayer.currentTime, this.name);
-						entry.getElementsByClassName('vs-editor-start-time')[0].value = self.mediaPlayer.currentTime.toFixed(2);
+						// entry.getElementsByClassName('vs-editor-start-time')[0].value = self.mediaPlayer.currentTime.toFixed(2);
 					}
 					else {
 						self.insertSegmentEntry(entries[j-1], parseFloat(entries[j-1].getElementsByClassName('vs-editor-end-time')[0].value), self.mediaPlayer.currentTime, this.name);
-						entry.getElementsByClassName('vs-editor-start-time')[0].value = self.mediaPlayer.currentTime.toFixed(2);
+						// entry.getElementsByClassName('vs-editor-start-time')[0].value = self.mediaPlayer.currentTime.toFixed(2);
 					}
 				}
 				self.updatePreview();
-			}, 'width: 80%; padding: 0; margin-right: 0; background-color: ' + this.settings.segments[segmentsTypes[i]].color + '; border: none; height: 2em; cursor: pointer; color: ' + textColor + ';');
+			}, 'width: 80%; padding: 0; margin-right: 0; background-color: ' + this.settings.segments[segmentsTypes[i]].color + '; border: none; cursor: pointer; color: ' + textColor + ';');
 			
 			// add segment from current time to end 
 			var buttonLastPos = this.createButton(segmentsTypes[i], '>', function() {
@@ -1191,7 +1191,7 @@ var editorWrapper = {
 				// update preview 
 				self.updatePreview();
 				// }
-			}, 'width: 20%; padding: 0; margin-left: 0; background-color: ' + this.settings.segments[segmentsTypes[i]].color + '; border: none; height: 2em; border-left: 1px solid black; cursor: pointer; color: ' + textColor + ';');
+			}, 'width: 20%; padding: 0; margin-left: 0; background-color: ' + this.settings.segments[segmentsTypes[i]].color + '; border: none; border-left: 1px solid black; cursor: pointer; color: ' + textColor + ';');
 			
 			// add buttons and define thier behavior 
 			var container = document.createElement('div');
@@ -1318,16 +1318,16 @@ var editorWrapper = {
 		inputStartTime.type = 'text';
 		inputStartTime.className = 'vs-editor-start-time';
 		inputStartTime.value = startTime.toFixed(2);
-		inputStartTime.size = 6;
-		inputStartTime.style = 'text-align: center';
+		inputStartTime.size = 8;
+		inputStartTime.style = 'text-align: center; font-family: courier';
 		
 		// end time 
 		var inputEndTime = document.createElement('input');
 		inputEndTime.type = 'text';
 		inputEndTime.className = 'vs-editor-end-time';
 		inputEndTime.value = endTime.toFixed(2);
-		inputEndTime.size = 6;
-		inputEndTime.style = 'text-align: center';
+		inputEndTime.size = 8;
+		inputEndTime.style = 'text-align: center; font-family: courier';
 		// update next segment start time
 		inputEndTime.onkeyup = function() {
 			var nextEntry = this.parentNode.nextSibling;
