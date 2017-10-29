@@ -1,7 +1,7 @@
 {
 	"manifest_version": 2,
 	"name": "__MSG_extensionName__",
-	"version": "1.4.1",
+	"version": "1.4.2",
 	
 	"applications": {
 		"gecko": {
@@ -19,7 +19,7 @@
 		"128": "icons/icon-128.png"
 	},
 	
-	"author": "Alex Lys",
+	"author": "VideoSegments Team",
 	
 	"background": {
 		"scripts": ["background-script/background.js"]
