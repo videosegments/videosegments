@@ -222,7 +222,7 @@ function loadSettings()
 		showSegmentationTools: true,
 		
 		// segmentation settings 
-		sendToDatabase: false,
+		// sendToDatabase: false,
 		displayPending: false,
 	}
 	
@@ -280,9 +280,9 @@ function restoreOptions(settings)
 	element.checked = settings.showSegmentationTools;
 	element.addEventListener('change', function() { updateGlobalBool(this, settings, 'showSegmentationTools'); });
 	
-	element = document.getElementById('sendToDatabase')
-	element.checked = settings.sendToDatabase;
-	element.addEventListener('change', function() { updateGlobalBool(this, settings, 'sendToDatabase'); });
+	// element = document.getElementById('sendToDatabase')
+	// element.checked = settings.sendToDatabase;
+	// element.addEventListener('change', function() { updateGlobalBool(this, settings, 'sendToDatabase'); });
 	
 	element = document.getElementById('displayPending')
 	element.checked = settings.displayPending;

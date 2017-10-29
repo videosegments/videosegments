@@ -936,7 +936,7 @@ function loadSettings() {
 		showSegmentationTools: true,
 		
 		// segmentation settings 
-		sendToDatabase: false,
+		// sendToDatabase: false,
 		displayPending: false,
 	}
 	
@@ -1263,24 +1263,24 @@ var editorWrapper = {
 		container.style.textAlign = 'right';
 		
 		// create send button 
-		if ( this.settings.sendToDatabase ) {
-			if ( segmentsData && segmentsData.origin === 'pendingDatabase' ) {
-				container.appendChild(this.createButton('', browser.i18n.getMessage('declineSegmentation'), function() {self.sendSegmentsData(true)}, 'width: 40%; padding: 0; height: 30px; margin-right: 5%;'));
-				container.appendChild(this.createButton('', browser.i18n.getMessage('acceptSegmentation'), function() {self.sendSegmentsData(false)}, 'width: 40%; padding: 0; height: 30px'));
-			}
-			else {
-				browser.storage.local.get({ request: '0' }, function(result) {
-					if ( result.request == '1' ) {
-						browser.storage.local.remove(['request']);
-						container.appendChild(self.createButton('', browser.i18n.getMessage('declineSegmentation'), function() {self.sendSegmentsData(true)}, 'width: 40%; padding: 0; height: 30px; margin-right: 5%;'));
-						container.appendChild(self.createButton('', browser.i18n.getMessage('sendSegmentation'), function() {self.sendSegmentsData(false)}, 'width: 40%; padding: 0; height: 30px'));
-					}
-					else {
-						container.appendChild(self.createButton('', browser.i18n.getMessage('sendSegmentationToOfficialDatabase'), function() {self.sendSegmentsData(false)}, 'width: 90%; padding: 0; height: 30px'));
-					}
-				});
-			}
+		// if ( this.settings.sendToDatabase ) {
+		if ( segmentsData && segmentsData.origin === 'pendingDatabase' ) {
+			container.appendChild(this.createButton('', browser.i18n.getMessage('declineSegmentation'), function() {self.sendSegmentsData(true)}, 'width: 40%; padding: 0; height: 30px; margin-right: 5%;'));
+			container.appendChild(this.createButton('', browser.i18n.getMessage('acceptSegmentation'), function() {self.sendSegmentsData(false)}, 'width: 40%; padding: 0; height: 30px'));
 		}
+		else {
+			browser.storage.local.get({ request: '0' }, function(result) {
+				if ( result.request == '1' ) {
+					browser.storage.local.remove(['request']);
+					container.appendChild(self.createButton('', browser.i18n.getMessage('declineSegmentation'), function() {self.sendSegmentsData(true)}, 'width: 40%; padding: 0; height: 30px; margin-right: 5%;'));
+					container.appendChild(self.createButton('', browser.i18n.getMessage('sendSegmentation'), function() {self.sendSegmentsData(false)}, 'width: 40%; padding: 0; height: 30px'));
+				}
+				else {
+					container.appendChild(self.createButton('', browser.i18n.getMessage('sendSegmentationToOfficialDatabase'), function() {self.sendSegmentsData(false)}, 'width: 90%; padding: 0; height: 30px'));
+				}
+			});
+		}
+		// }
 		controlButtons.appendChild(container);
 		
 		this.editorDiv.appendChild(controlButtons);
