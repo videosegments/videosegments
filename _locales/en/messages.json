@@ -5,7 +5,7 @@
 	},
 
 	"extensionDescription": {
-		"message": "Skips automatically advertisement, intros, credits, etc in videos which was segmented either by you or addon's moderators",
+		"message": "Skip automatically boring parts (intro, credits, advertisement) of music or videos. Watch only content.",
 		"description": ""
 	},
 	
