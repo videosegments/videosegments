@@ -316,6 +316,14 @@ var mediaPlayerWrapper = {
 						self.onGotSegments(response, 'officialDatabase', votes);
 					}
 				}
+				else {
+					// server doesn't answer, try to look into local database 
+					var video_id = self.sourceInformation.domain + '-' + self.sourceInformation.id;
+					browser.storage.local.get({ [video_id]: '' }, function(result) {
+						response = result[video_id];
+						self.onGotSegments(response, 'localDatabase', votes);
+					});
+				}
 			}
 		}
 		
