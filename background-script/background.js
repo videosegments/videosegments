@@ -23,14 +23,16 @@ if ( typeof this.chrome != 'undefined' ) {
 
 var timer;
 var doCheck = false;
+var totalTime = undefined;
 
 browser.storage.local.get({ 
 		settings: false,
 		messages: {
 			segmentation: false,
-		}
+		},
+		totalTime: 0,
 	}, function(result) {
-		console.log(result);
+		// console.log(result);
 		
 		if ( result.settings ) {
 			doCheck = result.settings.displayPending;
@@ -49,6 +51,9 @@ browser.storage.local.get({
 				console.log();
 			});
 		}
+		
+		totalTime = result.totalTime;
+		console.log('totalTime', totalTime);
 	}
 );
 
@@ -100,5 +105,11 @@ browser.runtime.onMessage.addListener(function(message) {
 	}
 	else if ( typeof message.updateBadge !== 'undefined' ) {
 		checkContext();
+	}
+	else if ( typeof message.updateTotalTime !== 'undefined' ) {
+		console.log(message.updateTotalTime, totalTime, parseFloat(message.updateTotalTime));
+		totalTime += parseFloat(message.updateTotalTime);
+		console.log(totalTime);
+		browser.storage.local.set({ totalTime: totalTime });
 	}
 });

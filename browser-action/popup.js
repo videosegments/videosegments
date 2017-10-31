@@ -228,9 +228,22 @@ function loadSettings()
 	}
 	
 	browser.storage.local.get({
-			settings: defaultSettings
+			settings: defaultSettings,
+			totalTime: 0,
 		}, function(result) {
+			console.log(result);
+			
 			restoreOptions(result.settings);
+			
+			var seconds = Number(result.totalTime);
+			var element = document.getElementById('saved-time');
+			
+			var h = Math.floor(seconds / 3600);
+			var m = Math.floor(seconds % 3600 / 60);
+			var s = Math.floor(seconds % 3600 % 60);
+
+			var totalTimeSaved = (h<10?('0'+h):h) + ":" + ('0' + m).slice(-2) + ":" + ('0' + s).slice(-2);
+			element.textContent = totalTimeSaved;
 		}
 	);
 }
@@ -273,11 +286,11 @@ function restoreOptions(settings)
 	element.value = settings.autoPauseDuration;
 	element.addEventListener('change', function() { updateGlobalValue(this, settings, 'autoPauseDuration'); });
 	
-	element = document.getElementById('showSegmentsbar')
+	element = document.getElementById('showSegmentsbar');
 	element.checked = settings.showSegmentsbar;
 	element.addEventListener('change', function() { updateGlobalBool(this, settings, 'showSegmentsbar'); });
 	
-	element = document.getElementById('showSegmentationTools')
+	element = document.getElementById('showSegmentationTools');
 	element.checked = settings.showSegmentationTools;
 	element.addEventListener('change', function() { updateGlobalBool(this, settings, 'showSegmentationTools'); });
 	
@@ -285,11 +298,11 @@ function restoreOptions(settings)
 	// element.checked = settings.sendToDatabase;
 	// element.addEventListener('change', function() { updateGlobalBool(this, settings, 'sendToDatabase'); });
 	
-	element = document.getElementById('displayPending')
+	element = document.getElementById('displayPending');
 	element.checked = settings.displayPending;
 	element.addEventListener('change', function() { updateGlobalBool(this, settings, 'displayPending'); browser.runtime.sendMessage( {'displayPending': this.checked }); });
 	
-	element = document.getElementById('databasePriority')
+	element = document.getElementById('databasePriority');
 	element.value = settings.databasePriority;
 	element.addEventListener('change', function() { updateGlobalSelect(this, settings, 'databasePriority'); });
 }

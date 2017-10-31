@@ -625,6 +625,8 @@ var mediaPlayerWrapper = {
 				}
 				
 				// rewind to segment end time
+				console.log(this.segmentsData.timestamps[rewindSegment+1], this.mediaPlayer.currentTime);
+				browser.runtime.sendMessage({ 'updateTotalTime': this.segmentsData.timestamps[rewindSegment+1] - this.mediaPlayer.currentTime });
 				this.mediaPlayer.currentTime = this.segmentsData.timestamps[rewindSegment+1];
 				
 				// look for next segment

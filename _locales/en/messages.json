@@ -218,6 +218,13 @@
 	
 	
 	
+	"timeSaved": {
+		"message": "Time saved: ",
+		"description": ""
+	},
+	
+	
+	
 	"requestSegmentationLabel": {
 		"message": "Request",
 		"description": ""

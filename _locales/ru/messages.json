@@ -218,6 +218,13 @@
 	
 	
 	
+	"timeSaved": {
+		"message": "Сэкономлено времени: ",
+		"description": ""
+	},
+	
+	
+	
 	"requestSegmentationLabel": {
 		"message": "Запросить",
 		"description": ""
