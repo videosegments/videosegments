@@ -977,121 +977,6 @@ var mediaPlayerWrapper = {
 	}
 };
 
-function loadSettings() {
-	// default extension settings 
-	var defaultSettings = {
-		// segments configuration
-		segments: {
-			// content 
-			c: 	{ skip: false, color: '#00ff00', duration: 0.0, speed: 1.0 },
-			// adcontent 
-			ac: { skip: false, color: '#008800', duration: 0.0, speed: 1.0 },
-			// advertisement 
-			a: 	{ skip: true,  color: '#ff0000', duration: 0.0, speed: 5.0 },
-			// intro 
-			i: 	{ skip: true,  color: '#0000ff', duration: 0.0, speed: 5.0 },
-			// credits 
-			cr: { skip: true,  color: '#ffff00', duration: 0.0, speed: 5.0 },
-			// cutscene 
-			cs: { skip: true,  color: '#808080', duration: 0.0, speed: 2.0 },
-			// offtop 
-			o: 	{ skip: true,  color: '#ff00ff', duration: 0.0, speed: 3.0 },
-			// interactive 
-			ia: { skip: true,  color: '#00ffff', duration: 0.0, speed: 4.0 },
-			// scam 
-			s:	{ skip: true,  color: '#008080', duration: 0.0, speed: 5.0 },
-		},
-		
-		// global settings 
-		autoPauseDuration: 1,
-		showSegmentsbar: true,
-		showSegmentationTools: true,
-		databasePriority: 'local',
-		
-		// segmentation settings 
-		// sendToDatabase: false,
-		displayPending: false,
-	}
-	
-	// request settings 
-	browser.storage.local.get({
-		settings: defaultSettings
-	}, function(result) {
-		tryFindMediaPlayer(result.settings);
-	});
-}
-
-// media player wrapper
-var wrapper;
-
-// look for media players on page 
-function tryFindMediaPlayer(settings) 
-{
-	// find media player on page 
-	var mediaPlayer = document.getElementsByTagName('video')[0];
-	// if media player exists
-	if ( mediaPlayer ) {
-		// remove click callback
-		document.onclick = null;
-		
-		// create wrapper 
-		wrapper = Object.create(mediaPlayerWrapper);
-		// initialize wrapper 
-		wrapper.init(mediaPlayer, settings);
-	}
-	else {
-		// prevent multiple hooks
-		var hooked = false;
-		// listen for mutations on page 
-		var observer = new MutationObserver(onMutation);
-		observer.observe(document.documentElement, {
-			childList: true, // report added/removed nodes
-			subtree: true, // low level
-		});
-		
-		// called when mutation occurs
-		function onMutation(mutations) {
-			mutations.forEach(function(mutation) {
-				// sometime video is netsed so we have to look deeper 
-				if ( mutation.target.getElementsByTagName('video')[0] && !hooked ) {
-					// console.log(mutation);
-					hooked = true;
-					
-					tryFindMediaPlayer(settings);
-					observer.disconnect();
-				}
-			});
-		}
-	}
-}
-
-// load settings then start search of media player
-loadSettings(tryFindMediaPlayer);
-
-// on settings update
-browser.runtime.onMessage.addListener(
-	function(request, sender, sendResponse) {
-		if ( wrapper ) {
-			wrapper.settings = request.settings;
-			
-			wrapper.removeSegmentBar();
-			if ( wrapper.settings.showSegmentsbar ) {
-				wrapper.insertSegmentBar();
-			}
-			
-			wrapper.editor.destroy();
-			if ( wrapper.settings.showSegmentationTools ) {
-				wrapper.editor.init(wrapper, wrapper.segmentsData, wrapper.settings, wrapper.sourceInformation.domain, wrapper.sourceInformation.id);
-			}
-			
-			if ( !wrapper.mediaPlayer.paused ) {
-				wrapper.mediaPlayer.pause();
-				wrapper.mediaPlayer.play();
-			}
-		}
-	}
-);
-
 /**
  * Main class to handle segmentation. 
  * Should be rewritten for better look. 
@@ -1733,3 +1618,120 @@ var editorWrapper = {
 		}
 	},
 };
+
+
+
+function loadSettings() {
+	// default extension settings 
+	var defaultSettings = {
+		// segments configuration
+		segments: {
+			// content 
+			c: 	{ skip: false, color: '#00ff00', duration: 0.0, speed: 1.0 },
+			// adcontent 
+			ac: { skip: false, color: '#008800', duration: 0.0, speed: 1.0 },
+			// advertisement 
+			a: 	{ skip: true,  color: '#ff0000', duration: 0.0, speed: 5.0 },
+			// intro 
+			i: 	{ skip: true,  color: '#0000ff', duration: 0.0, speed: 5.0 },
+			// credits 
+			cr: { skip: true,  color: '#ffff00', duration: 0.0, speed: 5.0 },
+			// cutscene 
+			cs: { skip: true,  color: '#808080', duration: 0.0, speed: 2.0 },
+			// offtop 
+			o: 	{ skip: true,  color: '#ff00ff', duration: 0.0, speed: 3.0 },
+			// interactive 
+			ia: { skip: true,  color: '#00ffff', duration: 0.0, speed: 4.0 },
+			// scam 
+			s:	{ skip: true,  color: '#008080', duration: 0.0, speed: 5.0 },
+		},
+		
+		// global settings 
+		autoPauseDuration: 1,
+		showSegmentsbar: true,
+		showSegmentationTools: true,
+		databasePriority: 'local',
+		
+		// segmentation settings 
+		// sendToDatabase: false,
+		displayPending: false,
+	}
+	
+	// request settings 
+	browser.storage.local.get({
+		settings: defaultSettings
+	}, function(result) {
+		tryFindMediaPlayer(result.settings);
+	});
+}
+
+// media player wrapper
+var wrapper;
+
+// look for media players on page 
+function tryFindMediaPlayer(settings) 
+{
+	// find media player on page 
+	var mediaPlayer = document.getElementsByTagName('video')[0];
+	// if media player exists
+	if ( mediaPlayer ) {
+		// remove click callback
+		document.onclick = null;
+		
+		// create wrapper 
+		wrapper = Object.create(mediaPlayerWrapper);
+		// initialize wrapper 
+		wrapper.init(mediaPlayer, settings);
+	}
+	else {
+		// prevent multiple hooks
+		var hooked = false;
+		// listen for mutations on page 
+		var observer = new MutationObserver(onMutation);
+		observer.observe(document.documentElement, {
+			childList: true, // report added/removed nodes
+			subtree: true, // low level
+		});
+		
+		// called when mutation occurs
+		function onMutation(mutations) {
+			mutations.forEach(function(mutation) {
+				// sometime video is netsed so we have to look deeper 
+				if ( mutation.target.getElementsByTagName('video')[0] && !hooked ) {
+					// console.log(mutation);
+					hooked = true;
+					
+					tryFindMediaPlayer(settings);
+					observer.disconnect();
+				}
+			});
+		}
+	}
+}
+
+// load settings then start search of media player
+loadSettings(tryFindMediaPlayer);
+
+// on settings update
+browser.runtime.onMessage.addListener(
+	function(request, sender, sendResponse) {
+		if ( wrapper ) {
+			wrapper.settings = request.settings;
+			
+			wrapper.removeSegmentBar();
+			if ( wrapper.settings.showSegmentsbar ) {
+				wrapper.insertSegmentBar();
+			}
+			
+			wrapper.editor.destroy();
+			if ( wrapper.settings.showSegmentationTools ) {
+				wrapper.editor.init(wrapper, wrapper.segmentsData, wrapper.settings, wrapper.sourceInformation.domain, wrapper.sourceInformation.id);
+			}
+			
+			if ( !wrapper.mediaPlayer.paused ) {
+				wrapper.mediaPlayer.pause();
+				wrapper.mediaPlayer.play();
+			}
+		}
+	}
+);

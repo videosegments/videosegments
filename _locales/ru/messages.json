@@ -187,6 +187,10 @@
 	
 	
 	
+	"databasePriority": {
+		"message": "Приоритет базы данных: ",
+		"description": ""
+	},
 	"hideSegmentationTools": {
 		"message": "Скрыть панель сегментации",
 		"description": ""
@@ -201,6 +205,10 @@
 	},
 	"officialDatabase": {
 		"message": "официальная база данных",
+		"description": ""
+	},
+	"pendingDatabase": {
+		"message": "база запросов",
 		"description": ""
 	},
 	"noSegmentation": {
