@@ -180,6 +180,7 @@ var mediaPlayerWrapper = {
 		
 		// clear segments data 
 		this.segmentsData = null;
+		this.secondPrioritySegmentsData = null;
 		
 		if ( this.defaultSpeed ) {
 			this.preventUpdate = true;
