@@ -187,6 +187,10 @@
 	
 	
 	
+	"databasePriority": {
+		"message": "Database priority: ",
+		"description": ""
+	},
 	"hideSegmentationTools": {
 		"message": "Hide segmentation tools",
 		"description": ""

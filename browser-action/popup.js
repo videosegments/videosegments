@@ -220,6 +220,7 @@ function loadSettings()
 		autoPauseDuration: 1,
 		showSegmentsbar: true,
 		showSegmentationTools: true,
+		databasePriority: 'local',
 		
 		// segmentation settings 
 		// sendToDatabase: false,
@@ -287,6 +288,10 @@ function restoreOptions(settings)
 	element = document.getElementById('displayPending')
 	element.checked = settings.displayPending;
 	element.addEventListener('change', function() { updateGlobalBool(this, settings, 'displayPending'); browser.runtime.sendMessage( {'displayPending': this.checked }); });
+	
+	element = document.getElementById('databasePriority')
+	element.value = settings.databasePriority;
+	element.addEventListener('change', function() { updateGlobalSelect(this, settings, 'databasePriority'); });
 }
 
 function updatePlayback(element, settings, segment)
@@ -327,6 +332,13 @@ function updateGlobalValue(element, settings, field)
 function updateGlobalBool(element, settings, field)
 {
 	settings[field] = element.checked;
+	browser.storage.local.set({ settings: settings });
+	notifyMediaPlayerWrapper(settings);
+}
+
+function updateGlobalSelect(element, settings, field)
+{
+	settings[field] = element.value;
 	browser.storage.local.set({ settings: settings });
 	notifyMediaPlayerWrapper(settings);
 }

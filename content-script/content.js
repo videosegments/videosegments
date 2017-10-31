@@ -55,6 +55,8 @@ var mediaPlayerWrapper = {
 	
 	/* json-like object with segments data */
 	segmentsData: null,
+	/* segments data from second-priority database */
+	secondPrioritySegmentsData: null,
 	
 	/* segments bar */
 	segmentsBar: null,
@@ -261,6 +263,27 @@ var mediaPlayerWrapper = {
 		// console.log('request: https://db.videosegments.org/get_segments.php?domain=' + domain + '&' + 'video_id=' + id);
 		this.editor.destroy();
 		
+		// pipeline to bypass callback hell
+		// https://www.pluralsight.com/guides/front-end-javascript/introduction-to-asynchronous-javascript
+		if ( this.settings.databasePriority === 'local' ) {
+			this.getSegmentation(self, domain, id, [this.getLocalSegmentation, this.getOfficialSegmentation, this.getPendingSegmentation, this.killAutoPauseTimer]);
+		}
+		else {
+			this.getSegmentation(self, domain, id, [this.getOfficialSegmentation, this.getLocalSegmentation, this.getPendingSegmentation, this.killAutoPauseTimer]);
+		}
+	},
+	
+	getSegmentation: function(self, domain, id, tasks) {
+		// console.log('mediaPlayerWrapper::getSegmentation()');
+		
+		tasks[0](self, domain, id, function() {
+			self.getSegmentation(self, domain, id, tasks.slice(1));  
+		});
+	},
+	
+	getOfficialSegmentation: function(self, domain, id, callback) {
+		// console.log('mediaPlayerWrapper::getOfficialSegmentation()');
+		
 		var xhr = new XMLHttpRequest();
 		xhr.open('GET', 'https://db.videosegments.org/get.php?domain=' + domain + '&' + 'id=' + id);
 		xhr.onreadystatechange = function() { 
@@ -271,64 +294,103 @@ var mediaPlayerWrapper = {
 					
 					var response = JSON.parse(xhr.responseText);
 					var votes = response.votes;
-					// if no official segmentation 
-					if ( typeof response.timestamps == 'undefined' ) {
-						// if sharing enabled look for pending requests 
-						if ( self.settings.showSegmentationTools ) {
-							browser.storage.local.get({ pending: '' }, function(result) {
-								if ( result.pending ) {
-									response = result.pending;
-									if ( response.timestamps.indexOf(',') > 0 ) {
-										response.timestamps = response.timestamps.split(',').map(parseFloat);
-									}
-									else {
-										if ( response.timestamps === '' ) {
-											response.timestamps = [];
-										}
-										else {
-											response.timestamps = [parseFloat(response.timestamps)];
-										}
-									}
-									response.types = response.types.split(',');
-									browser.storage.local.remove(['pending']);
-									self.onGotSegments(response, 'pendingDatabase', votes);
-								}
-								else {
-									// try to find local segmentation
-									var video_id = self.sourceInformation.domain + '-' + self.sourceInformation.id;
-									browser.storage.local.get({ [video_id]: '' }, function(result) {
-										response = result[video_id];
-										self.onGotSegments(response, 'localDatabase', votes);
-									});
-								}
-							});
+					if ( typeof response.timestamps !== 'undefined' ) {
+						if ( self.segmentsData === null ) {
+							self.onGotSegments(response, 'officialDatabase', votes);
 						}
 						else {
-							// try to find local segmentation
-							var video_id = self.sourceInformation.domain + '-' + self.sourceInformation.id;
-							browser.storage.local.get({ [video_id]: '' }, function(result) {
-								response = result[video_id];
-								self.onGotSegments(response, 'localDatabase', votes);
-							});
+							self.secondPrioritySegmentsData = response;
+							if ( self.secondPrioritySegmentsData.timestamps[0] != 0.0 ) {
+								self.secondPrioritySegmentsData.timestamps.unshift(0.0);
+								self.secondPrioritySegmentsData.timestamps.push(self.mediaPlayer.duration);
+							}
+							else {
+								self.secondPrioritySegmentsData.timestamps = [0.0, self.mediaPlayer.duration];
+							}
 						}
 					}
-					else {
-						self.onGotSegments(response, 'officialDatabase', votes);
-					}
 				}
-				else {
-					// server doesn't answer, try to look into local database 
-					var video_id = self.sourceInformation.domain + '-' + self.sourceInformation.id;
-					browser.storage.local.get({ [video_id]: '' }, function(result) {
-						response = result[video_id];
-						self.onGotSegments(response, 'localDatabase', votes);
-					});
+				
+				if ( callback ) {
+					callback();
 				}
 			}
 		}
 		
 		xhr.setRequestHeader("content-type", "application/x-www-form-urlencoded");
 		xhr.send();
+	},
+	
+	getLocalSegmentation: function(self, domain, id, callback) {
+		// console.log('mediaPlayerWrapper::getLocalSegmentation()');
+		
+		var video_id = domain + '-' + id;
+		browser.storage.local.get({ [video_id]: '' }, function(result) {
+			if ( result[video_id] !== '' ) {
+				var response = result[video_id];
+				if ( self.segmentsData === null ) {
+					self.onGotSegments(response, 'localDatabase', 0);
+				}
+				else {
+					self.secondPrioritySegmentsData = response;
+					if ( self.secondPrioritySegmentsData.timestamps[0] != 0.0 ) {
+						self.secondPrioritySegmentsData.timestamps.unshift(0.0);
+						self.secondPrioritySegmentsData.timestamps.push(self.mediaPlayer.duration);
+					}
+					else {
+						self.secondPrioritySegmentsData.timestamps = [0.0, self.mediaPlayer.duration];
+					}
+				}
+			}
+			
+			if ( callback ) {
+				callback();
+			}
+		});
+	},
+	
+	getPendingSegmentation: function(self, domain, id, callback) {
+		// console.log('mediaPlayerWrapper::getPendingSegmentation()');
+		
+		browser.storage.local.get({ pending: '' }, function(result) {
+			if ( result.pending !== '' ) {
+				response = result.pending;
+				if ( response.timestamps.indexOf(',') > 0 ) {
+					response.timestamps = response.timestamps.split(',').map(parseFloat);
+				}
+				else {
+					if ( response.timestamps === '' ) {
+						response.timestamps = [];
+					}
+					else {
+						response.timestamps = [parseFloat(response.timestamps)];
+					}
+				}
+				response.types = response.types.split(',');
+				browser.storage.local.remove(['pending']);
+				
+				// override segments data 
+				self.onGotSegments(response, 'pendingDatabase', 0);
+			}
+			
+			if ( callback ) {
+				callback();
+			}
+		});
+	},
+	
+	killAutoPauseTimer: function(self) {
+		// console.log('mediaPlayerWrapper::killAutoPauseTimer()');
+		
+		// if user waiting for segments 
+		if ( self.pauseTimer ) {
+			// if video paused (and is not loading)
+			if ( self.mediaPlayer.paused ) {
+				clearTimeout(self.pauseTimer);
+				self.pauseTimer = null;
+				self.mediaPlayer.play();
+			}
+		}
 	},
 	
 	onGotSegments: function(response, origin, votes) {
@@ -880,7 +942,7 @@ var mediaPlayerWrapper = {
 	/*
 	 * Called when segments in editor were changed
 	 */ 
-	updateSegmentsData: function(segmentsData) 
+	updateSegmentsData: function(segmentsData, saveLocally) 
 	{
 		if ( !this.segmentsData ) {
 			this.mediaPlayer.addEventListener("play", this.eventContexts.onPlay);
@@ -893,22 +955,24 @@ var mediaPlayerWrapper = {
 		this.segmentsData = segmentsData;
 		this.insertSegmentBar();
 		
-		// save locally 
-		var video_id = this.sourceInformation.domain + '-' + this.sourceInformation.id;
-		// if segmentation doesn't exists 
-		if ( segmentsData.types.length == 0 ) {
-			// remove it from local database 
-			browser.storage.local.remove([video_id]);
-		}
-		else {
-			// save locally
-			var temp = JSON.parse(JSON.stringify(segmentsData)); // break link between segments data and saved data 
-			temp.timestamps.shift(); // remove first 
-			temp.timestamps.pop(); // remove last 
-			
-			browser.storage.local.set({
-				[video_id]: temp
-			});
+		if ( saveLocally ) {
+			// save locally 
+			var video_id = this.sourceInformation.domain + '-' + this.sourceInformation.id;
+			// if segmentation doesn't exists 
+			if ( segmentsData.types.length == 0 ) {
+				// remove it from local database 
+				browser.storage.local.remove([video_id]);
+			}
+			else {
+				// save locally
+				var temp = JSON.parse(JSON.stringify(segmentsData)); // break link between segments data and saved data 
+				temp.timestamps.shift(); // remove first 
+				temp.timestamps.pop(); // remove last 
+				
+				browser.storage.local.set({
+					[video_id]: temp
+				});
+			}
 		}
 	}
 };
@@ -942,6 +1006,7 @@ function loadSettings() {
 		autoPauseDuration: 1,
 		showSegmentsbar: true,
 		showSegmentationTools: true,
+		databasePriority: 'local',
 		
 		// segmentation settings 
 		// sendToDatabase: false,
@@ -1256,7 +1321,48 @@ var editorWrapper = {
 		container.style.display = 'inline-block';
 		container.style.textAlign = 'center';
 		if ( segmentsData && segmentsData.origin ) {
-			container.appendChild(document.createTextNode(browser.i18n.getMessage('origin') + browser.i18n.getMessage(segmentsData.origin)));
+			if ( this.mediaPlayerWrapper.secondPrioritySegmentsData ) {
+				var select = document.createElement('select');
+				
+				var option = document.createElement('option');
+				option.value = 'local';
+				option.text = browser.i18n.getMessage('localDatabase');
+				select.appendChild(option);
+				
+				option = document.createElement('option');
+				option.value = 'official';
+				option.text = browser.i18n.getMessage('officialDatabase');
+				select.appendChild(option);
+				
+				select.value = (segmentsData.origin === 'localDatabase') ? 'local' : 'official';
+				select.onchange = function() {
+					var buffer = self.mediaPlayerWrapper.segmentsData;
+					self.mediaPlayerWrapper.segmentsData = self.mediaPlayerWrapper.secondPrioritySegmentsData;
+					self.mediaPlayerWrapper.secondPrioritySegmentsData = buffer;
+					
+					// delete old segments entries 
+					var segmentation = document.getElementById('vs-editor-entries');
+					while (segmentation.firstChild) {
+						segmentation.removeChild(segmentation.firstChild);
+					}
+					
+					if ( self.mediaPlayerWrapper.segmentsData ) {
+						var segments = self.mediaPlayerWrapper.segmentsData.timestamps.length;
+						for ( let i = 0; i < segments-1; ++i ) {
+							self.addSegmentEntry(segmentation, self.mediaPlayerWrapper.segmentsData.timestamps[i], self.mediaPlayerWrapper.segmentsData.timestamps[i+1], self.mediaPlayerWrapper.segmentsData.types[i]);
+						}
+					}
+					
+					// update visually and but do not save changes 
+					self.mediaPlayerWrapper.updateSegmentsData(self.mediaPlayerWrapper.segmentsData, false);
+				}
+				
+				container.appendChild(document.createTextNode(browser.i18n.getMessage('origin')));
+				container.appendChild(select);
+			}
+			else {
+				container.appendChild(document.createTextNode(browser.i18n.getMessage('origin') + browser.i18n.getMessage(segmentsData.origin)));
+			}
 		}
 		else {
 			container.appendChild(document.createTextNode(browser.i18n.getMessage('origin') + browser.i18n.getMessage('noSegmentation')));
@@ -1451,7 +1557,8 @@ var editorWrapper = {
 			segmentsData.types[i] = entries[i].getElementsByClassName('vs-editor-segment-type')[0].value;
 		}
 		
-		this.mediaPlayerWrapper.updateSegmentsData(segmentsData);
+		// update visually and save changes 
+		this.mediaPlayerWrapper.updateSegmentsData(segmentsData, true);
 	},
 	
 	/*
