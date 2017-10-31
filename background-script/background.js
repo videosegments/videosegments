@@ -48,12 +48,11 @@ browser.storage.local.get({
 				}
 			}, function() {
 				browser.tabs.create({url: 'http://www.videosegments.org/segmentation.php'});
-				console.log();
 			});
 		}
 		
 		totalTime = result.totalTime;
-		console.log('totalTime', totalTime);
+		// console.log('totalTime', totalTime);
 	}
 );
 
@@ -107,9 +106,9 @@ browser.runtime.onMessage.addListener(function(message) {
 		checkContext();
 	}
 	else if ( typeof message.updateTotalTime !== 'undefined' ) {
-		console.log(message.updateTotalTime, totalTime, parseFloat(message.updateTotalTime));
+		// console.log(message.updateTotalTime, totalTime, parseFloat(message.updateTotalTime));
 		totalTime += parseFloat(message.updateTotalTime);
-		console.log(totalTime);
+		// console.log(totalTime);
 		browser.storage.local.set({ totalTime: totalTime });
 	}
 });

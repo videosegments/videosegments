@@ -231,7 +231,7 @@ function loadSettings()
 			settings: defaultSettings,
 			totalTime: 0,
 		}, function(result) {
-			console.log(result);
+			// console.log(result);
 			
 			restoreOptions(result.settings);
 			

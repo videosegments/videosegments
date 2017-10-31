@@ -294,10 +294,10 @@ var mediaPlayerWrapper = {
 					// console.log(xhr.responseText);
 					
 					var response = JSON.parse(xhr.responseText);
-					var votes = response.votes;
+					// var votes = response.votes;
 					if ( typeof response.timestamps !== 'undefined' ) {
 						if ( self.segmentsData === null ) {
-							self.onGotSegments(response, 'officialDatabase', votes);
+							self.onGotSegments(response, 'officialDatabase', 0);
 						}
 						else {
 							self.secondPrioritySegmentsData = response;
@@ -382,6 +382,16 @@ var mediaPlayerWrapper = {
 	
 	killAutoPauseTimer: function(self) {
 		// console.log('mediaPlayerWrapper::killAutoPauseTimer()');
+		
+		// no segmentation found 
+		if ( self.segmentsData === null ) {
+			if ( self.afterFullScreen ) {
+				self.afterFullScreen = false;
+			}
+			else {
+				self.createSegmentationTools(0);
+			}
+		}
 		
 		// if user waiting for segments 
 		if ( self.pauseTimer ) {
@@ -496,16 +506,16 @@ var mediaPlayerWrapper = {
 					if ( attachTo ) {
 						setTimeout(function() {
 							self.editor.init(self, self.segmentsData, self.settings, self.sourceInformation.domain, self.sourceInformation.id);
-							setTimeout(function() {
-								if ( votes == 0 ) {
+							// setTimeout(function() {
+								// if ( votes == 0 ) {
 									// insert request segmentation button 
-									self.insertMenu(false);
-								}
-								else {
+									// self.insertMenu(false);
+								// }
+								// else {
 									// insert request segmentation button 
-									self.insertMenu(true);
-								}
-							}, 500);
+									// self.insertMenu(true);
+								// }
+							// }, 500);
 							
 						}, 500);
 						clearInterval(subtimer);
@@ -516,16 +526,16 @@ var mediaPlayerWrapper = {
 						if ( attachTo ) {
 							setTimeout(function() {
 								self.editor.init(self, self.segmentsData, self.settings, self.sourceInformation.domain, self.sourceInformation.id);
-								setTimeout(function() {
-									if ( votes == 0 ) {
+								// setTimeout(function() {
+									// if ( votes == 0 ) {
 										// insert request segmentation button 
-										self.insertMenu(false);
-									}
-									else {
+										// self.insertMenu(false);
+									// }
+									// else {
 										// insert request segmentation button 
-										self.insertMenu(true);
-									}
-								}, 500);
+										// self.insertMenu(true);
+									// }
+								// }, 500);
 								
 							}, 500);
 							clearInterval(subtimer);
@@ -625,7 +635,7 @@ var mediaPlayerWrapper = {
 				}
 				
 				// rewind to segment end time
-				console.log(this.segmentsData.timestamps[rewindSegment+1], this.mediaPlayer.currentTime);
+				// console.log(this.segmentsData.timestamps[rewindSegment+1], this.mediaPlayer.currentTime);
 				browser.runtime.sendMessage({ 'updateTotalTime': this.segmentsData.timestamps[rewindSegment+1] - this.mediaPlayer.currentTime });
 				this.mediaPlayer.currentTime = this.segmentsData.timestamps[rewindSegment+1];
 				
@@ -1513,7 +1523,7 @@ var editorWrapper = {
 		xhr.onreadystatechange = function() { 
 			if ( xhr.readyState == 4 ) {
 				if ( xhr.status == 200 ) {
-					console.log('response: ', xhr.responseText);
+					// console.log('response: ', xhr.responseText);
 					var jsonResponse = JSON.parse(xhr.responseText);
 					
 					if ( jsonResponse.message === 'captcha' ) {
