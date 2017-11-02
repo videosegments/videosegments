@@ -496,54 +496,63 @@ var mediaPlayerWrapper = {
 		// console.log('createSegmentationTools');
 		var self = this;
 		
-		if ( this.settings.showSegmentationTools ) {
+		// if ( this.settings.showSegmentationTools ) {
 			// if it's not iframe 
 			if ( window.parent === window ) {
 				// very hardcoded 
 				var subtimer = setInterval(function() {
-					var attachTo;
-					attachTo = document.getElementById('info-contents');
-					if ( attachTo ) {
-						setTimeout(function() {
-							self.editor.init(self, self.segmentsData, self.settings, self.sourceInformation.domain, self.sourceInformation.id);
-							// setTimeout(function() {
-								// if ( votes == 0 ) {
-									// insert request segmentation button 
-									// self.insertMenu(false);
-								// }
-								// else {
-									// insert request segmentation button 
-									// self.insertMenu(true);
-								// }
-							// }, 500);
-							
-						}, 500);
-						clearInterval(subtimer);
-					}
-					else {
-						// old desing
-						attachTo = document.getElementById('watch-header');
-						if ( attachTo ) {
-							setTimeout(function() {
-								self.editor.init(self, self.segmentsData, self.settings, self.sourceInformation.domain, self.sourceInformation.id);
-								// setTimeout(function() {
-									// if ( votes == 0 ) {
-										// insert request segmentation button 
-										// self.insertMenu(false);
-									// }
-									// else {
-										// insert request segmentation button 
-										// self.insertMenu(true);
-									// }
-								// }, 500);
-								
-							}, 500);
-							clearInterval(subtimer);
-						}
+					if ( !self.tryInsertSegmentationTools(self, 'info-contents', subtimer) ) {
+						self.tryInsertSegmentationTools(self, 'watch-header', subtimer)
 					}
 				}, 100);
 			}
+		// }
+	},
+	
+	tryInsertSegmentationTools: function(self, id, timer) {
+		var attachTo;
+		attachTo = document.getElementById('info-contents');
+		if ( attachTo ) {
+			setTimeout(function() {
+				if ( self.settings.showSegmentationTools ) {
+					self.editor.init(self, self.segmentsData, self.settings, self.sourceInformation.domain, self.sourceInformation.id);
+				}
+				
+				setTimeout(function() {
+					var actions = document.getElementById('watch8-secondary-actions');
+					if ( !actions ) {
+						actions = document.getElementById('menu-container');
+					}
+					
+					var img = document.createElement('img');
+					img.src = 'https://db.videosegments.org/images/icon_wb.png';
+					img.style.height = '20px';
+					img.style.width = '20px';
+					img.style.top = '-30px';
+					img.style.cursor = 'pointer';
+					img.style.paddingTop = '10px';
+					img.style.paddingLeft = '10px';
+					img.style.paddingRight = '10px';
+					img.addEventListener('click', function() {
+						if ( wrapper.settings.showSegmentationTools ) {
+							wrapper.editor.destroy();
+						}
+						else {
+							wrapper.editor.init(wrapper, wrapper.segmentsData, wrapper.settings, wrapper.sourceInformation.domain, wrapper.sourceInformation.id);
+						}
+						
+						wrapper.settings.showSegmentationTools = !wrapper.settings.showSegmentationTools;
+					});
+					
+					actions.getElementsByTagName('ytd-button-renderer')[0].insertAdjacentElement('afterEnd', img);
+				}, 500);
+				
+			}, 500);
+			clearInterval(timer);
+			return true;
 		}
+		
+		return false;
 	},
 	
 	/*
