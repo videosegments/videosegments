@@ -355,7 +355,7 @@ var mediaPlayerWrapper = {
 		
 		browser.storage.local.get({ pending: '' }, function(result) {
 			if ( result.pending !== '' ) {
-				response = result.pending;
+				var response = result.pending;
 				if ( response.timestamps.indexOf(',') > 0 ) {
 					response.timestamps = response.timestamps.split(',').map(parseFloat);
 				}
