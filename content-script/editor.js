@@ -267,7 +267,7 @@ var editor = {
 		button = document.createElement('button');
 		button.classList.add(className);
 		button.name = type;
-		button.innerHTML = text;
+		button.appendChild(document.createTextNode(text));
 		button.style.color = color;
 		button.style.backgroundColor = backgroundColor;
 		button.addEventListener('click', clickCallback);
@@ -549,7 +549,11 @@ var editor = {
 	
 	adjustSelectWidth: function(caller) {
 		var text = caller[caller.selectedIndex].innerHTML;
-		this.tempSelect.firstChild.innerHTML = text;
+		while ( this.tempSelect.firstChild.firstChild ) {
+			this.tempSelect.firstChild.firstChild.remove();
+		}
+		
+		this.tempSelect.firstChild.appendChild(document.createTextNode(text));
 		caller.style.width = this.tempSelect.offsetWidth + 2 + 'px';
 	},
 	
