@@ -568,6 +568,11 @@ var mediaPlayerWrapper = {
 		// console.log('mediaPlayerWrapper::onPlay()', this.mediaPlayer.playbackRate);
 		// this event is called before "durationchange" event during ajax redirection so we have to stop it manually
 		if ( this.url != this.getVideoUrl() ) {
+			// kill rewind timer
+			if ( this.rewindTimer ) {
+				clearTimeout(this.rewindTimer);
+				this.rewindTimer = null;
+			}
 			// console.log(this.url + ' ' + this.mediaPlayer.baseURI);
 			return;
 		}
@@ -593,6 +598,11 @@ var mediaPlayerWrapper = {
 	tryRewind: function(rewindSegment) {
 		// firefox will call it on video change
 		if ( this.url != this.getVideoUrl() ) {
+			// kill rewind timer
+			if ( this.rewindTimer ) {
+				clearTimeout(this.rewindTimer);
+				this.rewindTimer = null;
+			}
 			return;
 		}
 		
@@ -1672,7 +1682,7 @@ function loadSettings() {
 		autoPauseDuration: 1.0,
 		showSegmentsbar: true,
 		showSegmentationTools: true,
-		hideOnSegmentedVideos: false,
+		hideOnSegmentedVideos: true,
 		pinSegmentationTools: false,
 		hideIcon: false,
 		popupDurationOnSend: 5.0,

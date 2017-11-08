@@ -220,7 +220,7 @@ function loadSettings()
 		autoPauseDuration: 1.0,
 		showSegmentsbar: true,
 		showSegmentationTools: true,
-		hideOnSegmentedVideos: false,
+		hideOnSegmentedVideos: true,
 		pinSegmentationTools: false,
 		hideIcon: false,
 		popupDurationOnSend: 5.0,
@@ -311,9 +311,9 @@ function restoreOptions(settings)
 	element.checked = settings.showSegmentationTools;
 	element.addEventListener('change', function() { updateGlobalBool(this, settings, 'showSegmentationTools'); });
 	
-	// element = document.getElementById('hideOnSegmentedVideos');
-	// element.checked = settings.hideOnSegmentedVideos;
-	// element.addEventListener('change', function() { updateGlobalBool(this, settings, 'hideOnSegmentedVideos'); });
+	element = document.getElementById('hideOnSegmentedVideos');
+	element.checked = settings.hideOnSegmentedVideos;
+	element.addEventListener('change', function() { updateGlobalBool(this, settings, 'hideOnSegmentedVideos'); });
 	
 	element = document.getElementById('pinSegmentationTools');
 	element.checked = settings.pinSegmentationTools;
