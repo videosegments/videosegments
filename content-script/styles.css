@@ -1,0 +1,185 @@
+
+#vs-editor-icon {
+	position: fixed;
+	bottom: 2%;
+	left: 0;
+	width: 30px;
+	height: 30px;
+	border: 1px solid #ddd;
+	border-left: 0;
+	background: url('https://db.videosegments.org/images/icon_wb.png') no-repeat center center;
+	cursor: pointer;
+}
+
+.vs-editor-icon-active {
+	background: url('https://db.videosegments.org/images/icon.png') no-repeat center center !important;
+}
+
+#vs-editor-icon:hover {
+	/* background: url('https://db.videosegments.org/images/icon.png') no-repeat center center; */
+}
+
+#vs-segmentation-panel {
+	position: fixed;
+	bottom: 0;
+	left: 10%;
+	width: 80%;
+	border: 1px solid black;
+	border-top-right-radius: 12px;
+	border-top-left-radius: 12px;
+	border-bottom: 0;
+	padding: 10px;
+	padding-bottom: 0;
+	background-color: white;
+	z-index: 5;
+	transition: bottom 0.4s linear;
+}
+
+.vs-hide-segmentation-panel {
+	bottom: -15% !important;
+	transition: bottom 0.4s linear;
+}
+
+#vs-segmentation-panel-buttons {
+	display: flex; 
+	justify-content: space-between;
+}
+
+#vs-segmentation-panel-bar {
+	display: inline-block; 
+	width: 90%;
+	overflow-x: auto;
+	white-space: nowrap;
+	font-family: courier;
+	vertical-align: top;
+	/* border: 1px solid black; */
+}
+
+.vs-segmentation-panel-button {
+	width: 10%;
+}
+
+.vs-segmentation-panel-button-big {
+	width: 75%; /* fallback */
+	width: calc(100% - 2em);
+	padding: 0; 
+	margin-right: 0;
+	border: none; 
+	cursor: pointer; 
+	text-align: center;
+}
+
+.vs-segmentation-panel-button-small {
+	width: 1.5em; 
+	padding: 0; 
+	margin-left: 0;
+	border: none; 
+	border-left: 1px solid black; 
+	cursor: pointer; 
+	text-align: center;
+}
+
+.vs-segmentation-panel-button-big:hover, .vs-segmentation-panel-button-small:hover {
+	
+}
+
+.vs-segmentation-panel-bar-entry {
+	display: inline-block;
+	font-family: courier;
+	/* border: 1px solid black; */
+	text-align: center;
+	padding: 0;
+	margin: 0;
+	margin-top: 5px;
+	margin-right: 5px;
+	padding-bottom: 5px;
+}
+
+.vs-segmentation-panel-time-entry {
+	font-family: courier;
+	border: none;
+	border-bottom: 1px solid black;
+	width: 4.8em;
+	text-align: center;
+	padding: 0;
+	margin: 0;
+}
+
+.vs-segmentation-panel-bar-two-buttons, .vs-segmentation-panel-bar-one-button {
+	margin: auto;
+	margin-top: 5px;
+}
+
+.vs-segmentation-panel-bar-two-buttons button {
+	width: 2.0em;
+	padding: 0;
+	margin: 0;
+	margin-right: 2px;
+}
+
+.vs-segmentation-panel-bar-one-button button {
+	width: 4.0em;
+	padding: 0;
+	margin: 0;
+}
+
+.vs-segmentation-panel-bar-entry select {
+	cursor: pointer;
+	/* width: 5.0em; */
+	/* width: auto; */
+	font-family: courier;
+	/* -webkit-appearance: none; */
+	/* -moz-appearance: none;       */
+	/* appearance: none; */
+}
+
+#vs-segmentation-panel-bar-actions {
+	display: inline-block;
+	vertical-align: top;
+	text-align: center;
+	width: 10%;
+	margin-top: 5px;
+}
+
+#vs-modal {
+	display: none; 
+	position: fixed; 
+	z-index: 2147483647; 
+	padding-top: 100px; 
+	left: 0; 
+	top: 0; 
+	width: 100%; 
+	height: 100%; 
+	overflow: auto; 
+	background-color: rgb(0,0,0); 
+	background-color: rgba(0,0,0,0.8);
+}
+
+#vs-modal-content {
+	background-color: #fefefe; 
+	margin: auto; 
+	border: 1px solid #888; 
+	width: 350px;
+}
+
+#vs-messages-modal {
+	display: none; 
+	position: fixed; 
+	z-index: 2147483647; 
+	padding-top: 100px; 
+	right: 5%;
+	top: -20%;
+	margin: auto;
+	background-color: #333; 
+	border: 1px solid #888; 
+	border-radius: 50px;
+	padding: 30px;
+	font-size: 5em;
+	color: white;
+	transition: top 0.4s ease;
+}
+
+.vs-messages-modal-dropdown {
+	top: 10% !important;
+	transition: top 0.4s ease;
+}

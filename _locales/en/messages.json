@@ -119,11 +119,31 @@
 		"description": ""
 	},
 	"wait": {
-		"message": "Wait ",
+		"message": "Wait maximum ",
 		"description": ""
 	},
 	"secondsForSegments": {
 		"message": " seconds for segments",
+		"description": ""
+	},
+	"hideOnSegmentedVideos": {
+		"message": "Hide segmentation tools if video segmented",
+		"description": ""
+	},
+	"pinSegmentationTools": {
+		"message": "Pin segmentation tools",
+		"description": ""
+	},
+	"popupDurationOnSend": {
+		"message": "Popup duration on send: ",
+		"description": ""
+	},
+	"seconds": {
+		"message": " second(s)",
+		"description": ""
+	},
+	"hideIcon": {
+		"message": "Hide VS icon",
 		"description": ""
 	},
 	"loginToRemoveCaptcha": {
@@ -133,14 +153,6 @@
 	
 	
 	
-	"sendSegmentationSetting": {
-		"message": "Send segmentation to official database",
-		"description": ""
-	},
-	"sendSegmentationToOfficialDatabase": {
-		"message": "Send segmentation to official database",
-		"description": ""
-	},
 	"sendSegmentation": {
 		"message": "Send",
 		"description": ""
@@ -157,31 +169,35 @@
 		"message": "Display pending requests",
 		"description": ""
 	},
+	"openSettings": {
+		"message": "Open settings tab by default",
+		"description": ""
+	},
 	"logout": {
 		"message": "Logout",
 		"description": ""
 	},
 	"acceptSegmentation": {
-		"message": "Accept",
+		"message": "\u221A",
 		"description": ""
 	},
 	"declineSegmentation": {
-		"message": "Decline",
+		"message": "\u2718",
 		"description": ""
 	},
 	
 	
 	
 	"goTo": {
-		"message": "Go to",
+		"message": "go",
 		"description": ""
 	},
 	"currentTime": {
-		"message": "Current",
+		"message": "cur",
 		"description": ""
 	},
 	"remove": {
-		"message": "Remove",
+		"message": "remove",
 		"description": ""
 	},
 	
@@ -195,31 +211,31 @@
 		"message": "Hide segmentation tools",
 		"description": ""
 	},
-	"origin": {
-		"message": "Origin: ",
-		"description": ""
-	},
 	"localDatabase": {
-		"message": "local database",
+		"message": "local",
 		"description": ""
 	},
 	"officialDatabase": {
-		"message": "official database",
+		"message": "official",
 		"description": ""
 	},
 	"pendingDatabase": {
-		"message": "pending database",
+		"message": "pending",
 		"description": ""
 	},
 	"noSegmentation": {
-		"message": "no segmentation",
+		"message": "none",
 		"description": ""
 	},
 	
 	
 	
 	"timeSaved": {
-		"message": "Time saved: ",
+		"message": "Time skipped: ",
+		"description": ""
+	},
+	"thankYouMessage": {
+		"message": "Thank you for contribution!",
 		"description": ""
 	},
 	

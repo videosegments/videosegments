@@ -90,7 +90,11 @@ var checkContext = function() {
 }
 
 browser.runtime.onMessage.addListener(function(message) {
-	if ( typeof message.displayPending !== 'undefined' ) {
+	if ( typeof message.updateSettings !== 'undefined' ) {
+		console.log(message.updateSettings);
+		notifyMediaPlayerWrapper(message.updateSettings);
+	}
+	else if ( typeof message.displayPending !== 'undefined' ) {
 		if ( message.displayPending ) {
 			doCheck = true;
 			checkContext();
@@ -112,3 +116,12 @@ browser.runtime.onMessage.addListener(function(message) {
 		browser.storage.local.set({ totalTime: totalTime });
 	}
 });
+
+function notifyMediaPlayerWrapper(settings)
+{
+	browser.tabs.query({}, function(tabs) {
+		for ( let i = 0; i < tabs.length; ++i ) {
+			browser.tabs.sendMessage(tabs[i].id, { settings: settings });
+		}
+	});
+}

@@ -217,14 +217,19 @@ function loadSettings()
 		},
 		
 		// global settings 
-		autoPauseDuration: 1,
+		autoPauseDuration: 1.0,
 		showSegmentsbar: true,
 		showSegmentationTools: true,
+		hideOnSegmentedVideos: false,
+		pinSegmentationTools: false,
+		hideIcon: false,
+		popupDurationOnSend: 5.0,
 		databasePriority: 'local',
 		
 		// segmentation settings 
 		// sendToDatabase: false,
 		displayPending: false,
+		openSettings: false,
 	}
 	
 	browser.storage.local.get({
@@ -279,12 +284,24 @@ function restoreOptions(settings)
 		inputs[1].addEventListener('change', function() { updateAccelerationSpeed(this, settings, segment); });
 	}
 	
+	if ( settings.openSettings ) {
+		document.getElementById('playback').style.display = 'none';
+		document.getElementById('settings').style.display = 'block';
+		
+		document.getElementById('tab-playback').classList.remove('active-tab');
+		document.getElementById('tab-settings').classList.add('active-tab');
+	}
+	
 	// global settings 
 	var element;
 	
 	element = document.getElementById('autoPauseDuration');
 	element.value = settings.autoPauseDuration;
 	element.addEventListener('change', function() { updateGlobalValue(this, settings, 'autoPauseDuration'); });
+	
+	element = document.getElementById('popupDurationOnSend');
+	element.value = settings.popupDurationOnSend;
+	element.addEventListener('change', function() { updateGlobalValue(this, settings, 'popupDurationOnSend'); });
 	
 	element = document.getElementById('showSegmentsbar');
 	element.checked = settings.showSegmentsbar;
@@ -294,6 +311,18 @@ function restoreOptions(settings)
 	element.checked = settings.showSegmentationTools;
 	element.addEventListener('change', function() { updateGlobalBool(this, settings, 'showSegmentationTools'); });
 	
+	// element = document.getElementById('hideOnSegmentedVideos');
+	// element.checked = settings.hideOnSegmentedVideos;
+	// element.addEventListener('change', function() { updateGlobalBool(this, settings, 'hideOnSegmentedVideos'); });
+	
+	element = document.getElementById('pinSegmentationTools');
+	element.checked = settings.pinSegmentationTools;
+	element.addEventListener('change', function() { updateGlobalBool(this, settings, 'pinSegmentationTools'); });
+	
+	element = document.getElementById('hideIcon');
+	element.checked = settings.hideIcon;
+	element.addEventListener('change', function() { updateGlobalBool(this, settings, 'hideIcon'); });
+	
 	// element = document.getElementById('sendToDatabase')
 	// element.checked = settings.sendToDatabase;
 	// element.addEventListener('change', function() { updateGlobalBool(this, settings, 'sendToDatabase'); });
@@ -301,6 +330,10 @@ function restoreOptions(settings)
 	element = document.getElementById('displayPending');
 	element.checked = settings.displayPending;
 	element.addEventListener('change', function() { updateGlobalBool(this, settings, 'displayPending'); browser.runtime.sendMessage( {'displayPending': this.checked }); });
+	
+	element = document.getElementById('openSettings');
+	element.checked = settings.openSettings;
+	element.addEventListener('change', function() { updateGlobalBool(this, settings, 'openSettings'); });
 	
 	element = document.getElementById('databasePriority');
 	element.value = settings.databasePriority;

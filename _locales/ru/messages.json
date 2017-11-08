@@ -126,6 +126,26 @@
 		"message": " секунд(у) получения сегментов",
 		"description": ""
 	},
+	"hideOnSegmentedVideos": {
+		"message": "Скрывать панель сегментации у сегментированных видео",
+		"description": ""
+	},
+	"pinSegmentationTools": {
+		"message": "Прикрепить панель сегментации",
+		"description": ""
+	},
+	"popupDurationOnSend": {
+		"message": "Длительность всплывающего окна после отправки: ",
+		"description": ""
+	},
+	"seconds": {
+		"message": " секунд(ы)",
+		"description": ""
+	},
+	"hideIcon": {
+		"message": "Скрыть VS иконку",
+		"description": ""
+	},
 	"loginToRemoveCaptcha": {
 		"message": "Войдите, чтобы убрать капчу при отправке сегментации",
 		"description": ""
@@ -157,31 +177,35 @@
 		"message": "Показывать число запросов",
 		"description": ""
 	},
+	"openSettings": {
+		"message": "Открывать окно настроек первым",
+		"description": ""
+	},
 	"logout": {
 		"message": "Выйти",
 		"description": ""
 	},
 	"acceptSegmentation": {
-		"message": "Принять",
+		"message": "\u221A",
 		"description": ""
 	},
 	"declineSegmentation": {
-		"message": "Отклонить",
+		"message": "\u2718",
 		"description": ""
 	},
 	
 	
 	
 	"goTo": {
-		"message": "Перейти",
+		"message": "go",
 		"description": ""
 	},
 	"currentTime": {
-		"message": "Текущий",
+		"message": "cur",
 		"description": ""
 	},
 	"remove": {
-		"message": "Удалить",
+		"message": "remove",
 		"description": ""
 	},
 	
@@ -195,31 +219,31 @@
 		"message": "Скрыть панель сегментации",
 		"description": ""
 	},
-	"origin": {
-		"message": "Источник: ",
-		"description": ""
-	},
 	"localDatabase": {
-		"message": "локальная база данных",
+		"message": "лок. бд",
 		"description": ""
 	},
 	"officialDatabase": {
-		"message": "официальная база данных",
+		"message": "офф. бд",
 		"description": ""
 	},
 	"pendingDatabase": {
-		"message": "база запросов",
+		"message": "запрос",
 		"description": ""
 	},
 	"noSegmentation": {
-		"message": "без сегментации",
+		"message": "не сегм.",
 		"description": ""
 	},
 	
 	
 	
 	"timeSaved": {
-		"message": "Сэкономлено времени: ",
+		"message": "Перемотано времени: ",
+		"description": ""
+	},
+	"thankYouMessage": {
+		"message": "Спасибо за вклад!",
 		"description": ""
 	},
 	

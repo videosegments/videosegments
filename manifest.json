@@ -1,7 +1,7 @@
 {
 	"manifest_version": 2,
 	"name": "__MSG_extensionName__",
-	"version": "1.4.8",
+	"version": "1.5.0",
 	
 	"applications": {
 		"gecko": {
@@ -36,7 +36,8 @@
 	"content_scripts": [
 		{
 			"matches": ["*://www.youtube.com/*"],
-			"js": ["content-script/content.js"],
+			"js": ["content-script/content.js", "content-script/editor.js"],
+			"css": ["content-script/styles.css"],
 			"run_at": "document_start",
 			"all_frames": true
 		}

@@ -150,7 +150,7 @@ var mediaPlayerWrapper = {
 		// reset fullscreen state 
 		this.afterFullScreen = false;
 		// if video changed during fullscreen 
-		if ( this.settings.showSegmentationTools && this.fullScreenURI && this.fullScreenURI != this.mediaPlayer.baseURI ) {
+		if ( this.fullScreenURI && this.fullScreenURI != this.mediaPlayer.baseURI ) {
 			this.createSegmentationTools();
 			this.fullScreenURI = null;
 			// prevent second segmentation tools after video change in fullscreen 
@@ -170,9 +170,15 @@ var mediaPlayerWrapper = {
 			return;
 		}
 		
+		// kill rewind timer
+		if ( this.rewindTimer ) {
+			clearTimeout(this.rewindTimer);
+			this.rewindTimer = null;
+		}
+		
 		// console.log('mediaPlayerWrapper::onCanPlay()');
 		if ( this.requestTime === null ) {
-			this.requestTime = this.mediaPlayer.currentTime.toFixed();
+			this.requestTime = this.mediaPlayer.currentTime;
 		}
 		
 		// remove segment bar 
@@ -514,9 +520,9 @@ var mediaPlayerWrapper = {
 		attachTo = document.getElementById('info-contents');
 		if ( attachTo ) {
 			setTimeout(function() {
-				if ( self.settings.showSegmentationTools ) {
-					self.editor.init(self, self.segmentsData, self.settings, self.sourceInformation.domain, self.sourceInformation.id);
-				}
+				// self.editor.init(self, self.segmentsData, self.settings, self.sourceInformation.domain, self.sourceInformation.id);
+				self.editor = Object.create(editor);
+				self.editor.init(self, self.segmentsData, self.settings, self.sourceInformation.domain, self.sourceInformation.id);
 				
 				setTimeout(function() {
 					var actions = document.getElementById('watch8-secondary-actions');
@@ -524,27 +530,27 @@ var mediaPlayerWrapper = {
 						actions = document.getElementById('menu-container');
 					}
 					
-					var img = document.createElement('img');
-					img.src = 'https://db.videosegments.org/images/icon_wb.png';
-					img.style.height = '20px';
-					img.style.width = '20px';
-					img.style.top = '-30px';
-					img.style.cursor = 'pointer';
-					img.style.paddingTop = '10px';
-					img.style.paddingLeft = '10px';
-					img.style.paddingRight = '10px';
-					img.addEventListener('click', function() {
-						if ( wrapper.settings.showSegmentationTools ) {
-							wrapper.editor.destroy();
-						}
-						else {
-							wrapper.editor.init(wrapper, wrapper.segmentsData, wrapper.settings, wrapper.sourceInformation.domain, wrapper.sourceInformation.id);
-						}
+					// var img = document.createElement('img');
+					// img.src = 'https://db.videosegments.org/images/icon_wb.png';
+					// img.style.height = '20px';
+					// img.style.width = '20px';
+					// img.style.top = '-30px';
+					// img.style.cursor = 'pointer';
+					// img.style.paddingTop = '10px';
+					// img.style.paddingLeft = '10px';
+					// img.style.paddingRight = '10px';
+					// img.addEventListener('click', function() {
+						// if ( wrapper.settings.showSegmentationTools ) {
+							// wrapper.editor.destroy();
+						// }
+						// else {
+							// wrapper.editor.init(wrapper, wrapper.segmentsData, wrapper.settings, wrapper.sourceInformation.domain, wrapper.sourceInformation.id);
+						// }
 						
-						wrapper.settings.showSegmentationTools = !wrapper.settings.showSegmentationTools;
-					});
+						// wrapper.settings.showSegmentationTools = !wrapper.settings.showSegmentationTools;
+					// });
 					
-					actions.getElementsByTagName('ytd-button-renderer')[0].insertAdjacentElement('afterEnd', img);
+					// actions.getElementsByTagName('ytd-button-renderer')[0].insertAdjacentElement('afterEnd', img);
 				}, 500);
 				
 			}, 500);
@@ -590,7 +596,7 @@ var mediaPlayerWrapper = {
 			return;
 		}
 		
-		// console.log('mediaPlayerWrapper::tryRewind()', this.mediaPlayer.currentTime);
+		// console.log('mediaPlayerWrapper::tryRewind()', this.mediaPlayer.currentTime, rewindSegment);
 		
 		// kill rewind timer
 		if ( this.rewindTimer ) {
@@ -636,6 +642,7 @@ var mediaPlayerWrapper = {
 		}
 		else {
 			var segmentLength = this.segmentsData.timestamps[rewindSegment+1] - this.mediaPlayer.currentTime;
+			// console.log(segmentLength, this.settings.segments[this.segmentsData.types[rewindSegment]].duration);
 			if ( segmentLength > this.settings.segments[this.segmentsData.types[rewindSegment]].duration ) {
 				if ( this.defaultSpeed ) {
 					this.preventUpdate = true;
@@ -667,6 +674,7 @@ var mediaPlayerWrapper = {
 					
 					this.preventUpdate = true;
 					this.mediaPlayer.playbackRate = this.settings.segments[this.segmentsData.types[rewindSegment]].speed;
+					// console.log(this.mediaPlayer.playbackRate);
 				}
 				this.previousSegment = rewindSegment;
 				
@@ -685,6 +693,8 @@ var mediaPlayerWrapper = {
 	 * Returns next segment to skip. Null if nothing found 
 	 */
 	getNextSegment: function(startSegment) {
+		console.log('mediaPlayerWrapper::getNextSegment()', startSegment);
+		
 		if ( this.segmentsData == null || this.segmentsData.timestamps == null ) {
 			return null;
 		}
@@ -694,7 +704,7 @@ var mediaPlayerWrapper = {
 		// for each segment from initial segment
 		for ( let i = startSegment; i < this.segmentsData.types.length; ++i ) {
 			// if requirements met
-			if ( this.settings.segments[this.segmentsData.types[i]].skip == true && this.segmentsData.timestamps[i] >= this.mediaPlayer.currentTime.toFixed(2) ) {
+			if ( this.settings.segments[this.segmentsData.types[i]].skip == true && this.segmentsData.timestamps[i] >= this.mediaPlayer.currentTime ) {
 				// return segment number
 				return i;
 			}
@@ -789,7 +799,7 @@ var mediaPlayerWrapper = {
 			// create div element
 			var div = document.createElement('div');
 			// set classname with segment number
-			div.className = 'vs_progressbar' + i;
+			div.className = 'vs_progressbar';
 			// set div style
 			// 0.12 - some kind of manual-found offset, 
 			// isn't perfect but fine for now 
@@ -810,18 +820,9 @@ var mediaPlayerWrapper = {
 		
 		// if segments for video exists
 		if ( this.segmentsData ) {
-			// segment element
-			var segment;
-			// segments count 
-			var segmentsCount = this.segmentsData.timestamps.length - 1;
-			// for each div segment
-			for ( let i = 0; i < segmentsCount; ++i ) {
-				// get element
-				segment = document.getElementsByClassName("vs_progressbar" + i)[0];
-				if ( segment ) {
-					// remove 
-					segment.remove();
-				}
+			var segments = document.getElementsByClassName("vs_progressbar");
+			while ( segments[0] ) {
+				segments[0].remove();
 			}
 		}
 	},
@@ -964,8 +965,7 @@ var mediaPlayerWrapper = {
 	/*
 	 * Called when segments in editor were changed
 	 */ 
-	updateSegmentsData: function(segmentsData, saveLocally) 
-	{
+	updateSegmentsData: function(segmentsData, saveLocally) {
 		if ( !this.segmentsData ) {
 			this.mediaPlayer.addEventListener("play", this.eventContexts.onPlay);
 			this.mediaPlayer.addEventListener("pause", this.eventContexts.onPause);
@@ -1669,14 +1669,19 @@ function loadSettings() {
 		},
 		
 		// global settings 
-		autoPauseDuration: 1,
+		autoPauseDuration: 1.0,
 		showSegmentsbar: true,
 		showSegmentationTools: true,
+		hideOnSegmentedVideos: false,
+		pinSegmentationTools: false,
+		hideIcon: false,
+		popupDurationOnSend: 5.0,
 		databasePriority: 'local',
 		
 		// segmentation settings 
 		// sendToDatabase: false,
 		displayPending: false,
+		openSettings: false,
 	}
 	
 	// request settings 
@@ -1746,9 +1751,9 @@ browser.runtime.onMessage.addListener(
 			}
 			
 			wrapper.editor.destroy();
-			if ( wrapper.settings.showSegmentationTools ) {
-				wrapper.editor.init(wrapper, wrapper.segmentsData, wrapper.settings, wrapper.sourceInformation.domain, wrapper.sourceInformation.id);
-			}
+			// if ( wrapper.settings.showSegmentationTools ) {
+			wrapper.editor.init(wrapper, wrapper.segmentsData, wrapper.settings, wrapper.sourceInformation.domain, wrapper.sourceInformation.id);
+			// }
 			
 			if ( !wrapper.mediaPlayer.paused ) {
 				wrapper.mediaPlayer.pause();
