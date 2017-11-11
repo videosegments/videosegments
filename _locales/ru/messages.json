@@ -127,7 +127,7 @@
 		"description": ""
 	},
 	"hideOnSegmentedVideos": {
-		"message": "Скрывать панель сегментации у сегментированных видео",
+		"message": "Скрывать панель сегментации у сегм. видео",
 		"description": ""
 	},
 	"pinSegmentationTools": {
@@ -135,7 +135,7 @@
 		"description": ""
 	},
 	"popupDurationOnSend": {
-		"message": "Длительность всплывающего окна после отправки: ",
+		"message": "Длительность всплывающего окна: ",
 		"description": ""
 	},
 	"seconds": {

@@ -8,6 +8,7 @@ body {
 	width: 400px;
 	margin: 0;
 	padding: 0;
+	overflow: hidden;
 }
 
 #tabs {
