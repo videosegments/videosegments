@@ -245,7 +245,7 @@ var editor = {
 		var modalContent = document.createElement('div');
 		modalContent.id = 'vs-modal-content';
 		this.modal.appendChild(modalContent);
-		this.segmentationPanel.appendChild(this.modal);
+		// this.segmentationPanel.appendChild(this.modal);
 		
 		this.messagesModal = document.createElement('div');
 		this.messagesModal.id = 'vs-messages-modal'
@@ -256,6 +256,7 @@ var editor = {
 		this.messagesModal.appendChild(text);
 		
 		// this.messagesModal.appendChild(messagesModalContent);
+		document.body.appendChild(this.modal);
 		document.body.appendChild(this.messagesModal);
 		
 		this.messagesModal.style.display = 'inline-block';

@@ -1685,7 +1685,7 @@ function loadSettings() {
 		hideOnSegmentedVideos: true,
 		pinSegmentationTools: false,
 		hideIcon: false,
-		popupDurationOnSend: 5.0,
+		popupDurationOnSend: 3.0,
 		databasePriority: 'local',
 		
 		// segmentation settings 
