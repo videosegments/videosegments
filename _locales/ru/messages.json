@@ -74,7 +74,7 @@
 		"description": ""
 	},
 	"scam": {
-		"message": "Обман",
+		"message": "Мусор",
 		"description": ""
 	},
 	
@@ -233,6 +233,10 @@
 	},
 	"noSegmentation": {
 		"message": "не сегм.",
+		"description": ""
+	},
+	"savedLocally": {
+		"message": "сохр. в лок. бд.",
 		"description": ""
 	},
 	

@@ -134,7 +134,12 @@ var editor = {
 		buttons.style.display = 'none';
 		
 		if ( this.segmentsData && this.segmentsData.origin ) {
-			buttons.appendChild(document.createTextNode(browser.i18n.getMessage(this.segmentsData.origin)));
+			if ( this.segmentsData.origin === 'localDatabase' ) {
+				buttons.appendChild(document.createTextNode(browser.i18n.getMessage('savedLocally')));
+			}
+			else {
+				buttons.appendChild(document.createTextNode(browser.i18n.getMessage(this.segmentsData.origin)));
+			}
 			buttons.appendChild(document.createElement('br'));
 			
 			if ( this.segmentsData.origin === 'pendingDatabase' ) {
@@ -192,7 +197,7 @@ var editor = {
 		else {
 			var button = document.createElement('button');
 			button.style.marginTop = '5px';
-			buttons.appendChild(document.createTextNode(browser.i18n.getMessage('localDatabase')));
+			buttons.appendChild(document.createTextNode(browser.i18n.getMessage('savedLocally')));
 			button.appendChild(document.createTextNode(browser.i18n.getMessage('sendSegmentation')));
 			button.addEventListener('click', function() {
 				self.sendSegmentsData(false);
@@ -727,7 +732,9 @@ var editor = {
 	
 	destroy: function() {
 		// this.icon.remove();
-		this.segmentationPanel.remove();
+		if ( this.segmentationPanel ) {
+			this.segmentationPanel.remove();
+		}
 		document.removeEventListener('scroll', this.scrollContext);
 	},
 };
