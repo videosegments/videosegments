@@ -1,11 +1,11 @@
 {
 	"extensionName": {
-		"message": "VideoSegments - skip intro in YouTube™ music or videos",
+		"message": "VS YouTube - skip intro in music or videos",
 		"description": ""
 	},
 
 	"extensionDescription": {
-		"message": "Skip automatically boring parts (intro, credits, advertisement) of music or videos. Watch only content.",
+		"message": "Skips automatically to the actual content of song or video. Remove intros, credits, talkings, etc.",
 		"description": ""
 	},
 	
