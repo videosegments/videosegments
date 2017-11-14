@@ -731,7 +731,12 @@ var editor = {
 	},
 	
 	destroy: function() {
-		// this.icon.remove();
+		if ( this.modal ) {
+			this.modal.remove();
+		}
+		if ( this.messagesModal ) {
+			this.messagesModal.remove();
+		}
 		if ( this.segmentationPanel ) {
 			this.segmentationPanel.remove();
 		}

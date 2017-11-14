@@ -579,7 +579,7 @@ var mediaPlayerWrapper = {
 		
 		// if loading and user rewinds 
 		if ( this.requestTime !== null ) {
-			this.requestTime = this.mediaPlayer.currentTime.toFixed();
+			this.requestTime = this.mediaPlayer.currentTime;
 		}
 		
 		// console.log('mediaPlayerWrapper::onPlay()', this.mediaPlayer.playbackRate);
@@ -634,7 +634,7 @@ var mediaPlayerWrapper = {
 		}
 		
 		// 2 digits precision is enough
-		var currentTime = this.mediaPlayer.currentTime.toFixed(2);
+		var currentTime = this.mediaPlayer.currentTime;
 		// console.log('current time: ' + currentTime, ', rewind time: ' + this.segmentsData.timestamps[rewindSegment]);
 		// get difference between segment start time and current time
 		var delay = this.segmentsData.timestamps[rewindSegment] - currentTime;
