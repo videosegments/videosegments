@@ -63,6 +63,8 @@ var editor = {
 			icon.style.display = 'none';
 		}
 		
+		segmentationPanel.style.opacity = settings.segmentationToolsOpacity / 100;
+		
 		var buttons = document.createElement('div');
 		buttons.id = 'vs-segmentation-panel-buttons';
 		
@@ -394,12 +396,17 @@ var editor = {
 		
 		var buttons = document.getElementById('vs-segmentation-panel-bar-actions');
 		var panelBar = document.getElementById('vs-segmentation-panel-bar');
+		var segments = document.getElementById('vs-segmentation-panel-buttons');
 		if ( this.segmentsData == null || this.segmentsData.types.length === 0 ) {
 			buttons.style.display = 'none';
+			panelBar.style.display = 'none';
+			segments.style.paddingBottom = '10px';
 			// panelBar.remove();
 			return;
 		}
 		buttons.style.display = 'inline-block';
+		panelBar.style.display = 'inline-block';
+		segments.style.paddingBottom = '0';
 		
 		while ( panelBar.firstChild ) {
 			panelBar.removeChild(panelBar.firstChild);
@@ -494,6 +501,8 @@ var editor = {
 			entry.appendChild(container);
 			panelBar.appendChild(entry);
 		}
+		
+		panelBar.scrollLeft = 99999999;
 	},
 	
 	goTo: function(caller) {

@@ -35,6 +35,10 @@
 	transition: bottom 0.4s linear;
 }
 
+#vs-segmentation-panel:hover {
+	opacity: 1.0 !important;
+}
+
 .vs-hide-segmentation-panel {
 	bottom: -15% !important;
 	transition: bottom 0.4s linear;
@@ -52,6 +56,7 @@
 	white-space: nowrap;
 	font-family: courier;
 	vertical-align: top;
+	overflow: scroll;
 	/* border: 1px solid black; */
 }
 

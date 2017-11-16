@@ -142,6 +142,10 @@
 		"message": " секунд(ы)",
 		"description": ""
 	},
+	"segmentationToolsOpacity": {
+		"message": "Непрозрачность панели сегментации: ",
+		"description": ""
+	},
 	"hideIcon": {
 		"message": "Скрыть VS иконку",
 		"description": ""

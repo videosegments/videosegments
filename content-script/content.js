@@ -1043,6 +1043,7 @@ function loadSettings() {
 		hideIcon: false,
 		popupDurationOnSend: 3.0,
 		databasePriority: 'local',
+		segmentationToolsOpacity: 10,
 		
 		// segmentation settings 
 		// sendToDatabase: false,

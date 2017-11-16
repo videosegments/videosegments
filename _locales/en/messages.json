@@ -142,6 +142,10 @@
 		"message": " second(s)",
 		"description": ""
 	},
+	"segmentationToolsOpacity": {
+		"message": "Segmentation tools opacity: ",
+		"description": ""
+	},
 	"hideIcon": {
 		"message": "Hide VS icon",
 		"description": ""

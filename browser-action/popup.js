@@ -225,6 +225,7 @@ function loadSettings()
 		hideIcon: false,
 		popupDurationOnSend: 3.0,
 		databasePriority: 'local',
+		segmentationToolsOpacity: 10,
 		
 		// segmentation settings 
 		// sendToDatabase: false,
@@ -302,6 +303,10 @@ function restoreOptions(settings)
 	element = document.getElementById('popupDurationOnSend');
 	element.value = settings.popupDurationOnSend;
 	element.addEventListener('change', function() { updateGlobalValue(this, settings, 'popupDurationOnSend'); });
+	
+	element = document.getElementById('segmentationToolsOpacity');
+	element.value = settings.segmentationToolsOpacity;
+	element.addEventListener('change', function() { updateGlobalValue(this, settings, 'segmentationToolsOpacity'); });
 	
 	element = document.getElementById('showSegmentsbar');
 	element.checked = settings.showSegmentsbar;
