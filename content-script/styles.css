@@ -56,7 +56,7 @@
 	white-space: nowrap;
 	font-family: courier;
 	vertical-align: top;
-	overflow: scroll;
+	overflow-x: scroll;
 	/* border: 1px solid black; */
 }
 
