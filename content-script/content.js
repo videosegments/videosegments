@@ -1037,13 +1037,13 @@ function loadSettings() {
 		// global settings 
 		autoPauseDuration: 1.0,
 		showSegmentsbar: true,
-		showSegmentationTools: true,
+		showSegmentationTools: false,
 		hideOnSegmentedVideos: true,
 		pinSegmentationTools: false,
 		hideIcon: false,
 		popupDurationOnSend: 3.0,
 		databasePriority: 'local',
-		segmentationToolsOpacity: 10,
+		segmentationToolsOpacity: 100,
 		
 		// segmentation settings 
 		// sendToDatabase: false,
