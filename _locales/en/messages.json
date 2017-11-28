@@ -1,11 +1,11 @@
 {
 	"extensionName": {
-		"message": "VS YouTube - skip intro in music or videos",
+		"message": "YouTube InVideo Skip for intro/ads/credits",
 		"description": ""
 	},
 
 	"extensionDescription": {
-		"message": "Skips automatically to the actual content of song or video. Remove intros, credits, talkings, etc.",
+		"message": "Remove boring parts from youtube videos (talking in music, intros, credits, embedded ads, etc) and share it with everyone",
 		"description": ""
 	},
 	

@@ -1,11 +1,11 @@
 {
 	"extensionName": {
-		"message": "VS YouTube - skip intro in music or videos",
+		"message": "YouTube InVideo Skip for intro/ads/credits",
 		"description": ""
 	},
 
 	"extensionDescription": {
-		"message": "Пропускайте автоматически скучные части видео или песен (вступление, рекламу, титры).",
+		"message": "Возможность убрать скучные части видео (разговоры в музыкальных клипах, вступления перед роликами, титры, интегрированную рекламу) для себя и всех остальных",
 		"description": ""
 	},
 	
