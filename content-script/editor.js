@@ -289,28 +289,29 @@ var editor = {
 			this.segmentationPanel.style.display = 'block';
 			this.icon.classList.toggle('vs-editor-icon-active', true);
 			
-			if ( this.hasSegmentation === false ) {
-				this.settings.showSegmentationTools = true;
-			}
+			// if ( this.hasSegmentation === false ) {
+				// this.settings.showSegmentationTools = true;
+			// }
 		}
 		else {
 			this.segmentationPanel.style.display = 'none';
 			this.icon.classList.toggle('vs-editor-icon-active', false);
 			
-			if ( this.hasSegmentation === false ) {
-				this.settings.showSegmentationTools = false;
-			}
+			// if ( this.hasSegmentation === false ) {
+				// this.settings.showSegmentationTools = false;
+			// }
 		}
 		
-		if ( this.hasSegmentation === false ) {
-			var self = this;
-			browser.storage.local.set({
-				settings: this.settings
-			}, function(result) {
-				browser.runtime.sendMessage( {'updateSettings': self.settings } );
-			});
-		}
-		else {
+		// if ( this.hasSegmentation === false ) {
+			// var self = this;
+			// browser.storage.local.set({
+				// settings: this.settings
+			// }, function(result) {
+				// browser.runtime.sendMessage( {'updateSettings': self.settings } );
+			// });
+		// }
+		// else {
+		if ( this.hasSegmentation === true ) {
 			if ( this.segmentationPanel.style.display === 'block' ) {
 				var entries = document.getElementsByClassName('vs-segmentation-panel-bar-entry');
 				for ( let i = 1; i < entries.length; i += 2 ) {
