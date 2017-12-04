@@ -5,7 +5,7 @@
 	},
 
 	"extensionDescription": {
-		"message": "Remove boring parts from youtube videos (talking in music, intros, credits, embedded ads, etc) and share it with everyone",
+		"message": "AdBlock can't do it. Remove boring parts from youtube videos (talking in music, intros, embedded ads) and share it with everyone",
 		"description": ""
 	},
 	
@@ -115,7 +115,7 @@
 		"description": ""
 	},
 	"showSegmentationTools": {
-		"message": "Show segmentation tools",
+		"message": "Always show segmentation tools",
 		"description": ""
 	},
 	"wait": {

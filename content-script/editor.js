@@ -39,17 +39,16 @@ var editor = {
 		var segmentationPanel = document.createElement('div');
 		segmentationPanel.id = 'vs-segmentation-panel';
 		if ( this.settings.showSegmentationTools ) {
-			segmentationPanel.style.display = 'block';
 			icon.classList.add('vs-editor-icon-active');
 		}
 		else {
-			segmentationPanel.style.display = 'none';
+			segmentationPanel.classList.add('vs-hide-segmentation-panel');
 			icon.classList.remove('vs-editor-icon-active');
 		}
 		
 		if ( this.settings.hideOnSegmentedVideos && this.segmentsData && this.segmentsData.origin !== 'pendingDatabase' ) {
 			this.hasSegmentation = true;
-			segmentationPanel.style.display = 'none';
+			segmentationPanel.classList.toggle('vs-hide-segmentation-panel', true);
 			icon.classList.remove('vs-editor-icon-active');
 		}
 		else {
@@ -133,7 +132,7 @@ var editor = {
 		
 		var buttons = document.createElement('div');
 		buttons.id ='vs-segmentation-panel-bar-actions';
-		buttons.style.display = 'none';
+		buttons.style.display = 'block';
 		
 		if ( this.segmentsData && this.segmentsData.origin ) {
 			if ( this.segmentsData.origin === 'localDatabase' ) {
@@ -232,7 +231,9 @@ var editor = {
 			var offset = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
 			if ( offset === 0 ) {
 				// self.segmentationPanel.style.display = 'block';
-				self.segmentationPanel.classList.toggle('vs-hide-segmentation-panel', false);
+				if ( self.icon.classList.contains('vs-editor-icon-active') ) {
+					self.segmentationPanel.classList.toggle('vs-hide-segmentation-panel', false);
+				}
 			}
 			else {
 				// self.segmentationPanel.style.display = 'none';
@@ -244,7 +245,7 @@ var editor = {
 		
 		if ( this.settings.pinSegmentationTools === false ) {
 			document.addEventListener('scroll', this.scrollContext);
-			this.scrollContext();
+			// this.scrollContext();
 		}
 		
 		this.modal = document.createElement('div');
@@ -285,8 +286,13 @@ var editor = {
 	toggleSegmentationPanel: function() {
 		// console.log('editor::toggleSegmentationPanel()');
 		
-		if ( this.segmentationPanel.style.display === 'none' ) {
-			this.segmentationPanel.style.display = 'block';
+		if ( !this.icon.classList.contains('vs-editor-icon-active') ) {
+			var offset = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+			if ( offset !== 0 ) {
+				document.body.scrollTop = document.documentElement.scrollTop = 0;
+			}
+			
+			this.segmentationPanel.classList.toggle('vs-hide-segmentation-panel', false);
 			this.icon.classList.toggle('vs-editor-icon-active', true);
 			
 			// if ( this.hasSegmentation === false ) {
@@ -294,7 +300,7 @@ var editor = {
 			// }
 		}
 		else {
-			this.segmentationPanel.style.display = 'none';
+			this.segmentationPanel.classList.toggle('vs-hide-segmentation-panel', true);
 			this.icon.classList.toggle('vs-editor-icon-active', false);
 			
 			// if ( this.hasSegmentation === false ) {
@@ -312,7 +318,7 @@ var editor = {
 		// }
 		// else {
 		if ( this.hasSegmentation === true ) {
-			if ( this.segmentationPanel.style.display === 'block' ) {
+			if ( !this.segmentationPanel.classList.contains('vs-hide-segmentation-panel') ) {
 				var entries = document.getElementsByClassName('vs-segmentation-panel-bar-entry');
 				for ( let i = 1; i < entries.length; i += 2 ) {
 					var select = entries[i].getElementsByTagName('select')[0];
@@ -653,27 +659,7 @@ var editor = {
 						window.addEventListener('click', clickContext);
 					}
 					else {
-						if ( jsonResponse.message === 'updated' || jsonResponse.message === 'added' || jsonResponse.message === 'overwritten' ) {
-							// setTimeout(function() {
-								// window.location.reload();
-								// self.updateBadge();
-							// }, 100);
-							
-							self.messagesModal.classList.toggle('vs-messages-modal-dropdown', true);
-							setTimeout(function() {
-								self.messagesModal.classList.toggle('vs-messages-modal-dropdown', false);
-							}, self.settings.popupDurationOnSend*1000);
-							self.updateBadge();
-						}
-						else if ( jsonResponse.message === 'successufully sended' ) {
-							self.messagesModal.classList.toggle('vs-messages-modal-dropdown', true);
-							setTimeout(function() {
-								self.messagesModal.classList.toggle('vs-messages-modal-dropdown', false);
-							}, self.settings.popupDurationOnSend*1000);
-						}
-						else {
-							window.alert('VideoSegments: ' + jsonResponse.message);
-						}
+						self.checkSendResponse(jsonResponse);
 					}
 				}
 			}
@@ -705,22 +691,7 @@ var editor = {
 						// console.log('response: ', xhr.responseText);
 						
 						var jsonResponse = JSON.parse(xhr.responseText);
-						if ( jsonResponse.message === 'added' || jsonResponse.message === 'updated' || jsonResponse.message === 'overwritten' ) {
-							self.messagesModal.classList.toggle('vs-messages-modal-dropdown', true);
-							setTimeout(function() {
-								self.messagesModal.classList.toggle('vs-messages-modal-dropdown', false);
-							}, self.settings.popupDurationOnSend*1000);
-							self.updateBadge();
-						}
-						else if ( jsonResponse.message === 'successufully sended' ) {
-							self.messagesModal.classList.toggle('vs-messages-modal-dropdown', true);
-							setTimeout(function() {
-								self.messagesModal.classList.toggle('vs-messages-modal-dropdown', false);
-							}, self.settings.popupDurationOnSend*1000);
-						}
-						else {
-							window.alert('VideoSegments: ' + jsonResponse.message);
-						}
+						self.checkSendResponse(jsonResponse);
 					}
 				}
 			};
@@ -733,6 +704,23 @@ var editor = {
 			
 			window.removeEventListener('message', messageContext);
 			window.removeEventListener('click', clickContext);
+		}
+	},
+	
+	checkSendResponse: function(jsonResponse) {
+		var self = this;
+		if ( jsonResponse.message === 'successufully sended' || jsonResponse.message === 'added' || jsonResponse.message === 'updated' || jsonResponse.message === 'overwritten' ) {
+			this.messagesModal.classList.toggle('vs-messages-modal-dropdown', true);
+			setTimeout(function() {
+				self.messagesModal.classList.toggle('vs-messages-modal-dropdown', false);
+			}, this.settings.popupDurationOnSend*1000);
+			this.updateBadge();
+
+			this.segmentationPanel.classList.toggle('vs-hide-segmentation-panel', true);
+			this.icon.classList.toggle('vs-editor-icon-active', false);
+		}
+		else {
+			window.alert('VideoSegments: ' + jsonResponse.message);
 		}
 	},
 	

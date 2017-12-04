@@ -40,7 +40,7 @@
 }
 
 .vs-hide-segmentation-panel {
-	bottom: -15% !important;
+	bottom: -20% !important;
 	transition: bottom 0.4s linear;
 }
 
