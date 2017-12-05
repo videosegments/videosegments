@@ -1,11 +1,11 @@
 {
 	"extensionName": {
-		"message": "YouTube InVideo Skip for intro/ads/credits",
+		"message": "Skip integrated intros/ads on YouTube",
 		"description": ""
 	},
 
 	"extensionDescription": {
-		"message": "Адблок не может этого сделать. Уберите скучные части видео (разговоры в клипах, вступления, рекламу) для себя и всех остальных",
+		"message": "Адблок не может этого сделать. Расширение автоматически перемотает видео до контента.",
 		"description": ""
 	},
 	

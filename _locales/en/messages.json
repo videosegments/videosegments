@@ -1,11 +1,11 @@
 {
 	"extensionName": {
-		"message": "YouTube InVideo Skip for intro/ads/credits",
+		"message": "Skip integrated intros/ads on YouTube",
 		"description": ""
 	},
 
 	"extensionDescription": {
-		"message": "AdBlock can't do it. Remove boring parts from youtube videos (talking in music, intros, embedded ads) and share it with everyone",
+		"message": "AdBlock can't do it. Skip automatically to content in videos.",
 		"description": ""
 	},
 	
