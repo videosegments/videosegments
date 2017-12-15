@@ -1,7 +1,7 @@
 {
 	"manifest_version": 2,
 	"name": "__MSG_extensionName__",
-	"version": "1.5.13",
+	"version": "1.5.14",
 	
 	"applications": {
 		"gecko": {
@@ -12,6 +12,7 @@
 	"default_locale": "en",
 	"description": "__MSG_extensionDescription__",
 	"icons": {
+		"32": "icons/icon-32.png",
 		"64": "icons/icon-64.png",
 		"128": "icons/icon-128.png"
 	},
