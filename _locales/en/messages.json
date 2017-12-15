@@ -1,11 +1,11 @@
 {
 	"extensionName": {
-		"message": "Skip integrated intros/ads on YouTube",
+		"message": "Music Mode for YouTube",
 		"description": ""
 	},
 
 	"extensionDescription": {
-		"message": "AdBlock can't do it. Skip automatically to content in videos.",
+		"message": "Skip automatically to the song or video content.",
 		"description": ""
 	},
 	
@@ -24,7 +24,7 @@
 		"description": ""
 	},
 	"tabDisabled": {
-		"message": "[in development]",
+		"message": "[coming soon]",
 		"description": ""
 	},
 	
