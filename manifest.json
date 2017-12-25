@@ -1,7 +1,7 @@
 {
 	"manifest_version": 2,
 	"name": "__MSG_extensionName__",
-	"version": "1.5.14",
+	"version": "1.6.0",
 	
 	"applications": {
 		"gecko": {
@@ -12,9 +12,7 @@
 	"default_locale": "en",
 	"description": "__MSG_extensionDescription__",
 	"icons": {
-		"32": "icons/icon-32.png",
-		"64": "icons/icon-64.png",
-		"128": "icons/icon-128.png"
+		"64": "icons/icon-64.png"
 	},
 	
 	"author": "VideoSegments Team",
@@ -25,7 +23,7 @@
 	
 	"browser_action": {
 		"default_icon": {
-			"32": "icons/icon-32.png"
+			"64": "icons/icon-64.png"
 		},
 		"default_title": "VideoSegments",
 		"default_popup": "browser-action/popup.html"
@@ -34,7 +32,7 @@
 	"content_scripts": [
 		{
 			"matches": ["*://www.youtube.com/*"],
-			"js": ["content-script/content.js", "content-script/editor.js"],
+			"js": ["content-script/observer.js", "content-script/wrapper.js", "content-script/editor.js", "content-script/index.js"],
 			"css": ["content-script/styles.css"],
 			"run_at": "document_start",
 			"all_frames": true
@@ -45,5 +43,9 @@
 		"https://db.videosegments.org/*",
 		"storage",
 		"tabs"
+	],
+	
+	"web_accessible_resources": [
+		"content-script/sprites.png"
 	]
 }

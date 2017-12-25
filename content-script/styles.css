@@ -1,4 +1,15 @@
 
+#vs-segmentsbar {
+	margin-top: 1px;
+	height: 0; 
+	overflow: visible;
+}
+
+#vs-segmentsbar li {
+	display: inline-block;
+	height: 3px;
+}
+
 #vs-editor-icon {
 	position: fixed;
 	bottom: 2%;
@@ -9,6 +20,7 @@
 	border-left: 0;
 	background: url('https://db.videosegments.org/images/icon_wb.png') no-repeat center center;
 	cursor: pointer;
+	z-index: 3000;
 }
 
 .vs-editor-icon-active {
@@ -25,13 +37,13 @@
 	left: 10%;
 	width: 80%;
 	border: 1px solid black;
-	border-top-right-radius: 12px;
-	border-top-left-radius: 12px;
 	border-bottom: 0;
+	border-top-left-radius: 15px;
+	border-top-right-radius: 15px;
 	padding: 10px;
 	padding-bottom: 0;
 	background-color: white;
-	z-index: 5;
+	z-index: 3000;
 	transition: bottom 0.4s linear;
 }
 
@@ -45,6 +57,7 @@
 }
 
 #vs-segmentation-panel-buttons {
+	text-align: center;
 	display: flex; 
 	justify-content: space-between;
 }
@@ -52,7 +65,6 @@
 #vs-segmentation-panel-bar {
 	display: inline-block; 
 	width: 90%;
-	overflow-x: auto;
 	white-space: nowrap;
 	font-family: courier;
 	vertical-align: top;
@@ -69,23 +81,33 @@
 	width: calc(100% - 2em);
 	padding: 0; 
 	margin-right: 0;
-	border: none; 
+	border: 1px solid black; 
+	border-right: none;
 	cursor: pointer; 
 	text-align: center;
+	border-top-left-radius: 5px;
+	border-bottom-left-radius: 5px;
+	overflow: hidden;
+	position: relative;
 }
 
 .vs-segmentation-panel-button-small {
 	width: 1.5em; 
 	padding: 0; 
 	margin-left: 0;
-	border: none; 
-	border-left: 1px solid black; 
+	border: 1px solid black; 
+	border-left: 1px solid black;
 	cursor: pointer; 
 	text-align: center;
+	border-top-right-radius: 5px;
+	border-bottom-right-radius: 5px;
+	overflow: hidden;
+	position: relative;
 }
 
 .vs-segmentation-panel-button-big:hover, .vs-segmentation-panel-button-small:hover {
-	
+	box-shadow: 0 0 2px 2px rgba(0,0,0,0.5), 0 0 2px 2px rgba(0,0,0,0.0);
+	z-index: 4000;
 }
 
 .vs-segmentation-panel-bar-entry {
@@ -97,17 +119,17 @@
 	margin: 0;
 	margin-top: 5px;
 	margin-right: 5px;
-	padding-bottom: 5px;
+	padding-bottom: 1px;
 }
 
 .vs-segmentation-panel-time-entry {
 	font-family: courier;
 	border: none;
 	border-bottom: 1px solid black;
-	width: 4.8em;
 	text-align: center;
 	padding: 0;
 	margin: 0;
+	position: relative;
 }
 
 .vs-segmentation-panel-bar-two-buttons, .vs-segmentation-panel-bar-one-button {
@@ -168,7 +190,7 @@
 }
 
 #vs-messages-modal {
-	display: none; 
+	display: inline-block; 
 	position: fixed; 
 	z-index: 2147483647; 
 	padding-top: 100px; 
@@ -187,4 +209,40 @@
 .vs-messages-modal-dropdown {
 	top: 10% !important;
 	transition: top 0.4s ease;
+}
+
+#vs-segmentation-bar {
+	display: inline-block; 
+	width: 90%;
+	white-space: nowrap;
+	font-family: courier;
+	vertical-align: top;
+	overflow-x: scroll;
+}
+
+#vs-segmentation-bar-width-fixer {
+	font-family: courier;
+	visibility: hidden;
+}
+
+#vs-segmentation-bar select {
+	cursor: pointer;
+	font-family: courier;
+	border: none;
+	border-bottom: 1px solid black;
+}
+
+.vs-segmentation-panel-small-button {
+	margin: 0 2px;
+	padding: 0px;
+	font-family: "Courier New";
+	width: 2em;
+	height: 16px;
+	background: white;
+	font-size: 10px;
+	vertical-align: top;
+}
+
+.vs-segmentation-panel-small-button:focus {
+	outline: none;
 }

@@ -1,11 +1,11 @@
 {
 	"extensionName": {
-		"message": "Music Mode for YouTube",
+		"message": "Skip integrated intros/ads on YouTube",
 		"description": ""
 	},
 
 	"extensionDescription": {
-		"message": "Skip automatically to the song or video content.",
+		"message": "AdBlock can't do it. Skip automatically to content in videos.",
 		"description": ""
 	},
 	
@@ -24,7 +24,7 @@
 		"description": ""
 	},
 	"tabDisabled": {
-		"message": "[coming soon]",
+		"message": "[in development]",
 		"description": ""
 	},
 	
@@ -158,7 +158,7 @@
 	
 	
 	"sendSegmentation": {
-		"message": "Send",
+		"message": "Share",
 		"description": ""
 	},
 	"nextSegmentation": {
@@ -216,23 +216,23 @@
 		"description": ""
 	},
 	"localDatabase": {
-		"message": "local",
+		"message": "Local",
 		"description": ""
 	},
 	"officialDatabase": {
-		"message": "official",
+		"message": "Official",
 		"description": ""
 	},
 	"pendingDatabase": {
-		"message": "pending",
+		"message": "Pending",
 		"description": ""
 	},
 	"noSegmentation": {
-		"message": "none",
+		"message": "None",
 		"description": ""
 	},
 	"savedLocally": {
-		"message": "saved locally",
+		"message": "Saved locally",
 		"description": ""
 	},
 	
