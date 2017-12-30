@@ -1,11 +1,11 @@
 {
 	"extensionName": {
-		"message": "Skip integrated intros/ads on YouTube",
+		"message": "VideoSegments YouTube version",
 		"description": ""
 	},
 
 	"extensionDescription": {
-		"message": "Адблок не может этого сделать. Расширение автоматически перемотает видео до контента.",
+		"message": "Самый простой способ убрать нежелательный контент из онлайн видео. Отлично подходит для прослушивания музыки.",
 		"description": ""
 	},
 	
@@ -17,6 +17,10 @@
 	},
 	"tabAcceleration": {
 		"message": "Ускорение",
+		"description": ""
+	},
+	"tabAccount": {
+		"message": "Аккаунт",
 		"description": ""
 	},
 	"tabSettings": {
@@ -147,7 +151,7 @@
 		"description": ""
 	},
 	"hideIcon": {
-		"message": "Скрыть VS иконку",
+		"message": "Скрыть иконку VS",
 		"description": ""
 	},
 	"loginToRemoveCaptcha": {
@@ -182,7 +186,7 @@
 		"description": ""
 	},
 	"openSettings": {
-		"message": "Открывать окно настроек первым",
+		"message": "Открывать эту вкладку первой",
 		"description": ""
 	},
 	"logout": {
@@ -190,11 +194,11 @@
 		"description": ""
 	},
 	"acceptSegmentation": {
-		"message": "\u221A",
+		"message": "Y",
 		"description": ""
 	},
 	"declineSegmentation": {
-		"message": "\u2718",
+		"message": "N",
 		"description": ""
 	},
 	
@@ -241,6 +245,37 @@
 	},
 	"savedLocally": {
 		"message": "сохр. в лок. бд.",
+		"description": ""
+	},
+	
+	
+	
+	"localStatistic": {
+		"message": "Локальная статистика",
+		"description": ""
+	},
+	"globalStatistic": {
+		"message": "Глобальная статистика",
+		"description": ""
+	},
+	"localStatisticDescription1": {
+		"message": "Данная статистика ведется вашим компьютером.",
+		"description": ""
+	},
+	"localStatisticDescription2": {
+		"message": "У нас нет доступа к этим данным.",
+		"description": ""
+	},
+	"globalStatisticDescription1": {
+		"message": "Наш сервер не ведёт статистику.",
+		"description": ""
+	},
+	"globalStatisticDescription2": {
+		"message": "Мы не отслеживаем вашу активность.",
+		"description": ""
+	},
+	"privacyPolicy": {
+		"message": "Политика конфиденциальности",
 		"description": ""
 	},
 	

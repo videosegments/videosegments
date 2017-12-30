@@ -4,12 +4,21 @@ if ( typeof this.chrome != 'undefined' ) {
 	this.browser = this.chrome;
 }
 
+let observer;
+
 // load settings 
 getSettings(function(settings) {
 	// start observer to look for "video" elements 
-	let observer = new Object(Observer);
+	observer = new Object(Observer);
 	observer.start(settings);
 })
+
+// on settings update 
+browser.runtime.onMessage.addListener(
+	function(request, sender, sendResponse) {
+		observer.updateSettings(request.settings);
+	}
+);
 
 function getSettings(callback) {
 	let defaultSettings = {
@@ -45,6 +54,7 @@ function getSettings(callback) {
 		popupDurationOnSend: 3.0,
 		databasePriority: 'local',
 		segmentationToolsOpacity: 100,
+		iconOpacity: 100,
 		
 		// moderator settings 
 		displayPending: false,

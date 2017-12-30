@@ -22,16 +22,6 @@ function domContentLoaded()
 	// load settings 
 	loadSettings();
 	
-	// disable temporary acceleration settings for chrome and opera 
-	// did not found better way to do it 
-	if ( browser.runtime.getBrowserInfo == undefined ) {
-		var tab = document.getElementById('tab-acceleration');
-		tab.disabled = true;
-		
-		var span = tab.getElementsByTagName('span')[0];
-		span.innerHTML = 'tabDisabled';
-	}
-	
 	var button;
 	button = document.getElementById('next-segmentation');
 	button.addEventListener('click', openNextSegmentationRequest);
@@ -197,35 +187,36 @@ function loadSettings()
 		// segments configuration
 		segments: {
 			// content 
-			c: 	{ skip: false, color: '#00ff00', duration: 0.0, speed: 1.0 },
+			c: 	{ skip: false, color: '#00c853', duration: 0.0, speed: 1.0 },
 			// adcontent 
-			ac: { skip: false, color: '#008800', duration: 0.0, speed: 1.0 },
+			ac: { skip: false, color: '#00897b', duration: 0.0, speed: 1.0 },
 			// advertisement 
-			a: 	{ skip: true,  color: '#ff0000', duration: 0.0, speed: 5.0 },
+			a: 	{ skip: true,  color: '#e53935', duration: 0.0, speed: 5.0 },
 			// intro 
-			i: 	{ skip: true,  color: '#0000ff', duration: 0.0, speed: 5.0 },
+			i: 	{ skip: true,  color: '#3949ab', duration: 0.0, speed: 5.0 },
 			// credits 
-			cr: { skip: true,  color: '#ffff00', duration: 0.0, speed: 5.0 },
+			cr: { skip: true,  color: '#ffb300', duration: 0.0, speed: 5.0 },
 			// cutscene 
-			cs: { skip: true,  color: '#808080', duration: 0.0, speed: 2.0 },
+			cs: { skip: true,  color: '#757575', duration: 0.0, speed: 2.0 },
 			// offtop 
-			o: 	{ skip: true,  color: '#ff00ff', duration: 0.0, speed: 3.0 },
+			o: 	{ skip: true,  color: '#8e24aa', duration: 0.0, speed: 3.0 },
 			// interactive 
-			ia: { skip: true,  color: '#00ffff', duration: 0.0, speed: 4.0 },
+			ia: { skip: true,  color: '#00acc1', duration: 0.0, speed: 4.0 },
 			// scam 
-			s:	{ skip: true,  color: '#008080', duration: 0.0, speed: 5.0 },
+			s:	{ skip: true,  color: '#6d4c41', duration: 0.0, speed: 5.0 },
 		},
 		
 		// global settings 
 		autoPauseDuration: 1.0,
 		showSegmentsbar: true,
 		showSegmentationTools: false,
-		hideOnSegmentedVideos: true,
+		hideOnSegmentedVideos: false,
 		pinSegmentationTools: false,
 		hideIcon: false,
 		popupDurationOnSend: 3.0,
 		databasePriority: 'local',
 		segmentationToolsOpacity: 100,
+		iconOpacity: 100,
 		
 		// segmentation settings 
 		// sendToDatabase: false,
@@ -287,10 +278,10 @@ function restoreOptions(settings)
 	
 	if ( settings.openSettings ) {
 		document.getElementById('playback').style.display = 'none';
-		document.getElementById('settings').style.display = 'block';
+		document.getElementById('account').style.display = 'block';
 		
 		document.getElementById('tab-playback').classList.remove('active-tab');
-		document.getElementById('tab-settings').classList.add('active-tab');
+		document.getElementById('tab-account').classList.add('active-tab');
 	}
 	
 	// global settings 
@@ -307,6 +298,10 @@ function restoreOptions(settings)
 	element = document.getElementById('segmentationToolsOpacity');
 	element.value = settings.segmentationToolsOpacity;
 	element.addEventListener('change', function() { updateGlobalValue(this, settings, 'segmentationToolsOpacity'); });
+	
+	element = document.getElementById('iconOpacity');
+	element.value = settings.iconOpacity;
+	element.addEventListener('change', function() { updateGlobalValue(this, settings, 'iconOpacity'); });
 	
 	element = document.getElementById('showSegmentsbar');
 	element.checked = settings.showSegmentsbar;

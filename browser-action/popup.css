@@ -21,30 +21,70 @@ body {
 	position: fixed;
 	bottom: 0;
 	width: 100%;
-	padding: 10px 0 10px 0;
+	padding: 5px 0;
 	text-align: center;
-	font-size: 3ex;
-	color: white;
-	background-color: #333;
+	border-top: 1px solid #333;
 }
 
-#footer > span {
-	font-size: 20px;
+#footer > a {
+	display: inline;
+	margin: 0;
+	text-align: center;
+	font-weight: bold;
+	cursor: pointer;
+	outline: none;
+	border: none;
+    text-decoration: none;
+	margin: 0 10px;
+	color: black;
+}
+
+#icon-github {
+	background: url('sprites.png') 0px -70px;
+	display: inline-block;
+	height: 36px;
+	width: 32px;
+}
+
+#icon-facebook {
+	background: url('sprites.png') 96px -70px;
+	display: inline-block;
+	height: 36px;
+	width: 32px;
+}
+
+#icon-twitter {
+	background: url('sprites.png') 64px -70px;
+	display: inline-block;
+	height: 36px;
+	width: 32px;
+}
+
+#icon-vk {
+	background: url('sprites.png') 32px -70px;
+	display: inline-block;
+	height: 36px;
+	width: 32px;
 }
 
 .tab {
 	display: inline-block;
-	width: 33.3%;
+	width: 25%;
 	margin: 0;
-	padding: 10px 0 10px 0;
 	text-align: center;
 	font-weight: bold;
 	background-color: white;
 	color: black;
 	cursor: pointer;
-	outline:none;
+	outline: none;
 	border: none;
     text-decoration: none;
+}
+
+.tab:first-child {
+}
+
+.tab:last-child {
 }
 
 .tab:not(.active-tab):hover {
@@ -57,10 +97,76 @@ body {
 	color: white;
 }
 
+.tab-name {
+	padding: 5px 0 5px 0;
+	margin-bottom: 10px;
+}
+
+.tab-name span {
+	font-size: 1.4em; 
+	font-weight: bold;
+}
+
 .tab-content {
-	margin: 10px;
+	margin: 5px 10px;
 	text-align: center;
 	background-color: white;
+}
+
+#icon-playback {
+	background: url('sprites.png') 0px -10px;
+	display: inline-block;
+	height: 30px;
+	width: 30px;
+}
+
+.active-tab #icon-playback, .tab:not(.active-tab):hover #icon-playback {
+	background: url('sprites.png') 0px -38px;
+	display: inline-block;
+	height: 30px;
+	width: 30px;
+}
+
+#icon-acceleration {
+	background: url('sprites.png') -30px -10px;
+	display: inline-block;
+	height: 30px;
+	width: 30px;
+}
+
+.active-tab #icon-acceleration, .tab:not(.active-tab):hover #icon-acceleration {
+	background: url('sprites.png') -30px -38px;
+	display: inline-block;
+	height: 30px;
+	width: 30px;
+}
+
+#icon-account {
+	background: url('sprites.png') -60px -10px;
+	display: inline-block;
+	height: 30px;
+	width: 30px;
+}
+
+.active-tab #icon-account, .tab:not(.active-tab):hover #icon-account {
+	background: url('sprites.png') -60px -40px;
+	display: inline-block;
+	height: 30px;
+	width: 30px;
+}
+
+#icon-settings {
+	background: url('sprites.png') -90px -10px;
+	display: inline-block;
+	height: 30px;
+	width: 30px;
+}
+
+.active-tab #icon-settings, .tab:not(.active-tab):hover #icon-settings {
+	background: url('sprites.png') -90px -38px;
+	display: inline-block;
+	height: 30px;
+	width: 30px;
 }
 
 .jscolor {
@@ -68,7 +174,7 @@ body {
 }
 
 table {
-	margin: 20px auto;
+	margin: 0 auto;
 	border-collapse: collapse;
 }
 
@@ -80,6 +186,7 @@ table th {
 	border-top: 1px solid black;
 	border-bottom: 1px solid black;
 	padding: 10px;
+	padding-top: none;
 }
 
 #playback-settings td:first-child {
@@ -94,7 +201,7 @@ table th {
 
 #acceleration-settings th {
 	border: 1px solid black;
-	padding: 2px;
+	padding: 2px 5px;
 }
 
 #acceleration-settings td {

@@ -3,6 +3,9 @@
 	margin-top: 1px;
 	height: 0; 
 	overflow: visible;
+	padding: 0;
+	margin: 0;
+	margin-top: 1px;
 }
 
 #vs-segmentsbar li {
@@ -29,6 +32,7 @@
 
 #vs-editor-icon:hover {
 	/* background: url('https://db.videosegments.org/images/icon.png') no-repeat center center; */
+	opacity: 1.0 !important;
 }
 
 #vs-segmentation-panel {
@@ -120,6 +124,7 @@
 	margin-top: 5px;
 	margin-right: 5px;
 	padding-bottom: 1px;
+	position: relative;
 }
 
 .vs-segmentation-panel-time-entry {
@@ -152,11 +157,10 @@
 
 .vs-segmentation-panel-bar-entry select {
 	cursor: pointer;
-	/* width: 5.0em; */
-	/* width: auto; */
 	font-family: courier;
+	border: none;
 	/* -webkit-appearance: none; */
-	/* -moz-appearance: none;       */
+	/* -moz-appearance: none; */
 	/* appearance: none; */
 }
 

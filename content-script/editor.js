@@ -94,7 +94,9 @@ var Editor = {
 			}
 		}
 		else {
-			this.panel.classList.add('vs-hide-segmentation-panel');
+			if ( this.origin !== 'pendingDatabase' ) {
+				this.panel.classList.add('vs-hide-segmentation-panel');
+			}
 		}
 		
 		
@@ -103,8 +105,9 @@ var Editor = {
 			this.icon.style.display = 'none';
 		}
 		
-		// panel opacity setting 
+		// opacity setting 
 		this.panel.style.opacity = this.settings.segmentationToolsOpacity / 100;
+		this.icon.style.opacity = this.settings.iconOpacity / 100;
 				
 		// buttons 
 		let createButtonsFn = function(type, text, color, backgroundColor, leftCallback, rightCallback) {
@@ -142,7 +145,6 @@ var Editor = {
 			
 			let textColor;
 			let light = 0.2126 * r + 0.7152 * g + 0.0722 * b;
-			console.log(light);
 			if ( light < 110 ) {
 				return 'white';
 			}
@@ -352,6 +354,7 @@ var Editor = {
 			let removeButton = document.createElement('button');
 			removeButton.classList.add('vs-segmentation-panel-small-button');
 			setButtonImage(removeButton, -24, 0, 16, 16);
+			removeButton.style.marginTop = '1px';
 			entry.appendChild(removeButton);
 			entry.appendChild(document.createTextNode('\u00A0'));
 			fixSelectWidthFn(select);
@@ -397,7 +400,6 @@ var Editor = {
 		else {
 			container.appendChild(createTimeEntry(0));
 		}
-		console.log(container);
 		segmentationBar.appendChild(container);
 		
 		let buttonsContainer = document.createElement('div');
@@ -422,11 +424,11 @@ var Editor = {
 		if ( this.origin === 'pendingDatabase' ) {
 			let declineButton = document.createElement('button');
 			declineButton.appendChild(document.createTextNode(browser.i18n.getMessage('declineSegmentation')));
-			sendButton.addEventListener('click', function() { self.shareSegmentation(true); });
+			declineButton.addEventListener('click', function() { self.shareSegmentation(true); });
 			
 			let acceptButton = document.createElement('button');
 			acceptButton.appendChild(document.createTextNode(browser.i18n.getMessage('acceptSegmentation')));
-			sendButton.addEventListener('click', function() { self.shareSegmentation(false); });
+			acceptButton.addEventListener('click', function() { self.shareSegmentation(false); });
 			
 			buttonsContainer.appendChild(declineButton);
 			buttonsContainer.appendChild(document.createTextNode('\u00A0\u00A0'));

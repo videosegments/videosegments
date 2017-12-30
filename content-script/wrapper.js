@@ -27,6 +27,12 @@ var Wrapper = {
 	
 	/* timer */
 	timer: null,
+	
+	/* playback */
+	playbackRate: null,
+	preventPlaybackRateUpdate: null,
+	muteFirstEvents: null,
+	
 		
 	// called when "video" element appears on page 
 	start: function(video, settings) {
@@ -53,6 +59,12 @@ var Wrapper = {
 		this.timestamps = [];
 		this.types = [];
 		this.origin = 'none';
+		
+		if ( typeof chrome != 'undefined' ) {
+			// chrome calls pause/play event at video start
+			// workaround to fix it 
+			this.muteFirstEvents = 2;
+		}
 		
 		// if video is ready to play (otherwise we can't get video id)
 		if ( this.video.readyState > 3 ) {
@@ -214,14 +226,10 @@ var Wrapper = {
 	onSegmentationReady: function() {
 		console.log('Wrapper::onSegmentationReady()');
 		
-		// hook essential events 
-		this.video.addEventListener('play', this.onPlayContext);
-		this.video.addEventListener('pause', this.onPauseContext);
-		this.video.addEventListener('ratechange', this.onRateChangeContext);
-		
 		if ( this.timer ) {
 			clearTimeout(this.timer);
 			this.timer = null;
+			
 			this.video.play();
 		}
 		
@@ -236,9 +244,14 @@ var Wrapper = {
 			if ( this.requestTime !== null ) {
 				this.video.currentTime = Math.floor(this.requestTime);
 			}
-			
-			this.onPlay();
 		}
+		
+		// this.onPlay();
+		
+		// hook essential events 
+		this.video.addEventListener('play', this.onPlayContext);
+		this.video.addEventListener('pause', this.onPauseContext);
+		this.video.addEventListener('ratechange', this.onRateChangeContext);
 		
 		// if it's not iframe 
 		if ( window.parent === window ) {
@@ -249,33 +262,33 @@ var Wrapper = {
 	insertSegmentsBar: function() {
 		console.log('Wrapper::insertSegmentsBar()');
 		
-		if ( window.parent === window ) {
-			let progressBar = document.getElementsByClassName("ytp-progress-bar-container")[0];
-			let segmentsBar = document.createElement('ul');
-			segmentsBar.id = 'vs-segmentsbar';
-			progressBar.insertAdjacentElement("afterEnd", segmentsBar);
+		if ( this.settings.showSegmentsbar === false ) {
+			return;
+		}
+		
+		let progressBar = document.getElementsByClassName("ytp-progress-bar-container")[0];
+		let segmentsBar = document.createElement('ul');
+		segmentsBar.id = 'vs-segmentsbar';
+		progressBar.insertAdjacentElement("afterEnd", segmentsBar);
+		
+		let width, left = 0.0;
+		for ( let i = 0; i < this.types.length; ++i ) {
+			width = (this.timestamps[i+1] - this.timestamps[i]) / this.video.duration * 100;
 			
-			let width, left = 0.0;
-			for ( let i = 0; i < this.types.length; ++i ) {
-				width = (this.timestamps[i+1] - this.timestamps[i]) / this.video.duration * 100;
-				
-				let segment = document.createElement('li');
-				segment.style.width = width+'%';
-				segment.style.backgroundColor = this.settings.segments[this.types[i]].color;
-				segment.innerHTML = '&nbsp;';
-				segmentsBar.insertAdjacentElement('beforeEnd', segment);
-			}
+			let segment = document.createElement('li');
+			segment.style.width = width+'%';
+			segment.style.backgroundColor = this.settings.segments[this.types[i]].color;
+			segment.innerHTML = '&nbsp;';
+			segmentsBar.insertAdjacentElement('beforeEnd', segment);
 		}
 	},
 	
 	removeSegmentsBar: function() {
 		console.log('Wrapper::removeSegmentsBar()');
-		
-		if ( window.parent === window ) {
-			let segmentsBar = document.getElementById('vs-segmentsbar');
-			if ( segmentsBar ) {
-				segmentsBar.remove();
-			}
+	
+		let segmentsBar = document.getElementById('vs-segmentsbar');
+		if ( segmentsBar ) {
+			segmentsBar.remove();
 		}
 	},
 	
@@ -286,6 +299,15 @@ var Wrapper = {
 	
 	onPlay: function() {
 		console.log('Wrapper::onPlay()');
+		
+		// first call is nessesary and second one is false so mute him
+		if ( this.muteFirstEvents == 1 ) {
+			this.muteFirstEvents -= 1;
+			return;
+		}
+		else {
+			this.muteFirstEvents -= 1;
+		}
 		
 		if ( this.timer ) {
 			clearTimeout(this.timer);
@@ -322,17 +344,74 @@ var Wrapper = {
 			this.timer = setTimeout(function() { self.tryRewind(rewindSegment); }, delay*(1000/this.video.playbackRate));
 		}
 		else {
-			this.video.currentTime = this.timestamps[rewindSegment+1];
+			this.processSegment(this.video.currentTime, rewindSegment);
+		}
+	},
+	
+	processSegment: function(currentTime, segment) {
+		console.log('Wrapper::processSegment()');
+		let self = this;
+		
+		let duration = this.timestamps[segment+1] - currentTime;
+		if ( duration > this.settings.segments[this.types[segment]].duration ) {
+			browser.runtime.sendMessage({ 'updateTotalTime': this.timestamps[segment+1] - this.video.currentTime });
+			this.video.currentTime = this.timestamps[segment+1];
 			
-			rewindSegment = this.getNextRewindSegment(rewindSegment+1);
-			if ( rewindSegment !== null ) {
-				this.tryRewind(rewindSegment);
+			segment = this.getNextRewindSegment(segment+1);
+			if ( segment !== null ) {
+				this.tryRewind(segment);
+			}
+		}
+		else {
+			this.playbackRate = parseFloat(this.video.playbackRate);
+			this.preventPlaybackRateUpdate = true;
+			
+			this.video.playbackRate = this.settings.segments[this.types[segment]].speed;
+			
+			let delay = duration*(1000/this.video.playbackRate);
+			if ( delay > 500 ) delay -= 500; // timers have awful precision so start a little bit earlier
+			this.timer = setTimeout(function() { self.restoreSpeed(segment); }, delay);
+		}
+	},
+	
+	restoreSpeed: function(segment) {
+		console.log('Wrapper::restoreSpeed()');
+		var self = this;
+		
+		let delay = this.timestamps[segment+1] - this.video.currentTime;
+		if ( delay > 0 ) {
+			this.timer = setTimeout(function() { self.restoreSpeed(segment); }, delay*(1000/this.video.playbackRate));
+		}
+		else {
+			this.preventPlaybackRateUpdate = true;
+			this.video.playbackRate = this.playbackRate;
+			this.playbackRate = null;
+			
+			let nextSegment = this.getNextRewindSegment(segment+1);
+			if ( nextSegment !== null ) {
+				let delay = this.timestamps[nextSegment] - this.video.currentTime;
+				if ( delay < 0 ) {
+					this.processSegment(this.timestamps[nextSegment], nextSegment);
+				}
+				else {
+					this.tryRewind(nextSegment);
+				}
 			}
 		}
 	},
 	
 	onPause: function() {
 		console.log('Wrapper::onPause()');
+		
+		if ( this.muteFirstEvents == 1 ) {
+			return;
+		}
+		
+		if ( this.playbackRate ) {
+			this.preventPlaybackRateUpdate = true;
+			this.video.playbackRate = this.playbackRate;
+			this.playbackRate = null;
+		}
 		
 		if ( this.timer ) {
 			clearTimeout(this.timer);
@@ -343,13 +422,28 @@ var Wrapper = {
 	onRateChange: function() {
 		console.log('Wrapper::onRateChange()');
 		
-		if ( this.timer ) {
-			clearTimeout(this.timer);
-			this.timer = null;
+		if ( this.preventPlaybackRateUpdate === false ) {
+			if ( this.timer ) {
+				clearTimeout(this.timer);
+				this.timer = null;
+			}
+			
+			let rewindSegment = this.getNextRewindSegment(0);
+			this.tryRewind(rewindSegment);
 		}
+		else {
+			this.preventPlaybackRateUpdate = false;
+		}
+	},
+	
+	updateSettings: function(settings) {
+		this.settings = settings;
+		this.updateSegmentsBar();
 		
-		let rewindSegment = this.getNextRewindSegment(0);
-		this.tryRewind(rewindSegment);
+		if ( window.parent === window ) {
+			this.editor.end();
+			this.editor.start(this, this.timestamps, this.types, this.origin, this.settings, 'youtube', this.id);
+		}
 	},
 	
 	// called when "video" element "src" is changed

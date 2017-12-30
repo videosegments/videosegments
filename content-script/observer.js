@@ -63,4 +63,18 @@ var Observer = {
 		this.observer = new MutationObserver(onBodyMutation);
 		this.observer.observe(document.documentElement, { childList: true, subtree: true });
 	},
+	
+	updateSettings: function(settings) {
+		this.wrapper.updateSettings(settings);
+	},
+	
+	end: function() {
+		console.log('Observer::end()');
+		
+		this.observer.disconnect();
+		this.wrapper.end();
+		
+		this.collection = null;
+		this.wrapper = null;
+	}
 };

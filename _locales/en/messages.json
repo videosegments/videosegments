@@ -1,11 +1,11 @@
 {
 	"extensionName": {
-		"message": "Skip integrated intros/ads on YouTube",
+		"message": "VideoSegments YouTube version",
 		"description": ""
 	},
 
 	"extensionDescription": {
-		"message": "AdBlock can't do it. Skip automatically to content in videos.",
+		"message": "Easiest way to remove unwanted content from online videos. Great for listening to music.",
 		"description": ""
 	},
 	
@@ -17,6 +17,10 @@
 	},
 	"tabAcceleration": {
 		"message": "Acceleration",
+		"description": ""
+	},
+	"tabAccount": {
+		"message": "Account",
 		"description": ""
 	},
 	"tabSettings": {
@@ -146,6 +150,10 @@
 		"message": "Segmentation tools opacity: ",
 		"description": ""
 	},
+	"iconOpacity": {
+		"message": "Icon opacity: ",
+		"description": ""
+	},
 	"hideIcon": {
 		"message": "Hide VS icon",
 		"description": ""
@@ -174,7 +182,7 @@
 		"description": ""
 	},
 	"openSettings": {
-		"message": "Open settings tab by default",
+		"message": "Open this tab first",
 		"description": ""
 	},
 	"logout": {
@@ -182,11 +190,11 @@
 		"description": ""
 	},
 	"acceptSegmentation": {
-		"message": "\u221A",
+		"message": "Y",
 		"description": ""
 	},
 	"declineSegmentation": {
-		"message": "\u2718",
+		"message": "N",
 		"description": ""
 	},
 	
@@ -233,6 +241,37 @@
 	},
 	"savedLocally": {
 		"message": "Saved locally",
+		"description": ""
+	},
+	
+	
+	
+	"localStatistic": {
+		"message": "Local Statistic",
+		"description": ""
+	},
+	"globalStatistic": {
+		"message": "Global Statistic",
+		"description": ""
+	},
+	"localStatisticDescription1": {
+		"message": "This statistic is calculated by your computer.",
+		"description": ""
+	},
+	"localStatisticDescription2": {
+		"message": "We do not have access to this data.",
+		"description": ""
+	},
+	"globalStatisticDescription1": {
+		"message": "Our server do not calculate statistic.",
+		"description": ""
+	},
+	"globalStatisticDescription2": {
+		"message": "We do not collect any anonymous information. ",
+		"description": ""
+	},
+	"privacyPolicy": {
+		"message": "Privacy policy",
 		"description": ""
 	},
 	

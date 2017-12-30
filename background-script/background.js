@@ -27,9 +27,9 @@ var totalTime = undefined;
 
 browser.storage.local.get({ 
 		settings: false,
-		messages: {
-			segmentation: false,
-		},
+		// messages: {
+			// segmentation: false,
+		// },
 		totalTime: 0,
 	}, function(result) {
 		// console.log(result);
@@ -41,15 +41,15 @@ browser.storage.local.get({
 			timer = setInterval(checkContext, 60000);
 		}
 		
-		if ( result.messages.segmentation === false ) {
-			browser.storage.local.set({
-				messages: {
-					segmentation: true,
-				}
-			}, function() {
-				browser.tabs.create({url: 'http://www.videosegments.org/segmentation.php'});
-			});
-		}
+		// if ( result.messages.segmentation === false ) {
+			// browser.storage.local.set({
+				// messages: {
+					// segmentation: true,
+				// }
+			// }, function() {
+				// browser.tabs.create({url: 'http://www.videosegments.org/segmentation.php'});
+			// });
+		// }
 		
 		totalTime = result.totalTime;
 		// console.log('totalTime', totalTime);
@@ -110,9 +110,9 @@ browser.runtime.onMessage.addListener(function(message) {
 		checkContext();
 	}
 	else if ( typeof message.updateTotalTime !== 'undefined' ) {
-		// console.log(message.updateTotalTime, totalTime, parseFloat(message.updateTotalTime));
+		console.log(message.updateTotalTime, totalTime, parseFloat(message.updateTotalTime));
 		totalTime += parseFloat(message.updateTotalTime);
-		// console.log(totalTime);
+		console.log(totalTime);
 		browser.storage.local.set({ totalTime: totalTime });
 	}
 });
