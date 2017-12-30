@@ -31,8 +31,7 @@ var Wrapper = {
 	/* playback */
 	playbackRate: null,
 	preventPlaybackRateUpdate: null,
-	muteFirstEvents: null,
-	
+	muteFirstEvents: null,	
 		
 	// called when "video" element appears on page 
 	start: function(video, settings) {
@@ -64,6 +63,8 @@ var Wrapper = {
 			// chrome calls pause/play event at video start
 			// workaround to fix it 
 			this.muteFirstEvents = 2;
+			
+			setTimeout(function() { self.muteFirstEvents = 0; }, 1000);
 		}
 		
 		// if video is ready to play (otherwise we can't get video id)
