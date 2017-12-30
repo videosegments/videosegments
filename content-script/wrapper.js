@@ -1,6 +1,6 @@
 'use strict';
 
-if ( typeof this.chrome != 'undefined' ) {
+if ( typeof this.chrome !== 'undefined' ) {
 	this.browser = this.chrome;
 }
 
@@ -60,7 +60,7 @@ var Wrapper = {
 		this.types = [];
 		this.origin = 'none';
 		
-		if ( typeof chrome != 'undefined' ) {
+		if ( typeof InstallTrigger === 'undefined' ) {
 			// chrome calls pause/play event at video start
 			// workaround to fix it 
 			this.muteFirstEvents = 2;
@@ -302,6 +302,7 @@ var Wrapper = {
 		
 		// first call is nessesary and second one is false so mute him
 		if ( this.muteFirstEvents == 1 ) {
+			// console.log('muted');
 			this.muteFirstEvents -= 1;
 			return;
 		}
