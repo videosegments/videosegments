@@ -110,9 +110,9 @@ browser.runtime.onMessage.addListener(function(message) {
 		checkContext();
 	}
 	else if ( typeof message.updateTotalTime !== 'undefined' ) {
-		console.log(message.updateTotalTime, totalTime, parseFloat(message.updateTotalTime));
+		// console.log(message.updateTotalTime, totalTime, parseFloat(message.updateTotalTime));
 		totalTime += parseFloat(message.updateTotalTime);
-		console.log(totalTime);
+		// console.log(totalTime);
 		browser.storage.local.set({ totalTime: totalTime });
 	}
 });

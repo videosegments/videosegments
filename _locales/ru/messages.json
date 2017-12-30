@@ -150,6 +150,10 @@
 		"message": "Непрозрачность панели сегментации: ",
 		"description": ""
 	},
+	"iconOpacity": {
+		"message": "Непрозрачность иконки VS: ",
+		"description": ""
+	},
 	"hideIcon": {
 		"message": "Скрыть иконку VS",
 		"description": ""
