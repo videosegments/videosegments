@@ -12,10 +12,22 @@ var Observer = {
 	collection: null,
 	/* core object of addon */
 	wrapper: null,
+	/* 
+		workaround for acceleration in chrome\opera 
+		browser will call pause/play events on first video on tab 
+	*/
+	muteFirstEvents: null,
 	
 	start: function(settings) {
 		console.log('Observer::start()');
 		let self = this;
+		
+		if ( typeof InstallTrigger === 'undefined' ) {
+			this.muteFirstEvents = true;
+		}
+		else {
+			this.muteFirstEvents = false;
+		}
 		
 		// to increase performance look into html5 live collection instead of hundreds of mutations 
 		// https://stackoverflow.com/a/39332340
@@ -39,7 +51,8 @@ var Observer = {
 				self.observer.observe(self.collection[0], { attributes: true, attributeFilter: ['src'] });
 				
 				// 
-				self.wrapper.start(self.collection[0], settings);
+				self.wrapper.start(self.collection[0], settings, self.muteFirstEvents);
+				self.muteFirstEvents = false;
 			}
 		}
 		

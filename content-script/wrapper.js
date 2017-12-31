@@ -34,7 +34,7 @@ var Wrapper = {
 	muteFirstEvents: null,	
 		
 	// called when "video" element appears on page 
-	start: function(video, settings) {
+	start: function(video, settings, muteFirstEvents) {
 		console.log('Wrapper::start()');
 		let self = this;
 		
@@ -59,12 +59,12 @@ var Wrapper = {
 		this.types = [];
 		this.origin = 'none';
 		
-		if ( typeof InstallTrigger === 'undefined' ) {
+		if ( muteFirstEvents ) {
 			// chrome calls pause/play event at video start
 			// workaround to fix it 
 			this.muteFirstEvents = 2;
 			
-			setTimeout(function() { self.muteFirstEvents = 0; }, 1000);
+			// setTimeout(function() { self.muteFirstEvents = 0; }, 1000);
 		}
 		
 		// if video is ready to play (otherwise we can't get video id)
@@ -303,7 +303,9 @@ var Wrapper = {
 		
 		// first call is nessesary and second one is false so mute him
 		if ( this.muteFirstEvents == 1 ) {
-			// console.log('muted');
+			console.log('*************');
+			console.log('*** muted ***');
+			console.log('*************');
 			this.muteFirstEvents -= 1;
 			return;
 		}
