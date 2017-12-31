@@ -454,6 +454,12 @@ var Wrapper = {
 	end: function() {
 		console.log('Wrapper::end()');
 		
+		if ( this.playbackRate ) {
+			this.preventPlaybackRateUpdate = true;
+			this.video.playbackRate = this.playbackRate;
+			this.playbackRate = null;
+		}
+		
 		// remove hooks 
 		this.video.removeEventListener('play', this.onPlayContext);
 		this.video.removeEventListener('pause', this.onPauseContext);
