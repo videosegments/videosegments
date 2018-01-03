@@ -492,7 +492,7 @@ var Editor = {
 		
 		if ( this.types.length > 0 ) {
 			let segmentation = JSON.parse(JSON.stringify({timestamps: this.timestamps, types: this.types})); // break link between segments data and saved data 
-			if ( segmentation.timestamps[segmentation.timestamps.length-1] !== this.wrapper.video.duration && segmentation.types[segmentation.types.length-1] !== 'c' ) {
+			if ( Math.abs(segmentation.timestamps[segmentation.timestamps.length-1] - this.wrapper.video.duration < 1.0) && segmentation.types[segmentation.types.length-1] !== 'c' ) {
 				// assume that everything else is content 
 				segmentation.timestamps.push(this.wrapper.video.duration);
 				segmentation.types.push('c');
