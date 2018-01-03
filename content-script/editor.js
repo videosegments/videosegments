@@ -97,6 +97,9 @@ var Editor = {
 			if ( this.origin !== 'pendingDatabase' ) {
 				this.panel.classList.add('vs-hide-segmentation-panel');
 			}
+			else {
+				this.icon.classList.add('vs-editor-icon-active');
+			}
 		}
 		
 		
@@ -155,14 +158,13 @@ var Editor = {
 		
 		// from previous to current 
 		let leftButtonFn = function() {
-			let currentTime = parseFloat(self.wrapper.video.currentTime.toFixed(2));
+			let i = 0, currentTime = parseFloat(self.wrapper.video.currentTime.toFixed(2));
 			if ( self.timestamps.length === 0 ) {
 				self.timestamps.push(0.0);
 				self.timestamps.push(currentTime);
 				self.types.push(this.name);
 			}
 			else {
-				let i;
 				for ( i = 0; i < self.timestamps.length; ++i ) {
 					if ( self.timestamps[i] > currentTime ) {
 						self.timestamps.splice(i, 0, currentTime);
@@ -179,19 +181,18 @@ var Editor = {
 			
 			self.saveLocally();
 			self.wrapper.updateSegmentsBar();
-			self.rebuildSegmentationBar();
+			self.recreateSegmentationBar(i);
 		}
 		
 		// from current to next 
 		let rightButtonFn = function() {
-			let currentTime = parseFloat(self.wrapper.video.currentTime.toFixed(2));
+			let i = 0, currentTime = parseFloat(self.wrapper.video.currentTime.toFixed(2));
 			if ( self.timestamps.length === 0 ) {
 				self.timestamps.push(0.0);
 				self.timestamps.push(self.wrapper.video.duration);
 				self.types.push(this.name);
 			}
 			else {
-				let i, currentTime = parseFloat(self.wrapper.video.currentTime.toFixed(2));
 				for ( i = 0; i < self.timestamps.length; ++i ) {
 					if ( self.timestamps[i] > currentTime ) {
 						self.timestamps.splice(i, 0, currentTime);
@@ -208,7 +209,7 @@ var Editor = {
 			
 			self.saveLocally();
 			self.wrapper.updateSegmentsBar();
-			self.rebuildSegmentationBar();
+			self.recreateSegmentationBar(i);
 		}
 		
 		let container = document.createElement('div');
@@ -261,6 +262,61 @@ var Editor = {
 		console.log('Editor::buildSegmentationBar()');
 		let self = this;
 		
+		let segmentationBar = document.createElement('div');
+		segmentationBar.id = 'vs-segmentation-panel-segments';
+		
+		let container = document.createElement('div');
+		container.id = 'vs-segmentation-bar';
+		segmentationBar.appendChild(container);
+		this.createSegmentationBar(container);
+		
+		let buttonsContainer = document.createElement('div');
+		buttonsContainer.style.display = 'inline-block';
+		buttonsContainer.style.textAlign = 'center';
+		buttonsContainer.style.width = '10%';
+		buttonsContainer.style.marginBottom = '2px';
+		buttonsContainer.style.marginTop = '5px';
+		
+		let segmentationOrigin = document.createElement('span');
+		segmentationOrigin.id = 'vs-segmentation-origin';
+		
+		if ( this.origin === 'savedLocally' ) {
+			segmentationOrigin.appendChild(document.createTextNode(browser.i18n.getMessage(this.origin) + ' (' + this.iterations + ')'));
+		}
+		else {
+			segmentationOrigin.appendChild(document.createTextNode(browser.i18n.getMessage(this.origin)));
+		}
+		buttonsContainer.appendChild(segmentationOrigin);
+		buttonsContainer.appendChild(document.createElement('br'));
+		
+		if ( this.origin === 'pendingDatabase' ) {
+			let declineButton = document.createElement('button');
+			declineButton.appendChild(document.createTextNode(browser.i18n.getMessage('declineSegmentation')));
+			declineButton.addEventListener('click', function() { self.shareSegmentation(true); });
+			
+			let acceptButton = document.createElement('button');
+			acceptButton.appendChild(document.createTextNode(browser.i18n.getMessage('acceptSegmentation')));
+			acceptButton.addEventListener('click', function() { self.shareSegmentation(false); });
+			
+			buttonsContainer.appendChild(declineButton);
+			buttonsContainer.appendChild(document.createTextNode('\u00A0\u00A0'));
+			buttonsContainer.appendChild(acceptButton);
+		}
+		else {
+			let sendButton = document.createElement('button');
+			sendButton.appendChild(document.createTextNode(browser.i18n.getMessage('sendSegmentation')));
+			sendButton.addEventListener('click', function() { self.shareSegmentation(false); });
+			buttonsContainer.appendChild(sendButton);
+		}
+		
+		segmentationBar.appendChild(buttonsContainer);
+		this.panel.insertAdjacentElement('beforeEnd', segmentationBar);
+	},
+	
+	createSegmentationBar: function(container) {
+		console.log('Editor::createSegmentationBar()');
+		let self = this;
+		
 		// set width to option content 
 		let fixSelectWidthFn = function(select) {
 			let text = select[select.selectedIndex].innerHTML;
@@ -271,12 +327,6 @@ var Editor = {
 			self.widthFixer.firstChild.appendChild(document.createTextNode(text));
 			select.style.width = self.widthFixer.offsetWidth + 2 + 'px';
 		};
-		
-		let segmentationBar = document.createElement('div');
-		segmentationBar.id = 'vs-segmentation-panel-segments';
-		
-		let container = document.createElement('div');
-		container.id = 'vs-segmentation-bar';
 		
 		// update timestamps, set input width 
 		let keyupFn = function(element, i) {
@@ -380,7 +430,7 @@ var Editor = {
 				
 				self.saveLocally();
 				self.wrapper.updateSegmentsBar(); 
-				self.rebuildSegmentationBar();
+				self.recreateSegmentationBar(i);
 			});
 			
 			return entry;
@@ -400,59 +450,34 @@ var Editor = {
 		else {
 			container.appendChild(createTimeEntry(0));
 		}
-		segmentationBar.appendChild(container);
 		
-		let buttonsContainer = document.createElement('div');
-		buttonsContainer.style.display = 'inline-block';
-		buttonsContainer.style.textAlign = 'center';
-		buttonsContainer.style.width = '10%';
-		buttonsContainer.style.marginBottom = '2px';
-		buttonsContainer.style.marginTop = '5px';
-		
-		let segmentationOrigin = document.createElement('span');
-		segmentationOrigin.id = 'vs-segmentation-origin';
-		
-		if ( this.origin === 'savedLocally' ) {
-			segmentationOrigin.appendChild(document.createTextNode(browser.i18n.getMessage(this.origin) + ' (' + this.iterations + ')'));
-		}
-		else {
-			segmentationOrigin.appendChild(document.createTextNode(browser.i18n.getMessage(this.origin)));
-		}
-		buttonsContainer.appendChild(segmentationOrigin);
-		buttonsContainer.appendChild(document.createElement('br'));
-		
-		if ( this.origin === 'pendingDatabase' ) {
-			let declineButton = document.createElement('button');
-			declineButton.appendChild(document.createTextNode(browser.i18n.getMessage('declineSegmentation')));
-			declineButton.addEventListener('click', function() { self.shareSegmentation(true); });
-			
-			let acceptButton = document.createElement('button');
-			acceptButton.appendChild(document.createTextNode(browser.i18n.getMessage('acceptSegmentation')));
-			acceptButton.addEventListener('click', function() { self.shareSegmentation(false); });
-			
-			buttonsContainer.appendChild(declineButton);
-			buttonsContainer.appendChild(document.createTextNode('\u00A0\u00A0'));
-			buttonsContainer.appendChild(acceptButton);
-		}
-		else {
-			let sendButton = document.createElement('button');
-			sendButton.appendChild(document.createTextNode(browser.i18n.getMessage('sendSegmentation')));
-			sendButton.addEventListener('click', function() { self.shareSegmentation(false); });
-			buttonsContainer.appendChild(sendButton);
-		}
-		
-		segmentationBar.appendChild(buttonsContainer);
-		this.panel.insertAdjacentElement('beforeEnd', segmentationBar);
+		return container;
 	},
 	
-	rebuildSegmentationBar: function() {
-		console.log('Editor::rebuildSegmentationBar()');
+	recreateSegmentationBar: function(i) {
+		console.log('Editor::recreateSegmentationBar()');
 		
-		let bar = document.getElementById('vs-segmentation-panel-segments');
-		if ( bar ) bar.remove();
+		let container = document.getElementById('vs-segmentation-bar');
+		while ( container.firstChild ) {
+			container.firstChild.remove();
+		}
+		this.createSegmentationBar(container);
 		
-		this.buildSegmentationBar();
+		let timeEntry = document.getElementsByClassName('vs-segmentation-panel-bar-entry')[(i-1)*4];
+		if ( timeEntry ) { // TODO: investigate why it can be undefined (prob 'cause last element)
+			container.scrollLeft = timeEntry.offsetLeft - 20;
+			console.log(i, container.scrollLeft, timeEntry.offsetLeft);
+		}
 	},
+	
+	// rebuildSegmentationBar: function() {
+		// console.log('Editor::rebuildSegmentationBar()');
+		
+		// let bar = document.getElementById('vs-segmentation-panel-segments');
+		// if ( bar ) bar.remove();
+		
+		// this.buildSegmentationBar();
+	// },
 	
 	saveLocally: function() {
 		console.log('Editor::saveLocally()');
@@ -492,7 +517,7 @@ var Editor = {
 		
 		if ( this.types.length > 0 ) {
 			let segmentation = JSON.parse(JSON.stringify({timestamps: this.timestamps, types: this.types})); // break link between segments data and saved data 
-			if ( Math.abs(segmentation.timestamps[segmentation.timestamps.length-1] - this.wrapper.video.duration < 1.0) && segmentation.types[segmentation.types.length-1] !== 'c' ) {
+			if ( Math.abs(segmentation.timestamps[segmentation.timestamps.length-1] - this.wrapper.video.duration > 1.0) && segmentation.types[segmentation.types.length-1] !== 'c' ) {
 				// assume that everything else is content 
 				segmentation.timestamps.push(this.wrapper.video.duration);
 				segmentation.types.push('c');
