@@ -46,7 +46,6 @@ function getSettings(callback) {
 		
 		// global settings 
 		autoPauseDuration: 1.0,
-		showSegmentsbar: true,
 		showSegmentationTools: false,
 		hideOnSegmentedVideos: false,
 		pinSegmentationTools: false,
@@ -55,6 +54,7 @@ function getSettings(callback) {
 		databasePriority: 'local',
 		segmentationToolsOpacity: 100,
 		iconOpacity: 100,
+		segmentsBarLocation: 'separated',
 		
 		// moderator settings 
 		displayPending: false,

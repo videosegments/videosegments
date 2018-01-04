@@ -1,11 +1,11 @@
 {
 	"extensionName": {
-		"message": "VideoSegments YouTube version",
+		"message": "VideoSegments - Cut YouTube Videos",
 		"description": ""
 	},
 
 	"extensionDescription": {
-		"message": "Самый простой способ убрать нежелательный контент из онлайн видео. Отлично подходит для прослушивания музыки.",
+		"message": "Самый простой способ вырезать нежелательный контент из онлайн видео. Отлично подходит для прослушивания музыки.",
 		"description": ""
 	},
 	
@@ -114,10 +114,6 @@
 	
 	
 	
-	"showSegmentsBar": {
-		"message": "Показывать сегменты под видео",
-		"description": ""
-	},
 	"showSegmentationTools": {
 		"message": "Всегда показывать панель сегментации",
 		"description": ""
@@ -160,6 +156,26 @@
 	},
 	"loginToRemoveCaptcha": {
 		"message": "Войдите, чтобы убрать капчу при отправке сегментации",
+		"description": ""
+	},
+	"segmentsBarLocation": {
+		"message": "Отображать сегменты: ",
+		"description": ""
+	},
+	"separated": {
+		"message": "Отдельно",
+		"description": ""
+	},
+	"overlay": {
+		"message": "Поверх",
+		"description": ""
+	},
+	"below": {
+		"message": "Под",
+		"description": ""
+	},
+	"none": {
+		"message": "Не отображать",
 		"description": ""
 	},
 	
