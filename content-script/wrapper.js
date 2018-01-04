@@ -263,14 +263,26 @@ var Wrapper = {
 	insertSegmentsBar: function() {
 		console.log('Wrapper::insertSegmentsBar()');
 		
-		if ( this.settings.showSegmentsbar === false ) {
+		if ( this.settings.segmentsBarLocation === 'none' ) {
 			return;
 		}
 		
 		let progressBar = document.getElementsByClassName("ytp-progress-bar-container")[0];
 		let segmentsBar = document.createElement('ul');
 		segmentsBar.id = 'vs-segmentsbar';
-		progressBar.insertAdjacentElement("afterEnd", segmentsBar);
+		
+		if ( this.settings.segmentsBarLocation === 'separated' ) {
+			progressBar.insertAdjacentElement("afterEnd", segmentsBar);
+			// segmentsBar.style.marginTop = '1px';
+		}
+		else {
+			progressBar.insertAdjacentElement("afterBegin", segmentsBar);
+			if ( this.settings.segmentsBarLocation === 'overlay' ) {
+				segmentsBar.style.zIndex = '100';
+				segmentsBar.style.opacity = '0.5';
+			}
+		}
+		
 		
 		let width, left = 0.0;
 		for ( let i = 0; i < this.types.length; ++i ) {

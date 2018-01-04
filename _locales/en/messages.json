@@ -114,10 +114,6 @@
 	
 	
 	
-	"showSegmentsBar": {
-		"message": "Show segmentbar",
-		"description": ""
-	},
 	"showSegmentationTools": {
 		"message": "Always show segmentation tools",
 		"description": ""
@@ -160,6 +156,26 @@
 	},
 	"loginToRemoveCaptcha": {
 		"message": "Login to remove captcha on segmentation send",
+		"description": ""
+	},
+	"segmentsBarLocation": {
+		"message": "Segmentbar location: ",
+		"description": ""
+	},
+	"separated": {
+		"message": "Separated",
+		"description": ""
+	},
+	"overlay": {
+		"message": "Overlay",
+		"description": ""
+	},
+	"below": {
+		"message": "Below",
+		"description": ""
+	},
+	"none": {
+		"message": "None",
 		"description": ""
 	},
 	

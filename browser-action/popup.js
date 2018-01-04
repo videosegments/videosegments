@@ -208,7 +208,6 @@ function loadSettings()
 		
 		// global settings 
 		autoPauseDuration: 1.0,
-		showSegmentsbar: true,
 		showSegmentationTools: false,
 		hideOnSegmentedVideos: false,
 		pinSegmentationTools: false,
@@ -217,6 +216,7 @@ function loadSettings()
 		databasePriority: 'local',
 		segmentationToolsOpacity: 100,
 		iconOpacity: 100,
+		segmentsBarLocation: 'separated',
 		
 		// segmentation settings 
 		// sendToDatabase: false,
@@ -303,9 +303,9 @@ function restoreOptions(settings)
 	element.value = settings.iconOpacity;
 	element.addEventListener('change', function() { updateGlobalValue(this, settings, 'iconOpacity'); });
 	
-	element = document.getElementById('showSegmentsbar');
-	element.checked = settings.showSegmentsbar;
-	element.addEventListener('change', function() { updateGlobalBool(this, settings, 'showSegmentsbar'); });
+	// element = document.getElementById('showSegmentsbar');
+	// element.checked = settings.showSegmentsbar;
+	// element.addEventListener('change', function() { updateGlobalBool(this, settings, 'showSegmentsbar'); });
 	
 	element = document.getElementById('showSegmentationTools');
 	element.checked = settings.showSegmentationTools;
@@ -338,6 +338,10 @@ function restoreOptions(settings)
 	element = document.getElementById('databasePriority');
 	element.value = settings.databasePriority;
 	element.addEventListener('change', function() { updateGlobalSelect(this, settings, 'databasePriority'); });
+	
+	element = document.getElementById('segmentsBarLocation');
+	element.value = settings.segmentsBarLocation;
+	element.addEventListener('change', function() { updateGlobalSelect(this, settings, 'segmentsBarLocation'); });
 }
 
 function updatePlayback(element, settings, segment)
