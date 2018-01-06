@@ -158,7 +158,7 @@ var Editor = {
 		
 		// from previous to current 
 		let leftButtonFn = function() {
-			let i = 0, currentTime = parseFloat(self.wrapper.video.currentTime.toFixed(2));
+			let i = 0, currentTime = parseFloat(self.wrapper.video.currentTime.toFixed(1));
 			if ( self.timestamps.length === 0 ) {
 				self.timestamps.push(0.0);
 				self.timestamps.push(currentTime);
@@ -186,7 +186,7 @@ var Editor = {
 		
 		// from current to next 
 		let rightButtonFn = function() {
-			let i = 0, currentTime = parseFloat(self.wrapper.video.currentTime.toFixed(2));
+			let i = 0, currentTime = parseFloat(self.wrapper.video.currentTime.toFixed(1));
 			if ( self.timestamps.length === 0 ) {
 				self.timestamps.push(0.0);
 				self.timestamps.push(self.wrapper.video.duration);
@@ -345,6 +345,9 @@ var Editor = {
 			let time = 0.0;
 			if ( typeof self.timestamps[i] !== 'undefined' ) {
 				time = parseFloat(self.timestamps[i]).toFixed(2);
+				if ( time.slice(-1) === '0' ) {
+					time = time.slice(0, -1);
+				}
 			}
 			
 			entry = document.createElement('div');
@@ -368,7 +371,7 @@ var Editor = {
 			entry.appendChild(startTime);
 			
 			let setCurrentTimeFn = function() {
-				self.timestamps[i] = parseFloat(self.wrapper.video.currentTime).toFixed(2);
+				self.timestamps[i] = parseFloat(self.wrapper.video.currentTime).toFixed(1);
 				self.saveLocally(); 
 				self.wrapper.updateSegmentsBar(); 
 				
@@ -517,7 +520,7 @@ var Editor = {
 		
 		if ( this.types.length > 0 ) {
 			let segmentation = JSON.parse(JSON.stringify({timestamps: this.timestamps, types: this.types})); // break link between segments data and saved data 
-			if ( Math.abs(segmentation.timestamps[segmentation.timestamps.length-1] - this.wrapper.video.duration > 1.0) && segmentation.types[segmentation.types.length-1] !== 'c' ) {
+			if ( Math.abs(segmentation.timestamps[segmentation.timestamps.length-1] - this.wrapper.video.duration > 1.5) && segmentation.types[segmentation.types.length-1] !== 'c' ) {
 				// assume that everything else is content 
 				segmentation.timestamps.push(this.wrapper.video.duration);
 				segmentation.types.push('c');
