@@ -154,8 +154,12 @@
 		"message": "Hide VS icon",
 		"description": ""
 	},
+	"autosaveMessage": {
+		"message": "Segmentation is automatically saved at your PC",
+		"description": ""
+	},
 	"loginToRemoveCaptcha": {
-		"message": "Login to remove captcha on segmentation send",
+		"message": "If you want to see less captcha when you send your segmentation to us for review (so everyone will see it), you can login with Facebook (anonymous login coming soon).",
 		"description": ""
 	},
 	"segmentsBarLocation": {
@@ -263,11 +267,11 @@
 	
 	
 	"localStatistic": {
-		"message": "Local Statistic",
+		"message": "Local",
 		"description": ""
 	},
 	"globalStatistic": {
-		"message": "Global Statistic",
+		"message": "Global",
 		"description": ""
 	},
 	"localStatisticDescription1": {
