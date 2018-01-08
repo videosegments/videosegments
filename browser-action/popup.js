@@ -7,11 +7,26 @@ if ( typeof this.chrome != 'undefined' ) {
 
 document.addEventListener('DOMContentLoaded', domContentLoaded);
 
+// browser.runtime.onMessage.addListener(function(message) {
+	// if ( typeof message.gotCategory !== 'undefined' ) {
+		// let scope = document.getElementById('scope');
+		// scope.readOnly = false;
+		// scope.value = message.gotCategory;
+		// scope.readOnly = true;
+	// }
+	// else if ( typeof message.gotChannel !== 'undefined' ) {
+		// let scope = document.getElementById('scope');
+		// scope.readOnly = false;
+		// scope.value = message.gotChannel;
+		// scope.readOnly = true;
+	// }
+// });
+
 function domContentLoaded()
 {
-	var tabs = document.getElementById('tabs');
+	let tabs = document.getElementById('tabs');
 	// hook clicks on tab
-	var buttons = tabs.getElementsByTagName('button');
+	let buttons = tabs.getElementsByTagName('button');
 	for ( let i = 0; i < buttons.length; ++i ) {
 		buttons[i].addEventListener('click', switchTab);
 	}
@@ -22,7 +37,7 @@ function domContentLoaded()
 	// load settings 
 	loadSettings();
 	
-	var button;
+	let button;
 	button = document.getElementById('next-segmentation');
 	button.addEventListener('click', openNextSegmentationRequest);
 	button = document.getElementById('next-request');
@@ -33,12 +48,30 @@ function domContentLoaded()
 		window.open('https://db.videosegments.org/logout.php'); 
 		setTimeout(function() {window.close();}, 100);
 	});
+	
+	let select = document.getElementById('scope-playback');
+	select.addEventListener('change', function() {
+		if ( select.value == 'category' ) {
+			browser.tabs.query({ currentWindow: true, active: true }, function(tabs) {
+				for ( let tab of tabs ) {
+					browser.tabs.sendMessage(tab.id, { getCategory: true });
+				}
+			});
+		}
+		else if ( select.value == 'channel' ) {
+			browser.tabs.query({ currentWindow: true, active: true }, function(tabs) {
+				for ( let tab of tabs ) {
+					browser.tabs.sendMessage(tab.id, { getChannel: true });
+				}
+			});
+		}
+	});
 }
 
 function switchTab()
 {
 	// remove old active tab class 
-	var tab = document.getElementsByClassName('active-tab')[0];
+	let tab = document.getElementsByClassName('active-tab')[0];
 	tab.classList.remove('active-tab');
 	
 	// change active tab class 
@@ -51,40 +84,40 @@ function switchTab()
 function openTab(tabName)
 {
 	// close all tabs 
-	var tabs = document.getElementsByClassName('tab-content');
+	let tabs = document.getElementsByClassName('tab-content');
 	for ( let i = 0; i < tabs.length; ++i ) {
 		tabs[i].style.display = 'none';
 	}
 	
 	// show desired
-	var tab = document.getElementById(tabName);
+	let tab = document.getElementById(tabName);
 	tab.style.display = 'block';
 }
 
 function checkLogin()
 {
-	var xhr = new XMLHttpRequest();
+	let xhr = new XMLHttpRequest();
 	xhr.open('GET', 'https://db.videosegments.org/status.php');
 	xhr.onreadystatechange = function() { 
 		// console.log(xhr);
 		if ( xhr.readyState == 4 ) {
 			if ( xhr.status == 200 ) {
 				// console.log(xhr.responseText);
-				var response = JSON.parse(xhr.responseText);
+				let response = JSON.parse(xhr.responseText);
 				if ( response.auth ) {
 					// var element = document.getElementById('settings-database');
 					// element.style.display = 'block';
-					var element = document.getElementById('settings-logout');
+					let element = document.getElementById('settings-logout');
 					element.style.display = 'block';
 					
 					if ( response.admin ) {
-						var element = document.getElementById('settings-database-admin');
+						let element = document.getElementById('settings-database-admin');
 						element.style.display = 'block';
 						updateRequestsCount();
 					}
 				}
 				else {
-					var element = document.getElementById('settings-login');
+					let element = document.getElementById('settings-login');
 					element.style.display = 'block';
 				}
 			}
@@ -97,7 +130,7 @@ function checkLogin()
 
 function updateRequestsCount()
 {
-	var xhr = new XMLHttpRequest();
+	let xhr = new XMLHttpRequest();
 	xhr.open('POST', 'https://db.videosegments.org/requests.php');
 	xhr.onreadystatechange = function() { 
 		if ( xhr.readyState == 4 ) {
@@ -120,23 +153,23 @@ function updateRequestsCount()
 		}
 	}
 	
-	var post = '';
+	let post = '';
 	xhr.setRequestHeader("content-type", "application/x-www-form-urlencoded");
 	xhr.send(post);
 }
 
 function openNextSegmentationRequest()
 {
-	var xhr = new XMLHttpRequest();
+	let xhr = new XMLHttpRequest();
 	xhr.open('POST', 'https://db.videosegments.org/requests.php');
 	xhr.onreadystatechange = function() { 
 		if ( xhr.readyState == 4 ) {
 			if ( xhr.status == 200 ) {
 				// console.log('xhr.responseText', xhr.responseText);
 				
-				var response = JSON.parse(xhr.responseText);
+				let response = JSON.parse(xhr.responseText);
 				if ( response.id ) {
-					var pending = {
+					let pending = {
 						timestamps: response.timestamps,
 						types: response.types
 					};
@@ -151,19 +184,19 @@ function openNextSegmentationRequest()
 		}
 	}
 	
-	var post = 'get_pending=1';
+	let post = 'get_pending=1';
 	xhr.setRequestHeader("content-type", "application/x-www-form-urlencoded");
 	xhr.send(post);
 }
 
 function openNextRequest()
 {
-	var xhr = new XMLHttpRequest();
+	let xhr = new XMLHttpRequest();
 	xhr.open('POST', 'https://db.videosegments.org/requests.php');
 	xhr.onreadystatechange = function() { 
 		if ( xhr.readyState == 4 ) {
 			if ( xhr.status == 200 ) {
-				var response = JSON.parse(xhr.responseText);
+				let response = JSON.parse(xhr.responseText);
 				if ( response.id ) {
 					browser.storage.local.set({ request: '1' }, function() {
 						browser.tabs.query({currentWindow: true, active: true}, function (tab) {
@@ -175,7 +208,7 @@ function openNextRequest()
 		}
 	}
 	
-	var post = 'get_request=1';
+	let post = 'get_request=1';
 	xhr.setRequestHeader("content-type", "application/x-www-form-urlencoded");
 	xhr.send(post);
 }
@@ -183,7 +216,7 @@ function openNextRequest()
 function loadSettings()
 {
 	// default extension settings 
-	var defaultSettings = {
+	let defaultSettings = {
 		// segments configuration
 		segments: {
 			// content 
@@ -232,14 +265,14 @@ function loadSettings()
 			
 			restoreOptions(result.settings);
 			
-			var seconds = Number(result.totalTime);
-			var element = document.getElementById('saved-time');
+			let seconds = Number(result.totalTime);
+			let element = document.getElementById('saved-time');
 			
-			var h = Math.floor(seconds / 3600);
-			var m = Math.floor(seconds % 3600 / 60);
-			var s = Math.floor(seconds % 3600 % 60);
+			let h = Math.floor(seconds / 3600);
+			let m = Math.floor(seconds % 3600 / 60);
+			let s = Math.floor(seconds % 3600 % 60);
 
-			var totalTimeSaved = (h<10?('0'+h):h) + ":" + ('0' + m).slice(-2) + ":" + ('0' + s).slice(-2);
+			let totalTimeSaved = (h<10?('0'+h):h) + ":" + ('0' + m).slice(-2) + ":" + ('0' + s).slice(-2);
 			element.textContent = totalTimeSaved;
 		}
 	);
@@ -247,28 +280,30 @@ function loadSettings()
 	
 function restoreOptions(settings) 
 {
+	let tr;
+	
 	// playback settings 
-	var playback = document.getElementById('playback-settings');
-	var tr = playback.getElementsByTagName('tr');
+	let playback = document.getElementById('playback-settings');
+	tr = playback.getElementsByTagName('tr');
 	for ( let i = 0; i < tr.length; ++i ) {
 		let segment = tr[i].id.slice(8);
 		
-		var select = tr[i].getElementsByTagName('select')[0];
+		let select = tr[i].getElementsByTagName('select')[0];
 		select.value = settings.segments[segment].skip ? '1' : '0';
 		select.addEventListener('change', function() { updatePlayback(this, settings, segment); });
 		
-		var input = tr[i].getElementsByTagName('input')[0];
+		let input = tr[i].getElementsByTagName('input')[0];
 		input.jscolor.fromString(settings.segments[segment].color);
 		input.addEventListener('change', function() { updateColor(this, settings, segment); });
 	}
 	
 	// acceleration settings 
-	var acceleration = document.getElementById('acceleration-settings');
-	var tr = acceleration.getElementsByTagName('tr');
+	let acceleration = document.getElementById('acceleration-settings');
+	tr = acceleration.getElementsByTagName('tr');
 	for ( let i = 1; i < tr.length; ++i ) {
 		let segment = tr[i].id.slice(8);
 		
-		var inputs = tr[i].getElementsByTagName('input');
+		let inputs = tr[i].getElementsByTagName('input');
 		inputs[0].value = settings.segments[segment].duration;
 		inputs[1].value = settings.segments[segment].speed*100;
 		
@@ -285,7 +320,7 @@ function restoreOptions(settings)
 	}
 	
 	// global settings 
-	var element;
+	let element;
 	
 	element = document.getElementById('autoPauseDuration');
 	element.value = settings.autoPauseDuration;

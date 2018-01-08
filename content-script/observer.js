@@ -81,6 +81,14 @@ var Observer = {
 		this.wrapper.updateSettings(settings);
 	},
 	
+	// getCategory: function() {
+		// this.wrapper.getCategory();
+	// },
+	
+	// getChannel: function() {
+		// this.wrapper.getChannel();
+	// },
+	
 	end: function() {
 		console.log('Observer::end()');
 		

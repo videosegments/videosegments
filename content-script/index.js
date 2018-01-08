@@ -14,11 +14,18 @@ getSettings(function(settings) {
 })
 
 // on settings update 
-browser.runtime.onMessage.addListener(
-	function(request, sender, sendResponse) {
+browser.runtime.onMessage.addListener(function(request) {
+	if ( typeof request.settings !== 'undefined' ) {
 		observer.updateSettings(request.settings);
 	}
-);
+	// too long to wait for channel to appear and even more for category
+	// else if ( typeof request.getCategory !== 'undefined' ) {
+		// observer.getCategory();
+	// }
+	// else if ( typeof request.getChannel !== 'undefined' ) {
+		// observer.getChannel();
+	// }
+});
 
 function getSettings(callback) {
 	let defaultSettings = {

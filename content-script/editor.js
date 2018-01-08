@@ -280,12 +280,15 @@ var Editor = {
 		let segmentationOrigin = document.createElement('span');
 		segmentationOrigin.id = 'vs-segmentation-origin';
 		
+		let text = document.createElement('span');
 		if ( this.origin === 'savedLocally' ) {
-			segmentationOrigin.appendChild(document.createTextNode(browser.i18n.getMessage(this.origin) + ' (' + this.iterations + ')'));
+			text = document.createTextNode(browser.i18n.getMessage(this.origin) + ' (' + this.iterations + ')');
 		}
 		else {
-			segmentationOrigin.appendChild(document.createTextNode(browser.i18n.getMessage(this.origin)));
+			text = document.createTextNode(browser.i18n.getMessage(this.origin));
 		}
+		segmentationOrigin.appendChild(text);
+		
 		buttonsContainer.appendChild(segmentationOrigin);
 		buttonsContainer.appendChild(document.createElement('br'));
 		
@@ -469,8 +472,11 @@ var Editor = {
 		let timeEntry = document.getElementsByClassName('vs-segmentation-panel-bar-entry')[(i-1)*4];
 		if ( timeEntry ) { // TODO: investigate why it can be undefined (prob 'cause last element)
 			container.scrollLeft = timeEntry.offsetLeft - 20;
-			console.log(i, container.scrollLeft, timeEntry.offsetLeft);
 		}
+		
+		let segmentationOrigin = document.getElementById('vs-segmentation-origin');
+		segmentationOrigin.firstChild.remove();
+		segmentationOrigin.appendChild(document.createTextNode(browser.i18n.getMessage(this.origin) + ' (' + this.iterations + ')'));
 	},
 	
 	// rebuildSegmentationBar: function() {
@@ -541,7 +547,7 @@ var Editor = {
 							self.modal.style.display = "block";
 							
 							let iframe = document.createElement("iframe");
-							iframe.src = 'https://db.videosegments.org/captcha2.php';
+							iframe.src = 'https://db.videosegments.org/captcha3.php';
 							iframe.width  = 350;
 							iframe.height = 500;
 							iframe.id = 'vs-captcha-iframe';
@@ -632,7 +638,7 @@ var Editor = {
 	},
 	
 	updateBadge: function() {
-		browser.runtime.sendMessage( {'updateBadge': true } );
+		browser.runtime.sendMessage( { updateBadge: true } );
 	},
 	
 	end: function() {

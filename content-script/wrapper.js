@@ -315,9 +315,9 @@ var Wrapper = {
 		
 		// first call is nessesary and second one is false so mute him
 		if ( this.muteFirstEvents == 1 ) {
-			console.log('*************');
-			console.log('*** muted ***');
-			console.log('*************');
+			// console.log('*************');
+			// console.log('*** muted ***');
+			// console.log('*************');
 			this.muteFirstEvents -= 1;
 			return;
 		}
@@ -461,6 +461,26 @@ var Wrapper = {
 			this.editor.start(this, this.timestamps, this.types, this.origin, this.settings, 'youtube', this.id);
 		}
 	},
+	
+	// getCategory: function() {
+		// let moreButton = document.getElementById('more');
+		// moreButton.click();
+		
+		// let container = document.getElementsByTagName('ytd-video-secondary-info-renderer')[0].getElementsByTagName('ytd-metadata-row-renderer')[0];
+		// if ( container ) {
+			// browser.runtime.sendMessage( { gotCategory: container.getElementsByTagName('a')[0].innerHTML } );
+		// }
+		
+		// let lessButton = document.getElementById('less');
+		// lessButton.click();
+	// },
+	
+	// getChannel: function() {
+		// let container = document.getElementById('owner-name');
+		// if ( container ) {
+			// browser.runtime.sendMessage( { gotChannel: container.getElementsByTagName('a')[0].innerHTML } );
+		// }
+	// },
 	
 	// called when "video" element "src" is changed
 	end: function() {

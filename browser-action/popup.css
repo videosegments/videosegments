@@ -209,11 +209,6 @@ table th {
 	padding: 5px;
 }
 
-#acceleration-settings input {
-	border: none;
-	border-bottom: 1px solid black;
-}
-
 input {
 	font-family: courier; 
 	text-align: center;
