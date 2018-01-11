@@ -44,6 +44,8 @@ var Editor = {
 		this.icon = document.createElement('div');
 		this.icon.id = 'vs-editor-icon';
 		
+		
+		
 		let togglePanelContext = function() {
 			if ( self.icon.classList.contains('vs-editor-icon-active') ) {
 				self.panel.classList.toggle('vs-hide-segmentation-panel', true);
@@ -111,6 +113,28 @@ var Editor = {
 		// opacity setting 
 		this.panel.style.opacity = this.settings.segmentationToolsOpacity / 100;
 		this.icon.style.opacity = this.settings.iconOpacity / 100;
+		
+		// hovering 
+		let mouseMoveEvent = document.createEvent("Events");
+		mouseMoveEvent.initEvent("mousemove", false, false);
+		// it is different element from "video" tag
+		let player = document.getElementsByClassName('html5-video-player')[0];
+		
+		let moveTimer = null;
+		// show youtube controls when mouse hover over panel 
+		let mouseEnterFn = function() {
+			player.dispatchEvent(mouseMoveEvent);
+			moveTimer = setInterval(function() { player.dispatchEvent(mouseMoveEvent); }, 1000);
+		}
+		
+		// hide youtube controls when mouse leave panel  
+		let mouseLeaveFn = function() {
+			// todo: instant hide 
+			clearInterval(moveTimer);
+		}
+		
+		this.panel.addEventListener('mouseenter', mouseEnterFn);
+		this.panel.addEventListener('mouseleave', mouseLeaveFn);
 				
 		// buttons 
 		let createButtonsFn = function(type, text, color, backgroundColor, leftCallback, rightCallback) {
@@ -181,7 +205,7 @@ var Editor = {
 			
 			self.saveLocally();
 			self.wrapper.updateSegmentsBar();
-			self.recreateSegmentationBar(i);
+			self.recreateSegmentationBar(i, false);
 		}
 		
 		// from current to next 
@@ -209,7 +233,7 @@ var Editor = {
 			
 			self.saveLocally();
 			self.wrapper.updateSegmentsBar();
-			self.recreateSegmentationBar(i);
+			self.recreateSegmentationBar(i, true);
 		}
 		
 		let container = document.createElement('div');
@@ -331,18 +355,15 @@ var Editor = {
 			select.style.width = self.widthFixer.offsetWidth + 2 + 'px';
 		};
 		
-		// update timestamps, set input width 
-		let keyupFn = function(element, i) {
-			self.timestamps[i] = parseFloat(element.value).toFixed(2);
-			self.saveLocally(); 
-			self.wrapper.updateSegmentsBar(); 
-			element.size = element.value.length + 1;
-		};
-		
 		let spritesheet = browser.extension.getURL('content-script/sprites.png');
 		let setButtonImage = function(btn, l, t, w, h) {
 			btn.style = 'width: '+w+'px; height: '+h+'px; background: url('+spritesheet+') '+l+'px '+t+'px;';
 		}
+		
+		// let blurFn = function(element, i) {
+			// element.value = self.convertSecondsToTime(self.timestamps[i]);
+			// element.size = element.value.length + 1;
+		// }
 		
 		let createTimeEntry = function(i) {
 			let time = 0.0;
@@ -355,37 +376,90 @@ var Editor = {
 			
 			entry = document.createElement('div');
 			entry.classList.add('vs-segmentation-panel-bar-entry');
+		
+			// update timestamps, set input width 
+			let keyupFn = function(element, i) {
+				// self.timestamps[i] = parseFloat(element.value).toFixed(2);
+				let timestamp = self.convertTimeToSeconds(element.value);
+				if ( timestamp === self.timestamps[i] ) {
+					return;
+				}
+				
+				self.timestamps[i] = timestamp;
+				self.saveLocally(); 
+				self.wrapper.updateSegmentsBar(); 
+				
+				element.size = element.value.length + 1;
+			};
+			
+			let focusFn = function(element, i) {
+				element.value = self.convertSecondsToTime(self.timestamps[i], true);
+				element.size = element.value.length + 1;
+				
+				let inputs = self.panel.getElementsByTagName('input');
+				for ( let j = 0; j < self.timestamps.length; ++j ) {
+					if ( inputs[j] !== element ) {
+						inputs[j].value = self.convertSecondsToTime(self.timestamps[j]);
+						inputs[j].size = inputs[j].value.length + 1;
+					}
+				}
+			}
+			
+			let keyDownFn = function(keyCode, element, i) {
+				if ( keyCode === 38 ) { // arrow up
+					// workaround for float substaction when 0.5 - 0.1 = 0.39999999999999
+					self.timestamps[i] = parseFloat(((self.timestamps[i] * 100 + 10) / 100).toFixed(2));
+				}
+				else if ( keyCode === 40 ) { // arrow down 
+					self.timestamps[i] = parseFloat(((self.timestamps[i] * 100 - 10) / 100).toFixed(2));
+				}
+				else { 
+					return;
+				}
+				
+				self.wrapper.video.currentTime = self.timestamps[i] + 0.01; // small offset to go into next segment 
+				self.saveLocally(); 
+				self.wrapper.updateSegmentsBar(); 
+				
+				element.value = self.convertSecondsToTime(self.timestamps[i], true);
+				element.size = element.value.length + 1;
+			}
+			
+			let startTime = document.createElement('input');
+			startTime.classList.add('vs-segmentation-panel-time-entry');
+			startTime.value = self.convertSecondsToTime(time);
+			startTime.size = startTime.value.length + 1;
+			startTime.addEventListener('keyup', function() { keyupFn(startTime, i) });
+			startTime.addEventListener('focus', function() { focusFn(startTime, i) });
+			startTime.addEventListener('keydown', function(event) { keyDownFn(event.keyCode, startTime, i) });
+			// startTime.addEventListener('blur', function() { blurFn(startTime, i) });
 			
 			let rewindFn = function() {
-				self.wrapper.video.currentTime = self.timestamps[i];
+				self.wrapper.video.currentTime = self.timestamps[i] + 0.0001; // small offset to go into next segment 
+				startTime.focus();
 			};
 			
 			let rewindButton = document.createElement('button');
 			rewindButton.classList.add('vs-segmentation-panel-small-button');
 			rewindButton.addEventListener('click', rewindFn);
 			setButtonImage(rewindButton, 0, 0, 16, 16);
-			entry.appendChild(rewindButton);
-			
-			let startTime = document.createElement('input');
-			startTime.classList.add('vs-segmentation-panel-time-entry');
-			startTime.value = time;
-			startTime.size = startTime.value.length + 1;
-			startTime.addEventListener('keyup', function() { keyupFn(startTime, i) });
-			entry.appendChild(startTime);
 			
 			let setCurrentTimeFn = function() {
 				self.timestamps[i] = parseFloat(self.wrapper.video.currentTime).toFixed(1);
 				self.saveLocally(); 
 				self.wrapper.updateSegmentsBar(); 
 				
-				startTime.value = self.timestamps[i];
+				startTime.value = self.convertSecondsToTime(self.timestamps[i], true);
 				startTime.size = startTime.value.length + 1;
 			}
 			
 			let currentButton = document.createElement('button');
 			currentButton.classList.add('vs-segmentation-panel-small-button');
 			currentButton.addEventListener('click', setCurrentTimeFn);
+			
 			setButtonImage(currentButton, -12, 0, 16, 16);
+			entry.appendChild(rewindButton);
+			entry.appendChild(startTime);
 			entry.appendChild(currentButton);
 			entry.appendChild(document.createTextNode('\u00A0'));
 			
@@ -436,7 +510,7 @@ var Editor = {
 				
 				self.saveLocally();
 				self.wrapper.updateSegmentsBar(); 
-				self.recreateSegmentationBar(i);
+				self.recreateSegmentationBar(i, null, false);
 			});
 			
 			return entry;
@@ -460,7 +534,61 @@ var Editor = {
 		return container;
 	},
 	
-	recreateSegmentationBar: function(i) {
+	convertSecondsToTime: function(timestamp, precisely=false) {
+		if ( typeof timestamp === 'undefined' ) {
+			timestamp = 0.0;
+		}
+		
+		let seconds = parseInt(timestamp) % 60;
+		let ms = timestamp * 1000;
+		
+		let hours = parseInt(ms / 3600000);
+		ms -= hours * 3600000;
+		
+		let minutes = parseInt(ms / 60000);
+		ms = ms % 1000;
+		
+		https://stackoverflow.com/a/19700358
+		hours = (hours < 10) ? "0" + hours : hours;
+		hours = (hours != '00')?(hours+':'):''
+		minutes = (minutes < 10) ? "0" + minutes : minutes;
+		seconds = (seconds < 10) ? "0" + seconds : seconds;
+		
+		let time;
+		if ( precisely ) {
+			ms = parseInt(ms / 10);
+			let msr = parseInt(ms / 10);
+			if ( msr * 10 === ms ) {
+				ms = msr;
+			}
+			
+			time = hours + minutes + ':' + seconds + '.' + ms;
+		}
+		else {
+			time = hours + minutes + ':' + seconds;
+		}
+		
+		// console.log(time);
+		return time;
+	},
+	
+	convertTimeToSeconds: function(time) {
+		let parts = time.split(':');
+		let timestamp = 0;
+		if ( parts.length == 3 ) {
+			timestamp += parseInt(parts[0]) * 3600;
+			timestamp += parseInt(parts[1]) * 60;
+		}
+		else {
+			timestamp += parseInt(parts[0]) * 60;
+		}
+		
+		timestamp += parseFloat(parseFloat(parts[parts.length-1]).toFixed(2));
+		// console.log(timestamp);
+		return timestamp;
+	},
+	
+	recreateSegmentationBar: function(i, rightButton, setFocus=true) {
 		console.log('Editor::recreateSegmentationBar()');
 		
 		let container = document.getElementById('vs-segmentation-bar');
@@ -474,10 +602,34 @@ var Editor = {
 			container.scrollLeft = timeEntry.offsetLeft - 20;
 		}
 		
+		console.log(this.timestamps.length, i);
+		if ( this.timestamps.length === 2 ) {
+			// do nothing since it's autofilled
+		}
+		else {
+			if ( setFocus ) {
+				if ( rightButton && (this.timestamps.length-1) === i ) {
+					let input = timeEntry.getElementsByTagName('input')[0];
+					input.focus();
+				}
+				else {
+					let nextSegmentEntry = document.getElementsByClassName('vs-segmentation-panel-bar-entry')[i*4];
+					if ( nextSegmentEntry ) { // TODO: investigate why it can be undefined (prob 'cause last element)
+						let input = nextSegmentEntry.getElementsByTagName('input')[0];
+						input.focus();
+					}
+				}
+			}
+		}
+		
+		
 		let segmentationOrigin = document.getElementById('vs-segmentation-origin');
 		segmentationOrigin.firstChild.remove();
 		segmentationOrigin.appendChild(document.createTextNode(browser.i18n.getMessage(this.origin) + ' (' + this.iterations + ')'));
 	},
+	
+	// this.setSelectionRange(0, this.value.length);
+	// field.selectionStart;
 	
 	// rebuildSegmentationBar: function() {
 		// console.log('Editor::rebuildSegmentationBar()');

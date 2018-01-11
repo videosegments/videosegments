@@ -34,7 +34,6 @@
 }
 
 #vs-editor-icon:hover {
-	/* background: url('https://db.videosegments.org/images/icon.png') no-repeat center center; */
 	opacity: 1.0 !important;
 }
 
@@ -96,6 +95,7 @@
 	border-bottom-left-radius: 5px;
 	overflow: hidden;
 	position: relative;
+	z-index: 3500;
 }
 
 .vs-segmentation-panel-button-small {
@@ -110,6 +110,7 @@
 	border-bottom-right-radius: 5px;
 	overflow: hidden;
 	position: relative;
+	z-index: 3500;
 }
 
 .vs-segmentation-panel-button-big:hover, .vs-segmentation-panel-button-small:hover {
