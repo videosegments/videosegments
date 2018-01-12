@@ -1,9 +1,6 @@
 'use strict';
 
-const DEBUG = 0;
-if ( DEBUG === 0 ) {
-	console.log = function() {};
-}
+// console.log = function() {};
 
 if ( typeof this.chrome != 'undefined' ) {
 	this.browser = this.chrome;

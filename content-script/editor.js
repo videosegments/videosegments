@@ -379,6 +379,10 @@ var Editor = {
 		
 			// update timestamps, set input width 
 			let keyupFn = function(element, i) {
+				if ( element.readOnly ) {
+					return;
+				}
+				
 				// self.timestamps[i] = parseFloat(element.value).toFixed(2);
 				let timestamp = self.convertTimeToSeconds(element.value);
 				if ( timestamp === self.timestamps[i] ) {
@@ -392,7 +396,12 @@ var Editor = {
 				element.size = element.value.length + 1;
 			};
 			
+			// show milliseconds 
 			let focusFn = function(element, i) {
+				if ( element.readOnly ) {
+					return;
+				}
+				
 				element.value = self.convertSecondsToTime(self.timestamps[i], true);
 				element.size = element.value.length + 1;
 				
@@ -405,7 +414,12 @@ var Editor = {
 				}
 			}
 			
+			// hotkeys 
 			let keyDownFn = function(keyCode, element, i) {
+				if ( element.readOnly ) {
+					return;
+				}
+				
 				if ( keyCode === 38 ) { // arrow up
 					// workaround for float substaction when 0.5 - 0.1 = 0.39999999999999
 					self.timestamps[i] = parseFloat(((self.timestamps[i] * 100 + 10) / 100).toFixed(2));
@@ -432,6 +446,12 @@ var Editor = {
 			startTime.addEventListener('keyup', function() { keyupFn(startTime, i) });
 			startTime.addEventListener('focus', function() { focusFn(startTime, i) });
 			startTime.addEventListener('keydown', function(event) { keyDownFn(event.keyCode, startTime, i) });
+			
+			if ( time === '0.0' || time === self.wrapper.video.duration.toFixed(2) ) {
+				startTime.readOnly = true;
+				startTime.style.color = 'rgb(150,150,150)';
+				startTime.style.cursor = 'not-allowed';
+			}
 			// startTime.addEventListener('blur', function() { blurFn(startTime, i) });
 			
 			let rewindFn = function() {
