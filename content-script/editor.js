@@ -447,9 +447,10 @@ var Editor = {
 			startTime.addEventListener('focus', function() { focusFn(startTime, i) });
 			startTime.addEventListener('keydown', function(event) { keyDownFn(event.keyCode, startTime, i) });
 			
-			if ( time === '0.0' || time === self.wrapper.video.duration.toFixed(2) ) {
+			time = parseFloat(time);
+			if ( time === 0.0 || time === parseFloat(self.wrapper.video.duration.toFixed(2)) ) {
 				startTime.readOnly = true;
-				startTime.style.color = 'rgb(150,150,150)';
+				startTime.style.color = 'rgb(100,100,100)';
 				startTime.style.cursor = 'not-allowed';
 			}
 			// startTime.addEventListener('blur', function() { blurFn(startTime, i) });
@@ -548,7 +549,7 @@ var Editor = {
 			container.appendChild(createTimeEntry(this.timestamps.length-1));
 		}
 		else {
-			container.appendChild(createTimeEntry(0));
+			container.appendChild(createTimeEntry(0.0));
 		}
 		
 		return container;
@@ -622,7 +623,6 @@ var Editor = {
 			container.scrollLeft = timeEntry.offsetLeft - 20;
 		}
 		
-		console.log(this.timestamps.length, i);
 		if ( this.timestamps.length === 2 ) {
 			// do nothing since it's autofilled
 		}
