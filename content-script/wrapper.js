@@ -63,8 +63,10 @@ var Wrapper = {
 			// chrome calls pause/play event at video start
 			// workaround to fix it 
 			this.muteFirstEvents = 2;
-			
 			// setTimeout(function() { self.muteFirstEvents = 0; }, 1000);
+		}
+		else {
+			this.muteFirstEvents = 0;
 		}
 		
 		// if video is ready to play (otherwise we can't get video id)
@@ -315,9 +317,9 @@ var Wrapper = {
 		
 		// first call is nessesary and second one is false so mute him
 		if ( this.muteFirstEvents == 1 ) {
-			// console.log('*************');
-			// console.log('*** muted ***');
-			// console.log('*************');
+			console.log('*************');
+			console.log('*** muted ***');
+			console.log('*************');
 			this.muteFirstEvents -= 1;
 			return;
 		}

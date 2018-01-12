@@ -15,6 +15,8 @@ var Observer = {
 	/* 
 		workaround for acceleration in chrome\opera 
 		browser will call pause/play events on first video on tab 
+		this workaround is required if user open tab with video 
+		if he start with youtube main page, workaround should be disabled 
 	*/
 	muteFirstEvents: null,
 	
@@ -23,7 +25,10 @@ var Observer = {
 		let self = this;
 		
 		if ( typeof InstallTrigger === 'undefined' ) {
-			this.muteFirstEvents = true;
+			let match = window.location.href.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/ ]{11})/i);
+			if ( match && match[1].length == 11 ) { /* youtube video id == 11 */
+				this.muteFirstEvents = true;
+			}
 		}
 		else {
 			this.muteFirstEvents = false;
