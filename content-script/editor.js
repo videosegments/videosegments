@@ -44,8 +44,6 @@ var Editor = {
 		this.icon = document.createElement('div');
 		this.icon.id = 'vs-editor-icon';
 		
-		
-		
 		let togglePanelContext = function() {
 			if ( self.icon.classList.contains('vs-editor-icon-active') ) {
 				self.panel.classList.toggle('vs-hide-segmentation-panel', true);
