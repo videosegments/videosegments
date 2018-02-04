@@ -317,9 +317,9 @@ var Wrapper = {
 		
 		// first call is nessesary and second one is false so mute him
 		if ( this.muteFirstEvents == 1 ) {
-			console.log('*************');
-			console.log('*** muted ***');
-			console.log('*************');
+			// console.log('*************');
+			// console.log('*** muted ***');
+			// console.log('*************');
 			this.muteFirstEvents -= 1;
 			return;
 		}

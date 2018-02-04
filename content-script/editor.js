@@ -376,25 +376,6 @@ var Editor = {
 			
 			entry = document.createElement('div');
 			entry.classList.add('vs-segmentation-panel-bar-entry');
-		
-			// update timestamps, set input width 
-			let keyupFn = function(element, i) {
-				if ( element.readOnly ) {
-					return;
-				}
-				
-				// self.timestamps[i] = parseFloat(element.value).toFixed(2);
-				let timestamp = self.convertTimeToSeconds(element.value);
-				if ( timestamp === self.timestamps[i] ) {
-					return;
-				}
-				
-				self.timestamps[i] = timestamp;
-				self.saveLocally(); 
-				self.wrapper.updateSegmentsBar(); 
-				
-				element.size = element.value.length + 1;
-			};
 			
 			// show milliseconds 
 			let focusFn = function(element, i) {
@@ -405,6 +386,9 @@ var Editor = {
 				element.value = self.convertSecondsToTime(self.timestamps[i], true);
 				element.size = element.value.length + 1;
 				
+				// now handled by mouse click event 
+				startTime.setSelectionRange(startTime.value.length-1, startTime.value.length);
+						
 				let inputs = self.panel.getElementsByTagName('input');
 				for ( let j = 0; j < self.timestamps.length; ++j ) {
 					if ( inputs[j] !== element ) {
@@ -414,38 +398,177 @@ var Editor = {
 				}
 			}
 			
-			// hotkeys 
-			let keyDownFn = function(keyCode, element, i) {
+			// smart cursor  
+			let mouseUpFn = function(event, element, i) {
 				if ( element.readOnly ) {
 					return;
 				}
 				
-				if ( keyCode === 38 ) { // arrow up
-					// workaround for float substaction when 0.5 - 0.1 = 0.39999999999999
-					self.timestamps[i] = parseFloat(((self.timestamps[i] * 100 + 10) / 100).toFixed(2));
+				// remove last zero if two digits after dot 
+				if ( element.value.indexOf('.') == element.value.length-3 && element.value[element.value.length-1] === '0' ) {
+					element.value = element.value.slice(0, -1); 
+					element.size = element.value.length + 1;
 				}
-				else if ( keyCode === 40 ) { // arrow down 
-					self.timestamps[i] = parseFloat(((self.timestamps[i] * 100 - 10) / 100).toFixed(2));
+				
+				if ( element.selectionStart >= element.value.length ) {
+					element.setSelectionRange(element.selectionStart-1, element.selectionStart);
 				}
-				else { 
+				else {
+					if ( element.value[element.selectionStart] >= '0' && element.value[element.selectionStart] <= '9' ) {
+						element.setSelectionRange(element.selectionStart, element.selectionStart+1);
+					}
+					else {
+						element.setSelectionRange(element.selectionStart+1, element.selectionStart+2);
+					}
+				}
+			}
+			
+			// hotkeys 
+			let keyDownFn = function(event, element, i) {
+				if ( element.readOnly ) {
 					return;
 				}
 				
-				self.wrapper.video.currentTime = self.timestamps[i] + 0.01; // small offset to go into next segment 
+				let keepPrecision = false;
+				
+				// arrow left 
+				if ( event.keyCode === 37 ) { 
+					// remove last zero if two digits after dot 
+					if ( element.value.indexOf('.') == element.value.length-3 && element.value[element.value.length-1] === '0' ) {
+						element.value = element.value.slice(0, -1); 
+						element.size = element.value.length + 1;
+					}
+					
+					if ( element.selectionStart < 2 ) {
+						element.setSelectionRange(0, 1);
+						event.preventDefault();
+						return;
+					}
+					
+					if ( element.value[element.selectionStart-1] >= '0' && element.value[element.selectionStart-1] <= '9' ) {
+						element.setSelectionRange(element.selectionStart-1, element.selectionStart);
+					}
+					else {
+						element.setSelectionRange(element.selectionStart-2, element.selectionStart-1);
+					}
+					
+					event.preventDefault();
+					return;
+				}
+				// arrow right 
+				else if ( event.keyCode === 39 ) { 
+					if ( element.selectionStart > element.value.length-2 ) {
+						// if only one digit after dot 
+						if ( element.value.indexOf('.') == element.value.length-2 ) {
+							// add one zero
+							element.value = element.value + '0';
+							element.size = element.value.length + 1;
+							setTimeout(function() {element.setSelectionRange(element.value.length-1, element.value.length)}, 0);
+							return;
+						}
+					
+						element.setSelectionRange(element.value.length-1, element.value.length);
+						event.preventDefault();
+						return;
+					}
+					
+					if ( element.value[element.selectionStart+1] >= '0' && element.value[element.selectionStart+1] <= '9' ) {
+						element.setSelectionRange(element.selectionStart+1, element.selectionStart+2);
+					}
+					else {
+						element.setSelectionRange(element.selectionStart+2, element.selectionStart+3);
+					}
+					
+					event.preventDefault();
+					return;
+				}
+				// arrow up
+				else if ( event.keyCode === 38 ) { 
+					// TODO: make it nested? 
+					keepPrecision = (element.value.indexOf('.')==element.value.length-2)?false:true;
+					// TODO: make this function return value 
+					smartCursorArrowsHandler(element.value, element.selectionStart, 1, i);
+				}
+				// arrow down 
+				else if ( event.keyCode === 40 ) { 
+					keepPrecision = (element.value.indexOf('.')==element.value.length-2)?false:true;
+					smartCursorArrowsHandler(element.value, element.selectionStart, -1, i);
+				}
+				// everything else 
+				else { 
+					// block input of non-digit 
+					// allow:                 1-0                                            numpad                                              f1-f12
+					if ( !(event.keyCode >= 48 && event.keyCode <= 57) && !(event.keyCode >= 96 && event.keyCode <= 105) && !(event.keyCode >= 112 && event.keyCode <= 123) ) {
+						event.preventDefault();
+					}
+					
+					return;
+				}
+				
+				self.wrapper.video.currentTime = self.timestamps[i] + 0.01; // small offset to be not rewinded  
+				self.wrapper.updateSegmentsBar(); 
+				self.saveLocally(); 
+				
+				let pos = element.selectionStart;
+				element.value = self.convertSecondsToTime(self.timestamps[i], true, keepPrecision);
+				element.size = element.value.length + 1;
+				setTimeout(function() { element.setSelectionRange(pos, pos+1) }, 0);
+			}
+			
+			let smartCursorArrowsHandler = function(text, cursorPosition, sign, i) {
+				let interval = [1,    10,    100, 1000, 6000, 60000, 360000, 3600000, 36000000];
+				//              10ms, 100ms, 1s,  10s,  1m,   10m,   1h,     10h,     100h
+				
+				// digit order number
+				let multiplierPosition = (text.indexOf('.')==text.length-2)?1:0;
+				
+				// from end to start
+				for ( let i = text.length; i > 0; --i ) {
+					if ( i == cursorPosition ) {
+						break;
+					}
+					
+					if ( text[i] >= '0' && text[i] <= '9' ) {
+						multiplierPosition++;
+					}
+				}
+				
+				self.timestamps[i] = parseFloat(((self.timestamps[i] * 100 + sign*interval[multiplierPosition]) / 100).toFixed(2));
+				if ( self.timestamps[i] < 0 ) self.timestamps[i] = 0.0;
+				else if ( self.timestamps[i] > self.wrapper.video.duration ) self.timestamps[i] = parseFloat(self.wrapper.video.duration.toFixed(2));
+			}
+		
+			// update timestamps, set input width 
+			let keyupFn = function(event, element, i) {
+				if ( element.readOnly ) {
+					return;
+				}
+				
+				// we only interested in digits 
+				if ( !(event.keyCode >= 48 && event.keyCode <= 57) && !(event.keyCode >= 96 && event.keyCode <= 105) ) { 
+					return;
+				}
+				
+				// self.timestamps[i] = parseFloat(element.value).toFixed(2);
+				self.timestamps[i] = self.convertTimeToSeconds(element.value);
 				self.saveLocally(); 
 				self.wrapper.updateSegmentsBar(); 
 				
 				element.value = self.convertSecondsToTime(self.timestamps[i], true);
 				element.size = element.value.length + 1;
-			}
+				setTimeout(function() { element.setSelectionRange(element.selectionStart-1, element.selectionStart) }, 0);
+				self.wrapper.video.currentTime = self.timestamps[i] + 0.01; // small offset to be not rewinded  
+			};
 			
 			let startTime = document.createElement('input');
 			startTime.classList.add('vs-segmentation-panel-time-entry');
 			startTime.value = self.convertSecondsToTime(time);
 			startTime.size = startTime.value.length + 1;
-			startTime.addEventListener('keyup', function() { keyupFn(startTime, i) });
+			startTime.addEventListener('keyup', function(event) { keyupFn(event, startTime, i) });
 			startTime.addEventListener('focus', function() { focusFn(startTime, i) });
-			startTime.addEventListener('keydown', function(event) { keyDownFn(event.keyCode, startTime, i) });
+			// we need fresh selectionStart position so wait a little bit 
+			startTime.addEventListener('mouseup', function(event) { setTimeout(function() {mouseUpFn(event, startTime, i)}, 0); });
+			startTime.addEventListener('keydown', function(event) { keyDownFn(event, startTime, i) });
 			
 			time = parseFloat(time);
 			if ( time === 0.0 || time === parseFloat(self.wrapper.video.duration.toFixed(2)) ) {
@@ -555,7 +678,7 @@ var Editor = {
 		return container;
 	},
 	
-	convertSecondsToTime: function(timestamp, precisely=false) {
+	convertSecondsToTime: function(timestamp, showMs=false, keepPrecision=false) {
 		if ( typeof timestamp === 'undefined' ) {
 			timestamp = 0.0;
 		}
@@ -567,7 +690,6 @@ var Editor = {
 		ms -= hours * 3600000;
 		
 		let minutes = parseInt(ms / 60000);
-		ms = ms % 1000;
 		
 		https://stackoverflow.com/a/19700358
 		hours = (hours < 10) ? "0" + hours : hours;
@@ -576,12 +698,18 @@ var Editor = {
 		seconds = (seconds < 10) ? "0" + seconds : seconds;
 		
 		let time;
-		if ( precisely ) {
-			ms = parseInt(ms / 10);
-			let msr = parseInt(ms / 10);
-			if ( msr * 10 === ms ) {
-				ms = msr;
+		if ( showMs ) {
+			ms = ms.toString();
+			
+			if ( ms[ms.length-2] == '0' && !keepPrecision ) {
+				ms = ms[ms.length-3];
 			}
+			else {
+				ms = ms[ms.length-3] + ms[ms.length-2];
+			}
+			
+			// TODO: remove this workaround 
+			if ( isNaN(ms) ) ms = '0';
 			
 			time = hours + minutes + ':' + seconds + '.' + ms;
 		}
@@ -641,11 +769,6 @@ var Editor = {
 				}
 			}
 		}
-		
-		
-		let segmentationOrigin = document.getElementById('vs-segmentation-origin');
-		segmentationOrigin.firstChild.remove();
-		segmentationOrigin.appendChild(document.createTextNode(browser.i18n.getMessage(this.origin) + ' (' + this.iterations + ')'));
 	},
 	
 	// this.setSelectionRange(0, this.value.length);
@@ -662,6 +785,7 @@ var Editor = {
 	
 	saveLocally: function() {
 		console.log('Editor::saveLocally()');
+		let self = this;
 		
 		let textElement;
 		let video_id = this.domain + '-' + this.id;
@@ -685,6 +809,10 @@ var Editor = {
 			
 			browser.storage.local.set({
 				[video_id]: segmentation
+			}, function() {
+				let segmentationOrigin = document.getElementById('vs-segmentation-origin');
+				segmentationOrigin.firstChild.remove();
+				segmentationOrigin.appendChild(document.createTextNode(browser.i18n.getMessage(self.origin) + ' (' + self.iterations + ')'));
 			});
 			this.origin = 'savedLocally';
 		}

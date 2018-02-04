@@ -132,13 +132,24 @@
 }
 
 .vs-segmentation-panel-time-entry {
-	font-family: courier;
+	font-family: 'Courier New';
+	font-size: 14px;
 	border: none;
 	border-bottom: 1px solid black;
 	text-align: center;
 	padding: 0;
 	margin: 0;
 	position: relative;
+}
+
+.vs-segmentation-panel-time-entry::selection {
+	background: black;
+	color: white;
+}
+
+.vs-segmentation-panel-time-entry::-moz-selection {
+	background: black;
+	color: white;
 }
 
 .vs-segmentation-panel-bar-two-buttons, .vs-segmentation-panel-bar-one-button {
@@ -235,7 +246,8 @@
 
 #vs-segmentation-bar select {
 	cursor: pointer;
-	font-family: courier;
+	font-family: 'Courier New';
+	font-size: 14px;
 	border: none;
 	border-bottom: 1px solid black;
 }
