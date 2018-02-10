@@ -255,6 +255,9 @@ function loadSettings()
 		// sendToDatabase: false,
 		displayPending: false,
 		openSettings: false,
+		
+		// addon working in simplified (skip-play) mode 
+		simplified: false, 	
 	}
 	
 	browser.storage.local.get({

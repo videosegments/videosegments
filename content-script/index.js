@@ -68,6 +68,14 @@ function getSettings(callback) {
 		// moderator settings 
 		displayPending: false,
 		openSettings: false,
+		
+		// addon working in simplified (skip-play) mode 
+		simplified: false, 
+		
+		// user notification  
+		// messages: {
+			// segmentation: true,	// popup on addon installation. currently disabled
+		// },
 	};
 	
 	// request settings 
