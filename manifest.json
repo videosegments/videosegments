@@ -40,7 +40,6 @@
 	],
 
 	"permissions": [
-		"*",
 		"https://db.videosegments.org/*",
 		"storage",
 		"tabs"
