@@ -21,7 +21,9 @@ var Wrapper = {
 	requestTime: null,
 	
 	/* segments data */
+	timestampsCopy: null, // for simplified mode 
 	timestamps: null,
+	typesCopy: null, // for simplified mode 
 	types: null,
 	origin: null,
 	
@@ -68,6 +70,8 @@ var Wrapper = {
 		else {
 			this.muteFirstEvents = 0;
 		}
+		
+		this.preventPlaybackRateUpdate = false;
 		
 		// if video is ready to play (otherwise we can't get video id)
 		if ( this.video.readyState > 3 ) {
@@ -179,10 +183,10 @@ var Wrapper = {
 	},
 	
 	getOfficialSegmentation: function(self, callback) {
-		console.log('Wrapper::getOfficialSegmentation()');
+		console.log('Wrapper::getOfficialSegmentation()', 'https://db.videosegments.org/api/v3/get.php?id=' + self.id);
 		
 		let xhr = new XMLHttpRequest();
-		xhr.open('GET', 'https://db.videosegments.org/get.php?domain=' + self.domain + '&' + 'id=' + self.id);
+		xhr.open('GET', 'https://db.videosegments.org/api/v3/get.php?id=' + self.id);
 		xhr.onreadystatechange = function() { 
 			if ( xhr.readyState == 4 ) {
 				if ( xhr.status == 200 ) {
@@ -265,6 +269,33 @@ var Wrapper = {
 	insertSegmentsBar: function() {
 		console.log('Wrapper::insertSegmentsBar()');
 		
+		if ( this.settings.mode === 'simplified' ) {
+			this.timestampsCopy = this.timestamps.slice();
+			this.typesCopy = this.types.slice();
+			
+			for ( let i = this.types.length-1; i >= 0; --i ) {
+				if ( this.types[i] !== 'c' ) {
+					if ( this.types[i] == 'ac' ) {
+						this.types[i] = 'c';
+					}
+					else { 
+						this.types[i] = 'cs';
+					}
+				}
+				
+				if ( i < this.types.length-1 && this.types[i+1] === this.types[i] ) {
+					this.timestamps.splice(i+1, 1);
+					this.types.splice(i+1, 1);
+				}
+			}
+		}
+		else {
+			if ( this.typesCopy && this.timestampsCopy ) {
+				this.timestamps = this.timestampsCopy.slice();
+				this.types = this.typesCopy.slice();
+			}
+		}
+		
 		if ( this.settings.segmentsBarLocation === 'none' ) {
 			return;
 		}
@@ -317,9 +348,9 @@ var Wrapper = {
 		
 		// first call is nessesary and second one is false so mute him
 		if ( this.muteFirstEvents == 1 ) {
-			// console.log('*************');
-			// console.log('*** muted ***');
-			// console.log('*************');
+			console.log('*************');
+			console.log('*** muted ***');
+			console.log('*************');
 			this.muteFirstEvents -= 1;
 			return;
 		}
@@ -438,7 +469,7 @@ var Wrapper = {
 	},
 	
 	onRateChange: function() {
-		console.log('Wrapper::onRateChange()');
+		console.log('Wrapper::onRateChange()', this.preventPlaybackRateUpdate);
 		
 		if ( this.preventPlaybackRateUpdate === false ) {
 			if ( this.timer ) {

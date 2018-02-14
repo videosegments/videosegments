@@ -7,248 +7,371 @@
 	<body>
 		<script src="jscolor.js"></script>
 		
-		<div id="tabs">
-			<button id="tab-playback" class="tab active-tab">
-				<div id="icon-playback"></div>
-			</button><!-- 
-			--><button id="tab-acceleration" class="tab">
-				<div id="icon-acceleration"></div>
-			</button><!-- 
-			--><button id="tab-account" class="tab">
-				<div id="icon-account"></div>
-			</button><!-- 
-			--><button id="tab-settings" class="tab">
-				<div id="icon-settings"></div>
-			</button>
-		</div>
-		
 		<div id="footer">
-			<!-- <span class="translate-me">timeSaved</span><span id="saved-time"></span> -->
-			<!-- <a href="https://github.com/videosegments" target="_blank"><div id="icon-github"></div></a> -->
-			<!-- <a href="https://www.facebook.com/videosegments/" target="_blank"><div id="icon-facebook"></div></a> -->
-			<!-- <a href="https://twitter.com/videosegments" target="_blank"><div id="icon-twitter"></div></a> -->
-			<!-- <a href="https://vk.com/vsegments" target="_blank"><div id="icon-vk"></div></a> -->
 			<a href="https://github.com/videosegments" target="_blank">GitHub</a>
 			<a href="https://www.facebook.com/videosegments/" target="_blank">Facebook</a>
 			<a href="https://twitter.com/videosegments" target="_blank">Twitter</a>
 			<a href="https://vk.com/vsegments" target="_blank">VK</a>
 		</div>
 		
-		<!-- <div id="playback" class="tab-content" style="display: none;"> -->
-		<div id="playback" class="tab-content">
-			<div class="tab-name" style="margin-bottom: 5px;"><span class="translate-me">tabPlayback</span></div>
-			
-			<!-- <select id="scope-playback" style="border: none; border-bottom: 1px solid black; margin-bottom: 10px; outline: none"> -->
-				<!-- <option value="global">Global</option> -->
-				<!-- <option value="category">Category</option> -->
-				<!-- <option value="channel">Channel</option> -->
-			<!-- </select> -->
-			
-			<!-- <input id="scope" readonly></input> -->
-			
-			<table id="playback-settings">
-				<tr id="segment-c">
-					<td><select><option value="0" class="translate-me">play</option><option value="1" class="translate-me">skip</option></select></td>
-					<td><span class="translate-me">content</span></td>
-					<td><input class="jscolor" size="7"></td>
-				</tr>
-				<tr id="segment-ac">
-					<td><select><option value="0" class="translate-me">play</option><option value="1" class="translate-me">skip</option></select></td>
-					<td><span class="translate-me">adcontent</span></td>
-					<td><input class="jscolor" size="7"></td>
-				</tr>
-				<tr id="segment-a">
-					<td><select><option value="0" class="translate-me">play</option><option value="1" class="translate-me">skip</option></select></td>
-					<td><span class="translate-me">advertisement</span></td>
-					<td><input class="jscolor" size="7"></td>
-				</tr>
-				<tr id="segment-i">
-					<td><select><option value="0" class="translate-me">play</option><option value="1" class="translate-me">skip</option></select></td>
-					<td><span class="translate-me">intro</span></td>
-					<td><input class="jscolor" size="7"></td>
-				</tr>
-				<tr id="segment-cr">
-					<td><select><option value="0" class="translate-me">play</option><option value="1" class="translate-me">skip</option></select></td>
-					<td><span class="translate-me">credits</span></td>
-					<td><input class="jscolor" size="7"></td>
-				</tr>
-				<tr id="segment-cs">
-					<td><select><option value="0" class="translate-me">play</option><option value="1" class="translate-me">skip</option></select></td>
-					<td><span class="translate-me">cutscene</span></td>
-					<td><input class="jscolor" size="7"></td>
-				</tr>
-				<tr id="segment-o">
-					<td><select><option value="0" class="translate-me">play</option><option value="1" class="translate-me">skip</option></select></td>
-					<td><span class="translate-me">offtop</span></td>
-					<td><input class="jscolor" size="7"></td>
-				</tr>
-				<tr id="segment-i">
-					<td><select><option value="0" class="translate-me">play</option><option value="1" class="translate-me">skip</option></select></td>
-					<td><span class="translate-me">interactive</span></td>
-					<td><input class="jscolor" size="7"></td>
-				</tr>
-				<tr id="segment-s">
-					<td><select><option value="0" class="translate-me">play</option><option value="1" class="translate-me">skip</option></select></td>
-					<td><span class="translate-me">scam</span></td>
-					<td><input class="jscolor" size="7"></td>
-				</tr>
-			</table>
-			
-			<br>
-			<div style="display: inline-block; text-align: left;">
-				<span class="translate-me">adcontentDescription</span>
+		<div class="simplified-mode">
+			<div id="simplified-header">
+				VideoSegments
 			</div>
-		</div><!--
-		--><div id="acceleration" class="tab-content" style="display: none;">
-			<div class="tab-name"><span class="translate-me">tabAcceleration</span></div>
 			
-			<table id="acceleration-settings">
+			<table id="simplified-playback-settings">
 				<tr>
-					<th>
-						<span class="translate-me">segment</span>
-					</th>
-					<th>
-						<span class="translate-me">length</span>
-					</th>
-					<th>
-						<span class="translate-me">speed</span>
-					</th>
+					<td>
+						<span class="translate-me">segmentsBarLocation</span>
+					</td>
+					<td>
+						<select id="simplified-segmentsBarLocation">
+							<option class="translate-me" value="separated">separated</option>
+							<option class="translate-me" value="overlay">overlay</option>
+							<option class="translate-me" value="below">below</option>
+							<option class="translate-me" value="none">none</option>
+						</select></td>
+					</td>
 				</tr>
-				<tr id="segment-c">
-					<td><span class="translate-me">content</span></td>
-					<td><input size="5"></td>					
-					<td><input size="5"></td>
+				<tr>
+					<td>
+						<span class="translate-me">showSegmentationTools</span>
+					</td>
+					<td>
+						<input type="checkbox" id="simplified-showSegmentationTools">
+					</td>
 				</tr>
-				<tr id="segment-ac">
-					<td><span class="translate-me">adcontent</span></td>
-					<td><input size="5"></td>					
-					<td><input size="5"></td>
+				<tr>
+					<td>
+						<span class="translate-me">hideOnSegmentedVideos</span>
+					</td>
+					<td>
+						<input type="checkbox" id="simplified-hideOnSegmentedVideos">
+					</td>
 				</tr>
-				<tr id="segment-a">
-					<td><span class="translate-me">advertisement</span></td>
-					<td><input size="5"></td>					
-					<td><input size="5"></td>
+				<tr>
+					<td>
+						<span class="translate-me">pinSegmentationTools</span>
+					</td>
+					<td>
+						<input type="checkbox" id="simplified-pinSegmentationTools">
+					</td>
 				</tr>
-				<tr id="segment-i">
-					<td><span class="translate-me">intro</span></td>
-					<td><input size="5"></td>					
-					<td><input size="5"></td>
+				<tr>
+					<td>
+						<span class="translate-me">hideIcon</span>
+					</td>
+					<td>
+						<input type="checkbox" id="simplified-hideIcon">
+					</td>
 				</tr>
-				<tr id="segment-cr">
-					<td><span class="translate-me">credits</span></td>
-					<td><input size="5"></td>					
-					<td><input size="5"></td>
+				<tr>
+					<td>
+						<span class="translate-me">wait</span><span class="translate-me">secondsForSegments</span>
+					</td>
+					<td>
+						<input size="3" id="simplified-autoPauseDuration">
+					</td>
 				</tr>
-				<tr id="segment-cs">
-					<td><span class="translate-me">cutscene</span></td>
-					<td><input size="5"></td>					
-					<td><input size="5"></td>
+				<tr>
+					<td>
+						<span class="translate-me">popupDurationOnSend</span><span class="translate-me">seconds</span>
+					</td>
+					<td>
+						<input size="2" id="simplified-popupDurationOnSend">
+					</td>
 				</tr>
-				<tr id="segment-o">
-					<td><span class="translate-me">offtop</span></td>
-					<td><input size="5"></td>					
-					<td><input size="5"></td>
+				<tr>
+					<td>
+						<span class="translate-me">segmentationToolsOpacity</span>, %
+					</td>
+					<td>
+						<input size="3" id="simplified-segmentationToolsOpacity">
+					</td>
 				</tr>
-				<tr id="segment-ia">
-					<td><span class="translate-me">interactive</span></td>
-					<td><input size="5"></td>					
-					<td><input size="5"></td>
+				<tr>
+					<td>
+						<span class="translate-me">iconOpacity</span>, %
+					</td>
+					<td>
+						<input size="3" id="simplified-iconOpacity">
+					</td>
 				</tr>
-				<tr id="segment-s">
-					<td><span class="translate-me">scam</span></td>
-					<td><input size="5"></td>					
-					<td><input size="5"></td>
+				<tr>
+					<td>
+						<span class="translate-me">databasePriority</span>
+					</td>
+					<td>
+						<select id="simplified-databasePriority">
+							<option class="translate-me" value="local">localDatabase</option>
+							<option class="translate-me" value="official">officialDatabase</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<span>Mode</span>
+					</td>
+					<td>
+						<select id="simplified-mode">
+							<option value="simplified">Simplified</option>
+							<option value="normal">Normal</option>
+						</select>
+					</td>
 				</tr>
 			</table>
-			
-			<br>
-			<div style="display: inline-block; text-align: left;">
-				<span class="translate-me">lengthDescription</span><br>
-				<span class="translate-me">speedDescription</span>
+		</div>
+		
+		<div class="normal-mode">
+			<div id="tabs">
+				<button id="tab-playback" class="tab active-tab">
+					<div id="icon-playback"></div>
+				</button><!-- 
+				--><button id="tab-acceleration" class="tab">
+					<div id="icon-acceleration"></div>
+				</button><!-- 
+				--><button id="tab-account" class="tab">
+					<div id="icon-account"></div>
+				</button><!-- 
+				--><button id="tab-settings" class="tab">
+					<div id="icon-settings"></div>
+				</button>
 			</div>
-		</div><!--
-		--><div id="account" class="tab-content" style="display: none;">
-			<!-- <label><input type="checkbox" id="sendToDatabase"><span class="translate-me">sendSegmentationSetting</span><br></label><br> -->
-			<div class="tab-name"><span class="translate-me">tabAccount</span></div>
 			
-			<fieldset>
-				<legend align="left" style="font-size: 1.2em"><span class="translate-me">localStatistic</span></legend>
-				<span class="translate-me">localStatisticDescription1</span><br><span class="translate-me">localStatisticDescription2</span>
-				<br>
-				<br>
-				<span class="translate-me">timeSaved</span><span id="saved-time">00:00:00</span>
-			</fieldset>
 			
-			<br>
-			
-			<fieldset>
-				<legend align="left" style="font-size: 1.2em"><span class="translate-me">globalStatistic</span></legend>
-				<span class="translate-me">globalStatisticDescription1</span><br>
-				<span class="translate-me">globalStatisticDescription2</span><br>
-				<a href="https://videosegments.org/policy.php" target="_blank"><span class="translate-me">privacyPolicy</span></a>
-				<br>
-				<br>
-				<div id="settings-login" style="display: none;">
-					<span class="translate-me" style="border-bottom: 1px solid black; font-weight: bold">autosaveMessage</span>
-					<br>
-					<br>
-					<span class="translate-me">loginToRemoveCaptcha</span>
-					<br>
-					<br>
-					<iframe id="settings-iframe" width="300" height="60" src="http://db.videosegments.org/" style="border: none"></iframe>
-				</div>
+			<div id="playback" class="tab-content">
+				<div class="tab-name" style="margin-bottom: 5px;"><span class="translate-me">tabPlayback</span></div>
 				
-				<div id="settings-database-admin" style="display: none">
-					<div style="width: 49%; text-align: center; display: inline-block">
-						<span id="segmentations-count">loading</span>
-					</div>
-					<div style="width: 49%; text-align: center; display: inline-block">
-						<span id="requests-count">loading</span>
+				<!-- <select id="scope-playback" style="border: none; border-bottom: 1px solid black; margin-bottom: 10px; outline: none"> -->
+					<!-- <option value="global">Global</option> -->
+					<!-- <option value="category">Category</option> -->
+					<!-- <option value="channel">Channel</option> -->
+				<!-- </select> -->
+				
+				<!-- <input id="scope" readonly></input> -->
+				
+				<table id="playback-settings">
+					<tr id="segment-c">
+						<td><select><option value="0" class="translate-me">play</option><option value="1" class="translate-me">skip</option></select></td>
+						<td><span class="translate-me">content</span></td>
+						<td><input class="jscolor" size="7"></td>
+					</tr>
+					<tr id="segment-ac">
+						<td><select><option value="0" class="translate-me">play</option><option value="1" class="translate-me">skip</option></select></td>
+						<td><span class="translate-me">adcontent</span></td>
+						<td><input class="jscolor" size="7"></td>
+					</tr>
+					<tr id="segment-a">
+						<td><select><option value="0" class="translate-me">play</option><option value="1" class="translate-me">skip</option></select></td>
+						<td><span class="translate-me">advertisement</span></td>
+						<td><input class="jscolor" size="7"></td>
+					</tr>
+					<tr id="segment-i">
+						<td><select><option value="0" class="translate-me">play</option><option value="1" class="translate-me">skip</option></select></td>
+						<td><span class="translate-me">intro</span></td>
+						<td><input class="jscolor" size="7"></td>
+					</tr>
+					<tr id="segment-cr">
+						<td><select><option value="0" class="translate-me">play</option><option value="1" class="translate-me">skip</option></select></td>
+						<td><span class="translate-me">credits</span></td>
+						<td><input class="jscolor" size="7"></td>
+					</tr>
+					<tr id="segment-cs">
+						<td><select><option value="0" class="translate-me">play</option><option value="1" class="translate-me">skip</option></select></td>
+						<td><span class="translate-me">cutscene</span></td>
+						<td><input class="jscolor" size="7"></td>
+					</tr>
+					<tr id="segment-o">
+						<td><select><option value="0" class="translate-me">play</option><option value="1" class="translate-me">skip</option></select></td>
+						<td><span class="translate-me">offtop</span></td>
+						<td><input class="jscolor" size="7"></td>
+					</tr>
+					<tr id="segment-i">
+						<td><select><option value="0" class="translate-me">play</option><option value="1" class="translate-me">skip</option></select></td>
+						<td><span class="translate-me">interactive</span></td>
+						<td><input class="jscolor" size="7"></td>
+					</tr>
+					<tr id="segment-s">
+						<td><select><option value="0" class="translate-me">play</option><option value="1" class="translate-me">skip</option></select></td>
+						<td><span class="translate-me">scam</span></td>
+						<td><input class="jscolor" size="7"></td>
+					</tr>
+				</table>
+				
+				<br>
+				<div style="display: inline-block; text-align: left;">
+					<span class="translate-me">adcontentDescription</span>
+				</div>
+			</div><!--
+			--><div id="acceleration" class="tab-content" style="display: none;">
+				<div class="tab-name"><span class="translate-me">tabAcceleration</span></div>
+				
+				<table id="acceleration-settings">
+					<tr>
+						<th>
+							<span class="translate-me">segment</span>
+						</th>
+						<th>
+							<span class="translate-me">length</span>
+						</th>
+						<th>
+							<span class="translate-me">speed</span>
+						</th>
+					</tr>
+					<tr id="segment-c">
+						<td><span class="translate-me">content</span></td>
+						<td><input size="5"></td>					
+						<td><input size="5"></td>
+					</tr>
+					<tr id="segment-ac">
+						<td><span class="translate-me">adcontent</span></td>
+						<td><input size="5"></td>					
+						<td><input size="5"></td>
+					</tr>
+					<tr id="segment-a">
+						<td><span class="translate-me">advertisement</span></td>
+						<td><input size="5"></td>					
+						<td><input size="5"></td>
+					</tr>
+					<tr id="segment-i">
+						<td><span class="translate-me">intro</span></td>
+						<td><input size="5"></td>					
+						<td><input size="5"></td>
+					</tr>
+					<tr id="segment-cr">
+						<td><span class="translate-me">credits</span></td>
+						<td><input size="5"></td>					
+						<td><input size="5"></td>
+					</tr>
+					<tr id="segment-cs">
+						<td><span class="translate-me">cutscene</span></td>
+						<td><input size="5"></td>					
+						<td><input size="5"></td>
+					</tr>
+					<tr id="segment-o">
+						<td><span class="translate-me">offtop</span></td>
+						<td><input size="5"></td>					
+						<td><input size="5"></td>
+					</tr>
+					<tr id="segment-ia">
+						<td><span class="translate-me">interactive</span></td>
+						<td><input size="5"></td>					
+						<td><input size="5"></td>
+					</tr>
+					<tr id="segment-s">
+						<td><span class="translate-me">scam</span></td>
+						<td><input size="5"></td>					
+						<td><input size="5"></td>
+					</tr>
+				</table>
+				
+				<br>
+				<div style="display: inline-block; text-align: left;">
+					<span class="translate-me">lengthDescription</span><br>
+					<span class="translate-me">speedDescription</span>
+				</div>
+			</div><!--
+			--><div id="account" class="tab-content" style="display: none;">
+				<div class="tab-name"><span class="translate-me">tabAccount</span></div>
+				
+				<fieldset>
+					<legend align="left" style="font-size: 1.2em"><span class="translate-me">localStatistic</span></legend>
+					<span class="translate-me">localStatisticDescription1</span><br><span class="translate-me">localStatisticDescription2</span>
+					<br>
+					<br>
+					<span class="translate-me">timeSaved</span><span id="saved-time">00:00:00</span>
+				</fieldset>
+				
+				<br>
+				
+				<fieldset>
+					<legend align="left" style="font-size: 1.2em"><span class="translate-me">globalStatistic</span></legend>
+					<span class="translate-me">globalStatisticDescription1</span><br>
+					<span class="translate-me">globalStatisticDescription2</span><br>
+					<a href="https://videosegments.org/policy.php" target="_blank"><span class="translate-me">privacyPolicy</span></a>
+					<br>
+					<br>
+					<div id="settings-login" style="display: none;">
+						<span class="translate-me" style="border-bottom: 1px solid black; font-weight: bold">autosaveMessage</span>
+						<br>
+						<br>
+						<span class="translate-me">loginToRemoveCaptcha</span>
+						<br>
+						<br>
+						<iframe id="settings-iframe" width="300" height="60" src="http://db.videosegments.org/" style="border: none"></iframe>
 					</div>
 					
-					<div style="width: 49%; text-align: center; display: inline-block">
-						<button style="width: 90%" id="next-segmentation"><span class="translate-me">nextSegmentation</span></button>
+					<div id="settings-database-admin" style="display: none">
+						<div style="width: 49%; text-align: center; display: inline-block">
+							<span id="segmentations-count">loading</span>
+						</div>
+						<div style="width: 49%; text-align: center; display: inline-block">
+							<span id="requests-count">loading</span>
+						</div>
+						
+						<div style="width: 49%; text-align: center; display: inline-block">
+							<button style="width: 90%" id="next-segmentation"><span class="translate-me">nextSegmentation</span></button>
+						</div>
+						<div style="width: 49%; text-align: center; display: inline-block">
+							<button style="width: 90%" id="next-request"><span class="translate-me">nextRequest</span></button>
+						</div>
+						<br>
+						<br>
+						<label><input type="checkbox" id="openSettings"><span class="translate-me">openSettings</span><br></label>
+						<label><input type="checkbox" id="displayPending"><span class="translate-me">displayPending</span><br></label>
+						<br>
 					</div>
-					<div style="width: 49%; text-align: center; display: inline-block">
-						<button style="width: 90%" id="next-request"><span class="translate-me">nextRequest</span></button>
+					
+					<div id="settings-logout" style="display: none;">
+						<a href="#" id="logout"><span class="translate-me">logout</span></a>
 					</div>
-					<br>
-					<br>
-					<label><input type="checkbox" id="openSettings"><span class="translate-me">openSettings</span><br></label>
-					<label><input type="checkbox" id="displayPending"><span class="translate-me">displayPending</span><br></label>
-					<br>
-				</div>
 				
-				<div id="settings-logout" style="display: none;">
-					<a href="#" id="logout"><span class="translate-me">logout</span></a>
+				</fieldset>
+			</div><!--
+			--><div id="settings" class="tab-content" style="display: none;">
+				<div class="tab-name"><span class="translate-me">tabSettings</span></div>
+				
+				<div style="display: inline-block; text-align: left;">
+					<span class="translate-me">segmentsBarLocation</span>
+					<select id="segmentsBarLocation" style="margin-top: 5px">
+						<option class="translate-me" value="separated">separated</option>
+						<option class="translate-me" value="overlay">overlay</option>
+						<option class="translate-me" value="below">below</option>
+						<option class="translate-me" value="none">none</option>
+					</select>
+					<br>
+					<br>
+					
+					<label><input type="checkbox" id="showSegmentationTools"><span class="translate-me">showSegmentationTools</span></label><br>
+					<label><input type="checkbox" id="hideOnSegmentedVideos"><span class="translate-me">hideOnSegmentedVideos</span></label><br>
+					<label><input type="checkbox" id="pinSegmentationTools"><span class="translate-me">pinSegmentationTools</span></label><br>
+					<label><input type="checkbox" id="hideIcon"><span class="translate-me">hideIcon</span></label><br>
+					<br>
+					
+					<span class="translate-me">wait</span><input size="3" id="autoPauseDuration"><span class="translate-me">secondsForSegments</span><br>
+					<span class="translate-me">popupDurationOnSend</span><input size="2" id="popupDurationOnSend"><span class="translate-me">seconds</span><br>
+					<br>
+					
+					<span class="translate-me">segmentationToolsOpacity</span><input size="3" id="segmentationToolsOpacity">%<br>
+					<span class="translate-me">iconOpacity</span><input size="3" id="iconOpacity">%<br>
+					<br>
+					
+					<span class="translate-me">databasePriority</span>
+					<select id="databasePriority">
+						<option class="translate-me" value="local">localDatabase</option>
+						<option class="translate-me" value="official">officialDatabase</option>
+					</select>
+					<br>
+					<br>
+					
+					<div style="text-align: center">
+						<span>Mode</span>
+						<select id="mode">
+							<option value="simplified">Simplified</option>
+							<option value="normal">Normal</option>
+						</select>
+					</div>
 				</div>
-			
-			</fieldset>
-		</div><!--
-		--><div id="settings" class="tab-content" style="display: none;">
-			<div class="tab-name"><span class="translate-me">tabSettings</span></div>
-			
-			<div style="display: inline-block; text-align: left;">
-				<span class="translate-me">segmentsBarLocation</span><select id="segmentsBarLocation" style="margin-top: 5px">
-					<option class="translate-me" value="separated">separated</option>
-					<option class="translate-me" value="overlay">overlay</option>
-					<option class="translate-me" value="below">below</option>
-					<option class="translate-me" value="none">none</option>
-				</select>
-				<br>
-				<br>
-				<label><input type="checkbox" id="showSegmentationTools"><span class="translate-me">showSegmentationTools</span></label><br>
-				<label><input type="checkbox" id="hideOnSegmentedVideos"><span class="translate-me">hideOnSegmentedVideos</span></label><br>
-				<label><input type="checkbox" id="pinSegmentationTools"><span class="translate-me">pinSegmentationTools</span></label><br>
-				<label><input type="checkbox" id="hideIcon"><span class="translate-me">hideIcon</span></label><br>
-				<br>
-				<span class="translate-me">wait</span><input size="3" id="autoPauseDuration"><span class="translate-me">secondsForSegments</span><br>
-				<span class="translate-me">popupDurationOnSend</span><input size="2" id="popupDurationOnSend"><span class="translate-me">seconds</span><br>
-				<br>
-				<span class="translate-me">segmentationToolsOpacity</span><input size="3" id="segmentationToolsOpacity">%<br>
-				<span class="translate-me">iconOpacity</span><input size="3" id="iconOpacity">%<br>
-				<br>
-				<span class="translate-me">databasePriority</span><select id="databasePriority"><option class="translate-me" value="local">localDatabase</option><option class="translate-me" value="official">officialDatabase</option></select>
 			</div>
 		</div>
 		

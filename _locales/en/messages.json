@@ -236,7 +236,7 @@
 	
 	
 	"databasePriority": {
-		"message": "Database priority: ",
+		"message": "Database priority",
 		"description": ""
 	},
 	"hideSegmentationTools": {

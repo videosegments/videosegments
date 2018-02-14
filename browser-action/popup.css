@@ -26,7 +26,7 @@ body {
 	border-top: 1px solid #333;
 }
 
-#footer > a {
+#footer a {
 	display: inline;
 	margin: 0;
 	text-align: center;
@@ -176,13 +176,14 @@ body {
 table {
 	margin: 0 auto;
 	border-collapse: collapse;
+	border: none;
 }
 
 table th {
 	text-align: center;
 }
 
-#playback-settings td {
+#playback-settings tr {
 	border-top: 1px solid black;
 	border-bottom: 1px solid black;
 	padding: 10px;
@@ -250,4 +251,53 @@ label input {
     height: 0;
     border: 10px solid transparent;
     border-left: 10px solid;
+}
+
+
+
+
+
+#simplified-header {
+	text-align: center;
+	font-weight: bold;
+	font-size: 200%;
+	padding-top: 4px;
+	padding-bottom: 8px;
+	margin-bottom: 12px;
+	
+	color: white;
+	background-color: #333;
+}
+
+#simplified-playback-settings {
+	width: 90%;
+	margin: 0 5%;
+	border-collapse: collapse;
+	border: 1px solid black;
+}
+
+#simplified-playback-settings tr:nth-child(even) {
+	background-color: #f2f2f2;
+}
+
+#simplified-playback-settings tr, #simplified-playback-settings td {
+	border: 1px solid black;
+}
+
+#simplified-playback-settings td {
+	vertical-align: baseline;
+	padding: 5px 0;
+}
+
+#simplified-playback-settings input {
+	background-color: inherit
+}
+
+#simplified-playback-settings td:first-child {
+	padding: 0 12px;
+}
+
+#simplified-playback-settings td:nth-child(2) {
+	text-align: center;
+	width: 25%;
 }

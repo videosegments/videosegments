@@ -68,6 +68,12 @@
 	justify-content: space-between;
 }
 
+#vs-segmentation-panel-buttons-simplified {
+	text-align: center;
+	display: flex; 
+	justify-content: center;
+}
+
 #vs-segmentation-panel-bar {
 	display: inline-block; 
 	width: 90%;

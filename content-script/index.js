@@ -70,7 +70,7 @@ function getSettings(callback) {
 		openSettings: false,
 		
 		// addon working in simplified (skip-play) mode 
-		simplified: false, 
+		mode: 'simplified', 
 		
 		// user notification  
 		// messages: {

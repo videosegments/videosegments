@@ -49,23 +49,23 @@ function domContentLoaded()
 		setTimeout(function() {window.close();}, 100);
 	});
 	
-	let select = document.getElementById('scope-playback');
-	select.addEventListener('change', function() {
-		if ( select.value == 'category' ) {
-			browser.tabs.query({ currentWindow: true, active: true }, function(tabs) {
-				for ( let tab of tabs ) {
-					browser.tabs.sendMessage(tab.id, { getCategory: true });
-				}
-			});
-		}
-		else if ( select.value == 'channel' ) {
-			browser.tabs.query({ currentWindow: true, active: true }, function(tabs) {
-				for ( let tab of tabs ) {
-					browser.tabs.sendMessage(tab.id, { getChannel: true });
-				}
-			});
-		}
-	});
+	// let select = document.getElementById('scope-playback');
+	// select.addEventListener('change', function() {
+		// if ( select.value == 'category' ) {
+			// browser.tabs.query({ currentWindow: true, active: true }, function(tabs) {
+				// for ( let tab of tabs ) {
+					// browser.tabs.sendMessage(tab.id, { getCategory: true });
+				// }
+			// });
+		// }
+		// else if ( select.value == 'channel' ) {
+			// browser.tabs.query({ currentWindow: true, active: true }, function(tabs) {
+				// for ( let tab of tabs ) {
+					// browser.tabs.sendMessage(tab.id, { getChannel: true });
+				// }
+			// });
+		// }
+	// });
 }
 
 function switchTab()
@@ -97,7 +97,7 @@ function openTab(tabName)
 function checkLogin()
 {
 	let xhr = new XMLHttpRequest();
-	xhr.open('GET', 'https://db.videosegments.org/status.php');
+	xhr.open('GET', 'https://db.videosegments.org/api/v3/status.php');
 	xhr.onreadystatechange = function() { 
 		// console.log(xhr);
 		if ( xhr.readyState == 4 ) {
@@ -257,7 +257,7 @@ function loadSettings()
 		openSettings: false,
 		
 		// addon working in simplified (skip-play) mode 
-		simplified: false, 	
+		mode: 'simplified', 	
 	}
 	
 	browser.storage.local.get({
@@ -277,6 +277,15 @@ function loadSettings()
 
 			let totalTimeSaved = (h<10?('0'+h):h) + ":" + ('0' + m).slice(-2) + ":" + ('0' + s).slice(-2);
 			element.textContent = totalTimeSaved;
+			
+			if ( result.settings.mode === 'simplified' ) {
+				document.getElementsByClassName('simplified-mode')[0].style.display = 'block';
+				document.getElementsByClassName('normal-mode')[0].style.display = 'none';
+			}
+			else {
+				document.getElementsByClassName('simplified-mode')[0].style.display = 'none';
+				document.getElementsByClassName('normal-mode')[0].style.display = 'block';
+			}
 		}
 	);
 }
@@ -322,48 +331,72 @@ function restoreOptions(settings)
 		document.getElementById('tab-account').classList.add('active-tab');
 	}
 	
-	// global settings 
+	let modes = ['simplified-', ''];
+	let twins = ['', 'simplified-'];
+	for ( let i = 0; i < modes.length; ++i ) {
+		// global settings 
+		let element;
+		
+		element = document.getElementById(modes[i]+'autoPauseDuration');
+		element.value = settings.autoPauseDuration;
+		element.twin = twins[i];
+		element.addEventListener('change', function() { updateGlobalValue(this, settings, 'autoPauseDuration'); });
+		
+		element = document.getElementById(modes[i]+'popupDurationOnSend');
+		element.value = settings.popupDurationOnSend;
+		element.twin = twins[i];
+		element.addEventListener('change', function() { updateGlobalValue(this, settings, 'popupDurationOnSend'); });
+		
+		element = document.getElementById(modes[i]+'segmentationToolsOpacity');
+		element.value = settings.segmentationToolsOpacity;
+		element.twin = twins[i];
+		element.addEventListener('change', function() { updateGlobalValue(this, settings, 'segmentationToolsOpacity'); });
+		
+		element = document.getElementById(modes[i]+'iconOpacity');
+		element.value = settings.iconOpacity;
+		element.twin = twins[i];
+		element.addEventListener('change', function() { updateGlobalValue(this, settings, 'iconOpacity'); });
+		
+		element = document.getElementById(modes[i]+'showSegmentationTools');
+		element.checked = settings.showSegmentationTools;
+		element.twin = twins[i];
+		element.addEventListener('change', function() { updateGlobalBool(this, settings, 'showSegmentationTools'); });
+		
+		element = document.getElementById(modes[i]+'hideOnSegmentedVideos');
+		element.checked = settings.hideOnSegmentedVideos;
+		element.twin = twins[i];
+		element.addEventListener('change', function() { updateGlobalBool(this, settings, 'hideOnSegmentedVideos'); });
+		
+		element = document.getElementById(modes[i]+'pinSegmentationTools');
+		element.checked = settings.pinSegmentationTools;
+		element.twin = twins[i];
+		element.addEventListener('change', function() { updateGlobalBool(this, settings, 'pinSegmentationTools'); });
+		
+		element = document.getElementById(modes[i]+'hideIcon');
+		element.checked = settings.hideIcon;
+		element.twin = twins[i];
+		element.addEventListener('change', function() { updateGlobalBool(this, settings, 'hideIcon'); });
+		
+		element = document.getElementById(modes[i]+'databasePriority');
+		element.value = settings.databasePriority;
+		element.twin = twins[i];
+		element.addEventListener('change', function() { updateGlobalSelect(this, settings, 'databasePriority'); });
+		
+		element = document.getElementById(modes[i]+'segmentsBarLocation');
+		element.value = settings.segmentsBarLocation;
+		element.twin = twins[i];
+		element.addEventListener('change', function() { updateGlobalSelect(this, settings, 'segmentsBarLocation'); });
+		
+		element = document.getElementById(modes[i]+'mode');
+		element.value = settings.mode;
+		element.twin = twins[i];
+		element.addEventListener('change', function() {
+			updateGlobalValue(this, settings, 'mode');
+			switchMode();
+		});
+	}
+	
 	let element;
-	
-	element = document.getElementById('autoPauseDuration');
-	element.value = settings.autoPauseDuration;
-	element.addEventListener('change', function() { updateGlobalValue(this, settings, 'autoPauseDuration'); });
-	
-	element = document.getElementById('popupDurationOnSend');
-	element.value = settings.popupDurationOnSend;
-	element.addEventListener('change', function() { updateGlobalValue(this, settings, 'popupDurationOnSend'); });
-	
-	element = document.getElementById('segmentationToolsOpacity');
-	element.value = settings.segmentationToolsOpacity;
-	element.addEventListener('change', function() { updateGlobalValue(this, settings, 'segmentationToolsOpacity'); });
-	
-	element = document.getElementById('iconOpacity');
-	element.value = settings.iconOpacity;
-	element.addEventListener('change', function() { updateGlobalValue(this, settings, 'iconOpacity'); });
-	
-	// element = document.getElementById('showSegmentsbar');
-	// element.checked = settings.showSegmentsbar;
-	// element.addEventListener('change', function() { updateGlobalBool(this, settings, 'showSegmentsbar'); });
-	
-	element = document.getElementById('showSegmentationTools');
-	element.checked = settings.showSegmentationTools;
-	element.addEventListener('change', function() { updateGlobalBool(this, settings, 'showSegmentationTools'); });
-	
-	element = document.getElementById('hideOnSegmentedVideos');
-	element.checked = settings.hideOnSegmentedVideos;
-	element.addEventListener('change', function() { updateGlobalBool(this, settings, 'hideOnSegmentedVideos'); });
-	
-	element = document.getElementById('pinSegmentationTools');
-	element.checked = settings.pinSegmentationTools;
-	element.addEventListener('change', function() { updateGlobalBool(this, settings, 'pinSegmentationTools'); });
-	
-	element = document.getElementById('hideIcon');
-	element.checked = settings.hideIcon;
-	element.addEventListener('change', function() { updateGlobalBool(this, settings, 'hideIcon'); });
-	
-	// element = document.getElementById('sendToDatabase')
-	// element.checked = settings.sendToDatabase;
-	// element.addEventListener('change', function() { updateGlobalBool(this, settings, 'sendToDatabase'); });
 	
 	element = document.getElementById('displayPending');
 	element.checked = settings.displayPending;
@@ -372,14 +405,27 @@ function restoreOptions(settings)
 	element = document.getElementById('openSettings');
 	element.checked = settings.openSettings;
 	element.addEventListener('change', function() { updateGlobalBool(this, settings, 'openSettings'); });
+}
+
+function switchMode()
+{
+	let simplified = document.getElementsByClassName('simplified-mode')[0];
+	let normal = document.getElementsByClassName('normal-mode')[0];
 	
-	element = document.getElementById('databasePriority');
-	element.value = settings.databasePriority;
-	element.addEventListener('change', function() { updateGlobalSelect(this, settings, 'databasePriority'); });
-	
-	element = document.getElementById('segmentsBarLocation');
-	element.value = settings.segmentsBarLocation;
-	element.addEventListener('change', function() { updateGlobalSelect(this, settings, 'segmentsBarLocation'); });
+	if ( simplified.style.display == 'block' ) {
+		simplified.style.display = 'none';
+		normal.style.display = 'block';
+		
+		let tab = document.getElementsByClassName('active-tab')[0];
+		tab.classList.remove('active-tab');
+		
+		document.getElementById('tab-settings').classList.add('active-tab');
+		openTab('settings');
+	}
+	else {
+		simplified.style.display = 'block';
+		normal.style.display = 'none';
+	}
 }
 
 function updatePlayback(element, settings, segment)
@@ -413,6 +459,7 @@ function updateAccelerationSpeed(element, settings, segment)
 function updateGlobalValue(element, settings, field)
 {
 	settings[field] = element.value;
+	document.getElementById(element.twin+field).value = element.value;
 	browser.storage.local.set({ settings: settings });
 	notifyMediaPlayerWrapper(settings);
 }
@@ -420,6 +467,7 @@ function updateGlobalValue(element, settings, field)
 function updateGlobalBool(element, settings, field)
 {
 	settings[field] = element.checked;
+	document.getElementById(element.twin+field).checked = element.checked;
 	browser.storage.local.set({ settings: settings });
 	notifyMediaPlayerWrapper(settings);
 }
@@ -427,6 +475,7 @@ function updateGlobalBool(element, settings, field)
 function updateGlobalSelect(element, settings, field)
 {
 	settings[field] = element.value;
+	document.getElementById(element.twin+field).value = element.value;
 	browser.storage.local.set({ settings: settings });
 	notifyMediaPlayerWrapper(settings);
 }

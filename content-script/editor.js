@@ -235,11 +235,25 @@ var Editor = {
 		}
 		
 		let container = document.createElement('div');
-		container.id = 'vs-segmentation-panel-buttons';
+		if ( this.settings.mode === 'simplified' ) {
+			container.id = 'vs-segmentation-panel-buttons-simplified';
+		}
+		else {
+			container.id = 'vs-segmentation-panel-buttons';
+		}
 		
 		this.typesSelect = document.createElement('select');
-		let buttonsTypes = ['c', 'ac', 'a', 'i', 'cs', 'ia', 'cr', 'o', 's'];
-		let buttonsNames = ['content', 'adcontent', 'advertisement', 'intro', 'cutscene', 'interactive', 'credits', 'offtop', 'scam'];
+		
+		let buttonsTypes, buttonsNames;
+		if ( this.settings.mode === 'simplified' ) {
+			buttonsTypes = ['cs', 'c'];
+			buttonsNames = ['skip', 'play'];
+		}
+		else {
+			buttonsTypes = ['c', 'ac', 'a', 'i', 'cs', 'ia', 'cr', 'o', 's'];
+			buttonsNames = ['content', 'adcontent', 'advertisement', 'intro', 'cutscene', 'interactive', 'credits', 'offtop', 'scam'];
+		}
+		
 		for ( let i = 0; i < buttonsTypes.length; ++i ) {
 			let text = browser.i18n.getMessage(buttonsNames[i]);
 			
@@ -834,7 +848,7 @@ var Editor = {
 			let types = segmentation.types;
 			
 			let xhr = new XMLHttpRequest();
-			xhr.open('POST', 'https://db.videosegments.org/send_auth.php');
+			xhr.open('POST', 'https://db.videosegments.org/api/v3/send.php');
 			xhr.onreadystatechange = function() { 
 				if ( xhr.readyState == 4 ) {
 					if ( xhr.status == 200 ) {
@@ -845,7 +859,7 @@ var Editor = {
 							self.modal.style.display = "block";
 							
 							let iframe = document.createElement("iframe");
-							iframe.src = 'https://db.videosegments.org/captcha3.php';
+							iframe.src = 'https://db.videosegments.org/api/v3/captcha.php';
 							iframe.width  = 350;
 							iframe.height = 500;
 							iframe.id = 'vs-captcha-iframe';
@@ -890,7 +904,7 @@ var Editor = {
 			
 		if ( event.origin === 'https://db.videosegments.org' ) {
 			let xhr = new XMLHttpRequest();
-			xhr.open('POST', 'https://db.videosegments.org/send_auth.php');
+			xhr.open('POST', 'https://db.videosegments.org/api/v3/send.php');
 			
 			xhr.onreadystatechange = function() { 
 				if ( xhr.readyState == 4 ) {
