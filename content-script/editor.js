@@ -703,7 +703,7 @@ var Editor = {
 		
 		let minutes = parseInt(ms / 60000);
 		
-		https://stackoverflow.com/a/19700358
+		// https://stackoverflow.com/a/19700358
 		hours = (hours < 10) ? "0" + hours : hours;
 		hours = (hours != '00')?(hours+':'):''
 		minutes = (minutes < 10) ? "0" + minutes : minutes;
@@ -848,7 +848,7 @@ var Editor = {
 			let types = segmentation.types;
 			
 			let xhr = new XMLHttpRequest();
-			xhr.open('POST', 'https://db.videosegments.org/api/v3/send.php');
+			xhr.open('POST', 'https://db.videosegments.org/send_auth.php');
 			xhr.onreadystatechange = function() { 
 				if ( xhr.readyState == 4 ) {
 					if ( xhr.status == 200 ) {
@@ -859,7 +859,7 @@ var Editor = {
 							self.modal.style.display = "block";
 							
 							let iframe = document.createElement("iframe");
-							iframe.src = 'https://db.videosegments.org/api/v3/captcha.php';
+							iframe.src = 'https://db.videosegments.org/captcha3.php';
 							iframe.width  = 350;
 							iframe.height = 500;
 							iframe.id = 'vs-captcha-iframe';
@@ -904,7 +904,7 @@ var Editor = {
 			
 		if ( event.origin === 'https://db.videosegments.org' ) {
 			let xhr = new XMLHttpRequest();
-			xhr.open('POST', 'https://db.videosegments.org/api/v3/send.php');
+			xhr.open('POST', 'https://db.videosegments.org/send_auth.php');
 			
 			xhr.onreadystatechange = function() { 
 				if ( xhr.readyState == 4 ) {
