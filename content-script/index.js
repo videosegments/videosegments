@@ -82,6 +82,12 @@ function getSettings(callback) {
 	browser.storage.local.get({
 		settings: defaultSettings
 	}, function(result) {
+		if ( result.settings.simplified ) {
+			result.settings.mode = 'simplified';
+		}
+		else {
+			result.settings.mode = 'normal';
+		}
 		callback(result.settings);
 	});
 }

@@ -266,6 +266,13 @@ function loadSettings()
 		}, function(result) {
 			// console.log(result);
 			
+			if ( result.settings.simplified ) {
+				result.settings.mode = 'simplified';
+			}
+			else {
+				result.settings.mode = 'normal';
+			}
+			
 			restoreOptions(result.settings);
 			
 			let seconds = Number(result.totalTime);
