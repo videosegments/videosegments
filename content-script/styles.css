@@ -63,15 +63,25 @@
 }
 
 #vs-segmentation-panel-buttons {
-	text-align: center;
 	display: flex; 
 	justify-content: space-between;
 }
 
+#vs-segmentation-panel-buttons div {
+	width: 10%;
+}
+
 #vs-segmentation-panel-buttons-simplified {
-	text-align: center;
 	display: flex; 
 	justify-content: center;
+}
+
+#vs-segmentation-panel-buttons-simplified div:first-child {
+	margin-right: 20px;
+}
+
+#vs-segmentation-panel-buttons-simplified div {
+	width: 10%;
 }
 
 #vs-segmentation-panel-bar {
@@ -82,10 +92,6 @@
 	vertical-align: top;
 	overflow-x: scroll;
 	/* border: 1px solid black; */
-}
-
-.vs-segmentation-panel-button {
-	width: 10%;
 }
 
 .vs-segmentation-panel-button-big {

@@ -246,6 +246,12 @@ var Wrapper = {
 				this.types.pop();
 			}
 			
+			if ( this.settings.mode === 'simplified' ) {
+				this.simplifySegmentation();
+			}
+			// do not merge to see duplicates 
+			// this.mergeDuplicateSegments();
+			
 			this.insertSegmentsBar();
 			
 			if ( this.requestTime !== null ) {
@@ -268,33 +274,6 @@ var Wrapper = {
 	
 	insertSegmentsBar: function() {
 		console.log('Wrapper::insertSegmentsBar()');
-		
-		if ( this.settings.mode === 'simplified' ) {
-			this.timestampsCopy = this.timestamps.slice();
-			this.typesCopy = this.types.slice();
-			
-			for ( let i = this.types.length-1; i >= 0; --i ) {
-				if ( this.types[i] !== 'c' ) {
-					if ( this.types[i] == 'ac' ) {
-						this.types[i] = 'c';
-					}
-					else { 
-						this.types[i] = 'cs';
-					}
-				}
-				
-				if ( i < this.types.length-1 && this.types[i+1] === this.types[i] ) {
-					this.timestamps.splice(i+1, 1);
-					this.types.splice(i+1, 1);
-				}
-			}
-		}
-		else {
-			if ( this.typesCopy && this.timestampsCopy ) {
-				this.timestamps = this.timestampsCopy.slice();
-				this.types = this.typesCopy.slice();
-			}
-		}
 		
 		if ( this.settings.segmentsBarLocation === 'none' ) {
 			return;
@@ -338,9 +317,57 @@ var Wrapper = {
 		}
 	},
 	
-	updateSegmentsBar: function() {
+	updateSegmentsBar: function(leftButton=true) {
 		this.removeSegmentsBar();
+		this.mergeDuplicateSegments(leftButton);
 		this.insertSegmentsBar();
+	},
+	
+	simplifySegmentation: function(toLeft) {
+		this.timestampsCopy = this.timestamps.slice();
+		this.typesCopy = this.types.slice();
+		
+		for ( let i = 0; i < this.types.length ; ++i ) {
+			if ( this.types[i] !== 'c' ) {
+				if ( this.types[i] == 'ac' ) {
+					this.types[i] = 'c';
+				}
+				else { 
+					this.types[i] = 'cs';
+				}
+			}
+			
+			if ( i > 0 && this.types[i] === this.types[i-1] ) {
+				this.timestamps.splice(i, 1);
+				this.types.splice(i, 1);
+			}
+		}
+	},
+	
+	restoreSegmentation: function() {
+		if ( this.typesCopy && this.timestampsCopy ) {
+			this.timestamps = this.timestampsCopy.slice();
+			this.types = this.typesCopy.slice();
+		}
+	},
+	
+	mergeDuplicateSegments: function(leftMerge) {
+		if ( leftMerge ) {
+			for ( let i = 1; i < this.types.length ; ++i ) {
+				if ( this.types[i] === this.types[i-1] ) {
+					this.timestamps.splice(i, 1);
+					this.types.splice(i, 1);
+				}
+			}
+		}
+		else {
+			for ( let i = this.types.length-2; i >= 0; --i ) {
+				if ( this.types[i+1] === this.types[i] ) {
+					this.timestamps.splice(i+1, 1);
+					this.types.splice(i+1, 1);
+				}
+			}
+		}
 	},
 	
 	onPlay: function() {
@@ -487,6 +514,14 @@ var Wrapper = {
 	
 	updateSettings: function(settings) {
 		this.settings = settings;
+		
+		if ( this.settings.mode === 'simplified' ) {
+			this.simplifySegmentation();
+			this.mergeDuplicateSegments();
+		}
+		else {
+			this.restoreSegmentation();
+		}
 		this.updateSegmentsBar();
 		
 		if ( window.parent === window ) {

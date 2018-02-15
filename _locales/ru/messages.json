@@ -119,15 +119,15 @@
 		"description": ""
 	},
 	"wait": {
-		"message": "Ждать максимум ",
+		"message": "Ждать сек. до ",
 		"description": ""
 	},
 	"secondsForSegments": {
-		"message": " секунд(у) получения сегментов",
+		"message": " получения сегментов",
 		"description": ""
 	},
 	"hideOnSegmentedVideos": {
-		"message": "Скрывать панель сегментации у сегм. видео",
+		"message": "Скрывать панель у сегм. видео",
 		"description": ""
 	},
 	"pinSegmentationTools": {
@@ -135,19 +135,19 @@
 		"description": ""
 	},
 	"popupDurationOnSend": {
-		"message": "Длительность всплывающего окна: ",
+		"message": "Сообщение при отправке: ",
 		"description": ""
 	},
 	"seconds": {
-		"message": " секунд(ы)",
+		"message": " сек.",
 		"description": ""
 	},
 	"segmentationToolsOpacity": {
-		"message": "Непрозрачность панели сегментации: ",
+		"message": "Видимость панели сегментации: ",
 		"description": ""
 	},
 	"iconOpacity": {
-		"message": "Непрозрачность иконки VS: ",
+		"message": "Видимость иконки VS: ",
 		"description": ""
 	},
 	"hideIcon": {
@@ -179,7 +179,7 @@
 		"description": ""
 	},
 	"none": {
-		"message": "Не отображать",
+		"message": "Скрыть",
 		"description": ""
 	},
 	
@@ -311,6 +311,21 @@
 	},
 	"thankYouMessage": {
 		"message": "Спасибо за вклад!",
+		"description": ""
+	},
+	
+	
+	
+	"mode": {
+		"message": "Режим: ",
+		"description": ""
+	},
+	"simplifiedMode": {
+		"message": "Простой",
+		"description": ""
+	},
+	"normalMode": {
+		"message": "Эксперт",
 		"description": ""
 	},
 	

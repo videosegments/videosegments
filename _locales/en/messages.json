@@ -297,6 +297,21 @@
 	
 	
 	
+	"mode": {
+		"message": "Mode: ",
+		"description": ""
+	},
+	"simplifiedMode": {
+		"message": "Lite",
+		"description": ""
+	},
+	"normalMode": {
+		"message": "Expert",
+		"description": ""
+	},
+	
+	
+	
 	"timeSaved": {
 		"message": "Time skipped: ",
 		"description": ""

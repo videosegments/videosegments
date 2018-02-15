@@ -83,7 +83,7 @@
 				</tr>
 				<tr>
 					<td>
-						<span class="translate-me">segmentationToolsOpacity</span>, %
+						<span class="translate-me">segmentationToolsOpacity</span> %
 					</td>
 					<td>
 						<input size="3" id="simplified-segmentationToolsOpacity">
@@ -91,7 +91,7 @@
 				</tr>
 				<tr>
 					<td>
-						<span class="translate-me">iconOpacity</span>, %
+						<span class="translate-me">iconOpacity</span> %
 					</td>
 					<td>
 						<input size="3" id="simplified-iconOpacity">
@@ -110,12 +110,12 @@
 				</tr>
 				<tr>
 					<td>
-						<span>Mode</span>
+						<span class="translate-me">mode</span>
 					</td>
 					<td>
 						<select id="simplified-mode">
-							<option value="simplified">Simplified</option>
-							<option value="normal">Normal</option>
+							<option class="translate-me" value="simplified">simplifiedMode</option>
+							<option class="translate-me" value="normal">normalMode</option>
 						</select>
 					</td>
 				</tr>
@@ -289,19 +289,18 @@
 					<span class="translate-me">globalStatisticDescription1</span><br>
 					<span class="translate-me">globalStatisticDescription2</span><br>
 					<a href="https://videosegments.org/policy.php" target="_blank"><span class="translate-me">privacyPolicy</span></a>
-					<br>
-					<br>
-					<div id="settings-login" style="display: none;">
-						<span class="translate-me" style="border-bottom: 1px solid black; font-weight: bold">autosaveMessage</span>
-						<br>
-						<br>
-						<span class="translate-me">loginToRemoveCaptcha</span>
-						<br>
-						<br>
-						<iframe id="settings-iframe" width="300" height="60" src="http://db.videosegments.org/" style="border: none"></iframe>
-					</div>
+					<!-- <div id="settings-login" style="display: none;"> -->
+						<!-- <span class="translate-me" style="border-bottom: 1px solid black; font-weight: bold">autosaveMessage</span> -->
+						<!-- <br> -->
+						<!-- <br> -->
+						<!-- <span class="translate-me">loginToRemoveCaptcha</span> -->
+						<!-- <br> -->
+						<!-- <br> -->
+						<!-- <iframe id="settings-iframe" width="300" height="60" src="http://db.videosegments.org/" style="border: none"></iframe> -->
+					<!-- </div> -->
 					
 					<div id="settings-database-admin" style="display: none">
+						<br>
 						<div style="width: 49%; text-align: center; display: inline-block">
 							<span id="segmentations-count">loading</span>
 						</div>
@@ -319,10 +318,12 @@
 						<br>
 						<label><input type="checkbox" id="openSettings"><span class="translate-me">openSettings</span><br></label>
 						<label><input type="checkbox" id="displayPending"><span class="translate-me">displayPending</span><br></label>
-						<br>
+						<!-- <br> -->
 					</div>
 					
 					<div id="settings-logout" style="display: none;">
+						<br>
+						<br>
 						<a href="#" id="logout"><span class="translate-me">logout</span></a>
 					</div>
 				
@@ -365,10 +366,10 @@
 					<br>
 					
 					<div style="text-align: center">
-						<span>Mode</span>
+						<span class="translate-me">mode</span>
 						<select id="mode">
-							<option value="simplified">Simplified</option>
-							<option value="normal">Normal</option>
+							<option class="translate-me" value="simplified">simplifiedMode</option>
+							<option class="translate-me" value="normal">normalMode</option>
 						</select>
 					</div>
 				</div>

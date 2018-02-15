@@ -97,7 +97,7 @@ function openTab(tabName)
 function checkLogin()
 {
 	let xhr = new XMLHttpRequest();
-	xhr.open('GET', 'https://db.videosegments.org/api/v3/status.php');
+	xhr.open('GET', 'https://db.videosegments.org/status.php');
 	xhr.onreadystatechange = function() { 
 		// console.log(xhr);
 		if ( xhr.readyState == 4 ) {
@@ -117,8 +117,8 @@ function checkLogin()
 					}
 				}
 				else {
-					let element = document.getElementById('settings-login');
-					element.style.display = 'block';
+					// let element = document.getElementById('settings-login');
+					// element.style.display = 'block';
 				}
 			}
 		}

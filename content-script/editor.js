@@ -170,7 +170,7 @@ var Editor = {
 			
 			let textColor;
 			let light = 0.2126 * r + 0.7152 * g + 0.0722 * b;
-			if ( light < 110 ) {
+			if ( light < 120 ) {
 				return 'white';
 			}
 			else {
@@ -230,7 +230,7 @@ var Editor = {
 			}
 			
 			self.saveLocally();
-			self.wrapper.updateSegmentsBar();
+			self.wrapper.updateSegmentsBar(false);
 			self.recreateSegmentationBar(i, true);
 		}
 		
@@ -912,7 +912,7 @@ var Editor = {
 					self.modal.childNodes[0].childNodes[0].remove();
 					
 					if ( xhr.status == 200 ) {
-						// console.log('response: ', xhr.responseText);
+						console.log('response: ', xhr.responseText);
 						
 						let jsonResponse = JSON.parse(xhr.responseText);
 						self.checkResponse(jsonResponse);
