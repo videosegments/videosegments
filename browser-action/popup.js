@@ -266,11 +266,13 @@ function loadSettings()
 		}, function(result) {
 			// console.log(result);
 			
-			if ( result.settings.simplified ) {
-				result.settings.mode = 'simplified';
-			}
-			else {
-				result.settings.mode = 'normal';
+			if ( typeof result.settings.mode === 'undefined' ) {
+				if ( result.settings.simplified ) {
+					result.settings.mode = 'simplified';
+				}
+				else {
+					result.settings.mode = 'normal';
+				}
 			}
 			
 			restoreOptions(result.settings);
