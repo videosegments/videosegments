@@ -763,7 +763,7 @@ var Editor = {
 			container.scrollLeft = timeEntry.offsetLeft - 20;
 		}
 		
-		if ( this.timestamps.length === 2 ) {
+		if ( this.timestamps.length === 2 && parseFloat(this.timestamps[1].toFixed(2)) === parseFloat(this.wrapper.video.duration.toFixed(2)) ) {
 			// do nothing since it's autofilled
 		}
 		else {
@@ -773,6 +773,12 @@ var Editor = {
 					input.focus();
 				}
 				else {
+					// for first segment i should be 1
+					if ( i === 0 ) { 
+						i = 1;
+					}
+					
+					// find next segment 
 					let nextSegmentEntry = document.getElementsByClassName('vs-segmentation-panel-bar-entry')[i*4];
 					if ( nextSegmentEntry ) { // TODO: investigate why it can be undefined (prob 'cause last element)
 						let input = nextSegmentEntry.getElementsByTagName('input')[0];

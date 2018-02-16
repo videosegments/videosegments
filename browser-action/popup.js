@@ -256,6 +256,9 @@ function loadSettings()
 		displayPending: false,
 		openSettings: false,
 		
+		// backward compatibility 
+		// this var was intented to be flag but got replaced by string 
+		simplified: true,
 		// addon working in simplified (skip-play) mode 
 		mode: 'simplified', 	
 	}
@@ -266,13 +269,10 @@ function loadSettings()
 		}, function(result) {
 			// console.log(result);
 			
-			if ( typeof result.settings.mode === 'undefined' ) {
-				if ( result.settings.simplified ) {
-					result.settings.mode = 'simplified';
-				}
-				else {
-					result.settings.mode = 'normal';
-				}
+			// backward compatibility 
+			if ( result.settings.simplified === false ) {
+				result.settings.simplified = true;
+				result.settings.mode = 'normal';
 			}
 			
 			restoreOptions(result.settings);
