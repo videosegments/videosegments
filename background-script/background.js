@@ -1,6 +1,6 @@
 /**
  * VideoSegments. Browser extension to skip automatically unwanted content in videos
- * Copyright (C) 2017  VideoSegments Team
+ * Copyright (C) 2017-2018  VideoSegments Team
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,6 +17,8 @@
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
  */
  
+'use strict';
+ 
 if ( typeof this.chrome != 'undefined' ) {
 	this.browser = this.chrome;
 }
@@ -30,6 +32,7 @@ browser.storage.local.get({
 		// messages: {
 			// segmentation: false,
 		// },
+		firstRun: true,
 		totalTime: 0,
 	}, function(result) {
 		// console.log(result);
@@ -39,6 +42,18 @@ browser.storage.local.get({
 			
 			checkContext();
 			timer = setInterval(checkContext, 60000);
+		}
+		
+		if ( result.firstRun ) {
+			browser.storage.local.set({ firstRun: false });
+			browser.tabs.query({}, function(tabs) {
+				for ( let i = 0; i < tabs.length; ++i ) {
+					let match = tabs[i].url .match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/ ]{11})/i);
+					if ( match && match[1].length == 11 ) { /* youtube video id == 11 */
+						browser.tabs.reload(tabs[i].id);
+					}
+				}
+			});
 		}
 		
 		// if ( result.messages.segmentation === false ) {
