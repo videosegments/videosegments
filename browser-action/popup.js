@@ -313,7 +313,7 @@ function loadSettings()
 			
 			// result.settings.tutorial = 0;
 			// result.settings.mode === 'simplified' to backward compatibility
-			if ( result.settings.mode === 'simplified' && result.settings.tutorial > 0 ) {
+			if ( result.settings.tutorial > 0 || result.settings.mode === 'normal' ) {
 				if ( result.settings.mode === 'simplified' ) {
 					document.getElementsByClassName('simplified-mode')[0].style.display = 'block';
 					document.getElementsByClassName('normal-mode')[0].style.display = 'none';
