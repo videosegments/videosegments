@@ -147,11 +147,11 @@
 		"description": ""
 	},
 	"iconOpacity": {
-		"message": "Видимость иконки VS: ",
+		"message": "Видимость иконки: ",
 		"description": ""
 	},
 	"hideIcon": {
-		"message": "Скрыть иконку VS",
+		"message": "Скрыть иконку",
 		"description": ""
 	},
 	"autosaveMessage": {
