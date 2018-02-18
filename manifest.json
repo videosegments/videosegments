@@ -1,7 +1,7 @@
 {
 	"manifest_version": 2,
 	"name": "__MSG_extensionName__",
-	"version": "1.7.1",
+	"version": "1.7.2",
 	
 	"applications": {
 		"gecko": {
@@ -12,7 +12,9 @@
 	"default_locale": "en",
 	"description": "__MSG_extensionDescription__",
 	"icons": {
-		"64": "icons/icon-64.png"
+		"32": "icons/icon-32.png",
+		"64": "icons/icon-64.png",
+		"128": "icons/icon-128.png"
 	},
 	
 	"author": "VideoSegments Team",
@@ -46,6 +48,7 @@
 	],
 	
 	"web_accessible_resources": [
-		"content-script/sprites.png"
+		"content-script/sprites.png",
+		"content-script/icon-editor.png"
 	]
 }

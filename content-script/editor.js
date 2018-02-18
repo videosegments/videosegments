@@ -56,9 +56,21 @@ var Editor = {
 				self.panel.classList.toggle('vs-hide-segmentation-panel', false);
 			}
 			
+			if ( self.settings.highlightIcon === true ) {
+				self.settings.highlightIcon = false;
+				self.icon.style.border = '1px solid lightgray';
+				browser.storage.local.set({ settings: self.settings });
+			}
+			
 			self.icon.classList.toggle('vs-editor-icon-active')
 		}
 		this.icon.addEventListener('click', togglePanelContext);
+		
+		if ( this.settings.highlightIcon === true ) {
+			this.icon.style.border = '3px solid red';
+		}
+		this.icon.style.background = 'url(' + browser.extension.getURL('content-script/icon-editor.png') +') no-repeat center center';
+		this.icon.style.backgroundSize = 'cover';
 		document.body.insertAdjacentElement('afterBegin', this.icon);
 		
 		// panel  

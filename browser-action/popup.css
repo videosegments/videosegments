@@ -276,15 +276,11 @@ label input {
 	width: 90%;
 	margin: 0 5%;
 	border-collapse: collapse;
-	border: 1px solid black;
 }
 
-#simplified-playback-settings tr:nth-child(even) {
-	background-color: #f2f2f2;
-}
-
-#simplified-playback-settings tr, #simplified-playback-settings td {
-	border: 1px solid black;
+#simplified-playback-settings tr {
+	border-top: 1px solid black;
+	border-bottom: 1px solid black;
 }
 
 #simplified-playback-settings td {
@@ -303,4 +299,25 @@ label input {
 #simplified-playback-settings td:nth-child(2) {
 	text-align: center;
 	width: 25%;
+}
+
+
+.tutorial {
+	text-align: center;
+}
+
+#tutorial-header {
+	text-align: center;
+	font-weight: bold;
+	font-size: 200%;
+	padding-top: 4px;
+	padding-bottom: 8px;
+	margin-bottom: 12px;
+	
+	color: white;
+	background-color: #333;
+}
+
+#tutorial-image {
+	
 }

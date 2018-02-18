@@ -75,6 +75,11 @@ function getSettings(callback) {
 		// addon working in simplified (skip-play) mode 
 		mode: 'simplified', 
 		
+		// first time launch stuff
+		highlightIcon: true, // red border over icon 
+		// tutorial
+		tutorial: 0,
+		
 		// user notification  
 		// messages: {
 			// segmentation: true,	// popup on addon installation. currently disabled

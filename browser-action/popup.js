@@ -261,6 +261,11 @@ function loadSettings()
 		simplified: true,
 		// addon working in simplified (skip-play) mode 
 		mode: 'simplified', 	
+		
+		// first time launch stuff
+		highlightIcon: true, // red border over icon 
+		// tutorial 
+		tutorial: 0,
 	}
 	
 	browser.storage.local.get({
@@ -287,13 +292,40 @@ function loadSettings()
 			let totalTimeSaved = (h<10?('0'+h):h) + ":" + ('0' + m).slice(-2) + ":" + ('0' + s).slice(-2);
 			element.textContent = totalTimeSaved;
 			
-			if ( result.settings.mode === 'simplified' ) {
-				document.getElementsByClassName('simplified-mode')[0].style.display = 'block';
-				document.getElementsByClassName('normal-mode')[0].style.display = 'none';
+			// result.settings.tutorial = 0;
+			// result.settings.mode === 'simplified' to backward compatibility
+			if ( result.settings.mode === 'simplified' && result.settings.tutorial > 0 ) {
+				if ( result.settings.mode === 'simplified' ) {
+					document.getElementsByClassName('simplified-mode')[0].style.display = 'block';
+					document.getElementsByClassName('normal-mode')[0].style.display = 'none';
+					document.getElementsByClassName('tutorial')[0].style.display = 'none';
+				}
+				else {
+					document.getElementsByClassName('simplified-mode')[0].style.display = 'none';
+					document.getElementsByClassName('normal-mode')[0].style.display = 'block';
+					document.getElementsByClassName('tutorial')[0].style.display = 'none';
+				}
 			}
 			else {
 				document.getElementsByClassName('simplified-mode')[0].style.display = 'none';
-				document.getElementsByClassName('normal-mode')[0].style.display = 'block';
+				document.getElementsByClassName('normal-mode')[0].style.display = 'none';
+				document.getElementsByClassName('tutorial')[0].style.display = 'block';
+				document.getElementById('tutorial-image').src = browser.extension.getURL('browser-action/tutorial.png');
+				
+				document.getElementById('tutorial-finish').addEventListener('click', function() {
+					if ( result.settings.mode === 'simplified' ) {
+						document.getElementsByClassName('simplified-mode')[0].style.display = 'block';
+						document.getElementsByClassName('normal-mode')[0].style.display = 'none';
+					}
+					else {
+						document.getElementsByClassName('simplified-mode')[0].style.display = 'none';
+						document.getElementsByClassName('normal-mode')[0].style.display = 'block';
+					}
+					
+					result.settings.tutorial = 1;
+					browser.storage.local.set({ settings: result.settings });
+					document.getElementsByClassName('tutorial')[0].style.display = 'none';
+				});
 			}
 		}
 	);
@@ -468,7 +500,9 @@ function updateAccelerationSpeed(element, settings, segment)
 function updateGlobalValue(element, settings, field)
 {
 	settings[field] = element.value;
-	document.getElementById(element.twin+field).value = element.value;
+	if ( typeof element.twin !== 'undefined' ) {
+		document.getElementById(element.twin+field).value = element.value;
+	}
 	browser.storage.local.set({ settings: settings });
 	notifyMediaPlayerWrapper(settings);
 }
@@ -476,7 +510,9 @@ function updateGlobalValue(element, settings, field)
 function updateGlobalBool(element, settings, field)
 {
 	settings[field] = element.checked;
-	document.getElementById(element.twin+field).checked = element.checked;
+	if ( typeof element.twin !== 'undefined' ) {
+		document.getElementById(element.twin+field).checked = element.checked;
+	}
 	browser.storage.local.set({ settings: settings });
 	notifyMediaPlayerWrapper(settings);
 }
@@ -484,7 +520,9 @@ function updateGlobalBool(element, settings, field)
 function updateGlobalSelect(element, settings, field)
 {
 	settings[field] = element.value;
-	document.getElementById(element.twin+field).value = element.value;
+	if ( typeof element.twin !== 'undefined' ) {
+		document.getElementById(element.twin+field).value = element.value;
+	}
 	browser.storage.local.set({ settings: settings });
 	notifyMediaPlayerWrapper(settings);
 }
