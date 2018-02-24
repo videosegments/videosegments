@@ -727,7 +727,7 @@ var Editor = {
 		}
 		
 		let seconds = parseInt(timestamp) % 60;
-		let ms = timestamp * 1000;
+		let ms = Math.round(timestamp * 1000);
 		
 		let hours = parseInt(ms / 3600000);
 		ms -= hours * 3600000;

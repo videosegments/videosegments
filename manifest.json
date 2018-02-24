@@ -42,8 +42,7 @@
 	],
 
 	"permissions": [
-		"http://db.vsegments/api/v3/*",
-		"https://db.videosegments.org/*",
+		"https://db.videosegments.org/api/v3/*",
 		"storage",
 		"tabs"
 	],
