@@ -88,7 +88,7 @@ var Editor = {
 		if ( this.settings.highlightIcon === true ) {
 			this.icon.style.border = '3px solid red';
 		}
-		this.icon.style.background = 'url(' + browser.extension.getURL('content-script/icon-editor.png') +') no-repeat center center';
+		this.icon.style.background = 'url(' + browser.extension.getURL('images/scissors.png') +') no-repeat center center';
 		this.icon.style.backgroundSize = 'cover';
 		document.body.insertAdjacentElement('afterBegin', this.icon);
 		
@@ -398,7 +398,7 @@ var Editor = {
 			select.style.width = self.widthFixer.offsetWidth + 2 + 'px';
 		};
 		
-		let spritesheet = browser.extension.getURL('content-script/sprites.png');
+		let spritesheet = browser.extension.getURL('images/sprites.png');
 		let setButtonImage = function(btn, l, t, w, h) {
 			btn.style = 'width: '+w+'px; height: '+h+'px; background: url('+spritesheet+') '+l+'px '+t+'px;';
 		}

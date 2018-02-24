@@ -119,7 +119,7 @@ function checkLogin()
 		// console.log(xhr);
 		if ( xhr.readyState == 4 ) {
 			if ( xhr.status == 200 ) {
-				console.log(xhr.responseText);
+				// console.log(xhr.responseText);
 				let response = JSON.parse(xhr.responseText);
 				if ( response.authorized && response.moderator ) {
 					let element = document.getElementById('settings-database-admin');
@@ -318,7 +318,7 @@ function loadSettings()
 				document.getElementsByClassName('simplified-mode')[0].style.display = 'none';
 				document.getElementsByClassName('normal-mode')[0].style.display = 'none';
 				document.getElementsByClassName('tutorial')[0].style.display = 'block';
-				document.getElementById('tutorial-image').src = browser.extension.getURL('browser-action/tutorial.png');
+				document.getElementById('tutorial-image').src = browser.extension.getURL('images/tutorial.png');
 				
 				document.getElementById('tutorial-finish').addEventListener('click', function() {
 					if ( result.settings.mode === 'simplified' ) {

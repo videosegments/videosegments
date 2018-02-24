@@ -43,12 +43,14 @@
 
 	"permissions": [
 		"https://db.videosegments.org/api/v3/*",
+		"notifications",
 		"storage",
 		"tabs"
 	],
 	
 	"web_accessible_resources": [
-		"content-script/sprites.png",
-		"content-script/icon-editor.png"
+		"images/scissors.png",
+		"images/sprites.png",
+		"images/tutorial.png"
 	]
 }
