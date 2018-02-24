@@ -290,7 +290,7 @@
 			--><div id="account" class="tab-content" style="display: none;">
 				<div class="tab-name"><span class="translate-me">tabAccount</span></div>
 				
-				<fieldset>
+				<fieldset style="display: none">
 					<legend align="left" style="font-size: 1.2em"><span class="translate-me">localStatistic</span></legend>
 					<span class="translate-me">localStatisticDescription1</span><br><span class="translate-me">localStatisticDescription2</span>
 					<br>
@@ -298,52 +298,26 @@
 					<span class="translate-me">timeSaved</span><span id="saved-time">00:00:00</span>
 				</fieldset>
 				
-				<br>
-				
-				<fieldset>
-					<legend align="left" style="font-size: 1.2em"><span class="translate-me">globalStatistic</span></legend>
-					<span class="translate-me">globalStatisticDescription1</span><br>
-					<span class="translate-me">globalStatisticDescription2</span><br>
-					<a href="https://videosegments.org/policy.php" target="_blank"><span class="translate-me">privacyPolicy</span></a>
-					<!-- <div id="settings-login" style="display: none;"> -->
-						<!-- <span class="translate-me" style="border-bottom: 1px solid black; font-weight: bold">autosaveMessage</span> -->
-						<!-- <br> -->
-						<!-- <br> -->
-						<!-- <span class="translate-me">loginToRemoveCaptcha</span> -->
-						<!-- <br> -->
-						<!-- <br> -->
-						<!-- <iframe id="settings-iframe" width="300" height="60" src="http://db.videosegments.org/" style="border: none"></iframe> -->
-					<!-- </div> -->
-					
+				<!-- <fieldset> -->
+					<!-- <legend align="left" style="font-size: 1.2em"><span class="translate-me">globalStatistic</span></legend> -->
+					<!-- <span class="translate-me">globalStatisticDescription1</span><br> -->
+					<!-- <span class="translate-me">globalStatisticDescription2</span><br> -->
 					<div id="settings-database-admin" style="display: none">
 						<br>
-						<div style="width: 49%; text-align: center; display: inline-block">
+						<div style="text-align: center">
 							<span id="segmentations-count">loading</span>
 						</div>
-						<div style="width: 49%; text-align: center; display: inline-block">
-							<span id="requests-count">loading</span>
+						<div style="text-align: center">
+							<button id="next-segmentation"><span class="translate-me">nextSegmentation</span></button>
 						</div>
-						
-						<div style="width: 49%; text-align: center; display: inline-block">
-							<button style="width: 90%" id="next-segmentation"><span class="translate-me">nextSegmentation</span></button>
-						</div>
-						<div style="width: 49%; text-align: center; display: inline-block">
-							<button style="width: 90%" id="next-request"><span class="translate-me">nextRequest</span></button>
-						</div>
-						<br>
 						<br>
 						<label><input type="checkbox" id="openSettings"><span class="translate-me">openSettings</span><br></label>
 						<label><input type="checkbox" id="displayPending"><span class="translate-me">displayPending</span><br></label>
-						<!-- <br> -->
 					</div>
-					
-					<div id="settings-logout" style="display: none;">
-						<br>
-						<br>
-						<a href="#" id="logout"><span class="translate-me">logout</span></a>
+					<div>
+						<iframe id="settings-iframe" width="350" height="350" src="https://db.videosegments.org/api/v3/login.php" style="border: none; margin-top: 5px"></iframe>
 					</div>
-				
-				</fieldset>
+				<!-- </fieldset> -->
 			</div><!--
 			--><div id="settings" class="tab-content" style="display: none;">
 				<div class="tab-name"><span class="translate-me">tabSettings</span></div>

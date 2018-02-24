@@ -59,14 +59,6 @@ function domContentLoaded()
 	let button;
 	button = document.getElementById('next-segmentation');
 	button.addEventListener('click', openNextSegmentationRequest);
-	button = document.getElementById('next-request');
-	button.addEventListener('click', openNextRequest);
-	
-	button = document.getElementById('logout');
-	button.addEventListener('click', function() {
-		window.open('https://db.videosegments.org/logout.php'); 
-		setTimeout(function() {window.close();}, 100);
-	});
 	
 	// let select = document.getElementById('scope-playback');
 	// select.addEventListener('change', function() {
@@ -85,6 +77,12 @@ function domContentLoaded()
 			// });
 		// }
 	// });
+	
+	let iframe = document.getElementById('settings-iframe');
+	window.addEventListener('message', function(event) {
+		// iframe.style.height = event.data+'px';
+		checkLogin();
+	});
 }
 
 function switchTab()
@@ -116,28 +114,23 @@ function openTab(tabName)
 function checkLogin()
 {
 	let xhr = new XMLHttpRequest();
-	xhr.open('GET', 'https://db.videosegments.org/status.php');
+	xhr.open('GET', 'https://db.videosegments.org/api/v3/status.php');
 	xhr.onreadystatechange = function() { 
 		// console.log(xhr);
 		if ( xhr.readyState == 4 ) {
 			if ( xhr.status == 200 ) {
-				// console.log(xhr.responseText);
+				console.log(xhr.responseText);
 				let response = JSON.parse(xhr.responseText);
-				if ( response.auth ) {
-					// var element = document.getElementById('settings-database');
-					// element.style.display = 'block';
-					let element = document.getElementById('settings-logout');
+				if ( response.authorized && response.moderator ) {
+					let element = document.getElementById('settings-database-admin');
+					browser.runtime.sendMessage( {'displayPending': true });
 					element.style.display = 'block';
-					
-					if ( response.admin ) {
-						let element = document.getElementById('settings-database-admin');
-						element.style.display = 'block';
-						updateRequestsCount();
-					}
+					updateRequestsCount();
 				}
 				else {
-					// let element = document.getElementById('settings-login');
-					// element.style.display = 'block';
+					let element = document.getElementById('settings-database-admin');
+					browser.runtime.sendMessage( {'displayPending': false });
+					element.style.display = 'none';
 				}
 			}
 		}
@@ -150,21 +143,17 @@ function checkLogin()
 function updateRequestsCount()
 {
 	let xhr = new XMLHttpRequest();
-	xhr.open('POST', 'https://db.videosegments.org/requests.php');
+	xhr.open('POST', 'https://db.videosegments.org/api/v3/review.php?requests');
 	xhr.onreadystatechange = function() { 
 		if ( xhr.readyState == 4 ) {
 			if ( xhr.status == 200 ) {
 				// console.log('xhr.responseText', xhr.responseText);
 				
 				var response = JSON.parse(xhr.responseText);
-				if ( response.requests != 'undefined' && response.pending != 'undefined' ) {
+				if ( response.requests != 'undefined' ) {
 					var span;
 					
 					span = document.getElementById('segmentations-count');
-					span.removeChild(span.firstChild);
-					span.appendChild(document.createTextNode(response.pending));
-					
-					span = document.getElementById('requests-count');
 					span.removeChild(span.firstChild);
 					span.appendChild(document.createTextNode(response.requests));
 				}
@@ -180,7 +169,7 @@ function updateRequestsCount()
 function openNextSegmentationRequest()
 {
 	let xhr = new XMLHttpRequest();
-	xhr.open('POST', 'https://db.videosegments.org/requests.php');
+	xhr.open('POST', 'https://db.videosegments.org/api/v3/review.php?pending');
 	xhr.onreadystatechange = function() { 
 		if ( xhr.readyState == 4 ) {
 			if ( xhr.status == 200 ) {

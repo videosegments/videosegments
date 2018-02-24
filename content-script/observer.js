@@ -61,7 +61,7 @@ var Observer = {
 		// callback for first MutationObserver
 		// look for "video" tag on page 
 		let onBodyMutation = function(mutations) {
-			console.log('Observer::onBodyMutation()');
+			// console.log('Observer::onBodyMutation()');
 			
 			// if "video" tag appeared with proper "src" attribute 
 			if ( self.collection[0] && self.collection[0].src ) {

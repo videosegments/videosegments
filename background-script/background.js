@@ -48,7 +48,7 @@ browser.storage.local.get({
 			browser.storage.local.set({ firstRun: false });
 			browser.tabs.query({}, function(tabs) {
 				for ( let i = 0; i < tabs.length; ++i ) {
-					let match = tabs[i].url .match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/ ]{11})/i);
+					let match = tabs[i].url.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/ ]{11})/i);
 					if ( match && match[1].length == 11 ) { /* youtube video id == 11 */
 						browser.tabs.reload(tabs[i].id);
 					}

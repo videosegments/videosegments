@@ -885,7 +885,7 @@ var Editor = {
 			let types = segmentation.types;
 			
 			let xhr = new XMLHttpRequest();
-			xhr.open('POST', 'https://db.videosegments.org/send_auth.php');
+			xhr.open('POST', 'https://db.videosegments.org/api/v3/set.php');
 			xhr.onreadystatechange = function() { 
 				if ( xhr.readyState == 4 ) {
 					if ( xhr.status == 200 ) {
@@ -896,7 +896,7 @@ var Editor = {
 							self.modal.style.display = "block";
 							
 							let iframe = document.createElement("iframe");
-							iframe.src = 'https://db.videosegments.org/captcha3.php';
+							iframe.src = 'https://db.videosegments.org/api/v3/captcha.php';
 							iframe.width  = 350;
 							iframe.height = 500;
 							iframe.id = 'vs-captcha-iframe';
@@ -925,7 +925,7 @@ var Editor = {
 				}
 			};
 			
-			let post = 'domain='+this.domain+'&id='+this.id+'&timestamps='+timestamps+'&types='+types;
+			let post = 'id='+this.id+'&timestamps='+timestamps+'&types='+types;
 			if ( decline ) {
 				post += '&decline=1';
 			}
@@ -941,7 +941,7 @@ var Editor = {
 			
 		if ( event.origin === 'https://db.videosegments.org' ) {
 			let xhr = new XMLHttpRequest();
-			xhr.open('POST', 'https://db.videosegments.org/send_auth.php');
+			xhr.open('POST', 'https://db.videosegments.org/api/v3/set.php');
 			
 			xhr.onreadystatechange = function() { 
 				if ( xhr.readyState == 4 ) {
@@ -957,7 +957,7 @@ var Editor = {
 				}
 			};
 			
-			let post = 'domain='+this.domain+'&id='+this.id+'&timestamps='+timestamps+'&types='+types+'&captcha='+event.data;
+			let post = 'id='+this.id+'&timestamps='+timestamps+'&types='+types+'&captcha='+event.data;
 			// console.log(post);
 			
 			xhr.setRequestHeader("content-type", "application/x-www-form-urlencoded");

@@ -98,8 +98,8 @@ body {
 }
 
 .tab-name {
-	padding: 5px 0 5px 0;
-	margin-bottom: 10px;
+	padding: 5px 0;
+	margin-bottom: 5px;
 }
 
 .tab-name span {
@@ -186,7 +186,7 @@ table th {
 #playback-settings tr {
 	border-top: 1px solid black;
 	border-bottom: 1px solid black;
-	padding-top: none;
+	padding-top: 0;
 }
 
 #playback-settings td {
