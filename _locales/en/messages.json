@@ -217,6 +217,41 @@
 		"message": "N",
 		"description": ""
 	},
+	"newSegmentationRequest": {
+		"message": "Got new segmentation request",
+		"description": ""
+	},
+	
+	
+	
+	"success": {
+		"message": "Success",
+		"description": ""
+	},
+	"failed": {
+		"message": "Error",
+		"description": ""
+	},
+	"segmentationSendedToReview": {
+		"message": "Your segmentation is sended to review.",
+		"description": ""
+	},
+	"segmentationAddedToDatabase": {
+		"message": "Segmentation added to database.",
+		"description": ""
+	},
+	"segmentationUpdatedInDatabase": {
+		"message": "Segmentation updated in database.",
+		"description": ""
+	},
+	"segmentationSendTimeout": {
+		"message": "Timeout.",
+		"description": ""
+	},
+	"segmentationExistsInDatabase": {
+		"message": "Official segmentation exists for this video.",
+		"description": ""
+	},
 	
 	
 	

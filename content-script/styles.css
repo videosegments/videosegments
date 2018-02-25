@@ -216,24 +216,40 @@
 	width: 350px;
 }
 
-#vs-messages-modal {
+.vs-messages-modal {
 	display: inline-block; 
 	position: fixed; 
-	z-index: 2147483647; 
-	padding-top: 100px; 
+	z-index: 2147483647;  /* youtube have pretty high z-index for top menu */
 	right: 5%;
 	top: -20%;
-	margin: auto;
-	background-color: #333; 
-	border: 1px solid #888; 
-	border-radius: 50px;
-	padding: 30px;
-	font-size: 200%;
-	color: white;
+	background-color: #fff; 
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 	transition: top 0.4s ease;
+	border-radius: 3px;
+	overflow: hidden;
 }
 
-.vs-messages-modal-dropdown {
+.vs-messages-modal-head {
+	padding: 5px 10px;
+	font-size: 180%;
+	color: #000;
+}
+
+.vs-messages-modal-head-success {
+	background-color: #0a0;
+}
+
+.vs-messages-modal-head-failure {
+	background-color: #c00;
+	color: #fff;
+}
+
+.vs-messages-modal-body {
+	padding: 5px 10px;
+	font-size: 140%;
+}
+
+.vs-messages-modal-animation {
 	top: 10% !important;
 	transition: top 0.4s ease;
 }

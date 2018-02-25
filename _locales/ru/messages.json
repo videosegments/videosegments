@@ -225,6 +225,41 @@
 		"message": "N",
 		"description": ""
 	},
+	"newSegmentationRequest": {
+		"message": "Получен новый запрос на сегментацию",
+		"description": ""
+	},
+	
+	
+	
+	"success": {
+		"message": "Успех",
+		"description": ""
+	},
+	"failed": {
+		"message": "Ошибка",
+		"description": ""
+	},
+	"segmentationSendedToReview": {
+		"message": "Ваша сегментация отправлена на рассмотрение.",
+		"description": ""
+	},
+	"segmentationAddedToDatabase": {
+		"message": "Сегментация добавлена.",
+		"description": ""
+	},
+	"segmentationUpdatedInDatabase": {
+		"message": "Сегментация обновлена.",
+		"description": ""
+	},
+	"segmentationSendTimeout": {
+		"message": "Таймаут.",
+		"description": ""
+	},
+	"segmentationExistsInDatabase": {
+		"message": "Данное видео уже оффициально сегментировано.",
+		"description": ""
+	},
 	
 	
 	

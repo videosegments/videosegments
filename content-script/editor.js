@@ -55,6 +55,7 @@ var Editor = {
 		this.types = types;
 		this.origin = origin;
 		this.iterations = 0;
+		this.savedIterations;
 		
 		this.domain = domain;
 		this.id = id;
@@ -873,6 +874,12 @@ var Editor = {
 		console.log('Editor::shareSegmentation()');
 		let self = this;
 		
+		// prevent sharing same segmentation 
+		if ( this.savedIterations == this.iterations ) {
+			return;
+		}
+		this.savedIterations = this.iterations;
+		
 		if ( this.types.length > 0 ) {
 			let segmentation = JSON.parse(JSON.stringify({timestamps: this.timestamps, types: this.types})); // break link between segments data and saved data 
 			if ( Math.abs(segmentation.timestamps[segmentation.timestamps.length-1] - this.wrapper.video.duration > 1.5) && segmentation.types[segmentation.types.length-1] !== 'c' ) {
@@ -971,19 +978,51 @@ var Editor = {
 	checkResponse: function(response) {
 		let self = this;
 		
-		if ( response.message === 'successufully sended' || response.message === 'added' || response.message === 'updated' || response.message === 'overwritten' ) {
-			this.messagesModal.classList.toggle('vs-messages-modal-dropdown', true);
-			setTimeout(function() {
-				self.messagesModal.classList.toggle('vs-messages-modal-dropdown', false);
-			}, this.settings.popupDurationOnSend*1000);
+		if ( response.message === 'sended' ) {
+			this.sendModal('success', 'segmentationSendedToReview');
+		}
+		else if ( response.message === 'added' ) {
+			this.sendModal('success', 'segmentationAddedToDatabase');
 			this.updateBadge();
-
-			this.panel.classList.toggle('vs-hide-segmentation-panel', true);
-			this.icon.classList.toggle('vs-editor-icon-active', false);
+		}
+		else if ( response.message === 'updated' ) {
+			this.sendModal('success', 'segmentationUpdatedInDatabase');
+		}
+		else if ( response.message === 'timeout' ) {
+			this.sendModal('failed', 'segmentationSendTimeout');
+		}
+		else if ( response.message === 'segmented' ) {
+			this.sendModal('failed', 'segmentationExistsInDatabase');
 		}
 		else {
 			window.alert('VideoSegments: ' + response.message);
 		}
+		
+					this.panel.classList.toggle('vs-hide-segmentation-panel', true);
+this.icon.classList.toggle('vs-editor-icon-active', false);
+	},
+	
+	sendModal(type, bodyText) {
+		let modal = document.createElement('div');
+		modal.classList.add('vs-messages-modal');
+		
+		let head = document.createElement('div');
+		head.classList.add('vs-messages-modal-head');
+		if ( type == 'success' ) head.classList.add('vs-messages-modal-head-success');
+		else head.classList.add('vs-messages-modal-head-failure');
+		head.appendChild(document.createTextNode(browser.i18n.getMessage(type)));
+		
+		let modalBody = document.createElement('div');
+		modalBody.classList.add('vs-messages-modal-body');
+		modalBody.appendChild(document.createTextNode(browser.i18n.getMessage(bodyText)));
+		
+		modal.appendChild(head);
+		modal.appendChild(modalBody);
+		setTimeout(function() { modal.classList.add('vs-messages-modal-animation'); }, 100);
+		document.body.appendChild(modal);
+		
+		setTimeout(function() { modal.classList.remove('vs-messages-modal-animation'); }, this.settings.popupDurationOnSend*1000);
+		setTimeout(function() { modal.remove(); }, this.settings.popupDurationOnSend*1000+1000);
 	},
 	
 	updateBadge: function() {

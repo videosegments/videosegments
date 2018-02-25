@@ -41,7 +41,7 @@ browser.storage.local.get({
 			doCheck = result.settings.displayPending;
 			
 			checkContext();
-			timer = setInterval(checkContext, 60000);
+			timer = setInterval(checkContext, 20000);
 		}
 		
 		if ( result.firstRun ) {
@@ -71,21 +71,33 @@ browser.storage.local.get({
 	}
 );
 
+var previousRequestsCount = 0;
 var checkContext = function() { 
 	// console.log('checkContext');
 	
 	if ( doCheck ) {
 		var xhr = new XMLHttpRequest();
-		xhr.open('POST', 'https://db.videosegments.org/requests.php');
+		xhr.open('POST', 'https://db.videosegments.org/api/v3/review.php?requests');
 		xhr.onreadystatechange = function() { 
 			if ( xhr.readyState == 4 ) {
 				if ( xhr.status == 200 ) {
 					// console.log('xhr.responseText', xhr.responseText);
 					
 					var response = JSON.parse(xhr.responseText);
-					if ( typeof response.requests !== 'undefined' && typeof response.pending !== 'undefined' ) {
-						var count = parseInt(response.requests) + parseInt(response.pending);
-						browser.browserAction.setBadgeText( { text: count.toString() } );
+					if ( typeof response.requests !== 'undefined' ) {
+						// moved to moderator tools 
+						// var count = parseInt(response.requests);
+						// if ( count > previousRequestsCount ) {
+							// browser.notifications.create({
+								// "type": "basic",
+								// "iconUrl": browser.extension.getURL("icons/icon-64.png"),
+								// "title": 'VideoSegments',
+								// "message": browser.i18n.getMessage('newSegmentationRequest')
+							// });
+						// }
+						// previousRequestsCount = count;
+						
+						browser.browserAction.setBadgeText( { text: response.requests } );
 					}
 					else {
 						browser.browserAction.setBadgeText({text: ''});

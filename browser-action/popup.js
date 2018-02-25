@@ -253,7 +253,7 @@ function loadSettings()
 		hideOnSegmentedVideos: false,
 		pinSegmentationTools: false,
 		hideIcon: false,
-		popupDurationOnSend: 3.0,
+		popupDurationOnSend: 5.0,
 		databasePriority: 'local',
 		segmentationToolsOpacity: 100,
 		iconOpacity: 100,
