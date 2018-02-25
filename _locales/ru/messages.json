@@ -260,6 +260,10 @@
 		"message": "Данное видео уже оффициально сегментировано.",
 		"description": ""
 	},
+	"noChangesInSegmentation": {
+		"message": "Вы не внесли изменений после отправки.",
+		"description": ""
+	},
 	
 	
 	

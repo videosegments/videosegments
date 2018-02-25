@@ -27,7 +27,6 @@ var Editor = {
 	panel: null,
 	icon: null,
 	modal: null,
-	messagesModal: null,
 	
 	wrapper: null,
 	settings: null,
@@ -36,6 +35,7 @@ var Editor = {
 	types: null,
 	origin: null,
 	iterations: null,
+	savedIterations: null,
 	
 	domain: null,
 	id: null,
@@ -55,7 +55,7 @@ var Editor = {
 		this.types = types;
 		this.origin = origin;
 		this.iterations = 0;
-		this.savedIterations;
+		this.savedIterations = -1;
 		
 		this.domain = domain;
 		this.id = id;
@@ -315,15 +315,6 @@ var Editor = {
 		this.modal.appendChild(modalContent);
 		document.body.insertAdjacentElement('afterBegin', this.modal);
 		// this.segmentationPanel.appendChild(this.modal);
-		
-		this.messagesModal = document.createElement('div');
-		this.messagesModal.id = 'vs-messages-modal'
-		// var messagesModalContent = document.createElement('div');
-		// messagesModalContent.id = 'vs-messages-modal-content';
-		
-		var text = document.createTextNode(browser.i18n.getMessage('thankYouMessage'));
-		this.messagesModal.appendChild(text);
-		document.body.insertAdjacentElement('afterBegin', this.messagesModal);
 	},
 	
 	buildSegmentationBar: function() {
@@ -876,6 +867,7 @@ var Editor = {
 		
 		// prevent sharing same segmentation 
 		if ( this.savedIterations == this.iterations ) {
+			this.sendModal('failed', 'noChangesInSegmentation');
 			return;
 		}
 		this.savedIterations = this.iterations;
@@ -998,8 +990,8 @@ var Editor = {
 			window.alert('VideoSegments: ' + response.message);
 		}
 		
-					this.panel.classList.toggle('vs-hide-segmentation-panel', true);
-this.icon.classList.toggle('vs-editor-icon-active', false);
+		this.panel.classList.toggle('vs-hide-segmentation-panel', true);
+		this.icon.classList.toggle('vs-editor-icon-active', false);
 	},
 	
 	sendModal(type, bodyText) {
@@ -1035,6 +1027,5 @@ this.icon.classList.toggle('vs-editor-icon-active', false);
 		this.icon.remove();
 		this.panel.remove();
 		this.modal.remove();
-		this.messagesModal.remove();
 	},
 };

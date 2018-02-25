@@ -252,6 +252,10 @@
 		"message": "Official segmentation exists for this video.",
 		"description": ""
 	},
+	"noChangesInSegmentation": {
+		"message": "You already sent this segmentation.",
+		"description": ""
+	},
 	
 	
 	
