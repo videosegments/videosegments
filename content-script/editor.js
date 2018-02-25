@@ -44,7 +44,7 @@ var Editor = {
 	widthFixer: null,
 	
 	start: function(wrapper, timestamps, types, origin, settings, domain, id) {
-		console.log('Editor::start()');
+		log('Editor::start()');
 		let self = this;
 		
 		// references 
@@ -318,7 +318,7 @@ var Editor = {
 	},
 	
 	buildSegmentationBar: function() {
-		console.log('Editor::buildSegmentationBar()');
+		log('Editor::buildSegmentationBar()');
 		let self = this;
 		
 		let segmentationBar = document.createElement('div');
@@ -376,7 +376,7 @@ var Editor = {
 	},
 	
 	createSegmentationBar: function(container) {
-		console.log('Editor::createSegmentationBar()');
+		log('Editor::createSegmentationBar()');
 		let self = this;
 		
 		// set width to option content 
@@ -752,7 +752,7 @@ var Editor = {
 			time = hours + minutes + ':' + seconds;
 		}
 		
-		// console.log(time);
+		// log(time);
 		return time;
 	},
 	
@@ -768,12 +768,12 @@ var Editor = {
 		}
 		
 		timestamp += parseFloat(parseFloat(parts[parts.length-1]).toFixed(2));
-		// console.log(timestamp);
+		// log(timestamp);
 		return timestamp;
 	},
 	
 	recreateSegmentationBar: function(i, rightButton, setFocus=true) {
-		console.log('Editor::recreateSegmentationBar()');
+		log('Editor::recreateSegmentationBar()');
 		
 		let container = document.getElementById('vs-segmentation-bar');
 		while ( container.firstChild ) {
@@ -816,7 +816,7 @@ var Editor = {
 	// field.selectionStart;
 	
 	// rebuildSegmentationBar: function() {
-		// console.log('Editor::rebuildSegmentationBar()');
+		// log('Editor::rebuildSegmentationBar()');
 		
 		// let bar = document.getElementById('vs-segmentation-panel-segments');
 		// if ( bar ) bar.remove();
@@ -825,7 +825,7 @@ var Editor = {
 	// },
 	
 	saveLocally: function() {
-		console.log('Editor::saveLocally()');
+		log('Editor::saveLocally()');
 		let self = this;
 		
 		let textElement;
@@ -862,7 +862,7 @@ var Editor = {
 	},
 	
 	shareSegmentation: function(decline) {
-		console.log('Editor::shareSegmentation()');
+		log('Editor::shareSegmentation()');
 		let self = this;
 		
 		// prevent sharing same segmentation 
@@ -888,7 +888,7 @@ var Editor = {
 			xhr.onreadystatechange = function() { 
 				if ( xhr.readyState == 4 ) {
 					if ( xhr.status == 200 ) {
-						console.log('response: ', xhr.responseText);
+						log('response: ', xhr.responseText);
 						let jsonResponse = JSON.parse(xhr.responseText);
 						
 						if ( jsonResponse.message === 'captcha' ) {
@@ -929,7 +929,7 @@ var Editor = {
 				post += '&decline=1';
 			}
 			
-			// console.log(post);
+			// log(post);
 			xhr.setRequestHeader("content-type", "application/x-www-form-urlencoded");
 			xhr.send(post);
 		}
@@ -948,7 +948,7 @@ var Editor = {
 					self.modal.childNodes[0].childNodes[0].remove();
 					
 					if ( xhr.status == 200 ) {
-						console.log('response: ', xhr.responseText);
+						log('response: ', xhr.responseText);
 						
 						let jsonResponse = JSON.parse(xhr.responseText);
 						self.checkResponse(jsonResponse);
@@ -957,7 +957,7 @@ var Editor = {
 			};
 			
 			let post = 'id='+this.id+'&timestamps='+timestamps+'&types='+types+'&captcha='+event.data;
-			// console.log(post);
+			// log(post);
 			
 			xhr.setRequestHeader("content-type", "application/x-www-form-urlencoded");
 			xhr.send(post);
@@ -1022,7 +1022,7 @@ var Editor = {
 	},
 	
 	end: function() {
-		console.log('Editor::end()');
+		log('Editor::end()');
 		
 		this.icon.remove();
 		this.panel.remove();

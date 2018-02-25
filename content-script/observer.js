@@ -40,7 +40,7 @@ var Observer = {
 	muteFirstEvents: null,
 	
 	start: function(settings) {
-		console.log('Observer::start()');
+		log('Observer::start()');
 		let self = this;
 		
 		if ( typeof InstallTrigger === 'undefined' ) {
@@ -61,11 +61,11 @@ var Observer = {
 		// callback for first MutationObserver
 		// look for "video" tag on page 
 		let onBodyMutation = function(mutations) {
-			// console.log('Observer::onBodyMutation()');
+			// log('Observer::onBodyMutation()');
 			
 			// if "video" tag appeared with proper "src" attribute 
 			if ( self.collection[0] && self.collection[0].src ) {
-				console.log('player found');
+				log('player found');
 				
 				// disconnect first 
 				self.observer.disconnect();
@@ -83,7 +83,7 @@ var Observer = {
 		// callback for second MutationObserver
 		// look only at change of "src" attribute 
 		let onPlayerMutation = function(mutations) {
-			// console.log('Observer::onPlayerMutation()');
+			// log('Observer::onPlayerMutation()');
 			
 			// disconnect second  
 			self.observer.disconnect();
@@ -114,7 +114,7 @@ var Observer = {
 	// },
 	
 	end: function() {
-		console.log('Observer::end()');
+		log('Observer::end()');
 		
 		this.observer.disconnect();
 		this.wrapper.end();

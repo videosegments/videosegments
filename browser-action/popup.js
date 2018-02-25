@@ -116,10 +116,10 @@ function checkLogin()
 	let xhr = new XMLHttpRequest();
 	xhr.open('GET', 'https://db.videosegments.org/api/v3/status.php');
 	xhr.onreadystatechange = function() { 
-		// console.log(xhr);
+		// log(xhr);
 		if ( xhr.readyState == 4 ) {
 			if ( xhr.status == 200 ) {
-				// console.log(xhr.responseText);
+				// log(xhr.responseText);
 				let response = JSON.parse(xhr.responseText);
 				if ( response.authorized && response.moderator ) {
 					let element = document.getElementById('settings-database-admin');
@@ -147,7 +147,7 @@ function updateRequestsCount()
 	xhr.onreadystatechange = function() { 
 		if ( xhr.readyState == 4 ) {
 			if ( xhr.status == 200 ) {
-				// console.log('xhr.responseText', xhr.responseText);
+				// log('xhr.responseText', xhr.responseText);
 				
 				var response = JSON.parse(xhr.responseText);
 				if ( response.requests != 'undefined' ) {
@@ -173,7 +173,7 @@ function openNextSegmentationRequest()
 	xhr.onreadystatechange = function() { 
 		if ( xhr.readyState == 4 ) {
 			if ( xhr.status == 200 ) {
-				// console.log('xhr.responseText', xhr.responseText);
+				// log('xhr.responseText', xhr.responseText);
 				
 				let response = JSON.parse(xhr.responseText);
 				if ( response.id ) {
@@ -280,7 +280,7 @@ function loadSettings()
 			settings: defaultSettings,
 			totalTime: 0,
 		}, function(result) {
-			// console.log(result);
+			// log(result);
 			
 			// backward compatibility 
 			if ( result.settings.simplified === false ) {

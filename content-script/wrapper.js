@@ -56,7 +56,7 @@ var Wrapper = {
 		
 	// called when "video" element appears on page 
 	start: function(video, settings, muteFirstEvents) {
-		console.log('Wrapper::start()');
+		log('Wrapper::start()');
 		let self = this;
 		
 		if ( this.timer ) {
@@ -111,7 +111,7 @@ var Wrapper = {
 	
 	// request segmentation from server 
 	getSegmentation: function() {
-		console.log('Wrapper::getSegmentation()');
+		log('Wrapper::getSegmentation()');
 		let self = this;
 		
 		this.requestTime = this.video.currentTime;
@@ -148,7 +148,7 @@ var Wrapper = {
 	},
 	
 	getPendingSegmentation: function(self, callback) {
-		console.log('Wrapper::getPendingSegmentation()');
+		log('Wrapper::getPendingSegmentation()');
 		
 		browser.storage.local.get({ pending: '' }, function(result) {
 			if ( result.pending !== '' ) {
@@ -182,7 +182,7 @@ var Wrapper = {
 	},
 	
 	getLocalSegmentation: function(self, callback) {
-		console.log('Wrapper::getLocalSegmentation()');
+		log('Wrapper::getLocalSegmentation()');
 		
 		let video_id = self.domain + '-' + self.id;
 		browser.storage.local.get({[video_id]: ''}, function(result) {
@@ -202,7 +202,7 @@ var Wrapper = {
 	},
 	
 	getOfficialSegmentation: function(self, callback) {
-		console.log('Wrapper::getOfficialSegmentation()', 'https://db.videosegments.org/api/v3/get.php?id=' + self.id);
+		log('Wrapper::getOfficialSegmentation()', 'https://db.videosegments.org/api/v3/get.php?id=' + self.id);
 		
 		let xhr = new XMLHttpRequest();
 		xhr.open('GET', 'https://db.videosegments.org/api/v3/get.php?id=' + self.id);
@@ -240,7 +240,7 @@ var Wrapper = {
 	},
 	
 	clearPauseTimer: function(self) {
-		console.log('Wrapper::clearPauseTimer()');
+		log('Wrapper::clearPauseTimer()');
 		
 		self.timer = null;
 		self.video.play();
@@ -250,7 +250,7 @@ var Wrapper = {
 	},
 	
 	onSegmentationReady: function() {
-		console.log('Wrapper::onSegmentationReady()');
+		log('Wrapper::onSegmentationReady()');
 		
 		if ( this.timer ) {
 			clearTimeout(this.timer);
@@ -292,7 +292,7 @@ var Wrapper = {
 	},
 	
 	insertSegmentsBar: function() {
-		console.log('Wrapper::insertSegmentsBar()');
+		log('Wrapper::insertSegmentsBar()');
 		
 		if ( this.settings.segmentsBarLocation === 'none' ) {
 			return;
@@ -328,7 +328,7 @@ var Wrapper = {
 	},
 	
 	removeSegmentsBar: function() {
-		console.log('Wrapper::removeSegmentsBar()');
+		log('Wrapper::removeSegmentsBar()');
 	
 		let segmentsBar = document.getElementById('vs-segmentsbar');
 		if ( segmentsBar ) {
@@ -390,13 +390,13 @@ var Wrapper = {
 	},
 	
 	onPlay: function() {
-		console.log('Wrapper::onPlay()');
+		log('Wrapper::onPlay()');
 		
 		// first call is nessesary and second one is false so mute him
 		if ( this.muteFirstEvents == 1 ) {
-			// console.log('*************');
-			// console.log('*** muted ***');
-			// console.log('*************');
+			// log('*************');
+			// log('*** muted ***');
+			// log('*************');
 			this.muteFirstEvents -= 1;
 			return;
 		}
@@ -418,7 +418,7 @@ var Wrapper = {
 	},
 	
 	getNextRewindSegment: function(startSegment) {
-		console.log('Wrapper::getNextRewindSegment()');
+		log('Wrapper::getNextRewindSegment()');
 		
 		let currentTime = Math.round(this.video.currentTime * 1e2) / 1e2;
 		for ( let i = startSegment; i < this.types.length; ++i ) {
@@ -431,7 +431,7 @@ var Wrapper = {
 	},
 	
 	tryRewind: function(rewindSegment) {
-		console.log('Wrapper::tryRewind()');
+		log('Wrapper::tryRewind()');
 		let self = this;
 		
 		let delay = this.timestamps[rewindSegment] - this.video.currentTime;
@@ -444,7 +444,7 @@ var Wrapper = {
 	},
 	
 	processSegment: function(currentTime, segment) {
-		console.log('Wrapper::processSegment()');
+		log('Wrapper::processSegment()');
 		let self = this;
 		
 		let duration = this.timestamps[segment+1] - currentTime;
@@ -470,7 +470,7 @@ var Wrapper = {
 	},
 	
 	restoreSpeed: function(segment) {
-		console.log('Wrapper::restoreSpeed()');
+		log('Wrapper::restoreSpeed()');
 		var self = this;
 		
 		let delay = this.timestamps[segment+1] - this.video.currentTime;
@@ -496,7 +496,7 @@ var Wrapper = {
 	},
 	
 	onPause: function() {
-		console.log('Wrapper::onPause()');
+		log('Wrapper::onPause()');
 		
 		if ( this.muteFirstEvents == 1 ) {
 			return;
@@ -515,7 +515,7 @@ var Wrapper = {
 	},
 	
 	onRateChange: function() {
-		console.log('Wrapper::onRateChange()', this.preventPlaybackRateUpdate);
+		log('Wrapper::onRateChange()', this.preventPlaybackRateUpdate);
 		
 		if ( this.preventPlaybackRateUpdate === false ) {
 			if ( this.timer ) {
@@ -571,7 +571,7 @@ var Wrapper = {
 	
 	// called when "video" element "src" is changed
 	end: function() {
-		console.log('Wrapper::end()');
+		log('Wrapper::end()');
 		
 		if ( this.playbackRate ) {
 			this.preventPlaybackRateUpdate = true;

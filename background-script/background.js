@@ -35,7 +35,7 @@ browser.storage.local.get({
 		firstRun: true,
 		totalTime: 0,
 	}, function(result) {
-		// console.log(result);
+		// log(result);
 		
 		if ( result.settings ) {
 			doCheck = result.settings.displayPending;
@@ -67,13 +67,13 @@ browser.storage.local.get({
 		// }
 		
 		totalTime = result.totalTime;
-		// console.log('totalTime', totalTime);
+		// log('totalTime', totalTime);
 	}
 );
 
 var previousRequestsCount = 0;
 var checkContext = function() { 
-	// console.log('checkContext');
+	// log('checkContext');
 	
 	if ( doCheck ) {
 		var xhr = new XMLHttpRequest();
@@ -81,7 +81,7 @@ var checkContext = function() {
 		xhr.onreadystatechange = function() { 
 			if ( xhr.readyState == 4 ) {
 				if ( xhr.status == 200 ) {
-					// console.log('xhr.responseText', xhr.responseText);
+					// log('xhr.responseText', xhr.responseText);
 					
 					var response = JSON.parse(xhr.responseText);
 					if ( typeof response.requests !== 'undefined' ) {
@@ -118,7 +118,7 @@ var checkContext = function() {
 
 browser.runtime.onMessage.addListener(function(message) {
 	if ( typeof message.updateSettings !== 'undefined' ) {
-		console.log(message.updateSettings);
+		log(message.updateSettings);
 		notifyMediaPlayerWrapper(message.updateSettings);
 	}
 	else if ( typeof message.displayPending !== 'undefined' ) {
@@ -137,9 +137,9 @@ browser.runtime.onMessage.addListener(function(message) {
 		checkContext();
 	}
 	else if ( typeof message.updateTotalTime !== 'undefined' ) {
-		// console.log(message.updateTotalTime, totalTime, parseFloat(message.updateTotalTime));
+		// log(message.updateTotalTime, totalTime, parseFloat(message.updateTotalTime));
 		totalTime += parseFloat(message.updateTotalTime);
-		// console.log(totalTime);
+		// log(totalTime);
 		browser.storage.local.set({ totalTime: totalTime });
 	}
 });
