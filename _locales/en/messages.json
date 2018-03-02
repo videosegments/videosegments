@@ -27,19 +27,19 @@
 		"message": "Settings",
 		"description": ""
 	},
-	"tabDisabled": {
-		"message": "[in development]",
+	"tabColors": {
+		"message": "Colors",
 		"description": ""
 	},
 	
 	
 	
 	"play": {
-		"message": "play",
+		"message": "Play",
 		"description": ""
 	},
 	"skip": {
-		"message": "skip",
+		"message": "Skip",
 		"description": ""
 	},
 	

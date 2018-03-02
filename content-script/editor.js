@@ -278,7 +278,7 @@ var Editor = {
 		
 		let buttonsTypes, buttonsNames;
 		if ( this.settings.mode === 'simplified' ) {
-			buttonsTypes = ['cs', 'c'];
+			buttonsTypes = ['sk', 'pl'];
 			buttonsNames = ['skip', 'play'];
 		}
 		else {
@@ -390,7 +390,7 @@ var Editor = {
 			select.style.width = self.widthFixer.offsetWidth + 2 + 'px';
 		};
 		
-		let spritesheet = browser.extension.getURL('images/sprites.png');
+		let spritesheet = browser.extension.getURL('images/sprites-editor.png');
 		let setButtonImage = function(btn, l, t, w, h) {
 			btn.style = 'width: '+w+'px; height: '+h+'px; background: url('+spritesheet+') '+l+'px '+t+'px;';
 		}
@@ -621,7 +621,7 @@ var Editor = {
 			let rewindButton = document.createElement('button');
 			rewindButton.classList.add('vs-segmentation-panel-small-button');
 			rewindButton.addEventListener('click', rewindFn);
-			setButtonImage(rewindButton, 0, 0, 16, 16);
+			setButtonImage(rewindButton, 1, 1, 16, 16);
 			
 			let setCurrentTimeFn = function() {
 				self.timestamps[i] = parseFloat(self.wrapper.video.currentTime).toFixed(1);
@@ -636,7 +636,7 @@ var Editor = {
 			currentButton.classList.add('vs-segmentation-panel-small-button');
 			currentButton.addEventListener('click', setCurrentTimeFn);
 			
-			setButtonImage(currentButton, -12, 0, 16, 16);
+			setButtonImage(currentButton, 21, 1, 16, 16);
 			entry.appendChild(rewindButton);
 			entry.appendChild(startTime);
 			entry.appendChild(currentButton);
@@ -662,7 +662,7 @@ var Editor = {
 			entry.appendChild(select);
 			let removeButton = document.createElement('button');
 			removeButton.classList.add('vs-segmentation-panel-small-button');
-			setButtonImage(removeButton, -24, 0, 16, 16);
+			setButtonImage(removeButton, 11, 1, 16, 16);
 			removeButton.style.marginTop = '1px';
 			entry.appendChild(removeButton);
 			entry.appendChild(document.createTextNode('\u00A0'));
@@ -865,6 +865,11 @@ var Editor = {
 		log('Editor::shareSegmentation()');
 		let self = this;
 		
+		let channelContainer = document.getElementById('owner-name').getElementsByTagName('a')[0];
+		let channelName = channelContainer.innerHTML;
+		let channel = channelContainer.getAttribute("href").slice(9);
+		log(channelName, channel);
+		
 		// prevent sharing same segmentation 
 		if ( this.savedIterations == this.iterations ) {
 			this.sendModal('failed', 'noChangesInSegmentation');
@@ -873,7 +878,10 @@ var Editor = {
 		this.savedIterations = this.iterations;
 		
 		if ( this.types.length > 0 ) {
+			if ( this.settings.mode === 'simplified' ) this.wrapper.restoreSegmentation();
 			let segmentation = JSON.parse(JSON.stringify({timestamps: this.timestamps, types: this.types})); // break link between segments data and saved data 
+			if ( this.settings.mode === 'simplified' ) this.wrapper.simplifySegmentation();
+			
 			if ( Math.abs(segmentation.timestamps[segmentation.timestamps.length-1] - this.wrapper.video.duration > 1.5) && segmentation.types[segmentation.types.length-1] !== 'c' ) {
 				// assume that everything else is content 
 				segmentation.timestamps.push(this.wrapper.video.duration);
@@ -885,6 +893,7 @@ var Editor = {
 			
 			let xhr = new XMLHttpRequest();
 			xhr.open('POST', 'https://db.videosegments.org/api/v3/set.php');
+			// xhr.open('POST', 'http://db.vsegments/api/v3/set.php');
 			xhr.onreadystatechange = function() { 
 				if ( xhr.readyState == 4 ) {
 					if ( xhr.status == 200 ) {
@@ -924,7 +933,7 @@ var Editor = {
 				}
 			};
 			
-			let post = 'id='+this.id+'&timestamps='+timestamps+'&types='+types;
+			let post = 'id='+this.id+'&timestamps='+timestamps+'&types='+types+'&channel='+channel+'&name='+channelName;
 			if ( decline ) {
 				post += '&decline=1';
 			}
@@ -1019,6 +1028,10 @@ var Editor = {
 	
 	updateBadge: function() {
 		browser.runtime.sendMessage( { updateBadge: true } );
+	},
+	
+	updateSettings: function(settings) {
+		this.settings = settings;
 	},
 	
 	end: function() {

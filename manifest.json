@@ -1,7 +1,7 @@
 {
 	"manifest_version": 2,
 	"name": "__MSG_extensionName__",
-	"version": "1.7.3.1",
+	"version": "1.7.4",
 	
 	"applications": {
 		"gecko": {
@@ -43,13 +43,15 @@
 
 	"permissions": [
 		"https://db.videosegments.org/api/v3/*",
+		"http://db.vsegments/api/v3/*",
 		"storage",
 		"tabs"
 	],
 	
 	"web_accessible_resources": [
+		"images/sprites-options.png",
+		"images/sprites-editor.png",
 		"images/scissors.png",
-		"images/sprites.png",
 		"images/tutorial.png"
 	]
 }

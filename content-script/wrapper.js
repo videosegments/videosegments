@@ -314,7 +314,6 @@ var Wrapper = {
 			}
 		}
 		
-		
 		let width, left = 0.0;
 		for ( let i = 0; i < this.types.length; ++i ) {
 			width = (this.timestamps[i+1] - this.timestamps[i]) / this.video.duration * 100;
@@ -342,31 +341,37 @@ var Wrapper = {
 		this.insertSegmentsBar();
 	},
 	
-	simplifySegmentation: function(toLeft) {
+	simplifySegmentation: function() {
 		this.timestampsCopy = this.timestamps.slice();
 		this.typesCopy = this.types.slice();
 		
 		for ( let i = 0; i < this.types.length ; ++i ) {
-			if ( this.types[i] !== 'c' ) {
-				if ( this.types[i] == 'ac' ) {
-					this.types[i] = 'c';
-				}
-				else { 
-					this.types[i] = 'cs';
-				}
+			if ( this.types[i] == 'c' || this.types[i] == 'ac' ) {
+				this.types[i] = 'pl';
 			}
-			
-			if ( i > 0 && this.types[i] === this.types[i-1] ) {
-				this.timestamps.splice(i, 1);
-				this.types.splice(i, 1);
+			else { 
+				this.types[i] = 'sk';
 			}
 		}
+		this.mergeDuplicateSegments();
 	},
 	
 	restoreSegmentation: function() {
 		if ( this.typesCopy && this.timestampsCopy ) {
 			this.timestamps = this.timestampsCopy.slice();
 			this.types = this.typesCopy.slice();
+			this.timestampsCopy = undefined;
+			this.typesCopy = undefined;
+		}
+		else {
+			for ( let i = 0; i < this.types.length ; ++i ) {
+				if ( this.types[i] == 'pl' ) {
+					this.types[i] = 'c';
+				}
+				else { 
+					this.types[i] = 'cs';
+				}
+			}
 		}
 	},
 	
@@ -532,14 +537,17 @@ var Wrapper = {
 	},
 	
 	updateSettings: function(settings) {
+		let modeChanged = settings.mode != this.settings.mode;
 		this.settings = settings;
 		
-		if ( this.settings.mode === 'simplified' ) {
-			this.simplifySegmentation();
-			this.mergeDuplicateSegments();
-		}
-		else {
-			this.restoreSegmentation();
+		if ( modeChanged ) {
+			if ( this.settings.mode === 'simplified' ) {
+				this.simplifySegmentation();
+				this.mergeDuplicateSegments();
+			}
+			else {
+				this.restoreSegmentation();
+			}
 		}
 		this.updateSegmentsBar();
 		

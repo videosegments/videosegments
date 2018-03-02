@@ -44,6 +44,8 @@ browser.storage.local.get({
 			timer = setInterval(checkContext, 20000);
 		}
 		
+		browser.browserAction.setBadgeBackgroundColor({color: "#00ABFF"});
+		
 		if ( result.firstRun ) {
 			browser.storage.local.set({ firstRun: false });
 			browser.tabs.query({}, function(tabs) {

@@ -58,6 +58,7 @@ function getSettings(callback) {
 	let defaultSettings = {
 		// segments configuration
 		segments: {
+			// expert mode 
 			// content 
 			c: 	{ skip: false, color: '#00c853', duration: 0.0, speed: 1.0 },
 			// adcontent 
@@ -76,6 +77,12 @@ function getSettings(callback) {
 			ia: { skip: true,  color: '#00acc1', duration: 0.0, speed: 4.0 },
 			// scam 
 			s:	{ skip: true,  color: '#6d4c41', duration: 0.0, speed: 5.0 },
+			
+			// simplified mode 
+			// play 
+			pl: { skip: false, color: '#00c853', duration: 0.0, speed: 1.0 },
+			// skip 
+			sk:	{ skip: true,  color: '#757575', duration: 0.0, speed: 5.0 },
 		},
 		
 		// global settings 

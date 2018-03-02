@@ -26,28 +26,12 @@ if ( typeof this.chrome != 'undefined' ) {
 
 document.addEventListener('DOMContentLoaded', domContentLoaded);
 
-// browser.runtime.onMessage.addListener(function(message) {
-	// if ( typeof message.gotCategory !== 'undefined' ) {
-		// let scope = document.getElementById('scope');
-		// scope.readOnly = false;
-		// scope.value = message.gotCategory;
-		// scope.readOnly = true;
-	// }
-	// else if ( typeof message.gotChannel !== 'undefined' ) {
-		// let scope = document.getElementById('scope');
-		// scope.readOnly = false;
-		// scope.value = message.gotChannel;
-		// scope.readOnly = true;
-	// }
-// });
-
 function domContentLoaded()
 {
-	let tabs = document.getElementById('tabs');
 	// hook clicks on tab
-	let buttons = tabs.getElementsByTagName('button');
-	for ( let i = 0; i < buttons.length; ++i ) {
-		buttons[i].addEventListener('click', switchTab);
+	let tabs = document.getElementsByClassName('tab');
+	for ( let i = 0; i < tabs.length; ++i ) {
+		tabs[i].addEventListener('click', switchTab);
 	}
 	
 	// check if user is logged in 
@@ -59,24 +43,6 @@ function domContentLoaded()
 	let button;
 	button = document.getElementById('next-segmentation');
 	button.addEventListener('click', openNextSegmentationRequest);
-	
-	// let select = document.getElementById('scope-playback');
-	// select.addEventListener('change', function() {
-		// if ( select.value == 'category' ) {
-			// browser.tabs.query({ currentWindow: true, active: true }, function(tabs) {
-				// for ( let tab of tabs ) {
-					// browser.tabs.sendMessage(tab.id, { getCategory: true });
-				// }
-			// });
-		// }
-		// else if ( select.value == 'channel' ) {
-			// browser.tabs.query({ currentWindow: true, active: true }, function(tabs) {
-				// for ( let tab of tabs ) {
-					// browser.tabs.sendMessage(tab.id, { getChannel: true });
-				// }
-			// });
-		// }
-	// });
 	
 	let iframe = document.getElementById('settings-iframe');
 	window.addEventListener('message', function(event) {
@@ -131,6 +97,18 @@ function checkLogin()
 					let element = document.getElementById('settings-database-admin');
 					browser.runtime.sendMessage( {'displayPending': false });
 					element.style.display = 'none';
+				}
+				
+				if ( response.authorized && response.moderator ) {
+					let el = document.getElementsByClassName('active-tab')[0];
+					if ( typeof el != 'undefined' ) {
+						el.classList.remove('active-tab');
+						el = document.getElementById(el.id.slice(4));
+						el.style.display = 'none';
+					}
+					
+					document.getElementById('tab-account').classList.add('active-tab');
+					document.getElementById('account').style.display = 'block';
 				}
 			}
 		}
@@ -227,6 +205,7 @@ function loadSettings()
 	let defaultSettings = {
 		// segments configuration
 		segments: {
+			// expert mode 
 			// content 
 			c: 	{ skip: false, color: '#00c853', duration: 0.0, speed: 1.0 },
 			// adcontent 
@@ -245,6 +224,12 @@ function loadSettings()
 			ia: { skip: true,  color: '#00acc1', duration: 0.0, speed: 4.0 },
 			// scam 
 			s:	{ skip: true,  color: '#6d4c41', duration: 0.0, speed: 5.0 },
+			
+			// simplified mode 
+			// play 
+			pl: { skip: false, color: '#00c853', duration: 0.0, speed: 1.0 },
+			// skip 
+			sk:	{ skip: true,  color: '#757575', duration: 0.0, speed: 5.0 },
 		},
 		
 		// global settings 
@@ -304,35 +289,36 @@ function loadSettings()
 			// result.settings.mode === 'simplified' to backward compatibility
 			if ( result.settings.tutorial > 0 || result.settings.mode === 'normal' ) {
 				if ( result.settings.mode === 'simplified' ) {
-					document.getElementsByClassName('simplified-mode')[0].style.display = 'block';
-					document.getElementsByClassName('normal-mode')[0].style.display = 'none';
-					document.getElementsByClassName('tutorial')[0].style.display = 'none';
+					document.getElementById('tab-colors').style.display = 'inline-block';
+					document.getElementById('tab-playback').style.display = 'none';
+					document.getElementById('tab-acceleration').style.display = 'none';
 				}
 				else {
-					document.getElementsByClassName('simplified-mode')[0].style.display = 'none';
-					document.getElementsByClassName('normal-mode')[0].style.display = 'block';
-					document.getElementsByClassName('tutorial')[0].style.display = 'none';
+					document.getElementById('tab-colors').style.display = 'none';
+					document.getElementById('tab-playback').style.display = 'inline-block';
+					document.getElementById('tab-acceleration').style.display = 'inline-block';
 				}
+					
+				document.getElementById('tab-settings').classList.add('active-tab');
+				document.getElementById('settings').style.display = 'block';
+				document.getElementById('tutorial').style.display = 'none';
 			}
 			else {
-				document.getElementsByClassName('simplified-mode')[0].style.display = 'none';
 				document.getElementsByClassName('normal-mode')[0].style.display = 'none';
 				document.getElementsByClassName('tutorial')[0].style.display = 'block';
-				document.getElementById('tutorial-image').src = browser.extension.getURL('images/tutorial.png');
 				
+				document.getElementById('tutorial-image').src = browser.extension.getURL('images/tutorial.png');
 				document.getElementById('tutorial-finish').addEventListener('click', function() {
 					if ( result.settings.mode === 'simplified' ) {
-						document.getElementsByClassName('simplified-mode')[0].style.display = 'block';
-						document.getElementsByClassName('normal-mode')[0].style.display = 'none';
+						
 					}
 					else {
-						document.getElementsByClassName('simplified-mode')[0].style.display = 'none';
-						document.getElementsByClassName('normal-mode')[0].style.display = 'block';
+						
 					}
 					
 					result.settings.tutorial = 1;
 					browser.storage.local.set({ settings: result.settings });
-					document.getElementsByClassName('tutorial')[0].style.display = 'none';
+					document.getElementById('tutorial').style.display = 'none';
 				});
 			}
 		}
@@ -347,6 +333,7 @@ function restoreOptions(settings)
 	let playback = document.getElementById('playback-settings');
 	tr = playback.getElementsByTagName('tr');
 	for ( let i = 0; i < tr.length; ++i ) {
+		// cut "segment-" prefix
 		let segment = tr[i].id.slice(8);
 		
 		let select = tr[i].getElementsByTagName('select')[0];
@@ -357,6 +344,20 @@ function restoreOptions(settings)
 		input.jscolor.fromString(settings.segments[segment].color);
 		input.addEventListener('change', function() { updateColor(this, settings, segment); });
 	}
+	
+	if ( typeof settings.segments.pl === 'undefined' ) {
+		settings.segments.pl = { skip: false, color: '#00c853', duration: 0.0, speed: 1.0 };
+		settings.segments.sk = { skip: true,  color: '#757575', duration: 0.0, speed: 5.0 };
+		browser.storage.local.set({ settings: settings });
+	}
+	
+	let segmentPlay = document.getElementById('segment-pl');
+	segmentPlay.jscolor.fromString(settings.segments.pl.color);
+	segmentPlay.addEventListener('change', function() { updateColor(this, settings, 'pl'); });
+	
+	let segmentSkip = document.getElementById('segment-sk');
+	segmentSkip.jscolor.fromString(settings.segments.sk.color);
+	segmentSkip.addEventListener('change', function() { updateColor(this, settings, 'sk'); });
 	
 	// acceleration settings 
 	let acceleration = document.getElementById('acceleration-settings');
@@ -372,80 +373,55 @@ function restoreOptions(settings)
 		inputs[1].addEventListener('change', function() { updateAccelerationSpeed(this, settings, segment); });
 	}
 	
-	if ( settings.openSettings ) {
-		document.getElementById('playback').style.display = 'none';
-		document.getElementById('account').style.display = 'block';
-		
-		document.getElementById('tab-playback').classList.remove('active-tab');
-		document.getElementById('tab-account').classList.add('active-tab');
-	}
-	
-	let modes = ['simplified-', ''];
-	let twins = ['', 'simplified-'];
-	for ( let i = 0; i < modes.length; ++i ) {
-		// global settings 
-		let element;
-		
-		element = document.getElementById(modes[i]+'autoPauseDuration');
-		element.value = settings.autoPauseDuration;
-		element.twin = twins[i];
-		element.addEventListener('change', function() { updateGlobalValue(this, settings, 'autoPauseDuration'); });
-		
-		element = document.getElementById(modes[i]+'popupDurationOnSend');
-		element.value = settings.popupDurationOnSend;
-		element.twin = twins[i];
-		element.addEventListener('change', function() { updateGlobalValue(this, settings, 'popupDurationOnSend'); });
-		
-		element = document.getElementById(modes[i]+'segmentationToolsOpacity');
-		element.value = settings.segmentationToolsOpacity;
-		element.twin = twins[i];
-		element.addEventListener('change', function() { updateGlobalValue(this, settings, 'segmentationToolsOpacity'); });
-		
-		element = document.getElementById(modes[i]+'iconOpacity');
-		element.value = settings.iconOpacity;
-		element.twin = twins[i];
-		element.addEventListener('change', function() { updateGlobalValue(this, settings, 'iconOpacity'); });
-		
-		element = document.getElementById(modes[i]+'showSegmentationTools');
-		element.checked = settings.showSegmentationTools;
-		element.twin = twins[i];
-		element.addEventListener('change', function() { updateGlobalBool(this, settings, 'showSegmentationTools'); });
-		
-		element = document.getElementById(modes[i]+'hideOnSegmentedVideos');
-		element.checked = settings.hideOnSegmentedVideos;
-		element.twin = twins[i];
-		element.addEventListener('change', function() { updateGlobalBool(this, settings, 'hideOnSegmentedVideos'); });
-		
-		element = document.getElementById(modes[i]+'pinSegmentationTools');
-		element.checked = settings.pinSegmentationTools;
-		element.twin = twins[i];
-		element.addEventListener('change', function() { updateGlobalBool(this, settings, 'pinSegmentationTools'); });
-		
-		element = document.getElementById(modes[i]+'hideIcon');
-		element.checked = settings.hideIcon;
-		element.twin = twins[i];
-		element.addEventListener('change', function() { updateGlobalBool(this, settings, 'hideIcon'); });
-		
-		element = document.getElementById(modes[i]+'databasePriority');
-		element.value = settings.databasePriority;
-		element.twin = twins[i];
-		element.addEventListener('change', function() { updateGlobalSelect(this, settings, 'databasePriority'); });
-		
-		element = document.getElementById(modes[i]+'segmentsBarLocation');
-		element.value = settings.segmentsBarLocation;
-		element.twin = twins[i];
-		element.addEventListener('change', function() { updateGlobalSelect(this, settings, 'segmentsBarLocation'); });
-		
-		element = document.getElementById(modes[i]+'mode');
-		element.value = settings.mode;
-		element.twin = twins[i];
-		element.addEventListener('change', function() {
-			updateGlobalValue(this, settings, 'mode');
-			switchMode();
-		});
-	}
-	
+	// global settings 
 	let element;
+	
+	element = document.getElementById('autoPauseDuration');
+	element.value = settings.autoPauseDuration;
+	element.addEventListener('change', function() { updateGlobalValue(this, settings, 'autoPauseDuration'); });
+	
+	element = document.getElementById('popupDurationOnSend');
+	element.value = settings.popupDurationOnSend;
+	element.addEventListener('change', function() { updateGlobalValue(this, settings, 'popupDurationOnSend'); });
+	
+	element = document.getElementById('segmentationToolsOpacity');
+	element.value = settings.segmentationToolsOpacity;
+	element.addEventListener('change', function() { updateGlobalValue(this, settings, 'segmentationToolsOpacity'); });
+	
+	element = document.getElementById('iconOpacity');
+	element.value = settings.iconOpacity;
+	element.addEventListener('change', function() { updateGlobalValue(this, settings, 'iconOpacity'); });
+	
+	element = document.getElementById('showSegmentationTools');
+	element.checked = settings.showSegmentationTools;
+	element.addEventListener('change', function() { updateGlobalBool(this, settings, 'showSegmentationTools'); });
+	
+	element = document.getElementById('hideOnSegmentedVideos');
+	element.checked = settings.hideOnSegmentedVideos;
+	element.addEventListener('change', function() { updateGlobalBool(this, settings, 'hideOnSegmentedVideos'); });
+	
+	element = document.getElementById('pinSegmentationTools');
+	element.checked = settings.pinSegmentationTools;
+	element.addEventListener('change', function() { updateGlobalBool(this, settings, 'pinSegmentationTools'); });
+	
+	element = document.getElementById('hideIcon');
+	element.checked = settings.hideIcon;
+	element.addEventListener('change', function() { updateGlobalBool(this, settings, 'hideIcon'); });
+	
+	element = document.getElementById('databasePriority');
+	element.value = settings.databasePriority;
+	element.addEventListener('change', function() { updateGlobalSelect(this, settings, 'databasePriority'); });
+	
+	element = document.getElementById('segmentsBarLocation');
+	element.value = settings.segmentsBarLocation;
+	element.addEventListener('change', function() { updateGlobalSelect(this, settings, 'segmentsBarLocation'); });
+	
+	element = document.getElementById('mode');
+	element.value = settings.mode;
+	element.addEventListener('change', function() {
+		updateGlobalValue(this, settings, 'mode');
+		switchMode(settings);
+	});
 	
 	element = document.getElementById('displayPending');
 	element.checked = settings.displayPending;
@@ -456,24 +432,17 @@ function restoreOptions(settings)
 	element.addEventListener('change', function() { updateGlobalBool(this, settings, 'openSettings'); });
 }
 
-function switchMode()
+function switchMode(settings)
 {
-	let simplified = document.getElementsByClassName('simplified-mode')[0];
-	let normal = document.getElementsByClassName('normal-mode')[0];
-	
-	if ( simplified.style.display == 'block' ) {
-		simplified.style.display = 'none';
-		normal.style.display = 'block';
-		
-		let tab = document.getElementsByClassName('active-tab')[0];
-		tab.classList.remove('active-tab');
-		
-		document.getElementById('tab-settings').classList.add('active-tab');
-		openTab('settings');
+	if ( settings.mode === 'simplified' ) {
+		document.getElementById('tab-colors').style.display = 'inline-block';
+		document.getElementById('tab-playback').style.display = 'none';
+		document.getElementById('tab-acceleration').style.display = 'none';
 	}
 	else {
-		simplified.style.display = 'block';
-		normal.style.display = 'none';
+		document.getElementById('tab-colors').style.display = 'none';
+		document.getElementById('tab-playback').style.display = 'inline-block';
+		document.getElementById('tab-acceleration').style.display = 'inline-block';
 	}
 }
 
@@ -508,9 +477,6 @@ function updateAccelerationSpeed(element, settings, segment)
 function updateGlobalValue(element, settings, field)
 {
 	settings[field] = element.value;
-	if ( typeof element.twin !== 'undefined' ) {
-		document.getElementById(element.twin+field).value = element.value;
-	}
 	browser.storage.local.set({ settings: settings });
 	notifyMediaPlayerWrapper(settings);
 }
@@ -518,9 +484,6 @@ function updateGlobalValue(element, settings, field)
 function updateGlobalBool(element, settings, field)
 {
 	settings[field] = element.checked;
-	if ( typeof element.twin !== 'undefined' ) {
-		document.getElementById(element.twin+field).checked = element.checked;
-	}
 	browser.storage.local.set({ settings: settings });
 	notifyMediaPlayerWrapper(settings);
 }
@@ -528,9 +491,6 @@ function updateGlobalBool(element, settings, field)
 function updateGlobalSelect(element, settings, field)
 {
 	settings[field] = element.value;
-	if ( typeof element.twin !== 'undefined' ) {
-		document.getElementById(element.twin+field).value = element.value;
-	}
 	browser.storage.local.set({ settings: settings });
 	notifyMediaPlayerWrapper(settings);
 }

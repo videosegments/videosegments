@@ -27,8 +27,8 @@
 		"message": "Настройки",
 		"description": ""
 	},
-	"tabDisabled": {
-		"message": "[не работает]",
+	"tabColors": {
+		"message": "Цвета",
 		"description": ""
 	},
 	

@@ -13,6 +13,7 @@ body {
 }
 
 #tabs {
+	display: flex;
 	margin: 0;
 	padding: 0;
 }
@@ -40,28 +41,28 @@ body {
 }
 
 #icon-github {
-	background: url('../images/sprites.png') 0px -70px;
+	background: url('../images/sprites-options.png') 0px -70px;
 	display: inline-block;
 	height: 36px;
 	width: 32px;
 }
 
 #icon-facebook {
-	background: url('../images/sprites.png') 96px -70px;
+	background: url('../images/sprites-options.png') 96px -70px;
 	display: inline-block;
 	height: 36px;
 	width: 32px;
 }
 
 #icon-twitter {
-	background: url('../images/sprites.png') 64px -70px;
+	background: url('../images/sprites-options.png') 64px -70px;
 	display: inline-block;
 	height: 36px;
 	width: 32px;
 }
 
 #icon-vk {
-	background: url('../images/sprites.png') 32px -70px;
+	background: url('../images/sprites-options.png') 32px -70px;
 	display: inline-block;
 	height: 36px;
 	width: 32px;
@@ -69,7 +70,6 @@ body {
 
 .tab {
 	display: inline-block;
-	width: 25%;
 	margin: 0;
 	text-align: center;
 	font-weight: bold;
@@ -79,12 +79,11 @@ body {
 	outline: none;
 	border: none;
     text-decoration: none;
+	flex: 1;
 }
 
-.tab:first-child {
-}
-
-.tab:last-child {
+.tab img {
+	border: none;
 }
 
 .tab:not(.active-tab):hover {
@@ -114,56 +113,70 @@ body {
 }
 
 #icon-playback {
-	background: url('../images/sprites.png') 0px -10px;
+	background: url('../images/sprites-options.png') 0px 2px;
 	display: inline-block;
 	height: 30px;
 	width: 30px;
 }
 
 .active-tab #icon-playback, .tab:not(.active-tab):hover #icon-playback {
-	background: url('../images/sprites.png') 0px -38px;
+	background: url('../images/sprites-options.png') 0px 30px;
 	display: inline-block;
 	height: 30px;
 	width: 30px;
 }
 
 #icon-acceleration {
-	background: url('../images/sprites.png') -30px -10px;
+	background: url('../images/sprites-options.png') 112px 2px;
 	display: inline-block;
 	height: 30px;
 	width: 30px;
 }
 
 .active-tab #icon-acceleration, .tab:not(.active-tab):hover #icon-acceleration {
-	background: url('../images/sprites.png') -30px -38px;
+	background: url('../images/sprites-options.png') 112px 30px;
 	display: inline-block;
 	height: 30px;
 	width: 30px;
 }
 
 #icon-account {
-	background: url('../images/sprites.png') -60px -10px;
+	background: url('../images/sprites-options.png') 84px 2px;
 	display: inline-block;
 	height: 30px;
 	width: 30px;
 }
 
 .active-tab #icon-account, .tab:not(.active-tab):hover #icon-account {
-	background: url('../images/sprites.png') -60px -40px;
+	background: url('../images/sprites-options.png') 84px 30px;
 	display: inline-block;
 	height: 30px;
 	width: 30px;
 }
 
 #icon-settings {
-	background: url('../images/sprites.png') -90px -10px;
+	background: url('../images/sprites-options.png') 56px 2px;
 	display: inline-block;
 	height: 30px;
 	width: 30px;
 }
 
 .active-tab #icon-settings, .tab:not(.active-tab):hover #icon-settings {
-	background: url('../images/sprites.png') -90px -38px;
+	background: url('../images/sprites-options.png') 56px 30px;
+	display: inline-block;
+	height: 30px;
+	width: 30px;
+}
+
+#icon-colors {
+	background: url('../images/sprites-options.png') 28px 2px;
+	display: inline-block;
+	height: 30px;
+	width: 30px;
+}
+
+.active-tab #icon-colors, .tab:not(.active-tab):hover #icon-colors {
+	background: url('../images/sprites-options.png') 28px 30px;
 	display: inline-block;
 	height: 30px;
 	width: 30px;
@@ -183,22 +196,22 @@ table th {
 	text-align: center;
 }
 
-#playback-settings tr {
+.fancy-table tr {
 	border-top: 1px solid black;
 	border-bottom: 1px solid black;
 	padding-top: 0;
 }
 
-#playback-settings td {
+.fancy-table td {
 	padding: 10px;
 }
 
-#playback-settings td:first-child {
+.fancy-table td:first-child {
 	/* border-left: 1px solid black; */
 	padding: 5px;
 }
 
-#playback-settings td:last-child {
+.fancy-table td:last-child {
 	/* border-right: 1px solid black; */
 	padding: 5px;
 }
@@ -256,53 +269,7 @@ label input {
     border-left: 10px solid;
 }
 
-
-
-
-
-#simplified-header {
-	text-align: center;
-	font-weight: bold;
-	font-size: 200%;
-	padding-top: 4px;
-	padding-bottom: 8px;
-	margin-bottom: 12px;
-	
-	color: white;
-	background-color: #333;
-}
-
-#simplified-playback-settings {
-	width: 90%;
-	margin: 0 5%;
-	border-collapse: collapse;
-}
-
-#simplified-playback-settings tr {
-	border-top: 1px solid black;
-	border-bottom: 1px solid black;
-}
-
-#simplified-playback-settings td {
-	vertical-align: baseline;
-	padding: 5px 0;
-}
-
-#simplified-playback-settings input {
-	background-color: inherit
-}
-
-#simplified-playback-settings td:first-child {
-	padding: 0 12px;
-}
-
-#simplified-playback-settings td:nth-child(2) {
-	text-align: center;
-	width: 25%;
-}
-
-
-.tutorial {
+#tutorial {
 	text-align: center;
 }
 
