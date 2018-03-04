@@ -285,7 +285,7 @@ function loadSettings()
 			let totalTimeSaved = (h<10?('0'+h):h) + ":" + ('0' + m).slice(-2) + ":" + ('0' + s).slice(-2);
 			element.textContent = totalTimeSaved;
 			
-			result.settings.tutorial = 0;
+			// result.settings.tutorial = 0;
 			// result.settings.mode === 'simplified' to backward compatibility
 			if ( result.settings.tutorial > 0 || result.settings.mode === 'normal' ) {
 				if ( result.settings.mode === 'simplified' ) {
