@@ -40,34 +40,6 @@ body {
 	color: black;
 }
 
-#icon-github {
-	background: url('../images/sprites-options.png') 0px -70px;
-	display: inline-block;
-	height: 36px;
-	width: 32px;
-}
-
-#icon-facebook {
-	background: url('../images/sprites-options.png') 96px -70px;
-	display: inline-block;
-	height: 36px;
-	width: 32px;
-}
-
-#icon-twitter {
-	background: url('../images/sprites-options.png') 64px -70px;
-	display: inline-block;
-	height: 36px;
-	width: 32px;
-}
-
-#icon-vk {
-	background: url('../images/sprites-options.png') 32px -70px;
-	display: inline-block;
-	height: 36px;
-	width: 32px;
-}
-
 .tab {
 	display: inline-block;
 	margin: 0;

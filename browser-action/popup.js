@@ -285,7 +285,7 @@ function loadSettings()
 			let totalTimeSaved = (h<10?('0'+h):h) + ":" + ('0' + m).slice(-2) + ":" + ('0' + s).slice(-2);
 			element.textContent = totalTimeSaved;
 			
-			// result.settings.tutorial = 0;
+			result.settings.tutorial = 0;
 			// result.settings.mode === 'simplified' to backward compatibility
 			if ( result.settings.tutorial > 0 || result.settings.mode === 'normal' ) {
 				if ( result.settings.mode === 'simplified' ) {
@@ -304,20 +304,19 @@ function loadSettings()
 				document.getElementById('tutorial').style.display = 'none';
 			}
 			else {
-				document.getElementsByClassName('normal-mode')[0].style.display = 'none';
-				document.getElementsByClassName('tutorial')[0].style.display = 'block';
+				document.getElementById('ext-settings').style.display = 'none';
+				document.getElementById('tutorial').style.display = 'block';
 				
-				document.getElementById('tutorial-image').src = browser.extension.getURL('images/tutorial.png');
 				document.getElementById('tutorial-finish').addEventListener('click', function() {
-					if ( result.settings.mode === 'simplified' ) {
-						
-					}
-					else {
-						
-					}
+					document.getElementById('tab-colors').style.display = 'inline-block';
+					document.getElementById('tab-playback').style.display = 'none';
+					document.getElementById('tab-acceleration').style.display = 'none';
 					
 					result.settings.tutorial = 1;
 					browser.storage.local.set({ settings: result.settings });
+					document.getElementById('tab-settings').classList.add('active-tab');
+					document.getElementById('ext-settings').style.display = 'block';
+					document.getElementById('settings').style.display = 'block';
 					document.getElementById('tutorial').style.display = 'none';
 				});
 			}
