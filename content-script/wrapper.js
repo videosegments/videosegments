@@ -342,6 +342,8 @@ var Wrapper = {
 	},
 	
 	simplifySegmentation: function() {
+		if ( this.types[0] == 'sk' || this.types[0] == 'pl' ) return;
+		
 		this.timestampsCopy = this.timestamps.slice();
 		this.typesCopy = this.types.slice();
 		

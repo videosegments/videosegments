@@ -868,7 +868,6 @@ var Editor = {
 		let channelContainer = document.getElementById('owner-name').getElementsByTagName('a')[0];
 		let channelName = channelContainer.innerHTML;
 		let channel = channelContainer.getAttribute("href").slice(9);
-		log(channelName, channel);
 		
 		// prevent sharing same segmentation 
 		if ( this.savedIterations == this.iterations ) {
@@ -879,6 +878,7 @@ var Editor = {
 		
 		if ( this.types.length > 0 ) {
 			if ( this.settings.mode === 'simplified' ) this.wrapper.restoreSegmentation();
+			log(this.timestamps, this.types);
 			let segmentation = JSON.parse(JSON.stringify({timestamps: this.timestamps, types: this.types})); // break link between segments data and saved data 
 			if ( this.settings.mode === 'simplified' ) this.wrapper.simplifySegmentation();
 			
