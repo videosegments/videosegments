@@ -1,7 +1,7 @@
 {
 	"manifest_version": 2,
 	"name": "__MSG_extensionName__",
-	"version": "1.7.4.1",
+	"version": "1.7.4.2",
 	
 	"applications": {
 		"gecko": {
@@ -43,7 +43,6 @@
 
 	"permissions": [
 		"https://db.videosegments.org/api/v3/*",
-		"http://db.vsegments/api/v3/*",
 		"storage",
 		"tabs"
 	],
