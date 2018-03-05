@@ -31,6 +31,8 @@ var Observer = {
 	collection: null,
 	/* core object of addon */
 	wrapper: null,
+	/* settings */
+	settings: null,
 	/* 
 		workaround for acceleration in chrome\opera 
 		browser will call pause/play events on first video on tab 
@@ -42,6 +44,7 @@ var Observer = {
 	start: function(settings) {
 		log('Observer::start()');
 		let self = this;
+		this.settings = settings;
 		
 		if ( typeof InstallTrigger === 'undefined' ) {
 			let match = window.location.href.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/ ]{11})/i);
@@ -75,7 +78,7 @@ var Observer = {
 				self.observer.observe(self.collection[0], { attributes: true, attributeFilter: ['src'] });
 				
 				// 
-				self.wrapper.start(self.collection[0], settings, self.muteFirstEvents);
+				self.wrapper.start(self.collection[0], self.settings, self.muteFirstEvents);
 				self.muteFirstEvents = false;
 			}
 		}
@@ -102,7 +105,8 @@ var Observer = {
 	},
 	
 	updateSettings: function(settings) {
-		this.wrapper.updateSettings(settings);
+		this.settings = settings;
+		this.wrapper.updateSettings(this.settings);
 	},
 	
 	// getCategory: function() {

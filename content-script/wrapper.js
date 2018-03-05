@@ -268,6 +268,9 @@ var Wrapper = {
 			if ( this.settings.mode === 'simplified' ) {
 				this.simplifySegmentation();
 			}
+			else {
+				this.restoreSegmentation();
+			}
 			// do not merge to see duplicates 
 			// this.mergeDuplicateSegments();
 			
@@ -358,6 +361,8 @@ var Wrapper = {
 	},
 	
 	restoreSegmentation: function() {
+		if ( this.types.length == 0 || (this.types[0] != 'sk' && this.types[0] != 'pl') ) return;
+		
 		if ( this.typesCopy && this.timestampsCopy ) {
 			this.timestamps = this.timestampsCopy.slice();
 			this.types = this.typesCopy.slice();
