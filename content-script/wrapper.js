@@ -342,11 +342,10 @@ var Wrapper = {
 	},
 	
 	simplifySegmentation: function() {
-		if ( this.types[0] == 'sk' || this.types[0] == 'pl' ) return;
+		if ( this.types.length == 0 || this.types[0] == 'sk' || this.types[0] == 'pl' ) return;
 		
 		this.timestampsCopy = this.timestamps.slice();
 		this.typesCopy = this.types.slice();
-		
 		for ( let i = 0; i < this.types.length ; ++i ) {
 			if ( this.types[i] == 'c' || this.types[i] == 'ac' ) {
 				this.types[i] = 'pl';
@@ -362,8 +361,8 @@ var Wrapper = {
 		if ( this.typesCopy && this.timestampsCopy ) {
 			this.timestamps = this.timestampsCopy.slice();
 			this.types = this.typesCopy.slice();
-			this.timestampsCopy = undefined;
-			this.typesCopy = undefined;
+			this.timestampsCopy = null;
+			this.typesCopy = null;
 		}
 		else {
 			for ( let i = 0; i < this.types.length ; ++i ) {

@@ -877,10 +877,18 @@ var Editor = {
 		this.savedIterations = this.iterations;
 		
 		if ( this.types.length > 0 ) {
-			if ( this.settings.mode === 'simplified' ) this.wrapper.restoreSegmentation();
-			log(this.timestamps, this.types);
 			let segmentation = JSON.parse(JSON.stringify({timestamps: this.timestamps, types: this.types})); // break link between segments data and saved data 
-			if ( this.settings.mode === 'simplified' ) this.wrapper.simplifySegmentation();
+			if ( this.settings.mode === 'simplified' ) {
+				for ( let i = 0; i < segmentation.types.length ; ++i ) {
+					if ( segmentation.types[i] == 'pl' ) {
+						segmentation.types[i] = 'c';
+					}
+					else { 
+						segmentation.types[i] = 'cs';
+					}
+				}
+			}
+			log(segmentation);
 			
 			if ( Math.abs(segmentation.timestamps[segmentation.timestamps.length-1] - this.wrapper.video.duration > 1.5) && segmentation.types[segmentation.types.length-1] !== 'c' ) {
 				// assume that everything else is content 
