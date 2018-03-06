@@ -169,7 +169,7 @@ var Wrapper = {
 				
 				self.timestamps = response.timestamps;
 				self.timestamps.unshift(0.0);
-				self.timestamps.push(self.video.duration);
+				self.timestamps.push(parseFloat(self.video.duration.toFixed(2)));
 						
 				self.types = response.types;
 				self.origin = 'pendingDatabase';
@@ -189,7 +189,7 @@ var Wrapper = {
 			if ( result[video_id] !== '' ) {
 				self.timestamps = result[video_id].timestamps;
 				self.timestamps.unshift(0.0);
-				self.timestamps.push(self.video.duration);
+				self.timestamps.push(parseFloat(self.video.duration.toFixed(2)));
 						
 				self.types = result[video_id].types;
 				self.origin = 'localDatabase';

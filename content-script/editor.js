@@ -243,7 +243,7 @@ var Editor = {
 			let i = 0, currentTime = parseFloat(self.wrapper.video.currentTime.toFixed(1));
 			if ( self.timestamps.length === 0 ) {
 				self.timestamps.push(0.0);
-				self.timestamps.push(self.wrapper.video.duration);
+				self.timestamps.push(parseFloat(self.wrapper.video.duration.toFixed(2)));
 				self.types.push(this.name);
 			}
 			else {
