@@ -109,13 +109,13 @@ var Observer = {
 		this.wrapper.updateSettings(this.settings);
 	},
 	
-	// getCategory: function() {
-		// this.wrapper.getCategory();
-	// },
+	getCategory: function() {
+		this.wrapper.getCategory();
+	},
 	
-	// getChannel: function() {
-		// this.wrapper.getChannel();
-	// },
+	getChannel: function() {
+		this.wrapper.getChannel();
+	},
 	
 	end: function() {
 		log('Observer::end()');

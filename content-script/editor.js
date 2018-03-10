@@ -29,6 +29,7 @@ var Editor = {
 	modal: null,
 	
 	wrapper: null,
+	filters: null,
 	settings: null,
 	
 	timestamps: null,
@@ -173,6 +174,7 @@ var Editor = {
 			
 			let leftButton = document.createElement('button');
 			leftButton.classList.add('vs-segmentation-panel-button-big');
+			leftButton.id = 'vs-left-button-' + type;
 			leftButton.name = type;
 			leftButton.appendChild(document.createTextNode(text));
 			leftButton.style.color = color;
@@ -182,6 +184,7 @@ var Editor = {
 			let rightButton = document.createElement('button');
 			rightButton = document.createElement('button');
 			rightButton.classList.add('vs-segmentation-panel-button-small');
+			rightButton.id = 'vs-right-button-' + type;
 			rightButton.name = type;
 			rightButton.appendChild(document.createTextNode('>'));
 			rightButton.style.color = color;
@@ -315,6 +318,11 @@ var Editor = {
 		this.modal.appendChild(modalContent);
 		document.body.insertAdjacentElement('afterBegin', this.modal);
 		// this.segmentationPanel.appendChild(this.modal);
+		
+		if ( this.filters === null ) {
+			this.filters = new Object(Filters);
+			this.filters.start(this.settings, this.wrapper, this);
+		}
 	},
 	
 	buildSegmentationBar: function() {
@@ -865,10 +873,6 @@ var Editor = {
 		log('Editor::shareSegmentation()');
 		let self = this;
 		
-		let channelContainer = document.getElementById('owner-name').getElementsByTagName('a')[0];
-		let channelName = channelContainer.innerHTML;
-		let channel = channelContainer.getAttribute("href").slice(9);
-		
 		// prevent sharing same segmentation 
 		if ( this.savedIterations == this.iterations ) {
 			this.sendModal('failed', 'noChangesInSegmentation');
@@ -941,7 +945,7 @@ var Editor = {
 				}
 			};
 			
-			let post = 'id='+this.id+'&timestamps='+timestamps+'&types='+types+'&channel='+channel+'&name='+channelName;
+			let post = 'id='+this.id+'&timestamps='+timestamps+'&types='+types;
 			if ( decline ) {
 				post += '&decline=1';
 			}
@@ -1044,6 +1048,8 @@ var Editor = {
 	
 	end: function() {
 		log('Editor::end()');
+		
+		this.filters.end();
 		
 		this.icon.remove();
 		this.panel.remove();

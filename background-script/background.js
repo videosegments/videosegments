@@ -41,7 +41,7 @@ browser.storage.local.get({
 			doCheck = result.settings.displayPending;
 			
 			checkContext();
-			timer = setInterval(checkContext, 20000);
+			timer = setInterval(checkContext, 30000);
 		}
 		
 		browser.browserAction.setBadgeBackgroundColor({color: "#00ABFF"});

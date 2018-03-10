@@ -1,6 +1,6 @@
 {
 	"extensionName": {
-		"message": "VideoSegments - Cut YouTube Videos",
+		"message": "Cut YouTube Videos with VideoSegments",
 		"description": ""
 	},
 
@@ -19,16 +19,20 @@
 		"message": "Ускорение",
 		"description": ""
 	},
-	"tabAccount": {
-		"message": "Аккаунт",
-		"description": ""
-	},
 	"tabSettings": {
 		"message": "Настройки",
 		"description": ""
 	},
 	"tabColors": {
 		"message": "Цвета",
+		"description": ""
+	},
+	"tabFilters": {
+		"message": "Фильтры",
+		"description": ""
+	},
+	"tabCommunity": {
+		"message": "Сообщество",
 		"description": ""
 	},
 	
@@ -300,6 +304,10 @@
 	},
 	"pendingDatabase": {
 		"message": "запрос",
+		"description": ""
+	},
+	"filtered": {
+		"message": "Фильтрация",
 		"description": ""
 	},
 	"noSegmentation": {

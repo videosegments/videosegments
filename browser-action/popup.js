@@ -24,6 +24,7 @@ if ( typeof this.chrome != 'undefined' ) {
 	this.browser = this.chrome;
 }
 
+let settings;
 document.addEventListener('DOMContentLoaded', domContentLoaded);
 
 function domContentLoaded()
@@ -49,7 +50,86 @@ function domContentLoaded()
 		// iframe.style.height = event.data+'px';
 		checkLogin();
 	});
+	
+	// new Tooltip(document.getElementById('tooltip-youtube-api-key'), {
+		// placement: 'left', 
+		// title: 'Time to get channel on video start is relatively long - from 1 to 5+ seconds. Video start to play way before metadata (such as comments, category, channel) is loaded. The only way to get metadata faster (lesser than 1 second) is to use YouTube API. YouTube API require key and every key have free day limit. Key will be saved at your PC and will be used on our server in real time only to process your queries (we will never save your key).'
+	// });
+	
+	new Tooltip(document.getElementById('tooltip-silence-detection'), {
+		placement: 'left', 
+		title: 'Do not expect results immediately after video start! The results will be after and only after silence was fully played. The algorithm is based on analysis of current sound spectrum. This filter is applied only on playing videos. The algorithm may give you inaccurate results if you rewind into silence or if you play video on significantly increased playback rate (more than 150%). In other cases this filter must work fine. If not, please send me video id to videosegmentsdev@gmail.com with note "silence detection bug" and I will investigate it.'
+	});
+	
+	new Tooltip(document.getElementById('tooltip-silence-threshold'), {
+		placement: 'left', 
+		title: 'Value from 0 to 10000. Zero mean absolute silence.'
+	});
+	
+	new Tooltip(document.getElementById('tooltip-silence-duration'), {
+		placement: 'left', 
+		title: 'Minimal silence duration to be cut. Low values may give unexpected result.'
+	});
+	
+	button = document.getElementById('get-current-channel');
+	button.addEventListener('click', function() {
+		browser.tabs.query({ active: true, currentWindow: true }, function(tabs) {
+			browser.tabs.sendMessage(tabs[0].id, { getChannel: true });
+		});
+	});
+	
+	button = document.getElementById('save-channel-settings');
+	button.addEventListener('click', function() {
+		let channelName = document.getElementById('channel-name').value;
+		if ( channelName.length < 1 ) {
+			return;
+		}
+		
+		let startFrom = parseFloat(document.getElementById('channel-from').value);
+		let jumpTo = parseFloat(document.getElementById('channel-to').value);
+		let endOn = parseFloat(document.getElementById('channel-end').value);
+		browser.storage.local.set({['|c|'+document.getElementById('channel-name').value]: [startFrom, jumpTo, endOn]});
+		
+		if ( document.getElementById('enableChannelBasedFilter').checked === false ) {
+			document.getElementById('enableChannelBasedFilter').checked = true;
+			settings.filters.channelBased.enabled = true; 
+			browser.storage.local.set({ settings: settings }); 
+			notifyMediaPlayerWrapper(settings);
+		}
+	});
+	
+	let input = document.getElementById('channel-name');
+	input.addEventListener('keyup', function() {
+		let channelName = input.value;
+		browser.storage.local.get({['|c|'+channelName]: []}, function(result) {
+			let filter = result['|c|'+channelName];
+			if ( filter && filter.length > 0 ) {
+				document.getElementById('channel-from').value = filter[0];
+				document.getElementById('channel-to').value = filter[1];
+				document.getElementById('channel-end').value = filter[2];
+			}
+			else {
+				document.getElementById('channel-from').value = '0.0';
+				document.getElementById('channel-to').value = '0.0';
+				document.getElementById('channel-end').value = '0.0';
+			}
+		});
+	});
 }
+
+browser.runtime.onMessage.addListener(function(message) {
+	if ( typeof message.gotChannel !== 'undefined' ) {
+		document.getElementById('channel-name').value = message.gotChannel;
+		browser.storage.local.get({['|c|'+document.getElementById('channel-name').value]: []}, function(result) {
+			let filter = result['|c|'+document.getElementById('channel-name').value];
+			if ( filter.length > 0 ) {
+				document.getElementById('channel-from').value = filter[0];
+				document.getElementById('channel-to').value = filter[1];
+				document.getElementById('channel-end').value = filter[2];
+			}
+		});
+	}
+});
 
 function switchTab()
 {
@@ -62,6 +142,9 @@ function switchTab()
 	
 	// open tab content  
 	openTab(this.id.slice(4));
+	
+	settings.lastTab = this.id;
+	browser.storage.local.set({ settings: settings });
 }
 
 function openTab(tabName)
@@ -97,18 +180,6 @@ function checkLogin()
 					let element = document.getElementById('settings-database-admin');
 					browser.runtime.sendMessage( {'displayPending': false });
 					element.style.display = 'none';
-				}
-				
-				if ( response.authorized && response.moderator ) {
-					let el = document.getElementsByClassName('active-tab')[0];
-					if ( typeof el != 'undefined' ) {
-						el.classList.remove('active-tab');
-						el = document.getElementById(el.id.slice(4));
-						el.style.display = 'none';
-					}
-					
-					document.getElementById('tab-account').classList.add('active-tab');
-					document.getElementById('account').style.display = 'block';
 				}
 			}
 		}
@@ -233,7 +304,7 @@ function loadSettings()
 		},
 		
 		// global settings 
-		autoPauseDuration: 1.0,
+		autoPauseDuration: 2.0,
 		showSegmentationTools: false,
 		hideOnSegmentedVideos: false,
 		pinSegmentationTools: false,
@@ -254,6 +325,21 @@ function loadSettings()
 		simplified: true,
 		// addon working in simplified (skip-play) mode 
 		mode: 'simplified', 	
+		lastTab: 'tab-settings',
+		
+		filters: {
+			apiKey: '',
+			
+			channelBased: {
+				enabled: false,
+			},
+			
+			silence: {
+				enabled: false,
+				threshold: 100,
+				duration: 0.5,
+			},
+		},
 		
 		// first time launch stuff
 		highlightIcon: true, // red border over icon 
@@ -265,15 +351,10 @@ function loadSettings()
 			settings: defaultSettings,
 			totalTime: 0,
 		}, function(result) {
-			// log(result);
+			settings = Object.assign({}, defaultSettings, result.settings);
+			console.log(settings);
 			
-			// backward compatibility 
-			if ( result.settings.simplified === false ) {
-				result.settings.simplified = true;
-				result.settings.mode = 'normal';
-			}
-			
-			restoreOptions(result.settings);
+			restoreOptions();
 			
 			let seconds = Number(result.totalTime);
 			let element = document.getElementById('saved-time');
@@ -292,15 +373,17 @@ function loadSettings()
 					document.getElementById('tab-colors').style.display = 'inline-block';
 					document.getElementById('tab-playback').style.display = 'none';
 					document.getElementById('tab-acceleration').style.display = 'none';
+					// document.getElementById('tab-filters').style.display = 'none';
 				}
 				else {
 					document.getElementById('tab-colors').style.display = 'none';
 					document.getElementById('tab-playback').style.display = 'inline-block';
 					document.getElementById('tab-acceleration').style.display = 'inline-block';
+					// document.getElementById('tab-filters').style.display = 'inline-block';
 				}
-					
-				document.getElementById('tab-settings').classList.add('active-tab');
-				document.getElementById('settings').style.display = 'block';
+				
+				document.getElementById(result.settings.lastTab).classList.add('active-tab');
+				document.getElementById(result.settings.lastTab.slice(4)).style.display = 'block';
 				document.getElementById('tutorial').style.display = 'none';
 			}
 			else {
@@ -311,6 +394,7 @@ function loadSettings()
 					document.getElementById('tab-colors').style.display = 'inline-block';
 					document.getElementById('tab-playback').style.display = 'none';
 					document.getElementById('tab-acceleration').style.display = 'none';
+					// document.getElementById('tab-filters').style.display = 'none';
 					
 					result.settings.tutorial = 1;
 					browser.storage.local.set({ settings: result.settings });
@@ -324,7 +408,7 @@ function loadSettings()
 	);
 }
 	
-function restoreOptions(settings) 
+function restoreOptions() 
 {
 	let tr;
 	
@@ -429,6 +513,25 @@ function restoreOptions(settings)
 	element = document.getElementById('openSettings');
 	element.checked = settings.openSettings;
 	element.addEventListener('change', function() { updateGlobalBool(this, settings, 'openSettings'); });
+	
+	element = document.getElementById('enableChannelBasedFilter');
+	element.checked = settings.filters.channelBased.enabled;
+	element.addEventListener('change', function() { settings.filters.channelBased.enabled = this.checked; browser.storage.local.set({ settings: settings }); notifyMediaPlayerWrapper(settings); });
+	
+	element = document.getElementById('enableSilenceDetection');
+	element.checked = settings.filters.silence.enabled;
+	element.addEventListener('change', function() { settings.filters.silence.enabled = this.checked; browser.storage.local.set({ settings: settings }); notifyMediaPlayerWrapper(settings); });
+	
+	element = document.getElementById('silenceThreshold');
+	element.value = settings.filters.silence.threshold;
+	element.addEventListener('change', function() { settings.filters.silence.threshold = this.value; browser.storage.local.set({ settings: settings }); notifyMediaPlayerWrapper(settings); });
+	
+	element = document.getElementById('silenceDuration');
+	element.value = settings.filters.silence.duration;
+	element.addEventListener('change', function() { settings.filters.silence.duration = this.value; browser.storage.local.set({ settings: settings }); notifyMediaPlayerWrapper(settings); });
+
+	// element = document.getElementById('youtube-api-key');
+	// element.value = settings.filters.apiKey;
 }
 
 function switchMode(settings)
@@ -437,11 +540,13 @@ function switchMode(settings)
 		document.getElementById('tab-colors').style.display = 'inline-block';
 		document.getElementById('tab-playback').style.display = 'none';
 		document.getElementById('tab-acceleration').style.display = 'none';
+		// document.getElementById('tab-filters').style.display = 'none';
 	}
 	else {
 		document.getElementById('tab-colors').style.display = 'none';
 		document.getElementById('tab-playback').style.display = 'inline-block';
 		document.getElementById('tab-acceleration').style.display = 'inline-block';
+		// document.getElementById('tab-filters').style.display = 'inline-block';
 	}
 }
 

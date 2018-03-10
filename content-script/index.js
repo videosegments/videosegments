@@ -21,8 +21,8 @@
 
 // I'm not sure that I can safely override console.log to function() {}
 // so I'll use wrapper
-// var log = console.log.bind(console);
-var log = function() {};
+var log = console.log.bind(console);
+// var log = function() {};
 
 if ( typeof this.chrome != 'undefined' ) {
 	this.browser = this.chrome;
@@ -43,12 +43,13 @@ browser.runtime.onMessage.addListener(function(request) {
 		observer.updateSettings(request.settings);
 	}
 	// too long to wait for channel to appear and even more for category
-	// else if ( typeof request.getCategory !== 'undefined' ) {
-		// observer.getCategory();
-	// }
-	// else if ( typeof request.getChannel !== 'undefined' ) {
-		// observer.getChannel();
-	// }
+	// use it only for filter selection 
+	else if ( typeof request.getCategory !== 'undefined' ) {
+		observer.getCategory();
+	}
+	else if ( typeof request.getChannel !== 'undefined' ) {
+		observer.getChannel();
+	}
 });
 
 function getSettings(callback) {
@@ -86,7 +87,7 @@ function getSettings(callback) {
 		},
 		
 		// global settings 
-		autoPauseDuration: 1.0,
+		autoPauseDuration: 2.0,
 		showSegmentationTools: false,
 		hideOnSegmentedVideos: false,
 		pinSegmentationTools: false,
@@ -112,6 +113,20 @@ function getSettings(callback) {
 		// tutorial
 		tutorial: 0,
 		
+		filters: {
+			apiKey: '',
+			
+			channelBased: {
+				enabled: false,
+			},
+			
+			silence: {
+				enabled: false,
+				threshold: 100,
+				duration: 0.5,
+			},
+		},
+		
 		// user notification  
 		// messages: {
 			// segmentation: true,	// popup on addon installation. currently disabled
@@ -123,12 +138,9 @@ function getSettings(callback) {
 		settings: defaultSettings
 	}, function(result) {
 		// backward compatibility 
-		if ( result.settings.simplified === false ) {
-			result.settings.simplified = true;
-			browser.storage.local.set({ settings: result.settings });
-			result.settings.mode = 'normal';
-		}
+		let settings = Object.assign({}, defaultSettings, result.settings);
+		log(settings);
 		
-		callback(result.settings);
+		callback(settings);
 	});
 }

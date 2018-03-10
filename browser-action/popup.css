@@ -99,56 +99,98 @@ body {
 }
 
 #icon-acceleration {
-	background: url('../images/sprites-options.png') 112px 2px;
+	background: url('../images/sprites-options.png') -28px 2px;
 	display: inline-block;
 	height: 30px;
 	width: 30px;
 }
 
 .active-tab #icon-acceleration, .tab:not(.active-tab):hover #icon-acceleration {
-	background: url('../images/sprites-options.png') 112px 30px;
+	background: url('../images/sprites-options.png') -28px 30px;
 	display: inline-block;
 	height: 30px;
 	width: 30px;
 }
 
 #icon-account {
-	background: url('../images/sprites-options.png') 84px 2px;
+	background: url('../images/sprites-options.png') -56px 2px;
 	display: inline-block;
 	height: 30px;
 	width: 30px;
 }
 
 .active-tab #icon-account, .tab:not(.active-tab):hover #icon-account {
-	background: url('../images/sprites-options.png') 84px 30px;
+	background: url('../images/sprites-options.png') -56px 30px;
 	display: inline-block;
 	height: 30px;
 	width: 30px;
 }
 
 #icon-settings {
-	background: url('../images/sprites-options.png') 56px 2px;
+	background: url('../images/sprites-options.png') -84px 2px;
 	display: inline-block;
 	height: 30px;
 	width: 30px;
 }
 
 .active-tab #icon-settings, .tab:not(.active-tab):hover #icon-settings {
-	background: url('../images/sprites-options.png') 56px 30px;
+	background: url('../images/sprites-options.png') -84px 30px;
 	display: inline-block;
 	height: 30px;
 	width: 30px;
 }
 
 #icon-colors {
-	background: url('../images/sprites-options.png') 28px 2px;
+	background: url('../images/sprites-options.png') -112px 2px;
 	display: inline-block;
 	height: 30px;
 	width: 30px;
 }
 
 .active-tab #icon-colors, .tab:not(.active-tab):hover #icon-colors {
-	background: url('../images/sprites-options.png') 28px 30px;
+	background: url('../images/sprites-options.png') -112px 30px;
+	display: inline-block;
+	height: 30px;
+	width: 30px;
+}
+
+#icon-information {
+	background: url('../images/sprites-options.png') -140px 2px;
+	display: inline-block;
+	height: 30px;
+	width: 30px;
+}
+
+.active-tab #icon-information, .tab:not(.active-tab):hover #icon-information {
+	background: url('../images/sprites-options.png') -140px 30px;
+	display: inline-block;
+	height: 30px;
+	width: 30px;
+}
+
+#icon-filters {
+	background: url('../images/sprites-options.png') -168px 2px;
+	display: inline-block;
+	height: 30px;
+	width: 30px;
+}
+
+.active-tab #icon-filters, .tab:not(.active-tab):hover #icon-filters {
+	background: url('../images/sprites-options.png') -168px 30px;
+	display: inline-block;
+	height: 30px;
+	width: 30px;
+}
+
+#icon-community {
+	background: url('../images/sprites-options.png') -196px 2px;
+	display: inline-block;
+	height: 30px;
+	width: 30px;
+}
+
+.active-tab #icon-community, .tab:not(.active-tab):hover #icon-community {
+	background: url('../images/sprites-options.png') -196px 30px;
 	display: inline-block;
 	height: 30px;
 	width: 30px;
@@ -260,3 +302,14 @@ label input {
 #tutorial-image {
 	
 }
+
+.tooltip {
+	border-radius: 2px;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+	padding: 5px;
+	background: white;
+	width: 350px;
+	cursor: default;
+	text-align: justify;
+}
+

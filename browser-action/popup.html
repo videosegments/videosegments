@@ -3,6 +3,8 @@
 <html>
 	<meta charset="utf-8">
 	<link rel="stylesheet" type="text/css" href="popup.css">
+	<script src="popper.min.js"></script>
+	<script src="tooltip.min.js"></script>
 	
 	<body>
 		<script src="jscolor.js"></script>
@@ -22,7 +24,7 @@
 			<h1>Example of segmented video</h1>
 			<iframe src="https://www.youtube.com/embed/kuvST3wGCG8"></iframe>
 			
-			<h1 style="padding-bottom: 0; margin-bottom: 0">Here you can find more examples!</h1>
+			<h1 style="padding-bottom: 0; margin-bottom: 0">Here you can find examples of segmented videos</h1>
 			<a href="https://db.videosegments.org/stats/examples.php" target="_blank">https://db.videosegments.org/stats/examples.php</a>
 			
 			<h1 style="padding-bottom: 0; margin-bottom: 0">Here you can find recently segmented videos</h1>
@@ -53,8 +55,11 @@
 				<li id="tab-colors" class="tab">
 					<div id="icon-colors"></div>
 				</li>
-				<li id="tab-account" class="tab">
-					<div id="icon-account"></div>
+				<li id="tab-filters" class="tab">
+					<div id="icon-filters"></div>
+				</li>
+				<li id="tab-community" class="tab">
+					<div id="icon-community"></div>
 				</li>
 			</ul>
 			
@@ -199,8 +204,8 @@
 				</div>
 			</div>
 			
-			<div id="account" class="tab-content" style="display: none;">
-				<div class="tab-name"><span class="translate-me">tabAccount</span></div>
+			<div id="community" class="tab-content" style="display: none;">
+				<div class="tab-name"><span class="translate-me">tabCommunity</span></div>
 				
 				<fieldset style="display: none">
 					<legend align="left" style="font-size: 1.2em"><span class="translate-me">localStatistic</span></legend>
@@ -276,6 +281,49 @@
 						</select>
 					</div>
 				</div>
+			</div>
+			
+			<div id="information" class="tab-content" style="display: none;">
+				<div class="tab-name"><span class="translate-me">tabInformation</span></div>
+			</div>
+			
+			<div id="filters" class="tab-content" style="display: none;">
+				<div class="tab-name"><span class="translate-me">tabFilters</span><br>(experimental)</div>
+				
+				<fieldset>
+					<legend align="left"><label for="enableChannelBasedFilter"><input id="enableChannelBasedFilter" type="checkbox" style="vertical-align: middle"><span style="vertical-align: middle">Channel-based</span></label></legend>
+					
+					<!-- <div>YouTube API key required (<span id="tooltip-youtube-api-key">?</span>)</div> -->
+					<!-- <input id="youtube-api-key" type="text" placeholder="youtube api key" size="40"> -->
+					<!-- <br> -->
+					<!-- <br> -->
+					
+					<input id="channel-name" type="text" placeholder="channel name" size="40">
+					<br>
+					<button id="get-current-channel" style="margin-top: 5px">get current</button>
+					<br>
+					<br>
+					<div>skip from <input id="channel-from" type="text" size="5" value="0.0"> to <input id="channel-to" type="text" size="5" value="0.0"> second</div>
+					<div>skip last <input id="channel-end" type="text" size="5" value="0.0"> seconds</div>
+					<button id="save-channel-settings" style="margin-top: 5px">save</button>
+				</fieldset>
+				<br>
+				
+				<fieldset>
+					<legend align="left"><label for="enableSilenceDetection"><input id="enableSilenceDetection" type="checkbox" style="vertical-align: middle"><span style="vertical-align: middle">Silence detection (<span id="tooltip-silence-detection">?</span>)</span></label></legend>
+					
+					<div><span>Silence threshold</span> (<span id="tooltip-silence-threshold">?</span>) <input id="silenceThreshold" type="text" size="5" value="0.0"></div>
+					<div><span>Min silence duration</span> (<span id="tooltip-silence-duration">?</span>) <input id="silenceDuration" type="text" size="5" value="0.4"></div>
+				</fieldset>
+				<br>
+				
+				<fieldset>
+					<legend align="left">Planned</legend>
+					
+					<ul style="text-align: left; margin-top: 5px">
+						<li>Specified picture detection.</li>
+					</ul>
+				</fieldset>
 			</div>
 		</div>
 		

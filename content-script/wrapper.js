@@ -53,6 +53,9 @@ var Wrapper = {
 	playbackRate: null,
 	preventPlaybackRateUpdate: null,
 	muteFirstEvents: null,	
+	
+	/* filters */
+	channel: null,
 		
 	// called when "video" element appears on page 
 	start: function(video, settings, muteFirstEvents) {
@@ -128,6 +131,7 @@ var Wrapper = {
 					
 					this.timer = setTimeout(function() {
 						self.video.play();
+						log('autopause timeout');
 					}, this.settings.autoPauseDuration*1000);
 				}
 			}
@@ -139,10 +143,10 @@ var Wrapper = {
 			}
 			
 			if ( this.settings.databasePriority === 'local' ) {
-				pipelineFn(this, [this.getPendingSegmentation, this.getLocalSegmentation, this.getOfficialSegmentation, this.clearPauseTimer]);
+				pipelineFn(this, [this.getPendingSegmentation, this.getLocalSegmentation, this.getOfficialSegmentation, this.tryFilter, this.clearPauseTimer]);
 			}
 			else {
-				pipelineFn(this, [this.getPendingSegmentation, this.getOfficialSegmentation, this.getLocalSegmentation, this.clearPauseTimer]);
+				pipelineFn(this, [this.getPendingSegmentation, this.getOfficialSegmentation, this.getLocalSegmentation, this.tryFilter, this.clearPauseTimer]);
 			}
 		}
 	},
@@ -226,6 +230,10 @@ var Wrapper = {
 						self.onSegmentationReady();
 					}
 					else {
+						if ( typeof response.channel !== 'undefined' ) {
+							self.channel = response.channel;
+							log(self.channel);
+						}
 						callback();
 					}
 				}
@@ -239,9 +247,65 @@ var Wrapper = {
 		xhr.send();
 	},
 	
+	tryFilter: function(self, callback) {
+		log('Wrapper::tryFilter()', self.channel, self.channel !== null && self.settings.filters.channelBased.enabled);
+		
+		if ( self.channel !== null && self.settings.filters.channelBased.enabled ) {
+			browser.storage.local.get({['|c|'+self.channel]: []}, function(result) {
+				let filter = result['|c|'+self.channel];
+				self.timestamps = [];
+				self.types = [];
+				
+				log(filter);
+				if ( typeof filter !== 'undefined' ) {
+					if ( filter[0] !== filter[1] ) {
+						if ( filter[0] === 0.0 ) {
+							self.timestamps = [filter[0], filter[1]];
+							self.types = ['cs'];
+						}
+						else {
+							self.timestamps = [0.0, filter[0], filter[1]];
+							self.types = ['c', 'cs'];
+						}
+						
+						if ( filter[2] > 0.0 ) {
+							self.timestamps.push(self.video.duration-filter[2]);
+							self.timestamps.push(self.video.duration);
+							self.types.push('c');
+							self.types.push('cs');
+						}
+						else {
+							self.timestamps.push(self.video.duration);
+							self.types.push('c');
+						}
+						
+						self.origin = 'filtered';
+						self.onSegmentationReady();
+					}
+					else if ( filter[2] > 0.0 ) {
+						self.timestamps = [0.0, self.video.duration-filter[2], self.video.duration];
+						self.types = ['c', 'cs'];
+						
+						self.origin = 'filtered';
+						self.onSegmentationReady();
+					}
+					
+					callback();
+				}
+				else {
+					callback();
+				}
+			});
+		}
+		else {
+			callback();
+		}
+	},
+	
 	clearPauseTimer: function(self) {
 		log('Wrapper::clearPauseTimer()');
 		
+		clearTimeout(self.timer);
 		self.timer = null;
 		self.video.play();
 		
@@ -317,11 +381,14 @@ var Wrapper = {
 			}
 		}
 		
-		let width, left = 0.0;
+		let width, left = 0.0, sum = 0.0;
 		for ( let i = 0; i < this.types.length; ++i ) {
 			width = (this.timestamps[i+1] - this.timestamps[i]) / this.video.duration * 100;
 			
 			let segment = document.createElement('li');
+			// TODO: investigate why it can be more than 100 
+			sum += width;
+			if ( sum > 100.0 ) width = width - sum + 100;
 			segment.style.width = width+'%';
 			segment.style.backgroundColor = this.settings.segments[this.types[i]].color;
 			segment.innerHTML = '&nbsp;';
@@ -401,7 +468,7 @@ var Wrapper = {
 	},
 	
 	onPlay: function() {
-		log('Wrapper::onPlay()');
+		log('Wrapper::onPlay()', this.video.currentTime);
 		
 		// first call is nessesary and second one is false so mute him
 		if ( this.muteFirstEvents == 1 ) {
@@ -563,25 +630,30 @@ var Wrapper = {
 		}
 	},
 	
-	// getCategory: function() {
-		// let moreButton = document.getElementById('more');
-		// moreButton.click();
+	getCategory: function() {
+		log('Wrapper::getCategory()');
 		
-		// let container = document.getElementsByTagName('ytd-video-secondary-info-renderer')[0].getElementsByTagName('ytd-metadata-row-renderer')[0];
-		// if ( container ) {
-			// browser.runtime.sendMessage( { gotCategory: container.getElementsByTagName('a')[0].innerHTML } );
-		// }
+		let moreButton = document.getElementById('more');
+		moreButton.click();
 		
-		// let lessButton = document.getElementById('less');
-		// lessButton.click();
-	// },
+		let container = document.getElementsByTagName('ytd-video-secondary-info-renderer')[0].getElementsByTagName('ytd-metadata-row-renderer')[0];
+		if ( container ) {
+			browser.runtime.sendMessage( { gotCategory: container.getElementsByTagName('a')[0].innerHTML } );
+		}
+		
+		let lessButton = document.getElementById('less');
+		lessButton.click();
+	},
 	
-	// getChannel: function() {
-		// let container = document.getElementById('owner-name');
-		// if ( container ) {
-			// browser.runtime.sendMessage( { gotChannel: container.getElementsByTagName('a')[0].innerHTML } );
-		// }
-	// },
+	getChannel: function() {
+		log('Wrapper::getChannel()');
+		
+		let container = document.getElementById('owner-name');
+		if ( container ) {
+			browser.runtime.sendMessage( { gotChannel: container.getElementsByTagName('a')[0].innerHTML } );
+			log(container.getElementsByTagName('a')[0].innerHTML);
+		}
+	},
 	
 	// called when "video" element "src" is changed
 	end: function() {

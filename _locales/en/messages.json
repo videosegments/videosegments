@@ -1,6 +1,6 @@
 {
 	"extensionName": {
-		"message": "VideoSegments - Cut YouTube Videos",
+		"message": "Cut YouTube Videos with VideoSegments",
 		"description": ""
 	},
 
@@ -19,16 +19,20 @@
 		"message": "Acceleration",
 		"description": ""
 	},
-	"tabAccount": {
-		"message": "Account",
-		"description": ""
-	},
 	"tabSettings": {
 		"message": "Settings",
 		"description": ""
 	},
 	"tabColors": {
 		"message": "Colors",
+		"description": ""
+	},
+	"tabFilters": {
+		"message": "Filters",
+		"description": ""
+	},
+	"tabCommunity": {
+		"message": "Community",
 		"description": ""
 	},
 	
@@ -292,6 +296,10 @@
 	},
 	"pendingDatabase": {
 		"message": "Pending",
+		"description": ""
+	},
+	"filtered": {
+		"message": "Filtered",
 		"description": ""
 	},
 	"noSegmentation": {
