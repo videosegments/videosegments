@@ -48,6 +48,24 @@
 	},
 	
 	
+	"sk": {
+		"message": "пропуск",
+		"description": ""
+	},
+	"pl": {
+		"message": "играть\u00A0",
+		"description": ""
+	},
+	"from": {
+		"message": "с",
+		"description": ""
+	},
+	"to": {
+		"message": "до",
+		"description": ""
+	},
+	
+	
 	
 	"content": {
 		"message": "Контент",

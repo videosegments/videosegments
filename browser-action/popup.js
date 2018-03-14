@@ -68,7 +68,7 @@ function domContentLoaded()
 	
 	new Tooltip(document.getElementById('tooltip-silence-duration'), {
 		placement: 'left', 
-		title: 'Minimal silence duration to be cut. Low values may give unexpected result.'
+		title: 'Minimal silence duration to be cut. VERY UNSTABLE on low values!'
 	});
 	
 	button = document.getElementById('get-current-channel');
@@ -324,8 +324,8 @@ function loadSettings()
 		// this var was intented to be flag but got replaced by string 
 		simplified: true,
 		// addon working in simplified (skip-play) mode 
-		mode: 'simplified', 	
-		lastTab: 'tab-settings',
+		mode: 'simplified', 
+		lastTab: 'tab-filters',
 		
 		filters: {
 			apiKey: '',
@@ -337,7 +337,7 @@ function loadSettings()
 			silence: {
 				enabled: false,
 				threshold: 100,
-				duration: 0.5,
+				duration: 2.0,
 			},
 		},
 		
@@ -345,6 +345,11 @@ function loadSettings()
 		highlightIcon: true, // red border over icon 
 		// tutorial 
 		tutorial: 0,
+
+		editor: {
+			posX: 100,
+			posY: 100,
+		},
 	}
 	
 	browser.storage.local.get({
@@ -370,15 +375,18 @@ function loadSettings()
 			// result.settings.mode === 'simplified' to backward compatibility
 			if ( result.settings.tutorial > 0 || result.settings.mode === 'normal' ) {
 				if ( result.settings.mode === 'simplified' ) {
-					document.getElementById('tab-colors').style.display = 'inline-block';
+					// document.getElementById('tab-colors').style.display = 'inline-block';
+					document.getElementById('tab-colors').style.display = 'none';
 					document.getElementById('tab-playback').style.display = 'none';
 					document.getElementById('tab-acceleration').style.display = 'none';
+					// document.getElementById('tab-settings').style.display = 'none';
 					// document.getElementById('tab-filters').style.display = 'none';
 				}
 				else {
 					document.getElementById('tab-colors').style.display = 'none';
 					document.getElementById('tab-playback').style.display = 'inline-block';
 					document.getElementById('tab-acceleration').style.display = 'inline-block';
+					// document.getElementById('tab-settings').style.display = 'inline-block';
 					// document.getElementById('tab-filters').style.display = 'inline-block';
 				}
 				
@@ -391,16 +399,18 @@ function loadSettings()
 				document.getElementById('tutorial').style.display = 'block';
 				
 				document.getElementById('tutorial-finish').addEventListener('click', function() {
-					document.getElementById('tab-colors').style.display = 'inline-block';
+					// document.getElementById('tab-colors').style.display = 'inline-block';
+					document.getElementById('tab-colors').style.display = 'none';
 					document.getElementById('tab-playback').style.display = 'none';
 					document.getElementById('tab-acceleration').style.display = 'none';
+					// document.getElementById('tab-settings').style.display = 'none';
 					// document.getElementById('tab-filters').style.display = 'none';
 					
 					result.settings.tutorial = 1;
 					browser.storage.local.set({ settings: result.settings });
-					document.getElementById('tab-settings').classList.add('active-tab');
+					document.getElementById('tab-filters').classList.add('active-tab');
 					document.getElementById('ext-settings').style.display = 'block';
-					document.getElementById('settings').style.display = 'block';
+					document.getElementById('filters').style.display = 'block';
 					document.getElementById('tutorial').style.display = 'none';
 				});
 			}
@@ -537,7 +547,8 @@ function restoreOptions()
 function switchMode(settings)
 {
 	if ( settings.mode === 'simplified' ) {
-		document.getElementById('tab-colors').style.display = 'inline-block';
+		// document.getElementById('tab-colors').style.display = 'inline-block';
+		document.getElementById('tab-colors').style.display = 'none';
 		document.getElementById('tab-playback').style.display = 'none';
 		document.getElementById('tab-acceleration').style.display = 'none';
 		// document.getElementById('tab-filters').style.display = 'none';

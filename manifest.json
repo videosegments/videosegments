@@ -34,7 +34,7 @@
 	"content_scripts": [
 		{
 			"matches": ["*://www.youtube.com/*"],
-			"js": ["content-script/observer.js", "content-script/wrapper.js", "content-script/editor.js", "content-script/filters.js", "content-script/index.js"],
+			"js": ["content-script/observer.js", "content-script/wrapper.js", "content-script/editor.js", "content-script/compact-editor.js", "content-script/filters.js", "content-script/index.js"],
 			"css": ["content-script/styles.css"],
 			"run_at": "document_start",
 			"all_frames": true
@@ -49,6 +49,7 @@
 	],
 	
 	"web_accessible_resources": [
+		"content-script/webfonts/*",
 		"images/sprites-options.png",
 		"images/sprites-editor.png",
 		"images/scissors.png",

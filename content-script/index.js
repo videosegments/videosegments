@@ -107,11 +107,7 @@ function getSettings(callback) {
 		simplified: true,
 		// addon working in simplified (skip-play) mode 
 		mode: 'simplified', 
-		
-		// first time launch stuff
-		highlightIcon: true, // red border over icon 
-		// tutorial
-		tutorial: 0,
+		lastTab: 'tab-filters',
 		
 		filters: {
 			apiKey: '',
@@ -123,8 +119,18 @@ function getSettings(callback) {
 			silence: {
 				enabled: false,
 				threshold: 100,
-				duration: 0.5,
+				duration: 2.0,
 			},
+		},
+		
+		// first time launch stuff
+		highlightIcon: true, // red border over icon 
+		// tutorial
+		tutorial: 0,
+
+		editor: {
+			posX: 100,
+			posY: 100,
 		},
 		
 		// user notification  

@@ -29,7 +29,6 @@ var Editor = {
 	modal: null,
 	
 	wrapper: null,
-	filters: null,
 	settings: null,
 	
 	timestamps: null,
@@ -318,11 +317,6 @@ var Editor = {
 		this.modal.appendChild(modalContent);
 		document.body.insertAdjacentElement('afterBegin', this.modal);
 		// this.segmentationPanel.appendChild(this.modal);
-		
-		if ( this.filters === null ) {
-			this.filters = new Object(Filters);
-			this.filters.start(this.settings, this.wrapper, this);
-		}
 	},
 	
 	buildSegmentationBar: function() {
@@ -1043,13 +1037,11 @@ var Editor = {
 	},
 	
 	updateSettings: function(settings) {
-		this.settings = settings;
+		// this.settings = settings;
 	},
 	
 	end: function() {
 		log('Editor::end()');
-		
-		this.filters.end();
 		
 		this.icon.remove();
 		this.panel.remove();

@@ -30,6 +30,8 @@ var Wrapper = {
 	id: null,
 	/* settings */
 	settings: null,
+	/* filters */
+	filters: null,
 	
 	/* events contexts */
 	onPlayContext: null,
@@ -71,9 +73,6 @@ var Wrapper = {
 		this.video = video;
 		this.settings = settings;
 		
-		// craete editor 
-		this.editor = new Object(Editor);
-		
 		// bind events 
 		this.onPlayContext = this.onPlay.bind(this);
 		this.onPauseContext = this.onPause.bind(this);
@@ -109,6 +108,11 @@ var Wrapper = {
 			
 			// wait for canplay event 
 			this.video.addEventListener('canplay', ctx);
+		}
+		
+		if ( this.filters === null ) {
+			this.filters = new Object(Filters);
+			this.filters.start(this.settings, this, this);
 		}
 	},
 	
@@ -354,6 +358,13 @@ var Wrapper = {
 		
 		// if it's not iframe 
 		if ( window.parent === window ) {
+			// craete editor 
+			if ( this.settings.mode === 'simplified' ) {
+				this.editor = new Object(CompactEditor);
+			}
+			else {
+				this.editor = new Object(Editor);
+			}
 			this.editor.start(this, this.timestamps, this.types, this.origin, this.settings, 'youtube', this.id);
 		}
 	},
@@ -389,6 +400,7 @@ var Wrapper = {
 			// TODO: investigate why it can be more than 100 
 			sum += width;
 			if ( sum > 100.0 ) width = width - sum + 100;
+			log((this.timestamps[i+1] - this.timestamps[i]), this.video.duration * 100, width);
 			segment.style.width = width+'%';
 			segment.style.backgroundColor = this.settings.segments[this.types[i]].color;
 			segment.innerHTML = '&nbsp;';
@@ -626,6 +638,14 @@ var Wrapper = {
 		
 		if ( window.parent === window ) {
 			this.editor.end();
+			
+			// craete editor 
+			if ( this.settings.mode === 'simplified' ) {
+				this.editor = new Object(CompactEditor);
+			}
+			else {
+				this.editor = new Object(Editor);
+			}
 			this.editor.start(this, this.timestamps, this.types, this.origin, this.settings, 'youtube', this.id);
 		}
 	},
@@ -658,6 +678,8 @@ var Wrapper = {
 	// called when "video" element "src" is changed
 	end: function() {
 		log('Wrapper::end()');
+		
+		this.filters.end();
 		
 		if ( this.playbackRate ) {
 			this.preventPlaybackRateUpdate = true;

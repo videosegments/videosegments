@@ -47,6 +47,23 @@
 		"description": ""
 	},
 	
+	"sk": {
+		"message": "skip",
+		"description": ""
+	},
+	"pl": {
+		"message": "play",
+		"description": ""
+	},
+	"from": {
+		"message": "from",
+		"description": ""
+	},
+	"to": {
+		"message": "to",
+		"description": ""
+	},
+	
 	
 	
 	"content": {
