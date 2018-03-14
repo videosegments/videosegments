@@ -374,22 +374,7 @@ function loadSettings()
 			// result.settings.tutorial = 0;
 			// result.settings.mode === 'simplified' to backward compatibility
 			if ( result.settings.tutorial > 0 || result.settings.mode === 'normal' ) {
-				if ( result.settings.mode === 'simplified' ) {
-					// document.getElementById('tab-colors').style.display = 'inline-block';
-					document.getElementById('tab-colors').style.display = 'none';
-					document.getElementById('tab-playback').style.display = 'none';
-					document.getElementById('tab-acceleration').style.display = 'none';
-					// document.getElementById('tab-settings').style.display = 'none';
-					// document.getElementById('tab-filters').style.display = 'none';
-				}
-				else {
-					document.getElementById('tab-colors').style.display = 'none';
-					document.getElementById('tab-playback').style.display = 'inline-block';
-					document.getElementById('tab-acceleration').style.display = 'inline-block';
-					// document.getElementById('tab-settings').style.display = 'inline-block';
-					// document.getElementById('tab-filters').style.display = 'inline-block';
-				}
-				
+				setMode(result.settings.mode);
 				document.getElementById(result.settings.lastTab).classList.add('active-tab');
 				document.getElementById(result.settings.lastTab.slice(4)).style.display = 'block';
 				document.getElementById('tutorial').style.display = 'none';
@@ -399,15 +384,10 @@ function loadSettings()
 				document.getElementById('tutorial').style.display = 'block';
 				
 				document.getElementById('tutorial-finish').addEventListener('click', function() {
-					// document.getElementById('tab-colors').style.display = 'inline-block';
-					document.getElementById('tab-colors').style.display = 'none';
-					document.getElementById('tab-playback').style.display = 'none';
-					document.getElementById('tab-acceleration').style.display = 'none';
-					// document.getElementById('tab-settings').style.display = 'none';
-					// document.getElementById('tab-filters').style.display = 'none';
-					
 					result.settings.tutorial = 1;
 					browser.storage.local.set({ settings: result.settings });
+					setMode('simplified');
+					
 					document.getElementById('tab-filters').classList.add('active-tab');
 					document.getElementById('ext-settings').style.display = 'block';
 					document.getElementById('filters').style.display = 'block';
@@ -513,7 +493,7 @@ function restoreOptions()
 	element.value = settings.mode;
 	element.addEventListener('change', function() {
 		updateGlobalValue(this, settings, 'mode');
-		switchMode(settings);
+		setMode(settings.mode);
 	});
 	
 	element = document.getElementById('displayPending');
@@ -548,16 +528,39 @@ function switchMode(settings)
 {
 	if ( settings.mode === 'simplified' ) {
 		// document.getElementById('tab-colors').style.display = 'inline-block';
-		document.getElementById('tab-colors').style.display = 'none';
-		document.getElementById('tab-playback').style.display = 'none';
-		document.getElementById('tab-acceleration').style.display = 'none';
+		// document.getElementById('tab-colors').style.display = 'none';
+		// document.getElementById('tab-playback').style.display = 'none';
+		// document.getElementById('tab-acceleration').style.display = 'none';
 		// document.getElementById('tab-filters').style.display = 'none';
+		setMode('normal');
 	}
 	else {
-		document.getElementById('tab-colors').style.display = 'none';
-		document.getElementById('tab-playback').style.display = 'inline-block';
-		document.getElementById('tab-acceleration').style.display = 'inline-block';
+		// document.getElementById('tab-colors').style.display = 'none';
+		// document.getElementById('tab-playback').style.display = 'inline-block';
+		// document.getElementById('tab-acceleration').style.display = 'inline-block';
 		// document.getElementById('tab-filters').style.display = 'inline-block';
+		setMode('simplified');
+	}
+}
+
+function setMode(mode)
+{
+	if ( mode === 'simplified' ) {
+		let elements = document.getElementsByClassName('expert-mode-only');
+		for ( let element of elements ) {
+			element.style.display = 'none';
+		}
+	}
+	else {
+		let elements = document.getElementsByClassName('expert-mode-only');
+		for ( let element of elements ) {
+			element.style.display = 'inline-block';
+		}
+	}
+	
+	let obsolete = document.getElementsByClassName('obsolete');
+	for ( let element of obsolete ) {
+		element.style.display = 'none';
 	}
 }
 

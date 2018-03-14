@@ -46,13 +46,13 @@
 				<li id="tab-settings" class="tab">
 					<div id="icon-settings"></div>
 				</li>
-				<li id="tab-playback" class="tab">
+				<li id="tab-playback" class="tab expert-mode-only">
 					<div id="icon-playback"></div>
 				</li>
-				<li id="tab-acceleration" class="tab">
+				<li id="tab-acceleration" class="tab expert-mode-only">
 					<div id="icon-acceleration"></div>
-				</li>
-				<li id="tab-colors" class="tab">
+				</li>	
+				<li id="tab-colors" class="tab obsolete">
 					<div id="icon-colors"></div>
 				</li>
 				<li id="tab-filters" class="tab">
@@ -249,12 +249,15 @@
 						<option class="translate-me" value="none">none</option>
 					</select>
 					<br>
-					<br>
 					
-					<label><input type="checkbox" id="showSegmentationTools"><span class="translate-me">showSegmentationTools</span></label><br>
-					<label><input type="checkbox" id="hideOnSegmentedVideos"><span class="translate-me">hideOnSegmentedVideos</span></label><br>
-					<label><input type="checkbox" id="pinSegmentationTools"><span class="translate-me">pinSegmentationTools</span></label><br>
-					<label><input type="checkbox" id="hideIcon"><span class="translate-me">hideIcon</span></label><br>
+					<div class="expert-mode-only">
+						<br>
+						<label><input type="checkbox" id="showSegmentationTools"><span class="translate-me">showSegmentationTools</span></label><br>
+						<label><input type="checkbox" id="hideOnSegmentedVideos"><span class="translate-me">hideOnSegmentedVideos</span></label><br>
+						<label><input type="checkbox" id="pinSegmentationTools"><span class="translate-me">pinSegmentationTools</span></label><br>
+						<label><input type="checkbox" id="hideIcon"><span class="translate-me">hideIcon</span></label><br>
+						<br>
+					</div>
 					<br>
 					
 					<span class="translate-me">wait</span><input size="3" id="autoPauseDuration"><span class="translate-me">secondsForSegments</span><br>
@@ -262,7 +265,10 @@
 					<br>
 					
 					<span class="translate-me">segmentationToolsOpacity</span><input size="3" id="segmentationToolsOpacity">%<br>
-					<span class="translate-me">iconOpacity</span><input size="3" id="iconOpacity">%<br>
+					<div class="expert-mode-only">
+						<span class="translate-me">iconOpacity</span><input size="3" id="iconOpacity">%<br>
+						<br>
+					</div>
 					<br>
 					
 					<span class="translate-me">databasePriority</span>
