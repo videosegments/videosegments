@@ -336,7 +336,7 @@ function loadSettings()
 			
 			silence: {
 				enabled: false,
-				threshold: 100,
+				threshold: 0,
 				duration: 2.0,
 			},
 		},
