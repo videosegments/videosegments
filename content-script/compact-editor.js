@@ -176,6 +176,13 @@ var CompactEditor = {
 	
 	createOpacityChanger: function(owner) {
 		let self = this;
+		
+		let container = document.createElement('div');
+		container.id = 'vs-compact-editor-opacity';
+		
+		let span = document.createElement('span');
+		span.appendChild(document.createTextNode(browser.i18n.getMessage('opacity')));
+		container.appendChild(span);
 
 		let input = document.createElement('input');
 		input.type = 'range';
@@ -202,7 +209,9 @@ var CompactEditor = {
 			}
 		});
 		
-		return input;
+		container.appendChild(input);
+		
+		return container;
 	},
 	
 	// idk why to minimize. maybe later 
@@ -310,7 +319,7 @@ var CompactEditor = {
 		if ( this.timestamps.length === 0 ) {
 			this.timestamps.push(0.0);
 			this.timestamps.push(parseFloat(this.wrapper.video.duration.toFixed(2)));
-			this.types.push(this.name);
+			this.types.push(type);
 		}
 		else {
 			for ( i = 0; i < this.timestamps.length; ++i ) {

@@ -376,6 +376,13 @@
 	
 	
 	
+	"opacity": {
+		"message": "Opacity: ",
+		"description": ""
+	}, 
+	
+	
+	
 	"timeSaved": {
 		"message": "Time skipped: ",
 		"description": ""

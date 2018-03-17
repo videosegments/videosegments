@@ -323,6 +323,10 @@
 	cursor: move;
 }
 
+#vs-compact-editor-opacity * {
+	vertical-align: middle;
+}
+
 #vs-compact-editor-header i {
 	margin-top: 2px;
 	height: 10px;

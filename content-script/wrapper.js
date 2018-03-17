@@ -400,7 +400,6 @@ var Wrapper = {
 			// TODO: investigate why it can be more than 100 
 			sum += width;
 			if ( sum > 100.0 ) width = width - sum + 100;
-			log((this.timestamps[i+1] - this.timestamps[i]), this.video.duration * 100, width);
 			segment.style.width = width+'%';
 			segment.style.backgroundColor = this.settings.segments[this.types[i]].color;
 			segment.innerHTML = '&nbsp;';
