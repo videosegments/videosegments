@@ -43,6 +43,7 @@ var CompactEditor = {
 	start: function(wrapper, timestamps, types, origin, settings, domain, id) {
 		log('CompactEditor::start()');
 		this.injectStylesheet();
+		let self = this;
 		
 		this.wrapper = wrapper;
 		this.timestamps = timestamps;
@@ -73,8 +74,19 @@ var CompactEditor = {
 		
 		let entries = document.createElement('div');
 		entries.id = 'vs-compact-editor-entries';
-		for ( let i = 0; i < this.types.length; ++i ) {
-			entries.appendChild(this.createSegmentEntry(i));
+		if ( this.types.length > 0 ) {
+			for ( let i = 0; i < this.types.length; ++i ) {
+				entries.appendChild(this.createSegmentEntry(i));
+			}
+			
+			buttons.style.borderBottom = '2px solid rgb(221, 221, 221)';
+			entries.style.borderBottom = '2px solid rgb(221, 221, 221)';
+			entries.style.padding = '4px';
+		}
+		else {
+			buttons.style.borderBottom = '0';
+			entries.style.borderBottom = '0';
+			entries.style.padding = '0';
 		}
 		this.panel.appendChild(entries);
 		
@@ -101,12 +113,30 @@ var CompactEditor = {
 		let mouseEnterFn = function() {
 			player.dispatchEvent(mouseMoveEvent);
 			moveTimer = setInterval(function() { player.dispatchEvent(mouseMoveEvent); }, 1000);
+			
+			if ( self.settings.minified && self.settings.maximizePanelOnHover ) {
+				self.panel.style.left = self.settings.editor.posX + 'px';
+				self.panel.style.width = '275px';
+				document.getElementById('vs-compact-editor-buttons').style.display = 'flex';
+				document.getElementById('vs-compact-editor-sharing').style.display = 'flex';
+				document.getElementById('vs-compact-editor-opacity').style.display = 'block';
+				document.getElementById('vs-compact-editor-entries').style.display = 'block';
+			}
 		}
 		
 		// hide youtube controls when mouse leave panel  
 		let mouseLeaveFn = function() {
 			// todo: instant hide 
 			clearInterval(moveTimer);
+			
+			if ( self.settings.minified && self.settings.maximizePanelOnHover ) {
+				self.panel.style.left = (self.settings.editor.posX + 225) + 'px';
+				self.panel.style.width = '50px';
+				document.getElementById('vs-compact-editor-buttons').style.display = 'none';
+				document.getElementById('vs-compact-editor-sharing').style.display = 'none';
+				document.getElementById('vs-compact-editor-opacity').style.display = 'none';
+				document.getElementById('vs-compact-editor-entries').style.display = 'none';
+			}
 		}
 
 		this.panel.addEventListener('mouseenter', mouseEnterFn);
@@ -118,6 +148,8 @@ var CompactEditor = {
 		else {
 			document.getElementById('vs-compact-editor-sharing').style.display = 'flex';
 		}
+		
+		this.minimize(document.getElementById('vs-compact-editor-header-minimize'), false);
 	},
 	
 	// https://stackoverflow.com/a/9345038
@@ -136,7 +168,8 @@ var CompactEditor = {
 		let move = document.createElement('i');
 		move.id = 'vs-compact-editor-header-move';
 		move.classList.add('fa');
-		move.classList.add('fa-arrows-alt');
+		move.classList.add('fa-arrows');
+		move.style.color = '#4B71E6';
 		
 		let x = 0, y = 0, offsetX = 0, offsetY = 0;
 		move.addEventListener('mousedown', startDrag); 
@@ -157,6 +190,9 @@ var CompactEditor = {
 			owner.style.left = owner.offsetLeft - x + 'px';
 			owner.style.top = owner.offsetTop - y + 'px';
 			
+			// remove selection 
+			window.getSelection().removeAllRanges();
+			
 			// owner.style.left = e.clientX/window.innerWidth*100 + '%';
 			// owner.style.top = (e.clientY-8)/window.innerHeight*100 + '%';
 		}
@@ -165,8 +201,9 @@ var CompactEditor = {
 			document.removeEventListener('mousemove', drag);
 			document.removeEventListener('mouseup', endDrag);
 
-			self.settings.editor.posX = owner.style.left.slice(0, -2);
-			self.settings.editor.posY = owner.style.top.slice(0, -2);
+			self.settings.editor.posX = parseInt(owner.style.left.slice(0, -2));
+			if ( self.settings.minified ) self.settings.editor.posX -= 225;
+			self.settings.editor.posY = parseInt(owner.style.top.slice(0, -2));
 
 			browser.storage.local.set({ settings: self.settings });
 		}
@@ -185,11 +222,13 @@ var CompactEditor = {
 		container.appendChild(span);
 
 		let input = document.createElement('input');
+		input.id = 'vs-compact-editor-opacity';
 		input.type = 'range';
 		
-		input.setAttribute('step', '0.05');
+		input.setAttribute('step', '0.01');
 		input.setAttribute('min', '0');
 		input.setAttribute('max', '1');
+		input.style.width = '100px';
 
 		input.value = this.settings.segmentationToolsOpacity / 100.0;
 		owner.classList.add('vs-compact-editor-hovering');
@@ -216,47 +255,50 @@ var CompactEditor = {
 	
 	// idk why to minimize. maybe later 
 	createMinimizeButton: function(owner) {
-		// let minimize = document.createElement('i');
-		// minimize.id = 'vs-compact-editor-header-minimize';
-		// minimize.classList.add('fa');
-		// minimize.classList.add('fa-close');
+		let self = this;
 		
-		// return minimize;
+		let minimize = document.createElement('i');
+		minimize.id = 'vs-compact-editor-header-minimize';
+		minimize.classList.add('fa');
 		
-		let move = document.createElement('i');
-		move.id = 'vs-compact-editor-header-move';
-		move.classList.add('fa');
-		move.classList.add('fa-arrows-alt');
-		
-		let x = 0, y = 0, offsetX = 0, offsetY = 0;
-		move.addEventListener('mousedown', startDrag); 
-		
-		function startDrag(e) {
-			offsetX = e.clientX;
-			offsetY = e.clientY;
-			document.addEventListener('mousemove', drag);
-			document.addEventListener('mouseup', endDrag);
+		if ( this.settings.minified ) {
+			minimize.classList.add('fa-window-minimize');
+		}
+		else {
+			minimize.classList.add('fa-window-maximize');
 		}
 		
-		function drag(e) {
-			x = offsetX - e.clientX;
-			y = offsetY - e.clientY;
-			offsetX = e.clientX;
-			offsetY = e.clientY;
+		minimize.addEventListener('click', function() { 
+			self.settings.minified = !self.settings.minified;
+			self.minimize(this); 
 			
-			owner.style.left = owner.offsetLeft - x + 'px';
-			owner.style.top = owner.offsetTop - y + 'px';
+			browser.storage.local.set({ settings: self.settings });
 			
-			// owner.style.left = e.clientX/window.innerWidth*100 + '%';
-			// owner.style.top = (e.clientY-8)/window.innerHeight*100 + '%';
+		}); 
+		return minimize;
+	},
+	
+	minimize: function(button) {
+		if ( this.settings.minified ) {
+			this.panel.style.left = (this.settings.editor.posX + 225) + 'px';
+			this.panel.style.width = '50px';
+			document.getElementById('vs-compact-editor-buttons').style.display = 'none';
+			document.getElementById('vs-compact-editor-sharing').style.display = 'none';
+			document.getElementById('vs-compact-editor-opacity').style.display = 'none';
+			document.getElementById('vs-compact-editor-entries').style.display = 'none';
+			button.classList.remove('fa-window-minimize');
+			button.classList.add('fa-window-maximize');
 		}
-		
-		function endDrag() {
-			document.removeEventListener('mousemove', drag);
-			document.removeEventListener('mouseup', endDrag);
+		else {
+			this.panel.style.left = this.settings.editor.posX + 'px';
+			this.panel.style.width = '275px';
+			document.getElementById('vs-compact-editor-buttons').style.display = 'flex';
+			document.getElementById('vs-compact-editor-sharing').style.display = 'flex';
+			document.getElementById('vs-compact-editor-opacity').style.display = 'block';
+			document.getElementById('vs-compact-editor-entries').style.display = 'block';
+			button.classList.remove('fa-window-maximize');
+			button.classList.add('fa-window-minimize');
 		}
-		
-		return move;
 	},
 	
 	createButton: function(name, type, background, color) {
@@ -354,9 +396,20 @@ var CompactEditor = {
 			i = i - 1;
 		}
 		
-		// log(this.timestamps, this.types);
-		for ( let j = 0; j < this.types.length; ++j ) {
-			entries.appendChild(this.createSegmentEntry(j, i === j));
+		if ( this.types.length > 0 ) {
+			// log(this.timestamps, this.types);
+			for ( let j = 0; j < this.types.length; ++j ) {
+				entries.appendChild(this.createSegmentEntry(j, i === j));
+			}
+			
+			document.getElementById('vs-compact-editor-buttons').style.borderBottom = '2px solid rgb(221, 221, 221)';
+			entries.style.borderBottom = '2px solid rgb(221, 221, 221)';
+			entries.style.padding = '4px';
+		}
+		else {
+			document.getElementById('vs-compact-editor-buttons').style.borderBottom = '0';
+			entries.style.borderBottom = '0';
+			entries.style.padding = '0';
 		}
 	},
 	
@@ -432,14 +485,15 @@ var CompactEditor = {
 		
 		let span;
 		span = document.createElement('span');
-		span.appendChild(document.createTextNode(' ' + browser.i18n.getMessage(this.types[i]) + ' ' + browser.i18n.getMessage('from') + '  '));
+		span.appendChild(document.createTextNode(' ' + browser.i18n.getMessage(this.types[i]) + ' ' + browser.i18n.getMessage('from') + ' '));
 		container.appendChild(span);
 		
 		let startTime = document.createElement('input');
 		startTime.classList.add('vs-segment-start-time');
 		startTime.classList.add('vs-segment-editing-restricted');
 		startTime.value = this.timestampToClockTime(this.timestamps[i]);
-		startTime.size = 6;
+		startTime.size = startTime.value.length + 1;
+		startTime.readOnly = true;
 		container.appendChild(startTime);
 		
 		span = document.createElement('span');
@@ -449,7 +503,7 @@ var CompactEditor = {
 		let endTime = document.createElement('input');
 		endTime.classList.add('vs-segment-end-time');
 		endTime.value = this.timestampToClockTime(this.timestamps[i+1]);
-		endTime.size = 6;
+		endTime.size = endTime.value.length + 1;
 		container.appendChild(endTime);
 		this.addSmartCursorHandler(endTime, i+1);
 

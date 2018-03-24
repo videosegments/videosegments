@@ -92,6 +92,7 @@ function getSettings(callback) {
 		hideOnSegmentedVideos: false,
 		pinSegmentationTools: false,
 		hideIcon: false,
+		maximizePanelOnHover: false,
 		popupDurationOnSend: 5.0,
 		databasePriority: 'local',
 		segmentationToolsOpacity: 100,
@@ -108,6 +109,7 @@ function getSettings(callback) {
 		// addon working in simplified (skip-play) mode 
 		mode: 'simplified', 
 		lastTab: 'tab-filters',
+		minified: false,
 		
 		filters: {
 			apiKey: '',
@@ -130,7 +132,7 @@ function getSettings(callback) {
 
 		editor: {
 			posX: 100,
-			posY: 100,
+			posY: 200,
 		},
 		
 		// user notification  

@@ -203,6 +203,10 @@
 		"message": "None",
 		"description": ""
 	},
+	"maximizePanelOnHover": {
+		"message": "Maximize panel on hover",
+		"description": ""
+	},
 	
 	
 	
@@ -378,6 +382,10 @@
 	
 	"opacity": {
 		"message": "Opacity: ",
+		"description": ""
+	}, 
+	"resetPanel": {
+		"message": "Reset panel position and opacity",
 		"description": ""
 	}, 
 	

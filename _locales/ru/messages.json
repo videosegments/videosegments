@@ -204,6 +204,10 @@
 		"message": "Скрыть",
 		"description": ""
 	},
+	"maximizePanelOnHover": {
+		"message": "Раскрывать свёрнутую панель наведением мышки",
+		"description": ""
+	},
 	
 	
 	
@@ -393,11 +397,15 @@
 		"message": "Эксперт",
 		"description": ""
 	},
+	"resetPanel": {
+		"message": "Сбросить позицию и прозрачность панели",
+		"description": ""
+	}, 
 	
 	
 	
 	"opacity": {
-		"message": "Прозрачность: ",
+		"message": "Прозрачн: ",
 		"description": ""
 	}, 
 	

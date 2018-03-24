@@ -115,6 +115,16 @@ function domContentLoaded()
 			}
 		});
 	});
+	
+	button = document.getElementById('reset-panel');
+	button.addEventListener('click', function() {
+		settings.segmentationToolsOpacity = 100;
+		settings.editor.posX = 100;
+		settings.editor.posY = 200;
+		settings.minified = false;
+		browser.storage.local.set({ settings: settings }); 
+		notifyMediaPlayerWrapper(settings);
+	});
 }
 
 browser.runtime.onMessage.addListener(function(message) {
@@ -309,6 +319,7 @@ function loadSettings()
 		hideOnSegmentedVideos: false,
 		pinSegmentationTools: false,
 		hideIcon: false,
+		maximizePanelOnHover: false,
 		popupDurationOnSend: 5.0,
 		databasePriority: 'local',
 		segmentationToolsOpacity: 100,
@@ -326,6 +337,7 @@ function loadSettings()
 		// addon working in simplified (skip-play) mode 
 		mode: 'simplified', 
 		lastTab: 'tab-filters',
+		minified: false,
 		
 		filters: {
 			apiKey: '',
@@ -348,7 +360,7 @@ function loadSettings()
 
 		editor: {
 			posX: 100,
-			posY: 100,
+			posY: 200,
 		},
 	}
 	
@@ -465,6 +477,10 @@ function restoreOptions()
 	element.value = settings.iconOpacity;
 	element.addEventListener('change', function() { updateGlobalValue(this, settings, 'iconOpacity'); });
 	
+	element = document.getElementById('maximizePanelOnHover');
+	element.checked = settings.maximizePanelOnHover;
+	element.addEventListener('change', function() { updateGlobalBool(this, settings, 'maximizePanelOnHover'); });
+	
 	element = document.getElementById('showSegmentationTools');
 	element.checked = settings.showSegmentationTools;
 	element.addEventListener('change', function() { updateGlobalBool(this, settings, 'showSegmentationTools'); });
@@ -550,11 +566,21 @@ function setMode(mode)
 		for ( let element of elements ) {
 			element.style.display = 'none';
 		}
+		
+		elements = document.getElementsByClassName('simple-mode-only');
+		for ( let element of elements ) {
+			element.style.display = 'inline-block';
+		}
 	}
 	else {
 		let elements = document.getElementsByClassName('expert-mode-only');
 		for ( let element of elements ) {
 			element.style.display = 'inline-block';
+		}
+		
+		elements = document.getElementsByClassName('simple-mode-only');
+		for ( let element of elements ) {
+			element.style.display = 'none';
 		}
 	}
 	
