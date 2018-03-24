@@ -109,7 +109,7 @@ function getSettings(callback) {
 		// addon working in simplified (skip-play) mode 
 		mode: 'simplified', 
 		lastTab: 'tab-filters',
-		minified: false,
+		minimized: false,
 		
 		filters: {
 			apiKey: '',

@@ -121,7 +121,7 @@ function domContentLoaded()
 		settings.segmentationToolsOpacity = 100;
 		settings.editor.posX = 100;
 		settings.editor.posY = 200;
-		settings.minified = false;
+		settings.minimized = false;
 		browser.storage.local.set({ settings: settings }); 
 		notifyMediaPlayerWrapper(settings);
 	});
@@ -337,7 +337,7 @@ function loadSettings()
 		// addon working in simplified (skip-play) mode 
 		mode: 'simplified', 
 		lastTab: 'tab-filters',
-		minified: false,
+		minimized: false,
 		
 		filters: {
 			apiKey: '',

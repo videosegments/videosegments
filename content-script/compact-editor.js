@@ -114,7 +114,7 @@ var CompactEditor = {
 			player.dispatchEvent(mouseMoveEvent);
 			moveTimer = setInterval(function() { player.dispatchEvent(mouseMoveEvent); }, 1000);
 			
-			if ( self.settings.minified && self.settings.maximizePanelOnHover ) {
+			if ( self.settings.minimized && self.settings.maximizePanelOnHover ) {
 				self.panel.style.left = self.settings.editor.posX + 'px';
 				self.panel.style.width = '275px';
 				document.getElementById('vs-compact-editor-buttons').style.display = 'flex';
@@ -129,7 +129,7 @@ var CompactEditor = {
 			// todo: instant hide 
 			clearInterval(moveTimer);
 			
-			if ( self.settings.minified && self.settings.maximizePanelOnHover ) {
+			if ( self.settings.minimized && self.settings.maximizePanelOnHover ) {
 				self.panel.style.left = (self.settings.editor.posX + 225) + 'px';
 				self.panel.style.width = '50px';
 				document.getElementById('vs-compact-editor-buttons').style.display = 'none';
@@ -202,7 +202,7 @@ var CompactEditor = {
 			document.removeEventListener('mouseup', endDrag);
 
 			self.settings.editor.posX = parseInt(owner.style.left.slice(0, -2));
-			if ( self.settings.minified ) self.settings.editor.posX -= 225;
+			if ( self.settings.minimized ) self.settings.editor.posX -= 225;
 			self.settings.editor.posY = parseInt(owner.style.top.slice(0, -2));
 
 			browser.storage.local.set({ settings: self.settings });
@@ -261,7 +261,7 @@ var CompactEditor = {
 		minimize.id = 'vs-compact-editor-header-minimize';
 		minimize.classList.add('fa');
 		
-		if ( this.settings.minified ) {
+		if ( this.settings.minimized ) {
 			minimize.classList.add('fa-window-minimize');
 		}
 		else {
@@ -269,7 +269,7 @@ var CompactEditor = {
 		}
 		
 		minimize.addEventListener('click', function() { 
-			self.settings.minified = !self.settings.minified;
+			self.settings.minimized = !self.settings.minimized;
 			self.minimize(this); 
 			
 			browser.storage.local.set({ settings: self.settings });
@@ -279,7 +279,7 @@ var CompactEditor = {
 	},
 	
 	minimize: function(button) {
-		if ( this.settings.minified ) {
+		if ( this.settings.minimized ) {
 			this.panel.style.left = (this.settings.editor.posX + 225) + 'px';
 			this.panel.style.width = '50px';
 			document.getElementById('vs-compact-editor-buttons').style.display = 'none';
