@@ -293,7 +293,7 @@ var CompactEditor = {
 			this.panel.style.left = this.settings.editor.posX + 'px';
 			this.panel.style.width = '275px';
 			document.getElementById('vs-compact-editor-buttons').style.display = 'flex';
-			document.getElementById('vs-compact-editor-sharing').style.display = 'flex';
+			if ( this.types.length > 0 ) document.getElementById('vs-compact-editor-sharing').style.display = 'flex';
 			document.getElementById('vs-compact-editor-opacity').style.display = 'block';
 			document.getElementById('vs-compact-editor-entries').style.display = 'block';
 			button.classList.remove('fa-window-maximize');
