@@ -446,7 +446,7 @@ var CompactEditor = {
 			}, function() {
 				let segmentationOrigin = document.getElementById('vs-segmentation-origin');
 				segmentationOrigin.firstChild.remove();
-				segmentationOrigin.appendChild(document.createTextNode(browser.i18n.getMessage(self.origin) + ' (' + self.iterations + ')'));
+				segmentationOrigin.appendChild(document.createTextNode(browser.i18n.getMessage(self.origin) + ' [' + self.iterations + ']'));
 			});
 			this.origin = 'savedLocally';
 		}

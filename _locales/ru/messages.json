@@ -1,11 +1,11 @@
 {
 	"extensionName": {
-		"message": "Cut YouTube Videos with VideoSegments",
+		"message": "Skip Boring Video Segments",
 		"description": ""
 	},
 
 	"extensionDescription": {
-		"message": "Самый простой способ вырезать нежелательный контент из онлайн видео. Отлично подходит для прослушивания музыки.",
+		"message": "Самый простой способ пропускать нежелательный контент в онлайн видео. Отлично подходит для прослушивания музыки.",
 		"description": ""
 	},
 	
@@ -317,11 +317,11 @@
 		"description": ""
 	},
 	"localDatabase": {
-		"message": "лок. бд",
+		"message": "Лок. бд",
 		"description": ""
 	},
 	"officialDatabase": {
-		"message": "офф. бд",
+		"message": "Сообщество",
 		"description": ""
 	},
 	"pendingDatabase": {

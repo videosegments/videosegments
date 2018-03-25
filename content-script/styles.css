@@ -306,7 +306,8 @@
 	z-index: 2000;
 	
 	background: white;
-	box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.19);
+	/* box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.19); */
+	box-shadow: 0 0 4px 1px rgba(0, 0, 0, 0.2);
 	border-radius: 5px;
 	
 	padding: 2px 5px;
