@@ -308,7 +308,7 @@
 	
 	
 	"databasePriority": {
-		"message": "Приоритет базы данных",
+		"message": "Приоритет базы данных:",
 		"description": ""
 	},
 	"hideSegmentationTools": {
@@ -389,7 +389,7 @@
 		"description": ""
 	},
 	"simplifiedMode": {
-		"message": "Простой",
+		"message": "Нормальный",
 		"description": ""
 	},
 	"normalMode": {

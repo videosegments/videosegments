@@ -202,7 +202,7 @@ var CompactEditor = {
 			document.removeEventListener('mouseup', endDrag);
 
 			self.settings.editor.posX = parseInt(owner.style.left.slice(0, -2));
-			if ( self.settings.minimized ) self.settings.editor.posX -= 225;
+			if ( self.settings.minimized && !self.settings.maximizePanelOnHover ) self.settings.editor.posX -= 225;
 			self.settings.editor.posY = parseInt(owner.style.top.slice(0, -2));
 
 			browser.storage.local.set({ settings: self.settings });

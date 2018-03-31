@@ -299,7 +299,7 @@
 	
 	
 	"databasePriority": {
-		"message": "Database priority",
+		"message": "Database priority: ",
 		"description": ""
 	},
 	"hideSegmentationTools": {
@@ -369,7 +369,7 @@
 		"description": ""
 	},
 	"simplifiedMode": {
-		"message": "Lite",
+		"message": "Normal",
 		"description": ""
 	},
 	"normalMode": {

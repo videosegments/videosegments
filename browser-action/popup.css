@@ -290,7 +290,7 @@ label input {
 #tutorial-header {
 	text-align: center;
 	font-weight: bold;
-	font-size: 200%;
+	font-size: 140%;
 	padding-top: 4px;
 	padding-bottom: 8px;
 	margin-bottom: 12px;
@@ -301,6 +301,41 @@ label input {
 
 #tutorial-image {
 	
+}
+
+#tutorial-finish {
+   border-top: 1px solid #96d1f8;
+   background: #145fa1;
+   background: -webkit-gradient(linear, left top, left bottom, from(#0073ff), to(#145fa1));
+   background: -webkit-linear-gradient(top, #0073ff, #145fa1);
+   background: -moz-linear-gradient(top, #0073ff, #145fa1);
+   background: -ms-linear-gradient(top, #0073ff, #145fa1);
+   background: -o-linear-gradient(top, #0073ff, #145fa1);
+   padding: 5px 10px;
+   -webkit-border-radius: 8px;
+   -moz-border-radius: 8px;
+   border-radius: 8px;
+   -webkit-box-shadow: rgba(0,0,0,1) 0 1px 0;
+   -moz-box-shadow: rgba(0,0,0,1) 0 1px 0;
+   box-shadow: rgba(0,0,0,1) 0 1px 0;
+   text-shadow: rgba(0,0,0,.4) 0 1px 0;
+   color: white;
+   font-size: 14px;
+   font-family: Georgia, serif;
+   text-decoration: none;
+   vertical-align: middle;
+   outline: none;
+}
+
+#tutorial-finish:hover {
+   border-top-color: #000fb5;
+   background: #000fb5;
+   color: #ffffff;
+}
+
+#tutorial-finish:active {
+   border-top-color: #1b435e;
+   background: #1b435e;
 }
 
 .tooltip {

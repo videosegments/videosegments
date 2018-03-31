@@ -46,6 +46,7 @@ function domContentLoaded()
 	button.addEventListener('click', openNextSegmentationRequest);
 	
 	let iframe = document.getElementById('settings-iframe');
+	setTimeout(function() { iframe.src = 'https://db.videosegments.org/api/v3/login.php' }, 0); // otherwise chrome will open page after iframe is loaded (1-2 seconds)
 	window.addEventListener('message', function(event) {
 		// iframe.style.height = event.data+'px';
 		checkLogin();
