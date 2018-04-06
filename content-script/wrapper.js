@@ -539,7 +539,8 @@ var Wrapper = {
 		let duration = this.timestamps[segment+1] - currentTime;
 		if ( duration > this.settings.segments[this.types[segment]].duration ) {
 			browser.runtime.sendMessage({ 'updateTotalTime': this.timestamps[segment+1] - this.video.currentTime });
-			this.video.currentTime = this.timestamps[segment+1];
+			this.video.currentTime = this.timestamps[segment+1]-0.0001;
+			log(this.video.currentTime);
 			
 			segment = this.getNextRewindSegment(segment+1);
 			if ( segment !== null ) {
@@ -613,7 +614,9 @@ var Wrapper = {
 			}
 			
 			let rewindSegment = this.getNextRewindSegment(0);
-			this.tryRewind(rewindSegment);
+			if ( rewindSegment !== null ) {
+				this.tryRewind(rewindSegment);
+			}
 		}
 		else {
 			this.preventPlaybackRateUpdate = false;
