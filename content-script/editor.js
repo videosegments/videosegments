@@ -898,7 +898,7 @@ var Editor = {
 			let types = segmentation.types;
 			
 			let xhr = new XMLHttpRequest();
-			xhr.open('POST', 'https://db.videosegments.org/api/v3/set.php');
+			xhr.open('POST', 'https://db.videosegments.org/api/test/set.php');
 			// xhr.open('POST', 'http://db.vsegments/api/v3/set.php');
 			xhr.onreadystatechange = function() { 
 				if ( xhr.readyState == 4 ) {
@@ -937,6 +937,7 @@ var Editor = {
 						}
 					}
 				}
+				log(xhr.readyState, xhr.status);
 			};
 			
 			let post = 'id='+this.id+'&timestamps='+timestamps+'&types='+types;
@@ -955,7 +956,7 @@ var Editor = {
 			
 		if ( event.origin === 'https://db.videosegments.org' ) {
 			let xhr = new XMLHttpRequest();
-			xhr.open('POST', 'https://db.videosegments.org/api/v3/set.php');
+			xhr.open('POST', 'https://db.videosegments.org/api/test/set.php');
 			
 			xhr.onreadystatechange = function() { 
 				if ( xhr.readyState == 4 ) {

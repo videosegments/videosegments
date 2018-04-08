@@ -206,6 +206,10 @@
 		"message": "Maximize panel on hover",
 		"description": ""
 	},
+	"showPageOnReject": {
+		"message": "Show info page on segmentation reject",
+		"description": ""
+	},
 	
 	
 	
@@ -256,6 +260,10 @@
 		"message": "Error",
 		"description": ""
 	},
+	"rejected": {
+		"message": "Rejected",
+		"description": ""
+	},
 	"segmentationSendedToReview": {
 		"message": "Your segmentation is sended to review.",
 		"description": ""
@@ -278,6 +286,34 @@
 	},
 	"noChangesInSegmentation": {
 		"message": "You already sent this segmentation.",
+		"description": ""
+	},
+	"rejectedUnlisted": {
+		"message": "Sorry. We can't review unlisted videos.",
+		"description": ""
+	},
+	"rejectedStream": {
+		"message": "Sorry. Anonymous users can't send streams.",
+		"description": ""
+	},
+	"rejectedViews": {
+		"message": "Sorry. Anonymous users can't send videos with less than 50 000 views (exception is only for new videos).",
+		"description": ""
+	},
+	"rejectedLong": {
+		"message": "Sorry. Anonymous users can't send videos longer than 1 hour.",
+		"description": ""
+	},
+	"rejectedSegmentation": {
+		"message": "Sorry. Our system think you sended intentionally wrong segmented video.",
+		"description": ""
+	},
+	"rejectedLanguage": {
+		"message": "Sorry. Seems like video you sending is not english. We can't review this video.",
+		"description": ""
+	},
+	"learnMore": {
+		"message": "Learn more about limits.",
 		"description": ""
 	},
 	
@@ -396,6 +432,17 @@
 	},
 	"thankYouMessage": {
 		"message": "Thank you for contribution!",
+		"description": ""
+	},
+	
+	
+	
+	"reportBug": {
+		"message": "Report Bug",
+		"description": ""
+	},
+	"rateExtension": {
+		"message": "Rate Us",
 		"description": ""
 	},
 	

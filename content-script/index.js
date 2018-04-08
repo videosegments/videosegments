@@ -93,6 +93,7 @@ function getSettings(callback) {
 		pinSegmentationTools: false,
 		hideIcon: false,
 		maximizePanelOnHover: false,
+		showPageOnReject: true,
 		popupDurationOnSend: 5.0,
 		databasePriority: 'local',
 		segmentationToolsOpacity: 100,
@@ -147,7 +148,7 @@ function getSettings(callback) {
 	}, function(result) {
 		// backward compatibility 
 		let settings = Object.assign({}, defaultSettings, result.settings);
-		log(settings);
+		// log(settings);
 		
 		callback(settings);
 	});

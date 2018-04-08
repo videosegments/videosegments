@@ -24,6 +24,11 @@ if ( typeof this.chrome != 'undefined' ) {
 	this.browser = this.chrome;
 }
 
+// rate url 
+// https://stackoverflow.com/a/9851769
+let isFirefox = typeof InstallTrigger !== 'undefined';
+let isOpera = (!!window.opr && !!opr.addons) || !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
+
 let settings;
 document.addEventListener('DOMContentLoaded', domContentLoaded);
 
@@ -33,6 +38,17 @@ function domContentLoaded()
 	let tabs = document.getElementsByClassName('tab');
 	for ( let i = 0; i < tabs.length; ++i ) {
 		tabs[i].addEventListener('click', switchTab);
+	}
+	
+	let rateExtensionLink = document.getElementById('rate-extension');
+	if ( isFirefox ) {
+		rateExtensionLink.href = 'https://addons.mozilla.org/en-US/firefox/addon/videosegments/';
+	}
+	else if ( isOpera ) {
+		rateExtensionLink.href = 'https://addons.opera.com/ru/extensions/details/videosegments/';
+	}
+	else {
+		rateExtensionLink.href = 'https://chrome.google.com/webstore/detail/cut-youtube-videos-with-v/eddbomdegiekipngdepnddkoemagllbn';
 	}
 	
 	// check if user is logged in 
@@ -321,6 +337,7 @@ function loadSettings()
 		pinSegmentationTools: false,
 		hideIcon: false,
 		maximizePanelOnHover: false,
+		showPageOnReject: true,
 		popupDurationOnSend: 5.0,
 		databasePriority: 'local',
 		segmentationToolsOpacity: 100,
@@ -481,6 +498,10 @@ function restoreOptions()
 	element = document.getElementById('maximizePanelOnHover');
 	element.checked = settings.maximizePanelOnHover;
 	element.addEventListener('change', function() { updateGlobalBool(this, settings, 'maximizePanelOnHover'); });
+	
+	element = document.getElementById('showPageOnReject');
+	element.checked = settings.showPageOnReject;
+	element.addEventListener('change', function() { updateGlobalBool(this, settings, 'showPageOnReject'); });
 	
 	element = document.getElementById('showSegmentationTools');
 	element.checked = settings.showSegmentationTools;

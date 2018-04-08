@@ -227,6 +227,7 @@
 	transition: top 0.4s ease;
 	border-radius: 3px;
 	overflow: hidden;
+	max-width: 30%;
 }
 
 .vs-messages-modal-head {
@@ -237,6 +238,11 @@
 
 .vs-messages-modal-head-success {
 	background-color: #0a0;
+}
+
+.vs-messages-modal-head-rejected {
+	background-color: #00a;
+	color: white;
 }
 
 .vs-messages-modal-head-failure {

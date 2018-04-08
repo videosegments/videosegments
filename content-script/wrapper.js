@@ -122,23 +122,22 @@ var Wrapper = {
 		let self = this;
 		
 		this.requestTime = this.video.currentTime;
+		if ( this.settings.autoPauseDuration > 0.0 ) {
+			if ( this.video.paused === false ) {
+				this.video.pause();
+				
+				this.timer = setTimeout(function() {
+					self.video.play();
+					log('autopause timeout');
+				}, this.settings.autoPauseDuration*1000);
+			}
+		}
 		
 		let url = document.getElementsByClassName('ytp-title-link')[0].href;
 		let match = url.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/ ]{11})/i);
 		if ( match && match[1].length == 11 ) { /* youtube video id == 11 */
 			this.domain = 'youtube';
 			this.id = match[1];
-			
-			if ( this.settings.autoPauseDuration > 0.0 ) {
-				if ( this.video.paused === false ) {
-					this.video.pause();
-					
-					this.timer = setTimeout(function() {
-						self.video.play();
-						log('autopause timeout');
-					}, this.settings.autoPauseDuration*1000);
-				}
-			}
 			
 			let pipelineFn = function(self, pipe) {
 				pipe[0](self, function() {
@@ -539,13 +538,20 @@ var Wrapper = {
 		let duration = this.timestamps[segment+1] - currentTime;
 		if ( duration > this.settings.segments[this.types[segment]].duration ) {
 			browser.runtime.sendMessage({ 'updateTotalTime': this.timestamps[segment+1] - this.video.currentTime });
-			this.video.currentTime = this.timestamps[segment+1]-0.0001;
-			log(this.video.currentTime);
-			
-			segment = this.getNextRewindSegment(segment+1);
-			if ( segment !== null ) {
-				this.tryRewind(segment);
+			if ( this.timestamps.length === segment+2 ) {
+				this.video.currentTime = this.video.duration;
+				this.video.pause();
 			}
+			else {
+				this.video.currentTime = this.timestamps[segment+1]; 
+				
+				segment = this.getNextRewindSegment(segment+1);
+				if ( segment !== null ) {
+					this.tryRewind(segment);
+				}
+			}
+			
+			log(this.video.currentTime);
 		}
 		else {
 			this.playbackRate = parseFloat(this.video.playbackRate);

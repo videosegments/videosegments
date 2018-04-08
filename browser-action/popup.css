@@ -25,18 +25,19 @@ body {
 	padding: 5px 0;
 	text-align: center;
 	border-top: 1px solid #333;
+	display: flex;
+	justify-content: space-between;
 }
 
 #footer a {
 	display: inline;
-	margin: 0;
+	margin: 0 20px;
 	text-align: center;
 	font-weight: bold;
 	cursor: pointer;
 	outline: none;
 	border: none;
     text-decoration: none;
-	margin: 0 10px;
 	color: black;
 }
 
