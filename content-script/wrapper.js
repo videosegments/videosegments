@@ -532,13 +532,13 @@ var Wrapper = {
 	},
 	
 	processSegment: function(currentTime, segment) {
-		log('Wrapper::processSegment()');
+		log('Wrapper::processSegment()', this.video.currentTime);
 		let self = this;
 		
 		let duration = this.timestamps[segment+1] - currentTime;
 		if ( duration > this.settings.segments[this.types[segment]].duration ) {
 			browser.runtime.sendMessage({ 'updateTotalTime': this.timestamps[segment+1] - this.video.currentTime });
-			if ( this.timestamps.length === segment+2 ) {
+			if ( this.timestamps.length === segment+2 && (this.video.duration - this.timestamps[segment+1]) < 0.1 ) {
 				this.video.currentTime = this.video.duration;
 				this.video.pause();
 			}
@@ -551,7 +551,7 @@ var Wrapper = {
 				}
 			}
 			
-			log(this.video.currentTime);
+			// log(this.video.currentTime);
 		}
 		else {
 			this.playbackRate = parseFloat(this.video.playbackRate);
@@ -592,7 +592,7 @@ var Wrapper = {
 	},
 	
 	onPause: function() {
-		log('Wrapper::onPause()');
+		log('Wrapper::onPause()', this.video.currentTime);
 		
 		if ( this.muteFirstEvents == 1 ) {
 			return;

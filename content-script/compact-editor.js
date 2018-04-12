@@ -69,8 +69,25 @@ var CompactEditor = {
 		buttons.id = 'vs-compact-editor-buttons';
 		this.panel.appendChild(buttons);
 		
-		buttons.appendChild(this.createButton('skip', 'sk', '#E7E7E7', '#000000'));
-		buttons.appendChild(this.createButton('play', 'pl', '#4CAF50', '#FFFFFF'));
+		let buttonStartCut = this.createButton('startCut', 'sk', '#E7E7E7', '#000000');
+		buttonStartCut.addEventListener('click', function() {
+			self.addSegmentBefore(self.wrapper.video.currentTime, 'pl');
+			self.addSegmentAfter(self.wrapper.video.currentTime, 'sk');
+			
+			self.updateSegmentation(self.wrapper.video.currentTime, true);
+			document.getElementById('vs-compact-editor-sharing').style.display = 'flex';
+		});
+		buttons.appendChild(buttonStartCut);
+		
+		let buttonEndCut = this.createButton('endCut', 'pl', '#4CAF50', '#000000');
+		buttonEndCut.addEventListener('click', function() {
+			self.addSegmentBefore(self.wrapper.video.currentTime, 'sk');
+			self.addSegmentAfter(self.wrapper.video.currentTime, 'pl');
+			
+			self.updateSegmentation(self.wrapper.video.currentTime, false);
+			document.getElementById('vs-compact-editor-sharing').style.display = 'flex';
+		});
+		buttons.appendChild(buttonEndCut);
 		
 		let entries = document.createElement('div');
 		entries.id = 'vs-compact-editor-entries';
@@ -95,10 +112,18 @@ var CompactEditor = {
 		this.panel.appendChild(buttons);
 		
 		buttons.appendChild(this.createOriginText());
-		buttons.appendChild(this.createSendButton());
+		log(this.origin);
+		if ( this.origin !== 'officialDatabase' ) {
+			buttons.appendChild(this.createSendButton());
+		}
 		
 		this.panel.style.opacity = this.settings.segmentationToolsOpacity / 100.0;
-		this.panel.style.left = this.settings.editor.posX + 'px';
+		if ( window.innerWidth < this.settings.editor.posX + this.panel.clientWidth ) {
+			this.panel.style.left = (window.innerWidth - (this.panel.clientWidth + 10)) + 'px';
+		}
+		else {
+			this.panel.style.left = this.settings.editor.posX + 'px';
+		}
 		this.panel.style.top = this.settings.editor.posY + 'px';
 		document.body.appendChild(this.panel);
 
@@ -150,6 +175,15 @@ var CompactEditor = {
 		}
 		
 		this.minimize(document.getElementById('vs-compact-editor-header-minimize'), false);
+		
+		window.addEventListener('resize', function() {
+			if ( window.innerWidth < self.settings.editor.posX + self.panel.clientWidth ) {
+				self.panel.style.left = (window.innerWidth - (self.panel.clientWidth + 20)) + 'px';
+			}
+			else {
+				self.panel.style.left = self.settings.editor.posX + 'px';
+			}
+		});
 	},
 	
 	// https://stackoverflow.com/a/9345038
@@ -189,6 +223,10 @@ var CompactEditor = {
 			
 			owner.style.left = owner.offsetLeft - x + 'px';
 			owner.style.top = owner.offsetTop - y + 'px';
+			
+			if ( window.innerWidth < parseInt(owner.style.left.slice(0, -2)) + owner.clientWidth ) {
+				owner.style.left = (window.innerWidth - (owner.clientWidth + 10)) + 'px';
+			}
 			
 			// remove selection 
 			window.getSelection().removeAllRanges();
@@ -303,30 +341,34 @@ var CompactEditor = {
 	
 	createButton: function(name, type, background, color) {
 		let self = this;
-		let container = document.createElement('span');
+		// let container = document.createElement('span');
 		
-		let leftButton = document.createElement('button');
-		leftButton.id = 'vs-segment-left-' + type;
-		leftButton.classList.add('vs-compact-editor-left-button');
-		leftButton.appendChild(document.createTextNode(browser.i18n.getMessage(name)));
-		leftButton.style.backgroundColor = background;
-		leftButton.style.color = color;
-		leftButton.addEventListener('click', function() { self.addSegmentBefore(self.wrapper.video.currentTime, type) });
+		// let leftButton = document.createElement('button');
+		// leftButton.id = 'vs-segment-left-' + type;
+		// leftButton.classList.add('vs-compact-editor-left-button');
+		// leftButton.appendChild(document.createTextNode(browser.i18n.getMessage(name)));
+		// leftButton.style.backgroundColor = background;
+		// leftButton.style.color = color;
+		// leftButton.addEventListener('click', function() { self.addSegmentBefore(self.wrapper.video.currentTime, type) });
 		
-		container.appendChild(leftButton);
+		// container.appendChild(leftButton);
 		
-		let rightButton = document.createElement('button');
-		rightButton.id = 'vs-segment-right-' + type;
-		rightButton.classList.add('vs-compact-editor-right-button');
-		rightButton.classList.add('fa');
-		rightButton.classList.add('fa-angle-double-right');
-		rightButton.style.backgroundColor = background;
-		rightButton.style.color = color;
-		rightButton.addEventListener('click', function() { self.addSegmentAfter(self.wrapper.video.currentTime, type) });
+		// let rightButton = document.createElement('button');
+		// rightButton.id = 'vs-segment-right-' + type;
+		// rightButton.classList.add('vs-compact-editor-right-button');
+		// rightButton.classList.add('fa');
+		// rightButton.classList.add('fa-angle-double-right');
+		// rightButton.style.backgroundColor = background;
+		// rightButton.style.color = color;
+		// rightButton.addEventListener('click', function() { self.addSegmentAfter(self.wrapper.video.currentTime, type) });
 		
-		container.appendChild(rightButton);
+		let button = document.createElement('button');
+		button.id = 'vs-segment-' + type;
+		button.appendChild(document.createTextNode(browser.i18n.getMessage(name)));
+		// button.style.backgroundColor = background;
+		// button.style.color = color;
 		
-		return container;
+		return button;
 	},
 	
 	addSegmentBefore: function(timestamp, type) {
@@ -351,9 +393,6 @@ var CompactEditor = {
 				i = i - 1;
 			}
 		}
-		
-		this.updateSegmentation(i);
-		document.getElementById('vs-compact-editor-sharing').style.display = 'flex';
 	},
 	
 	addSegmentAfter: function(timestamp, type) {
@@ -378,12 +417,9 @@ var CompactEditor = {
 				i = i - 1;
 			}
 		}
-		
-		this.updateSegmentation(i, false);
-		document.getElementById('vs-compact-editor-sharing').style.display = 'flex';
 	},
 	
-	updateSegmentation: function(i, left=true) {
+	updateSegmentation: function(currentTime, left) {
 		this.wrapper.updateSegmentsBar(false);
 		this.saveLocally();
 		
@@ -392,10 +428,17 @@ var CompactEditor = {
 			entries.firstChild.remove();
 		}
 		
-		if ( left !== true ) {
-			i = i - 1;
+		let i;
+		if ( typeof currentTime !== 'undefined' ) {
+			let timestamp = parseFloat(currentTime.toFixed(1));
+			i = this.timestamps.indexOf(timestamp)-1;
 		}
 		
+		if ( i < 0 ) {
+			i = 0;
+		}
+		
+		log(i, left);
 		if ( this.types.length > 0 ) {
 			// log(this.timestamps, this.types);
 			for ( let j = 0; j < this.types.length; ++j ) {
@@ -480,7 +523,8 @@ var CompactEditor = {
 				self.types.splice(i, 1);
 			}
 			
-			self.updateSegmentation();
+			log('delete');
+			self.updateSegmentation(undefined, false);
 		});
 		
 		let span;

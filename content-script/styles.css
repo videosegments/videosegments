@@ -353,13 +353,14 @@
 }
 
 #vs-compact-editor-buttons button {
-    color: white;
     text-align: center;
     text-decoration: none;
     display: inline-block;
     font-size: 12px;
 	cursor: pointer;
 	outline: none;
+	padding: 2px 4px;
+	font-size: 10px;
 }
 
 .vs-compact-editor-left-button {

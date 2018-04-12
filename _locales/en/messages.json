@@ -45,6 +45,14 @@
 		"message": "Skip",
 		"description": ""
 	},
+	"startCut": {
+		"message": "  Start Cut",
+		"description": ""
+	},
+	"endCut": {
+		"message": "  End Cut",
+		"description": ""
+	},
 	
 	"sk": {
 		"message": "skip",

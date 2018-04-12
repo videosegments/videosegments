@@ -1,7 +1,7 @@
 {
 	"manifest_version": 2,
 	"name": "__MSG_extensionName__",
-	"version": "1.8.5.2",
+	"version": "1.8.6",
 	
 	"applications": {
 		"gecko": {
@@ -33,7 +33,7 @@
 
 	"content_scripts": [
 		{
-			"matches": ["*://www.youtube.com/*"],
+			"matches": ["*://*.youtube.com/*"],
 			"js": ["content-script/observer.js", "content-script/wrapper.js", "content-script/editor.js", "content-script/compact-editor.js", "content-script/filters.js", "content-script/index.js"],
 			"css": ["content-script/styles.css"],
 			"run_at": "document_start",
@@ -42,14 +42,13 @@
 	],
 
 	"permissions": [
-		"https://db.videosegments.org/*",
+		"https://*.videosegments.org/*",
 		"unlimitedStorage",
 		"storage",
 		"tabs"
 	],
 	
 	"web_accessible_resources": [
-		"content-script/webfonts/*",
 		"images/sprites-options.png",
 		"images/sprites-editor.png",
 		"images/scissors.png",
