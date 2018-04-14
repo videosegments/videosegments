@@ -340,7 +340,7 @@ function loadSettings()
 		showPageOnReject: true,
 		popupDurationOnSend: 5.0,
 		databasePriority: 'local',
-		segmentationToolsOpacity: 100,
+		segmentationToolsOpacity: 25,
 		iconOpacity: 100,
 		segmentsBarLocation: 'separated',
 		
@@ -401,7 +401,7 @@ function loadSettings()
 			let totalTimeSaved = (h<10?('0'+h):h) + ":" + ('0' + m).slice(-2) + ":" + ('0' + s).slice(-2);
 			element.textContent = totalTimeSaved;
 			
-			// result.settings.tutorial = 0;
+			result.settings.tutorial = 1;
 			// result.settings.mode === 'simplified' to backward compatibility
 			if ( result.settings.tutorial > 0 || result.settings.mode === 'normal' ) {
 				setMode(result.settings.mode);
@@ -499,9 +499,9 @@ function restoreOptions()
 	element.checked = settings.maximizePanelOnHover;
 	element.addEventListener('change', function() { updateGlobalBool(this, settings, 'maximizePanelOnHover'); });
 	
-	element = document.getElementById('showPageOnReject');
-	element.checked = settings.showPageOnReject;
-	element.addEventListener('change', function() { updateGlobalBool(this, settings, 'showPageOnReject'); });
+	// element = document.getElementById('showPageOnReject');
+	// element.checked = settings.showPageOnReject;
+	// element.addEventListener('change', function() { updateGlobalBool(this, settings, 'showPageOnReject'); });
 	
 	element = document.getElementById('showSegmentationTools');
 	element.checked = settings.showSegmentationTools;

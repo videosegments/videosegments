@@ -121,7 +121,7 @@ var Wrapper = {
 		log('Wrapper::getSegmentation()');
 		let self = this;
 		
-		this.requestTime = this.video.currentTime;
+		this.requestTime = parseFloat(this.video.currentTime.toFixed(0));
 		if ( this.settings.autoPauseDuration > 0.0 ) {
 			if ( this.video.paused === false ) {
 				this.video.pause();
@@ -319,13 +319,6 @@ var Wrapper = {
 	onSegmentationReady: function() {
 		log('Wrapper::onSegmentationReady()');
 		
-		if ( this.timer ) {
-			clearTimeout(this.timer);
-			this.timer = null;
-			
-			this.video.play();
-		}
-		
 		if ( this.timestamps ) {
 			if ( this.types[this.types.length-1] === '-' ) {
 				this.timestamps.pop();
@@ -354,6 +347,17 @@ var Wrapper = {
 		this.video.addEventListener('play', this.onPlayContext);
 		this.video.addEventListener('pause', this.onPauseContext);
 		this.video.addEventListener('ratechange', this.onRateChangeContext);
+		
+		if ( this.timer ) {
+			clearTimeout(this.timer);
+			this.timer = null;
+			this.video.play();
+		}
+		
+		let rewindSegment = this.getNextRewindSegment(0);
+		if ( rewindSegment !== null ) {
+			this.tryRewind(rewindSegment);
+		}
 		
 		// if it's not iframe 
 		if ( window.parent === window ) {

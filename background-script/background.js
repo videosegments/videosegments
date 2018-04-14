@@ -57,7 +57,7 @@ browser.storage.local.get({
 				// }
 			// });
 			
-			browser.tabs.create({url: 'https://videosegments.org/install.html'});
+			// browser.tabs.create({url: 'https://videosegments.org/install.html'});
 		}
 		
 		// if ( result.messages.segmentation === false ) {

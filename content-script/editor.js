@@ -1010,27 +1010,84 @@ var Editor = {
 		this.icon.classList.toggle('vs-editor-icon-active', false);
 	},
 	
-	sendModal(type, bodyText) {
+	checkResponse: function(response) {
+		let self = this;
+		
+		if ( response.message === 'sended' ) {
+			this.sendModal('success', 'segmentationSendedToReview');
+		}
+		else if ( response.message === 'added' ) {
+			this.sendModal('success', 'segmentationAddedToDatabase');
+			this.updateBadge();
+		}
+		else if ( response.message === 'updated' ) {
+			this.sendModal('success', 'segmentationUpdatedInDatabase');
+		}
+		else if ( response.message === 'timeout' ) {
+			this.sendModal('failed', 'segmentationSendTimeout');
+		}
+		else if ( response.message === 'segmented' ) {
+			this.sendModal('failed', 'segmentationExistsInDatabase');
+		}
+		else if ( response.message === 'unlisted' || response.message === 'auto-rejected: video is unlisted' ) {
+			this.sendModal('rejected', 'rejectedUnlisted');
+		}
+		else if ( response.message === 'stream' || response.message === 'auto-rejected: video is stream' ) {
+			this.sendModal('rejected', 'rejectedStream');
+		}
+		else if ( response.message === 'views' || response.message === 'auto-rejected: less than 50000 views' ) {
+			this.sendModal('rejected', 'rejectedViews');
+		}
+		else if ( response.message === 'long' || response.message === 'auto-rejected: video is too long' ) {
+			this.sendModal('rejected', 'rejectedLong');
+		}
+		else if ( response.message === 'segmentation' || response.message === 'auto-rejected: suspicious segmentation' ) {
+			this.sendModal('rejected', 'rejectedSegmentation');
+		}
+		else if ( response.message === 'language' || response.message === 'auto-rejected: unsupported video language' ) {
+			this.sendModal('rejected', 'rejectedLanguage');
+		}
+		else {
+			log('VideoSegments: ' + response.message);
+		}
+	},
+	
+	sendModal: function(type, bodyText) {
 		let modal = document.createElement('div');
 		modal.classList.add('vs-messages-modal');
 		
 		let head = document.createElement('div');
 		head.classList.add('vs-messages-modal-head');
 		if ( type == 'success' ) head.classList.add('vs-messages-modal-head-success');
+		else if ( type == 'rejected' ) head.classList.add('vs-messages-modal-head-rejected');
 		else head.classList.add('vs-messages-modal-head-failure');
 		head.appendChild(document.createTextNode(browser.i18n.getMessage(type)));
 		
 		let modalBody = document.createElement('div');
 		modalBody.classList.add('vs-messages-modal-body');
 		modalBody.appendChild(document.createTextNode(browser.i18n.getMessage(bodyText)));
+		if ( type == 'rejected' ) {
+			let link = document.createElement('a');
+			link.appendChild(document.createTextNode(browser.i18n.getMessage('learnMore')));
+			link.target = '_blank';
+			link.href = 'https://videosegments.org/limits.html';
+			modalBody.appendChild(document.createElement('br'));
+			modalBody.appendChild(link);
+		}
 		
 		modal.appendChild(head);
 		modal.appendChild(modalBody);
 		setTimeout(function() { modal.classList.add('vs-messages-modal-animation'); }, 100);
 		document.body.appendChild(modal);
 		
-		setTimeout(function() { modal.classList.remove('vs-messages-modal-animation'); }, this.settings.popupDurationOnSend*1000);
-		setTimeout(function() { modal.remove(); }, this.settings.popupDurationOnSend*1000+1000);
+		if ( type != 'rejected' ) {
+			setTimeout(function() { modal.classList.remove('vs-messages-modal-animation'); }, this.settings.popupDurationOnSend*1000);
+			setTimeout(function() { modal.remove(); }, this.settings.popupDurationOnSend*1000+1000);
+		}
+		else {
+			setTimeout(function() { modal.classList.remove('vs-messages-modal-animation'); }, 8000);
+			setTimeout(function() { modal.remove(); }, 9000);
+		}
 	},
 	
 	updateBadge: function() {

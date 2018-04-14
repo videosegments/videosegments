@@ -69,7 +69,7 @@ var CompactEditor = {
 		buttons.id = 'vs-compact-editor-buttons';
 		this.panel.appendChild(buttons);
 		
-		let buttonStartCut = this.createButton('startCut', 'sk', '#E7E7E7', '#000000');
+		let buttonStartCut = this.createButton('startCut', 'fromCurrentTime', 'sk');
 		buttonStartCut.addEventListener('click', function() {
 			self.addSegmentBefore(self.wrapper.video.currentTime, 'pl');
 			self.addSegmentAfter(self.wrapper.video.currentTime, 'sk');
@@ -79,7 +79,7 @@ var CompactEditor = {
 		});
 		buttons.appendChild(buttonStartCut);
 		
-		let buttonEndCut = this.createButton('endCut', 'pl', '#4CAF50', '#000000');
+		let buttonEndCut = this.createButton('endCut', 'toCurrentTime', 'pl');
 		buttonEndCut.addEventListener('click', function() {
 			self.addSegmentBefore(self.wrapper.video.currentTime, 'sk');
 			self.addSegmentAfter(self.wrapper.video.currentTime, 'pl');
@@ -339,7 +339,7 @@ var CompactEditor = {
 		}
 	},
 	
-	createButton: function(name, type, background, color) {
+	createButton: function(name, subname, type) {
 		let self = this;
 		// let container = document.createElement('span');
 		
@@ -365,6 +365,8 @@ var CompactEditor = {
 		let button = document.createElement('button');
 		button.id = 'vs-segment-' + type;
 		button.appendChild(document.createTextNode(browser.i18n.getMessage(name)));
+		button.appendChild(document.createElement('br'));
+		button.appendChild(document.createTextNode(browser.i18n.getMessage(subname)));
 		// button.style.backgroundColor = background;
 		// button.style.color = color;
 		
@@ -875,8 +877,8 @@ var CompactEditor = {
 			let types = segmentation.types;
 			
 			let xhr = new XMLHttpRequest();
-			xhr.open('POST', 'https://db.videosegments.org/api/test/set.php');
-			// xhr.open('POST', 'https://db.videosegments.org/api/v3/set.php');
+			// xhr.open('POST', 'https://db.videosegments.org/api/test/set.php');
+			xhr.open('POST', 'https://db.videosegments.org/api/v3/set.php');
 			xhr.onreadystatechange = function() { 
 				if ( xhr.readyState == 4 ) {
 					if ( xhr.status == 200 ) {
@@ -929,7 +931,8 @@ var CompactEditor = {
 			
 		if ( event.origin === 'https://db.videosegments.org' ) {
 			let xhr = new XMLHttpRequest();
-			xhr.open('POST', 'https://db.videosegments.org/api/test/set.php');
+			xhr.open('POST', 'https://db.videosegments.org/api/v3/set.php');
+			// xhr.open('POST', 'https://db.videosegments.org/api/test/set.php');
 			
 			xhr.onreadystatechange = function() { 
 				if ( xhr.readyState == 4 ) {
@@ -975,29 +978,23 @@ var CompactEditor = {
 		else if ( response.message === 'segmented' ) {
 			this.sendModal('failed', 'segmentationExistsInDatabase');
 		}
-		else if ( response.message === 'unlisted' ) {
-			if ( this.settings.showPageOnReject ) window.open('https://videosegments.org/rejected.html', '_blank');
-			else this.sendModal('rejected', 'rejectedUnlisted');
+		else if ( response.message === 'unlisted' || response.message === 'auto-rejected: video is unlisted' ) {
+			this.sendModal('rejected', 'rejectedUnlisted');
 		}
-		else if ( response.message === 'stream' ) {
-			if ( this.settings.showPageOnReject ) window.open('https://videosegments.org/rejected.html', '_blank');
-			else this.sendModal('rejected', 'rejectedStream');
+		else if ( response.message === 'stream' || response.message === 'auto-rejected: video is stream' ) {
+			this.sendModal('rejected', 'rejectedStream');
 		}
-		else if ( response.message === 'views' ) {
-			if ( this.settings.showPageOnReject ) window.open('https://videosegments.org/rejected.html', '_blank');
-			else this.sendModal('rejected', 'rejectedViews');
+		else if ( response.message === 'views' || response.message === 'auto-rejected: less than 50000 views' ) {
+			this.sendModal('rejected', 'rejectedViews');
 		}
-		else if ( response.message === 'long' ) {
-			if ( this.settings.showPageOnReject ) window.open('https://videosegments.org/rejected.html', '_blank');
-			else this.sendModal('rejected', 'rejectedLong');
+		else if ( response.message === 'long' || response.message === 'auto-rejected: video is too long' ) {
+			this.sendModal('rejected', 'rejectedLong');
 		}
-		else if ( response.message === 'segmentation' ) {
-			if ( this.settings.showPageOnReject ) window.open('https://videosegments.org/rejected.html', '_blank');
-			else this.sendModal('rejected', 'rejectedSegmentation');
+		else if ( response.message === 'segmentation' || response.message === 'auto-rejected: suspicious segmentation' ) {
+			this.sendModal('rejected', 'rejectedSegmentation');
 		}
-		else if ( response.message === 'language' ) {
-			if ( this.settings.showPageOnReject ) window.open('https://videosegments.org/rejected.html', '_blank');
-			else this.sendModal('rejected', 'rejectedLanguage');
+		else if ( response.message === 'language' || response.message === 'auto-rejected: unsupported video language' ) {
+			this.sendModal('rejected', 'rejectedLanguage');
 		}
 		else {
 			log('VideoSegments: ' + response.message);

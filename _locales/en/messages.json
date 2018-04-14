@@ -46,14 +46,21 @@
 		"description": ""
 	},
 	"startCut": {
-		"message": "  Start Cut",
+		"message": "Start Cut",
+		"description": ""
+	},
+	"fromCurrentTime": {
+		"message": "(from current time)",
 		"description": ""
 	},
 	"endCut": {
-		"message": "  End Cut",
+		"message": "End Cut",
 		"description": ""
 	},
-	
+	"toCurrentTime": {
+		"message": "(to current time)",
+		"description": ""
+	},
 	"sk": {
 		"message": "skip",
 		"description": ""

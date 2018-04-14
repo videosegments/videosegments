@@ -96,7 +96,7 @@ function getSettings(callback) {
 		showPageOnReject: true,
 		popupDurationOnSend: 5.0,
 		databasePriority: 'local',
-		segmentationToolsOpacity: 100,
+		segmentationToolsOpacity: 25,
 		iconOpacity: 100,
 		segmentsBarLocation: 'separated',
 		
