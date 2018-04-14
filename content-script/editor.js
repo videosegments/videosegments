@@ -898,8 +898,8 @@ var Editor = {
 			let types = segmentation.types;
 			
 			let xhr = new XMLHttpRequest();
-			xhr.open('POST', 'https://db.videosegments.org/api/test/set.php');
-			// xhr.open('POST', 'http://db.vsegments/api/v3/set.php');
+			xhr.open('POST', 'https://db.videosegments.org/api/v3/set.php');
+			// xhr.open('POST', 'https://db.videosegments.org/api/test/set.php');
 			xhr.onreadystatechange = function() { 
 				if ( xhr.readyState == 4 ) {
 					if ( xhr.status == 200 ) {
@@ -909,7 +909,7 @@ var Editor = {
 						if ( jsonResponse.message === 'captcha' ) {
 							self.modal.style.display = "block";
 							
-							let iframe = document.createElement("iframe");
+							let iframe = document.createElement('iframe');
 							iframe.src = 'https://db.videosegments.org/api/v3/captcha.php';
 							iframe.width  = 350;
 							iframe.height = 500;
@@ -922,7 +922,7 @@ var Editor = {
 							
 							let clickContext = function(event) { 
 								if ( event.target == self.modal ) {
-									self.modal.style.display = "none";
+									self.modal.style.display = 'none';
 									self.modal.childNodes[0].childNodes[0].remove();
 									window.removeEventListener('message', messageContext);
 									window.removeEventListener('click', clickContext);
@@ -956,7 +956,8 @@ var Editor = {
 			
 		if ( event.origin === 'https://db.videosegments.org' ) {
 			let xhr = new XMLHttpRequest();
-			xhr.open('POST', 'https://db.videosegments.org/api/test/set.php');
+			xhr.open('POST', 'https://db.videosegments.org/api/v3/set.php');
+			// xhr.open('POST', 'https://db.videosegments.org/api/test/set.php');
 			
 			xhr.onreadystatechange = function() { 
 				if ( xhr.readyState == 4 ) {
