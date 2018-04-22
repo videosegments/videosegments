@@ -14,7 +14,7 @@ Cut YouTube videos with VideoSegments
  - Planned: specified picture detection.
  - Planned: filter based on subtitles.
  
-# Download:
+# Install:
   - [Chrome](https://chrome.google.com/webstore/detail/cut-youtube-videos-with-v/eddbomdegiekipngdepnddkoemagllbn)
   - [Firefox](https://addons.mozilla.org/en-US/firefox/addon/videosegments/)
   - [Opera](https://addons.opera.com/developer/package/229577/)
