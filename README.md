@@ -17,7 +17,7 @@ Cut YouTube videos with VideoSegments
 # Install:
   - [Chrome](https://chrome.google.com/webstore/detail/cut-youtube-videos-with-v/eddbomdegiekipngdepnddkoemagllbn)
   - [Firefox](https://addons.mozilla.org/en-US/firefox/addon/videosegments/)
-  - [Opera](https://addons.opera.com/developer/package/229577/)
+  - [Opera](https://addons.opera.com/ru/extensions/details/videosegments/)
 
 # Social Links:
   - [Twitter](https://twitter.com/videosegments) - short release notes.
