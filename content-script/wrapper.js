@@ -145,11 +145,26 @@ var Wrapper = {
 				});
 			}
 			
-			if ( this.settings.databasePriority === 'local' ) {
-				pipelineFn(this, [this.getPendingSegmentation, this.getLocalSegmentation, this.getOfficialSegmentation, this.tryFilter, this.clearPauseTimer]);
+			// https://gomakethings.com/how-to-get-the-value-of-a-querystring-with-native-javascript/
+			let getQueryString = function (field, url) {
+				let href = window.location.href;
+				let reg = new RegExp( '[?&]' + field + '=([^&#]*)', 'i' );
+				let res = reg.exec(href);
+				return res?res[1]:null;
+			};
+			
+			// pending-id 
+			let pid = getQueryString('vs-pid');
+			if ( pid === null ) {
+				if ( this.settings.databasePriority === 'local' ) {
+					pipelineFn(this, [this.getPendingSegmentation, this.getLocalSegmentation, this.getOfficialSegmentation, this.tryFilter, this.clearPauseTimer]);
+				}
+				else {
+					pipelineFn(this, [this.getPendingSegmentation, this.getOfficialSegmentation, this.getLocalSegmentation, this.tryFilter, this.clearPauseTimer]);
+				}
 			}
 			else {
-				pipelineFn(this, [this.getPendingSegmentation, this.getOfficialSegmentation, this.getLocalSegmentation, this.tryFilter, this.clearPauseTimer]);
+				this.requestPendingSegmentation(pid);
 			}
 		}
 	},
@@ -303,6 +318,63 @@ var Wrapper = {
 		else {
 			callback();
 		}
+	},
+	
+	requestPendingSegmentation: function(pid) {
+		log('Wrapper::requestPendingSegmentation()');
+		let self = this;
+		
+		let xhr = new XMLHttpRequest();
+		xhr.open('GET', 'https://db.videosegments.org/api/v3/review.php?id=' + pid);
+		xhr.onreadystatechange = function() { 
+			if ( xhr.readyState == 4 ) {
+				if ( xhr.status == 200 ) {
+					log('resp:', xhr.responseText);
+					let response = JSON.parse(xhr.responseText);
+					if ( typeof response.timestamps !== 'undefined' && response.timestamps.length > 0 ) {
+						self.timestamps = response.timestamps;
+						log(self.timestamps);
+						
+						if ( self.timestamps[0] !== 0.0 ) {
+							self.timestamps.unshift(0.0);
+							self.timestamps.push(self.video.duration);
+						}
+						else {
+							self.timestamps = [0.0, self.video.duration];
+						}
+						
+						self.types = response.types;
+						self.origin = 'pendingDatabase';
+						self.onSegmentationReady();
+					}
+					else {
+						// https://stackoverflow.com/a/16941754
+						function removeParam(key, sourceURL) {
+							var rtn = sourceURL.split("?")[0],
+								param,
+								params_arr = [],
+								queryString = (sourceURL.indexOf("?") !== -1) ? sourceURL.split("?")[1] : "";
+							if (queryString !== "") {
+								params_arr = queryString.split("&");
+								for (var i = params_arr.length - 1; i >= 0; i -= 1) {
+									param = params_arr[i].split("=")[0];
+									if (param === key) {
+										params_arr.splice(i, 1);
+									}
+								}
+								rtn = rtn + "?" + params_arr.join("&");
+							}
+							return rtn;
+						}
+						
+						window.location.href = removeParam("vs-pid", window.location.href);
+					}
+				}
+			}
+		}
+		
+		xhr.setRequestHeader("content-type", "application/x-www-form-urlencoded");
+		xhr.send();
 	},
 	
 	clearPauseTimer: function(self) {

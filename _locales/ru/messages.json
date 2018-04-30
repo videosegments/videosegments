@@ -299,6 +299,18 @@
 		"message": "Сегментация обновлена.",
 		"description": ""
 	},
+	"segmentationAccepted": {
+		"message": "Сегментация принята.",
+		"description": ""
+	},
+	"segmentationRejected": {
+		"message": "Сегментация отклонена.",
+		"description": ""
+	},
+	"segmentationOverriden": {
+		"message": "Сегментация доработана и принята.",
+		"description": ""
+	},
 	"segmentationSendTimeout": {
 		"message": "Таймаут.",
 		"description": ""
@@ -337,6 +349,10 @@
 	},
 	"learnMore": {
 		"message": "Узнать больше об ограничениях.",
+		"description": ""
+	},
+	"openReviewQuery": {
+		"message": "Открыть меню запросов.",
 		"description": ""
 	},
 	

@@ -356,20 +356,26 @@ var Editor = {
 		if ( this.origin === 'pendingDatabase' ) {
 			let declineButton = document.createElement('button');
 			declineButton.appendChild(document.createTextNode(browser.i18n.getMessage('declineSegmentation')));
-			declineButton.addEventListener('click', function() { self.shareSegmentation(true); });
+			declineButton.addEventListener('click', function() { self.shareSegmentation(1); });
+			
+			let overrideButton = document.createElement('button');
+			overrideButton.appendChild(document.createTextNode(browser.i18n.getMessage('overrideSegmentation')));
+			overrideButton.addEventListener('click', function() { self.shareSegmentation(2); });
 			
 			let acceptButton = document.createElement('button');
 			acceptButton.appendChild(document.createTextNode(browser.i18n.getMessage('acceptSegmentation')));
-			acceptButton.addEventListener('click', function() { self.shareSegmentation(false); });
+			acceptButton.addEventListener('click', function() { self.shareSegmentation(0); });
 			
 			buttonsContainer.appendChild(declineButton);
-			buttonsContainer.appendChild(document.createTextNode('\u00A0\u00A0'));
+			buttonsContainer.appendChild(document.createTextNode('\u00A0'));
+			buttonsContainer.appendChild(overrideButton);
+			buttonsContainer.appendChild(document.createTextNode('\u00A0'));
 			buttonsContainer.appendChild(acceptButton);
 		}
 		else {
 			let sendButton = document.createElement('button');
 			sendButton.appendChild(document.createTextNode(browser.i18n.getMessage('sendSegmentation')));
-			sendButton.addEventListener('click', function() { self.shareSegmentation(false); });
+			sendButton.addEventListener('click', function() { self.shareSegmentation(0); });
 			buttonsContainer.appendChild(sendButton);
 		}
 		
@@ -863,7 +869,7 @@ var Editor = {
 		this.iterations = this.iterations + 1;
 	},
 	
-	shareSegmentation: function(decline) {
+	shareSegmentation: function(decision) {
 		log('Editor::shareSegmentation()');
 		let self = this;
 		
@@ -937,13 +943,10 @@ var Editor = {
 						}
 					}
 				}
-				log(xhr.readyState, xhr.status);
+				// log(xhr.readyState, xhr.status);
 			};
 			
-			let post = 'id='+this.id+'&timestamps='+timestamps+'&types='+types;
-			if ( decline ) {
-				post += '&decline=1';
-			}
+			let post = 'id='+this.id+'&timestamps='+timestamps+'&types='+types+'&decision='+decision;
 			
 			// log(post);
 			xhr.setRequestHeader("content-type", "application/x-www-form-urlencoded");
@@ -993,9 +996,44 @@ var Editor = {
 		else if ( response.message === 'added' ) {
 			this.sendModal('success', 'segmentationAddedToDatabase');
 			this.updateBadge();
+			
+			this.origin = 'officialDatabase';
+			let segmentationOrigin = document.getElementById('vs-segmentation-origin');
+			segmentationOrigin.innerHTML = '';
+			segmentationOrigin.appendChild(document.createTextNode(browser.i18n.getMessage(this.origin)));
+			
 		}
 		else if ( response.message === 'updated' ) {
 			this.sendModal('success', 'segmentationUpdatedInDatabase');
+			
+			this.origin = 'officialDatabase';
+			let segmentationOrigin = document.getElementById('vs-segmentation-origin');
+			segmentationOrigin.innerHTML = '';
+			segmentationOrigin.appendChild(document.createTextNode(browser.i18n.getMessage(this.origin)));
+		}
+		else if ( response.message === 'accepted' ) {
+			this.sendModal('success', 'segmentationAccepted');
+			
+			this.origin = 'officialDatabase';
+			let segmentationOrigin = document.getElementById('vs-segmentation-origin');
+			segmentationOrigin.innerHTML = '';
+			segmentationOrigin.appendChild(document.createTextNode(browser.i18n.getMessage(this.origin)));
+		}
+		else if ( response.message === 'rejected' ) {
+			this.sendModal('success', 'segmentationRejected');
+			
+			this.origin = 'noSegmentation';
+			let segmentationOrigin = document.getElementById('vs-segmentation-origin');
+			segmentationOrigin.innerHTML = '';
+			segmentationOrigin.appendChild(document.createTextNode(browser.i18n.getMessage(this.origin)));
+		}
+		else if ( response.message === 'overriden' ) {
+			this.sendModal('success', 'segmentationOverriden');
+			
+			this.origin = 'officialDatabase';
+			let segmentationOrigin = document.getElementById('vs-segmentation-origin');
+			segmentationOrigin.innerHTML = '';
+			segmentationOrigin.appendChild(document.createTextNode(browser.i18n.getMessage(this.origin)));
 		}
 		else if ( response.message === 'timeout' ) {
 			this.sendModal('failed', 'segmentationSendTimeout');
@@ -1005,51 +1043,6 @@ var Editor = {
 		}
 		else {
 			window.alert('VideoSegments: ' + response.message);
-		}
-		
-		this.panel.classList.toggle('vs-hide-segmentation-panel', true);
-		this.icon.classList.toggle('vs-editor-icon-active', false);
-	},
-	
-	checkResponse: function(response) {
-		let self = this;
-		
-		if ( response.message === 'sended' ) {
-			this.sendModal('success', 'segmentationSendedToReview');
-		}
-		else if ( response.message === 'added' ) {
-			this.sendModal('success', 'segmentationAddedToDatabase');
-			this.updateBadge();
-		}
-		else if ( response.message === 'updated' ) {
-			this.sendModal('success', 'segmentationUpdatedInDatabase');
-		}
-		else if ( response.message === 'timeout' ) {
-			this.sendModal('failed', 'segmentationSendTimeout');
-		}
-		else if ( response.message === 'segmented' ) {
-			this.sendModal('failed', 'segmentationExistsInDatabase');
-		}
-		else if ( response.message === 'unlisted' || response.message === 'auto-rejected: video is unlisted' ) {
-			this.sendModal('rejected', 'rejectedUnlisted');
-		}
-		else if ( response.message === 'stream' || response.message === 'auto-rejected: video is stream' ) {
-			this.sendModal('rejected', 'rejectedStream');
-		}
-		else if ( response.message === 'views' || response.message === 'auto-rejected: less than 50000 views' ) {
-			this.sendModal('rejected', 'rejectedViews');
-		}
-		else if ( response.message === 'long' || response.message === 'auto-rejected: video is too long' ) {
-			this.sendModal('rejected', 'rejectedLong');
-		}
-		else if ( response.message === 'segmentation' || response.message === 'auto-rejected: suspicious segmentation' ) {
-			this.sendModal('rejected', 'rejectedSegmentation');
-		}
-		else if ( response.message === 'language' || response.message === 'auto-rejected: unsupported video language' ) {
-			this.sendModal('rejected', 'rejectedLanguage');
-		}
-		else {
-			log('VideoSegments: ' + response.message);
 		}
 	},
 	

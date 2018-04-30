@@ -1023,6 +1023,14 @@ var CompactEditor = {
 			modalBody.appendChild(document.createElement('br'));
 			modalBody.appendChild(link);
 		}
+		if ( type == 'success' ) {
+			let link = document.createElement('a');
+			link.appendChild(document.createTextNode(browser.i18n.getMessage('openReviewQuery')));
+			link.target = '_blank';
+			link.href = 'https://db.videosegments.org/reviews.html';
+			modalBody.appendChild(document.createElement('br'));
+			modalBody.appendChild(link);
+		}
 		
 		modal.appendChild(head);
 		modal.appendChild(modalBody);

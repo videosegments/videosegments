@@ -256,6 +256,10 @@
 		"message": "Y",
 		"description": ""
 	},
+	"overrideSegmentation": {
+		"message": "O",
+		"description": ""
+	},
 	"declineSegmentation": {
 		"message": "N",
 		"description": ""
@@ -285,6 +289,18 @@
 	},
 	"segmentationAddedToDatabase": {
 		"message": "Segmentation added to database.",
+		"description": ""
+	},
+	"segmentationAccepted": {
+		"message": "Segmentation accepted.",
+		"description": ""
+	},
+	"segmentationRejected": {
+		"message": "Segmentation rejected.",
+		"description": ""
+	},
+	"segmentationOverriden": {
+		"message": "Segmentation overriden.",
 		"description": ""
 	},
 	"segmentationUpdatedInDatabase": {
@@ -329,6 +345,10 @@
 	},
 	"learnMore": {
 		"message": "Learn more about limits.",
+		"description": ""
+	},
+	"openReviewQuery": {
+		"message": "Open review query.",
 		"description": ""
 	},
 	
