@@ -352,7 +352,11 @@
 		"description": ""
 	},
 	"openReviewQuery": {
-		"message": "Открыть меню запросов.",
+		"message": "Открыть очередь запросов.",
+		"description": ""
+	},
+	"inReviewQuery": {
+		"message": "В очереди запросов",
 		"description": ""
 	},
 	
@@ -478,6 +482,10 @@
 	
 	"reportBug": {
 		"message": "Сообщить об ошибке",
+		"description": ""
+	},
+	"reviewQuery": {
+		"message": "Очередь запросов",
 		"description": ""
 	},
 	"rateExtension": {

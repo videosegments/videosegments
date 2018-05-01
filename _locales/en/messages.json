@@ -348,7 +348,11 @@
 		"description": ""
 	},
 	"openReviewQuery": {
-		"message": "Open review query.",
+		"message": "Review query.",
+		"description": ""
+	},
+	"inReviewQuery": {
+		"message": "In Review Query",
 		"description": ""
 	},
 	
@@ -474,6 +478,10 @@
 	
 	"reportBug": {
 		"message": "Report Bug",
+		"description": ""
+	},
+	"reviewQuery": {
+		"message": "Review Query",
 		"description": ""
 	},
 	"rateExtension": {

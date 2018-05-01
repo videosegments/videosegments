@@ -330,8 +330,14 @@ var Editor = {
 		container.id = 'vs-segmentation-bar';
 		segmentationBar.appendChild(container);
 		this.createSegmentationBar(container);
+		this.createButtonsContainer(segmentationBar);
+	},
+	
+	createButtonsContainer: function(segmentationBar) {
+		let self = this;
 		
 		let buttonsContainer = document.createElement('div');
+		buttonsContainer.id = 'vs-segmentation-buttons';
 		buttonsContainer.style.display = 'inline-block';
 		buttonsContainer.style.textAlign = 'center';
 		buttonsContainer.style.width = '10%';
@@ -998,42 +1004,36 @@ var Editor = {
 			this.updateBadge();
 			
 			this.origin = 'officialDatabase';
-			let segmentationOrigin = document.getElementById('vs-segmentation-origin');
-			segmentationOrigin.innerHTML = '';
-			segmentationOrigin.appendChild(document.createTextNode(browser.i18n.getMessage(this.origin)));
-			
+			document.getElementById('vs-segmentation-buttons').remove();
+			this.createButtonsContainer(document.getElementById('vs-segmentation-panel-segments'));
 		}
 		else if ( response.message === 'updated' ) {
 			this.sendModal('success', 'segmentationUpdatedInDatabase');
 			
 			this.origin = 'officialDatabase';
-			let segmentationOrigin = document.getElementById('vs-segmentation-origin');
-			segmentationOrigin.innerHTML = '';
-			segmentationOrigin.appendChild(document.createTextNode(browser.i18n.getMessage(this.origin)));
+			document.getElementById('vs-segmentation-buttons').remove();
+			this.createButtonsContainer(document.getElementById('vs-segmentation-panel-segments'));
 		}
 		else if ( response.message === 'accepted' ) {
 			this.sendModal('success', 'segmentationAccepted');
 			
 			this.origin = 'officialDatabase';
-			let segmentationOrigin = document.getElementById('vs-segmentation-origin');
-			segmentationOrigin.innerHTML = '';
-			segmentationOrigin.appendChild(document.createTextNode(browser.i18n.getMessage(this.origin)));
+			document.getElementById('vs-segmentation-buttons').remove();
+			this.createButtonsContainer(document.getElementById('vs-segmentation-panel-segments'));
 		}
 		else if ( response.message === 'rejected' ) {
 			this.sendModal('success', 'segmentationRejected');
 			
 			this.origin = 'noSegmentation';
-			let segmentationOrigin = document.getElementById('vs-segmentation-origin');
-			segmentationOrigin.innerHTML = '';
-			segmentationOrigin.appendChild(document.createTextNode(browser.i18n.getMessage(this.origin)));
+			document.getElementById('vs-segmentation-buttons').remove();
+			this.createButtonsContainer(document.getElementById('vs-segmentation-panel-segments'));
 		}
 		else if ( response.message === 'overriden' ) {
 			this.sendModal('success', 'segmentationOverriden');
 			
 			this.origin = 'officialDatabase';
-			let segmentationOrigin = document.getElementById('vs-segmentation-origin');
-			segmentationOrigin.innerHTML = '';
-			segmentationOrigin.appendChild(document.createTextNode(browser.i18n.getMessage(this.origin)));
+			document.getElementById('vs-segmentation-buttons').remove();
+			this.createButtonsContainer(document.getElementById('vs-segmentation-panel-segments'));
 		}
 		else if ( response.message === 'timeout' ) {
 			this.sendModal('failed', 'segmentationSendTimeout');

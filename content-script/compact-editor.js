@@ -112,7 +112,6 @@ var CompactEditor = {
 		this.panel.appendChild(buttons);
 		
 		buttons.appendChild(this.createOriginText());
-		log(this.origin);
 		if ( this.origin !== 'officialDatabase' ) {
 			buttons.appendChild(this.createSendButton());
 		}
@@ -497,6 +496,9 @@ var CompactEditor = {
 		}
 		// browser.storage.local.remove([video_id]);
 		this.iterations = this.iterations + 1;
+		if ( document.getElementById('vs-share-segmentation') ) {
+			document.getElementById('vs-share-segmentation').disabled = false;
+		}
 	},
 	
 	createSegmentEntry: function(i, setFocus=false) {
@@ -964,6 +966,17 @@ var CompactEditor = {
 		
 		if ( response.message === 'sended' ) {
 			this.sendModal('success', 'segmentationSendedToReview');
+			
+			let segmentationOrigin = document.getElementById('vs-segmentation-origin');
+			segmentationOrigin.firstChild.remove();
+			
+			let link = document.createElement('a');
+			link.target = '_blank';
+			link.href = 'https://db.videosegments.org/query.php';
+			link.appendChild(document.createTextNode(browser.i18n.getMessage('inReviewQuery')));
+			segmentationOrigin.append(link);
+			
+			document.getElementById('vs-share-segmentation').disabled = true;
 		}
 		else if ( response.message === 'added' ) {
 			this.sendModal('success', 'segmentationAddedToDatabase');
@@ -997,7 +1010,7 @@ var CompactEditor = {
 			this.sendModal('rejected', 'rejectedLanguage');
 		}
 		else {
-			log('VideoSegments: ' + response.message);
+			window.alert('VideoSegments: ' + response.message);
 		}
 	},
 	
@@ -1027,7 +1040,7 @@ var CompactEditor = {
 			let link = document.createElement('a');
 			link.appendChild(document.createTextNode(browser.i18n.getMessage('openReviewQuery')));
 			link.target = '_blank';
-			link.href = 'https://db.videosegments.org/reviews.html';
+			link.href = 'https://db.videosegments.org/query.php';
 			modalBody.appendChild(document.createElement('br'));
 			modalBody.appendChild(link);
 		}
