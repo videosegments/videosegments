@@ -332,7 +332,7 @@ function loadSettings()
 		
 		// global settings 
 		autoPauseDuration: 2.0,
-		showSegmentationTools: false,
+		showSegmentationTools: true,
 		hideOnSegmentedVideos: false,
 		pinSegmentationTools: false,
 		hideIcon: false,
@@ -377,9 +377,11 @@ function loadSettings()
 		tutorial: 0,
 
 		editor: {
-			posX: 100,
-			posY: 200,
+			posX: 300,
+			posY: 300,
 		},
+		
+		lastVersionChanges: '1.8.7', 
 	}
 	
 	browser.storage.local.get({
@@ -388,6 +390,14 @@ function loadSettings()
 		}, function(result) {
 			settings = Object.assign({}, defaultSettings, result.settings);
 			console.log(settings);
+			
+			if ( settings.lastVersionChanges !== '1.8.8' ) {
+				if ( settings.mode === 'simplified' ) {
+					settings.showSegmentationTools = true;
+				}
+				settings.lastVersionChanges = '1.8.8';
+				browser.storage.local.set({ settings: settings });
+			}
 			
 			restoreOptions();
 			

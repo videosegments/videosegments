@@ -1,7 +1,7 @@
 {
 	"manifest_version": 2,
 	"name": "__MSG_extensionName__",
-	"version": "1.8.8.1",
+	"version": "1.8.9",
 	
 	"applications": {
 		"gecko": {
@@ -34,7 +34,7 @@
 	"content_scripts": [
 		{
 			"matches": ["*://*.youtube.com/*"],
-			"js": ["content-script/observer.js", "content-script/wrapper.js", "content-script/editor.js", "content-script/compact-editor.js", "content-script/filters.js", "content-script/index.js"],
+			"js": ["browser-action/popper.min.js", "content-script/observer.js", "content-script/wrapper.js", "content-script/tutorial.js", "content-script/editor.js", "content-script/compact-editor.js", "content-script/filters.js", "content-script/index.js"],
 			"css": ["content-script/styles.css"],
 			"run_at": "document_start",
 			"all_frames": true

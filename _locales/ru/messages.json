@@ -351,11 +351,11 @@
 		"message": "Узнать больше об ограничениях.",
 		"description": ""
 	},
-	"openReviewQuery": {
+	"openReviewQueue": {
 		"message": "Открыть очередь запросов.",
 		"description": ""
 	},
-	"inReviewQuery": {
+	"inReviewQueue": {
 		"message": "В очереди запросов",
 		"description": ""
 	},
@@ -484,7 +484,7 @@
 		"message": "Сообщить об ошибке",
 		"description": ""
 	},
-	"reviewQuery": {
+	"reviewQueue": {
 		"message": "Очередь запросов",
 		"description": ""
 	},

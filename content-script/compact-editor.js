@@ -54,6 +54,10 @@ var CompactEditor = {
 		this.id = id;
 		this.savedIterations = -1;
 		
+		if ( this.settings.showSegmentationTools === false ) {
+			return;
+		}
+		
 		this.panel = document.createElement('div');
 		this.panel.id = 'vs-compact-editor';
 		
@@ -61,23 +65,23 @@ var CompactEditor = {
 		header.id = 'vs-compact-editor-header';
 		this.panel.appendChild(header);
 		
-		header.appendChild(this.createMoveButton(this.panel));
+		let leftActions = document.createElement('div');
+		leftActions.style.display = 'inline';
+		leftActions.appendChild(this.createMoveButton(this.panel));
+		leftActions.appendChild(this.createInfoButton(this.panel));
+		header.appendChild(leftActions);
+		
 		header.appendChild(this.createOpacityChanger(this.panel));
-		header.appendChild(this.createMinimizeButton(this.panel));
+		
+		let rightActions = document.createElement('div');
+		rightActions.style.display = 'inline';
+		rightActions.appendChild(this.createMinimizeButton(this.panel));
+		rightActions.appendChild(this.createCloseButton(this.panel));
+		header.appendChild(rightActions);
 		
 		let buttons = document.createElement('div');
 		buttons.id = 'vs-compact-editor-buttons';
 		this.panel.appendChild(buttons);
-		
-		let buttonStartCut = this.createButton('startCut', 'fromCurrentTime', 'sk');
-		buttonStartCut.addEventListener('click', function() {
-			self.addSegmentBefore(self.wrapper.video.currentTime, 'pl');
-			self.addSegmentAfter(self.wrapper.video.currentTime, 'sk');
-			
-			self.updateSegmentation(self.wrapper.video.currentTime, true);
-			document.getElementById('vs-compact-editor-sharing').style.display = 'flex';
-		});
-		buttons.appendChild(buttonStartCut);
 		
 		let buttonEndCut = this.createButton('endCut', 'toCurrentTime', 'pl');
 		buttonEndCut.addEventListener('click', function() {
@@ -88,6 +92,16 @@ var CompactEditor = {
 			document.getElementById('vs-compact-editor-sharing').style.display = 'flex';
 		});
 		buttons.appendChild(buttonEndCut);
+		
+		let buttonStartCut = this.createButton('startCut', 'fromCurrentTime', 'sk');
+		buttonStartCut.addEventListener('click', function() {
+			self.addSegmentBefore(self.wrapper.video.currentTime, 'pl');
+			self.addSegmentAfter(self.wrapper.video.currentTime, 'sk');
+			
+			self.updateSegmentation(self.wrapper.video.currentTime, true);
+			document.getElementById('vs-compact-editor-sharing').style.display = 'flex';
+		});
+		buttons.appendChild(buttonStartCut);
 		
 		let entries = document.createElement('div');
 		entries.id = 'vs-compact-editor-entries';
@@ -183,6 +197,12 @@ var CompactEditor = {
 				self.panel.style.left = self.settings.editor.posX + 'px';
 			}
 		});
+		
+		this.settings.tutorial = 0;
+		if ( this.settings.tutorial === 0 ) {
+			let tutorial = new Object(Tutorial);
+			tutorial.start(settings);
+		}
 	},
 	
 	// https://stackoverflow.com/a/9345038
@@ -202,7 +222,7 @@ var CompactEditor = {
 		move.id = 'vs-compact-editor-header-move';
 		move.classList.add('fa');
 		move.classList.add('fa-arrows');
-		move.style.color = '#4B71E6';
+		// move.style.color = '#4B71E6';
 		
 		let x = 0, y = 0, offsetX = 0, offsetY = 0;
 		move.addEventListener('mousedown', startDrag); 
@@ -246,6 +266,21 @@ var CompactEditor = {
 		}
 		
 		return move;
+	},
+	
+	createInfoButton: function(owner) {
+		let self = this;
+
+		let info = document.createElement('i');
+		info.id = 'vs-compact-editor-header-info';
+		info.innerHTML = '?';
+		
+		info.addEventListener('click', function() {
+			let tutorial = new Object(Tutorial);
+			tutorial.start(self.settings);
+		});
+		
+		return info;
 	},
 	
 	createOpacityChanger: function(owner) {
@@ -315,6 +350,24 @@ var CompactEditor = {
 		return minimize;
 	},
 	
+	createCloseButton: function(owner) {
+		let self = this;
+		
+		let closeb = document.createElement('i');
+		closeb.id = 'vs-compact-editor-header-close';
+		closeb.classList.add('fa');
+		closeb.classList.add('fa-times');
+		// closeb.style.color = '#ED4337';
+		
+		closeb.addEventListener('click', function() {
+			self.settings.showSegmentationTools = false;
+			browser.storage.local.set({ settings: self.settings });
+			self.panel.remove();
+		});
+		
+		return closeb;
+	},
+	
 	minimize: function(button) {
 		if ( this.settings.minimized ) {
 			this.panel.style.left = (this.settings.editor.posX + 225) + 'px';
@@ -323,6 +376,8 @@ var CompactEditor = {
 			document.getElementById('vs-compact-editor-sharing').style.display = 'none';
 			document.getElementById('vs-compact-editor-opacity').style.display = 'none';
 			document.getElementById('vs-compact-editor-entries').style.display = 'none';
+			document.getElementById('vs-compact-editor-header-info').style.display = 'none';
+			document.getElementById('vs-compact-editor-header-close').style.display = 'none';
 			button.classList.remove('fa-window-minimize');
 			button.classList.add('fa-window-maximize');
 		}
@@ -333,6 +388,8 @@ var CompactEditor = {
 			if ( this.types.length > 0 ) document.getElementById('vs-compact-editor-sharing').style.display = 'flex';
 			document.getElementById('vs-compact-editor-opacity').style.display = 'block';
 			document.getElementById('vs-compact-editor-entries').style.display = 'block';
+			document.getElementById('vs-compact-editor-header-info').style.display = 'inline';
+			document.getElementById('vs-compact-editor-header-close').style.display = 'inline';
 			button.classList.remove('fa-window-maximize');
 			button.classList.add('fa-window-minimize');
 		}
@@ -363,9 +420,10 @@ var CompactEditor = {
 		
 		let button = document.createElement('button');
 		button.id = 'vs-segment-' + type;
+		button.classList.add('vs-segment-button');
 		button.appendChild(document.createTextNode(browser.i18n.getMessage(name)));
-		button.appendChild(document.createElement('br'));
-		button.appendChild(document.createTextNode(browser.i18n.getMessage(subname)));
+		// button.appendChild(document.createElement('br'));
+		// button.appendChild(document.createTextNode(browser.i18n.getMessage(subname)));
 		// button.style.backgroundColor = background;
 		// button.style.color = color;
 		
@@ -972,8 +1030,8 @@ var CompactEditor = {
 			
 			let link = document.createElement('a');
 			link.target = '_blank';
-			link.href = 'https://db.videosegments.org/query.php';
-			link.appendChild(document.createTextNode(browser.i18n.getMessage('inReviewQuery')));
+			link.href = 'https://db.videosegments.org/queue.php';
+			link.appendChild(document.createTextNode(browser.i18n.getMessage('inReviewQueue')));
 			segmentationOrigin.append(link);
 			
 			document.getElementById('vs-share-segmentation').disabled = true;
@@ -1038,9 +1096,9 @@ var CompactEditor = {
 		}
 		if ( type == 'success' ) {
 			let link = document.createElement('a');
-			link.appendChild(document.createTextNode(browser.i18n.getMessage('openReviewQuery')));
+			link.appendChild(document.createTextNode(browser.i18n.getMessage('openReviewQueue')));
 			link.target = '_blank';
-			link.href = 'https://db.videosegments.org/query.php';
+			link.href = 'https://db.videosegments.org/queue.php';
 			modalBody.appendChild(document.createElement('br'));
 			modalBody.appendChild(link);
 		}

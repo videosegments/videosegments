@@ -46,7 +46,7 @@
 		"description": ""
 	},
 	"startCut": {
-		"message": "Start Cut",
+		"message": "Cut to now",
 		"description": ""
 	},
 	"fromCurrentTime": {
@@ -54,7 +54,7 @@
 		"description": ""
 	},
 	"endCut": {
-		"message": "End Cut",
+		"message": "Cut from now",
 		"description": ""
 	},
 	"toCurrentTime": {
@@ -347,12 +347,12 @@
 		"message": "Learn more about limits.",
 		"description": ""
 	},
-	"openReviewQuery": {
-		"message": "Review query.",
+	"openReviewQueue": {
+		"message": "Review Queue.",
 		"description": ""
 	},
-	"inReviewQuery": {
-		"message": "In Review Query",
+	"inReviewQueue": {
+		"message": "In Review Queue",
 		"description": ""
 	},
 	
@@ -480,8 +480,8 @@
 		"message": "Report Bug",
 		"description": ""
 	},
-	"reviewQuery": {
-		"message": "Review Query",
+	"reviewQueue": {
+		"message": "Review Queue",
 		"description": ""
 	},
 	"rateExtension": {
