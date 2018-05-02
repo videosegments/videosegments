@@ -377,8 +377,8 @@ function loadSettings()
 		tutorial: 0,
 
 		editor: {
-			posX: 300,
-			posY: 300,
+			posX: 200,
+			posY: 200,
 		},
 		
 		lastVersionChanges: '1.8.7', 

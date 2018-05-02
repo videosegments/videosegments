@@ -457,32 +457,12 @@
 	color: white;
 }
 
-.vs-arrow-down {
-	margin-top: 12px;
-	margin-bottom: 12px;
+.vs-popper-body[x-placement="top"]
+{
+	margin-bottom: 10px;
 }
 
-.vs-arrow-up {
-	margin-top: 12px;
-	margin-bottom: 12px;
-}
-
-.vs-arrow-up:after {
-	content: "";
-	width: 0; 
-	height: 0; 
-	border-left: 10px solid transparent;
-	border-right: 10px solid transparent;
-	border-bottom: 10px solid gray;
-	z-index: 9000;
-	
-	position: absolute;
-	top: -10px;
-	left: 50%;
-	margin-left: -9px;
-}
-
-.vs-arrow-down:after {
+.vs-popper-body[x-placement="top"]:after {
 	content: "";
 	width: 0; 
 	height: 0; 
@@ -492,39 +472,29 @@
 	z-index: 9000;
 	
 	position: absolute;
-	bottom: -10px;
 	left: 50%;
-	margin-left: -9px;
+	margin-left: -10px;
+	bottom: -10px;
 }
 
-.vs-arrow-right:after {
+.vs-popper-body[x-placement="bottom"]
+{
+	margin-top: 10px;
+}
+
+.vs-popper-body[x-placement="bottom"]:after {
 	content: "";
 	width: 0; 
 	height: 0; 
-	border-top: 10px solid transparent;
-	border-bottom: 10px solid transparent;
-	border-left: 10px solid gray;
+	border-left: 10px solid transparent;
+	border-right: 10px solid transparent;
+	border-bottom: 10px solid gray;
 	z-index: 9000;
 	
 	position: absolute;
-	bottom: 50%;
-	right: -10;
-	margin-top: -9px;
-}
-
-.vs-arrow-left:after {
-	content: "";
-	width: 0; 
-	height: 0; 
-	border-top: 10px solid transparent;
-	border-bottom: 10px solid transparent; 
-	border-right:10px solid gray; 
-	z-index: 9000;
-	
-	position: absolute;
-	bottom: 50%;
-	left: 0;
-	margin-top: -9px;
+	left: 50%;
+	margin-left: -10px;
+	top: -10px;
 }
 
 .vs-segment-button {

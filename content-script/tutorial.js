@@ -35,14 +35,14 @@ var Tutorial = {
 		this.settings = settings;
 		
 		// pure callback hell. yay! some of indents will be omitted for sake of sanity
-		this.showPopupDown(document.getElementById('vs-compact-editor'), 'This is segmentation panel', function() {
-		self.showPopupDown(document.getElementById('vs-compact-editor-header-move'), 'You can move panel to any place you want using this icon. Just press and hold your left mouse button and window will follow your mouse', function() {
-		self.showPopupDown(document.getElementById('vs-compact-editor-header-info'), 'This button is used to re-open this tutorial', function() {
-		self.showPopupDown(document.getElementById('vs-compact-editor-opacity'), 'This slider used to change opacity when mouse is outside of panel. If you lose panel you can always reset position and transparency using "reset" button in options', function() {
-		self.showPopupDown(document.getElementById('vs-compact-editor-header-minimize'), 'This button is used to minimize panel', function() {
-		self.showPopupDown(document.getElementById('vs-compact-editor-header-close'), 'You can also close panel. To open it, check "Always show segmentation panel" in options page', function() {
-		self.showPopupUp(document.getElementById('vs-segment-pl'), 'This button will start skip from current time (next segment will be skip) to end of video or current segment', function() {
-		self.showPopupUp(document.getElementById('vs-segment-sk'), 'This button will end skip (next segment will be play)', function() {
+		this.showPopup(document.getElementById('vs-compact-editor'), 'This is segmentation panel', 'top', function() {
+		self.showPopup(document.getElementById('vs-compact-editor-header-move'), 'You can move panel to any place you want using this icon. Just press and hold your left mouse button and window will follow your mouse', 'top', function() {
+		self.showPopup(document.getElementById('vs-compact-editor-header-info'), 'This button is used to re-open this tutorial', 'top', function() {
+		self.showPopup(document.getElementById('vs-compact-editor-opacity'), 'This slider used to change opacity when mouse is outside of panel. If you lose panel you can always reset position and transparency using "reset" button in options', 'top', function() {
+		self.showPopup(document.getElementById('vs-compact-editor-header-minimize'), 'This button is used to minimize panel', 'top', function() {
+		self.showPopup(document.getElementById('vs-compact-editor-header-close'), 'You can also close panel. To open it, check "Always show segmentation panel" in options page', 'top', function() {
+		self.showPopup(document.getElementById('vs-segment-pl'), 'This button will start skip from current time (next segment will be skip) to end of video or current segment', 'bottom', function() {
+		self.showPopup(document.getElementById('vs-segment-sk'), 'This button will end skip (next segment will be play)', 'bottom', function() {
 		
 		let p;
 		let entries = document.getElementsByClassName('vs-segment-entry');
@@ -55,10 +55,10 @@ var Tutorial = {
 				clearInterval(t);
 				if ( typeof p !== 'undefined' ) p.destroy();
 				
-					self.showPopupDown(entries[0].getElementsByClassName('fa-times')[0], 'Use this icon to delete segment', function() {
-					self.showPopupDown(entries[0].getElementsByClassName('fa-forward')[0], 'Use this icon to rewind video to end of segment', function() {
-					self.showPopupDown(entries[0].getElementsByClassName('vs-segment-end-time')[0], 'IMPORTANT! Here you can use keyboard arrows! Click with your mouse and use left-right to move selection and up-down to add/substract. Moreover you can set accuracy up to 10ms if you press right arrow few times', function() {
-					self.showPopupDown(document.getElementById('vs-segmentation-origin'), 'This is origin of segmentation', function() {
+					self.showPopup(entries[0].getElementsByClassName('fa-times')[0], 'Use this icon to delete segment', 'top', function() {
+					self.showPopup(entries[0].getElementsByClassName('fa-forward')[0], 'Use this icon to rewind video to end of segment', 'top', function() {
+					self.showPopup(entries[0].getElementsByClassName('vs-segment-end-time')[0], 'IMPORTANT! Here you can use keyboard arrows! Click with your mouse and use left-right to move selection and up-down to add/substract. Moreover you can set accuracy up to 10ms if you press right arrow few times', 'top', function() {
+					self.showPopup(document.getElementById('vs-segmentation-origin'), 'This is origin of segmentation', 'bottom', function() {
 					
 					let parent, msg;
 					if ( typeof document.getElementById('vs-share-segmentation') !== 'undefined' ) {
@@ -69,7 +69,7 @@ var Tutorial = {
 						parent = document.getElementById('vs-segmentation-origin');
 						msg = 'IMPORTANT! In videos without segmentation "Share" button will send your segmentation to manual review. After review everyone will see your segmentation!';
 					}
-					self.showPopupDown(parent, msg, function() {
+					self.showPopup(parent, msg, 'bottom', function() {
 					
 					self.showFinalPopup();
 						
@@ -93,10 +93,9 @@ var Tutorial = {
 		// end of pure callback hell. hurray!
 	},
 	
-	showPopupDown: function(element, message, callback) {
+	showPopup: function(element, message, location, callback) {
 		let popup = document.createElement('div');
 		popup.classList.add('vs-popper-body');
-		popup.classList.add('vs-arrow-down');
 		popup.appendChild(document.createTextNode(message));
 		
 		let next = document.createElement('button');
@@ -106,37 +105,34 @@ var Tutorial = {
 		container.appendChild(next);
 		popup.appendChild(container);
 		
-		let p = new Popper(element, popup, {placement: 'top'});
+		let p = new Popper(element, popup, {placement: location, flip: {behavior: ['bottom', 'top']}});
 		document.body.appendChild(popup);
 		
+		let owner = document.getElementById('vs-compact-editor');
 		next.addEventListener('click', function() {
+			owner.removeEventListener('mousedown', startDrag); 
 			this.parentNode.parentNode.remove();
 			p.destroy();
 			callback();
 		});
-	},
-	
-	showPopupUp: function(element, message, callback) {
-		let popup = document.createElement('div');
-		popup.classList.add('vs-popper-body');
-		popup.classList.add('vs-arrow-up');
-		popup.appendChild(document.createTextNode(message));
 		
-		let next = document.createElement('button');
-		next.appendChild(document.createTextNode('next'));
+		owner.addEventListener('mousedown', startDrag); 
+		document.addEventListener('mousemove', drag);
+		document.addEventListener('mouseup', endDrag);
 		
-		let container = document.createElement('div');
-		container.appendChild(next);
-		popup.appendChild(container);
+		function startDrag() {
+			document.addEventListener('mousemove', drag);
+			document.addEventListener('mouseup', endDrag);
+		}
 		
-		let p = new Popper(element, popup, {placement: 'bottom'});
-		document.body.appendChild(popup);
+		function drag () {
+			p.update();
+		}
 		
-		next.addEventListener('click', function() {
-			this.parentNode.parentNode.remove();
-			p.destroy();
-			callback();
-		});
+		function endDrag() {
+			document.removeEventListener('mousemove', drag);
+			document.removeEventListener('mouseup', endDrag);
+		}
 	},
 	
 	showIdlePopup: function(element, message, arrow) {
@@ -189,7 +185,9 @@ var Tutorial = {
 		container.appendChild(element);
 		popup.appendChild(container);
 		
+		let owner = document.getElementById('vs-compact-editor');
 		element.addEventListener('click', function() {
+			owner.removeEventListener('mousedown', startDrag); 
 			this.parentNode.parentNode.remove();
 			p.destroy();
 			
@@ -199,5 +197,23 @@ var Tutorial = {
 		
 		let p = new Popper(document.getElementById('vs-compact-editor'), popup, {placement: 'top'});
 		document.body.appendChild(popup);
+		
+		owner.addEventListener('mousedown', startDrag); 
+		document.addEventListener('mousemove', drag);
+		document.addEventListener('mouseup', endDrag);
+		
+		function startDrag() {
+			document.addEventListener('mousemove', drag);
+			document.addEventListener('mouseup', endDrag);
+		}
+		
+		function drag () {
+			p.update();
+		}
+		
+		function endDrag() {
+			document.removeEventListener('mousemove', drag);
+			document.removeEventListener('mouseup', endDrag);
+		}
 	},
 };
