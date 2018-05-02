@@ -21,8 +21,8 @@
 
 // I'm not sure that I can safely override console.log to function() {}
 // so I'll use wrapper
-var log = console.log.bind(console);
-// var log = function() {};
+// var log = console.log.bind(console);
+var log = function() {};
 
 if ( typeof this.chrome != 'undefined' ) {
 	this.browser = this.chrome;
@@ -96,7 +96,7 @@ function getSettings(callback) {
 		showPageOnReject: true,
 		popupDurationOnSend: 5.0,
 		databasePriority: 'local',
-		segmentationToolsOpacity: 25,
+		segmentationToolsOpacity: 100,
 		iconOpacity: 100,
 		segmentsBarLocation: 'separated',
 		

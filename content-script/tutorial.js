@@ -35,10 +35,10 @@ var Tutorial = {
 		this.settings = settings;
 		
 		// pure callback hell. yay! some of indents will be omitted for sake of sanity
-		this.showPopup(document.getElementById('vs-compact-editor'), 'This is segmentation panel', 'top', function() {
+		this.showPopup(document.getElementById('vs-compact-editor'), 'This is segmentation panel. Once you complete this short tutorial, this message will disappear', 'top', function() {
 		self.showPopup(document.getElementById('vs-compact-editor-header-move'), 'You can move panel to any place you want using this icon. Just press and hold your left mouse button and window will follow your mouse', 'top', function() {
 		self.showPopup(document.getElementById('vs-compact-editor-header-info'), 'This button is used to re-open this tutorial', 'top', function() {
-		self.showPopup(document.getElementById('vs-compact-editor-opacity'), 'This slider used to change opacity when mouse is outside of panel. If you lose panel you can always reset position and transparency using "reset" button in options', 'top', function() {
+		self.showPopup(document.getElementById('vs-compact-editor-opacity'), 'IMPORTANT! This slider is used to change panel opacity when mouse is outside of panel. You can make this panel completely transparent when mouse outside. If you lose panel you can always reset position and transparency using "reset" button in options', 'top', function() {
 		self.showPopup(document.getElementById('vs-compact-editor-header-minimize'), 'This button is used to minimize panel', 'top', function() {
 		self.showPopup(document.getElementById('vs-compact-editor-header-close'), 'You can also close panel. To open it, check "Always show segmentation panel" in options page', 'top', function() {
 		self.showPopup(document.getElementById('vs-segment-pl'), 'This button will start skip from current time (next segment will be skip) to end of video or current segment', 'bottom', function() {
@@ -154,7 +154,7 @@ var Tutorial = {
 		let popup = document.createElement('div');
 		popup.classList.add('vs-popper-body');
 		popup.classList.add('vs-arrow-down');
-		popup.appendChild(document.createTextNode('That\'s it. I hope you enjoy this addon! If you like it, please leave review and share with friends. If you have any questions or suggestions, feel free to contant:'));
+		popup.appendChild(document.createTextNode('That\'s it. I hope you enjoy this addon! If you like it, please leave review and share with friends. If you have any questions or suggestions, feel free to contant me any time:'));
 		
 		let container, element, link;
 		
