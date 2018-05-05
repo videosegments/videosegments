@@ -341,7 +341,7 @@ function loadSettings()
 		showPageOnReject: true,
 		popupDurationOnSend: 5.0,
 		databasePriority: 'local',
-		segmentationToolsOpacity: 100,
+		segmentationToolsOpacity: 60,
 		iconOpacity: 100,
 		segmentsBarLocation: 'separated',
 		

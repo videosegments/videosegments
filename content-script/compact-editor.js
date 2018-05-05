@@ -1119,6 +1119,8 @@ var CompactEditor = {
 	end: function() {
 		log('CompactEditor::end()');
 		
-		this.panel.remove();
+		if ( this.panel != null ) {
+			this.panel.remove();
+		}
 	}
 }

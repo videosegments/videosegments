@@ -447,6 +447,7 @@
 	color: white;
 	max-width: 250px;
 	z-index: 9000;
+	cursor: context-menu;
 }
 
 .vs-popper-body button {
@@ -455,6 +456,7 @@
 	outline: none;
 	border: none;
 	color: white;
+	cursor: pointer;
 }
 
 .vs-popper-body[x-placement="top"]

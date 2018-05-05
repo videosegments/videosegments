@@ -35,19 +35,19 @@ var Tutorial = {
 		this.settings = settings;
 		
 		// pure callback hell. yay! some of indents will be omitted for sake of sanity
-		this.showPopup(document.getElementById('vs-compact-editor'), 'This is segmentation panel. Once you complete this short tutorial, this message will disappear', 'top', function() {
-		self.showPopup(document.getElementById('vs-compact-editor-header-move'), 'You can move panel to any place you want using this icon. Just press and hold your left mouse button and window will follow your mouse', 'top', function() {
-		self.showPopup(document.getElementById('vs-compact-editor-header-info'), 'This button is used to re-open this tutorial', 'top', function() {
-		self.showPopup(document.getElementById('vs-compact-editor-opacity'), 'IMPORTANT! This slider is used to change panel opacity when mouse is outside of panel. You can make this panel completely transparent when mouse outside. If you lose panel you can always reset position and transparency using "reset" button in options', 'top', function() {
-		self.showPopup(document.getElementById('vs-compact-editor-header-minimize'), 'This button is used to minimize panel', 'top', function() {
-		self.showPopup(document.getElementById('vs-compact-editor-header-close'), 'You can also close panel. To open it, check "Always show segmentation panel" in options page', 'top', function() {
-		self.showPopup(document.getElementById('vs-segment-pl'), 'This button will start skip from current time (next segment will be skip) to end of video or current segment', 'bottom', function() {
-		self.showPopup(document.getElementById('vs-segment-sk'), 'This button will end skip (next segment will be play)', 'bottom', function() {
+		this.showPopup(document.getElementById('vs-compact-editor'), 'Quick tutorial.', 'top', function() {
+		self.showPopup(document.getElementById('vs-compact-editor-header-move'), 'Drag&move panel.', 'top', function() {
+		self.showPopup(document.getElementById('vs-compact-editor-header-info'), 'Re-open tutorial.', 'top', function() {
+		self.showPopup(document.getElementById('vs-compact-editor-opacity'), 'Panel opacity when mouse outside.<br>Can be reset in the settings.', 'top', function() {
+		self.showPopup(document.getElementById('vs-compact-editor-header-minimize'), 'Minimize panel.', 'top', function() {
+		self.showPopup(document.getElementById('vs-compact-editor-header-close'), 'Close panel.<br>Can be reset in the settings.', 'top', function() {
+		self.showPopup(document.getElementById('vs-segment-pl'), 'Add autoskip for next time starting from current time.', 'bottom', function() {
+		self.showPopup(document.getElementById('vs-segment-sk'), 'End autoskip for next time from current time.<br>Can be used without start if needed (to add skip at video start).', 'bottom', function() {
 		
 		let p;
 		let entries = document.getElementsByClassName('vs-segment-entry');
 		if ( entries.length === 0 ) {
-			p = self.showIdlePopup(document.getElementById('vs-compact-editor-buttons'), 'Press one of buttons to continue tutorial');
+			p = self.showIdlePopup(document.getElementById('vs-compact-editor-buttons'), 'Press one of buttons to continue tutorial...');
 		}
 		
 		let t = setInterval(function() {
@@ -55,19 +55,19 @@ var Tutorial = {
 				clearInterval(t);
 				if ( typeof p !== 'undefined' ) p.destroy();
 				
-					self.showPopup(entries[0].getElementsByClassName('fa-times')[0], 'Use this icon to delete segment', 'top', function() {
-					self.showPopup(entries[0].getElementsByClassName('fa-forward')[0], 'Use this icon to rewind video to end of segment', 'top', function() {
-					self.showPopup(entries[0].getElementsByClassName('vs-segment-end-time')[0], 'IMPORTANT! Here you can use keyboard arrows! Click with your mouse and use left-right to move selection and up-down to add/substract. Moreover you can set accuracy up to 10ms if you press right arrow few times', 'top', function() {
-					self.showPopup(document.getElementById('vs-segmentation-origin'), 'This is origin of segmentation', 'bottom', function() {
+					self.showPopup(entries[0].getElementsByClassName('fa-times')[0], 'Delete segment.', 'top', function() {
+					self.showPopup(entries[0].getElementsByClassName('fa-forward')[0], 'Rewind to segment end.', 'top', function() {
+					self.showPopup(entries[0].getElementsByClassName('vs-segment-end-time')[0], 'Here you can use keyboards arrows.<br>Up-down to add/substract one.<br>Left-right to move selection.', 'top', function() {
+					self.showPopup(document.getElementById('vs-segmentation-origin'), 'Origin of segmentation.', 'bottom', function() {
 					
 					let parent, msg;
 					if ( typeof document.getElementById('vs-share-segmentation') !== 'undefined' ) {
 						parent = document.getElementById('vs-share-segmentation');
-						msg = 'IMPORTANT! This button will send your segmentation to manual review. After review everyone will see your segmentation!';
+						msg = 'Send segmentation to manual review. After review everyone will see your segmentation.';
 					}
 					else {
 						parent = document.getElementById('vs-segmentation-origin');
-						msg = 'IMPORTANT! In videos without segmentation "Share" button will send your segmentation to manual review. After review everyone will see your segmentation!';
+						msg = 'In videos without segmentation "Share" button will send your segmentation to manual review. After review everyone will see your segmentation.';
 					}
 					self.showPopup(parent, msg, 'bottom', function() {
 					
@@ -96,7 +96,9 @@ var Tutorial = {
 	showPopup: function(element, message, location, callback) {
 		let popup = document.createElement('div');
 		popup.classList.add('vs-popper-body');
-		popup.appendChild(document.createTextNode(message));
+		
+		let parser = new DOMParser()
+		popup.appendChild(parser.parseFromString(message, 'text/html').firstChild);
 		
 		let next = document.createElement('button');
 		next.appendChild(document.createTextNode('next'));
@@ -109,9 +111,21 @@ var Tutorial = {
 		document.body.appendChild(popup);
 		
 		let owner = document.getElementById('vs-compact-editor');
+		let opacity = '1.0';
+		popup.addEventListener('mouseover', function() {
+			if ( owner.style.opacity != '1.0' ) {
+				opacity = owner.style.opacity;
+			}
+			owner.style.opacity = '1.0';
+		});
+		popup.addEventListener('mouseout', function() {
+			owner.style.opacity = opacity;
+		});
+		
 		next.addEventListener('click', function() {
 			owner.removeEventListener('mousedown', startDrag); 
 			this.parentNode.parentNode.remove();
+			owner.style.opacity = opacity;
 			p.destroy();
 			callback();
 		});
@@ -154,19 +168,15 @@ var Tutorial = {
 		let popup = document.createElement('div');
 		popup.classList.add('vs-popper-body');
 		popup.classList.add('vs-arrow-down');
-		popup.appendChild(document.createTextNode('That\'s it. I hope you enjoy this addon! If you like it, please leave review and share with friends. If you have any questions or suggestions, feel free to contant me any time:'));
+		popup.appendChild(document.createTextNode('That\'s it. I hope you enjoy this addon! Also check out:'));
 		
 		let container, element, link;
 		
 		container = document.createElement('div');
 		element = document.createElement('div');
-		element.appendChild(document.createTextNode('email: videosegmentsdev@gmail.com'));
-		container.appendChild(element);
-		
-		element = document.createElement('div');
 		link = document.createElement('a');
-		link.href = 'https://github.com/videosegments/videosegments';
-		link.appendChild(document.createTextNode('Github'));
+		link.href = 'https://videosegments.org/examples.php';
+		link.appendChild(document.createTextNode('Some of already segmented videos'));
 		element.appendChild(link);
 		container.appendChild(element);
 		popup.appendChild(container);
@@ -174,7 +184,7 @@ var Tutorial = {
 		element = document.createElement('div');
 		link = document.createElement('a');
 		link.href = 'https://www.facebook.com/videosegments/';
-		link.appendChild(document.createTextNode('Facebook'));
+		link.appendChild(document.createTextNode('Facebook (dev blog)'));
 		element.appendChild(link);
 		container.appendChild(element);
 		popup.appendChild(container);

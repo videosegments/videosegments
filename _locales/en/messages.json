@@ -46,7 +46,7 @@
 		"description": ""
 	},
 	"startCut": {
-		"message": "Cut to now",
+		"message": "Cut from now",
 		"description": ""
 	},
 	"fromCurrentTime": {
@@ -54,7 +54,7 @@
 		"description": ""
 	},
 	"endCut": {
-		"message": "Cut from now",
+		"message": "Cut to now",
 		"description": ""
 	},
 	"toCurrentTime": {
