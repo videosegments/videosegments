@@ -34,6 +34,8 @@ var Tutorial = {
 		
 		this.settings = settings;
 		
+		log(document.getElementById('vs-share-segmentation') !== null);
+		
 		// pure callback hell. yay! some of indents will be omitted for sake of sanity
 		this.showPopup(document.getElementById('vs-compact-editor'), 'Quick tutorial.', 'top', function() {
 		self.showPopup(document.getElementById('vs-compact-editor-header-move'), 'Drag&move panel.', 'top', function() {
@@ -61,7 +63,7 @@ var Tutorial = {
 					self.showPopup(document.getElementById('vs-segmentation-origin'), 'Origin of segmentation.', 'bottom', function() {
 					
 					let parent, msg;
-					if ( typeof document.getElementById('vs-share-segmentation') !== 'undefined' ) {
+					if ( document.getElementById('vs-share-segmentation') !== null ) {
 						parent = document.getElementById('vs-share-segmentation');
 						msg = 'Send segmentation to manual review. After review everyone will see your segmentation.';
 					}

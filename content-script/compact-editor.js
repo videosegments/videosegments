@@ -198,7 +198,7 @@ var CompactEditor = {
 			}
 		});
 		
-		// this.settings.tutorial = 0;
+		this.settings.tutorial = 0;
 		if ( this.settings.tutorial === 0 ) {
 			let tutorial = new Object(Tutorial);
 			tutorial.start(settings);
