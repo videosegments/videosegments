@@ -62,7 +62,7 @@ function domContentLoaded()
 	button.addEventListener('click', openNextSegmentationRequest);
 	
 	let iframe = document.getElementById('settings-iframe');
-	setTimeout(function() { iframe.src = 'https://db.videosegments.org/api/v3/login.php' }, 0); // otherwise chrome will open page after iframe is loaded (1-2 seconds)
+	setTimeout(function() { iframe.src = 'https://db.videosegments.org/api/v3/login.php' }, 0); // otherwise chrome will open page after iframe is loaded (+1-2 seconds to opening settings page)
 	window.addEventListener('message', function(event) {
 		// iframe.style.height = event.data+'px';
 		checkLogin();
@@ -137,6 +137,7 @@ function domContentLoaded()
 	button.addEventListener('click', function() {
 		settings.showSegmentationTools = true;
 		settings.segmentationToolsOpacity = 100;
+		settings.segmentationToolsFullscreenOpacity = 100;
 		settings.editor.posX = 100;
 		settings.editor.posY = 200;
 		settings.minimized = false;
@@ -245,33 +246,35 @@ function updateRequestsCount()
 
 function openNextSegmentationRequest()
 {
-	let xhr = new XMLHttpRequest();
-	xhr.open('POST', 'https://db.videosegments.org/api/v3/review.php?pending');
-	xhr.onreadystatechange = function() { 
-		if ( xhr.readyState == 4 ) {
-			if ( xhr.status == 200 ) {
+	// let xhr = new XMLHttpRequest();
+	// xhr.open('POST', 'https://db.videosegments.org/api/v3/review.php?pending');
+	// xhr.onreadystatechange = function() { 
+		// if ( xhr.readyState == 4 ) {
+			// if ( xhr.status == 200 ) {
 				// log('xhr.responseText', xhr.responseText);
 				
-				let response = JSON.parse(xhr.responseText);
-				if ( response.id ) {
-					let pending = {
-						timestamps: response.timestamps,
-						types: response.types
-					};
+				// let response = JSON.parse(xhr.responseText);
+				// if ( response.id ) {
+					// let pending = {
+						// timestamps: response.timestamps,
+						// types: response.types
+					// };
 					
-					browser.storage.local.set({ pending: pending }, function() {
-						browser.tabs.query({currentWindow: true, active: true}, function (tab) {
-							browser.tabs.update(tab.id, {url: 'https://www.youtube.com/watch?v=' + encodeURIComponent(response.id)} );
-						});
-					});
-				}
-			}
-		}
-	}
+					// browser.storage.local.set({ pending: pending }, function() {
+						// browser.tabs.query({currentWindow: true, active: true}, function (tab) {
+							// browser.tabs.update(tab.id, {url: 'https://www.youtube.com/watch?v=' + encodeURIComponent(response.id)} );
+						// });
+					// });
+				// }
+			// }
+		// }
+	// }
 	
-	let post = 'get_pending=1';
-	xhr.setRequestHeader("content-type", "application/x-www-form-urlencoded");
-	xhr.send(post);
+	// let post = 'get_pending=1';
+	// xhr.setRequestHeader("content-type", "application/x-www-form-urlencoded");
+	// xhr.send(post);
+	
+	window.open('https://db.videosegments.org/queue.php', '_blank');
 }
 
 function openNextRequest()
@@ -344,6 +347,7 @@ function loadSettings()
 		segmentationToolsOpacity: 60,
 		iconOpacity: 100,
 		segmentsBarLocation: 'separated',
+		showEditorInFullscreen: false,
 		
 		// segmentation settings 
 		// sendToDatabase: false,
@@ -382,7 +386,7 @@ function loadSettings()
 			posY: 200,
 		},
 		
-		lastVersionChanges: '1.8.7', 
+		lastVersionChanges: '1.9.2', 
 	}
 	
 	browser.storage.local.get({
@@ -502,6 +506,10 @@ function restoreOptions()
 	element.value = settings.segmentationToolsOpacity;
 	element.addEventListener('change', function() { updateGlobalValue(this, settings, 'segmentationToolsOpacity'); });
 	
+	element = document.getElementById('segmentationToolsFullscreenOpacity');
+	element.value = settings.segmentationToolsFullscreenOpacity;
+	element.addEventListener('change', function() { updateGlobalValue(this, settings, 'segmentationToolsFullscreenOpacity'); });
+	
 	element = document.getElementById('iconOpacity');
 	element.value = settings.iconOpacity;
 	element.addEventListener('change', function() { updateGlobalValue(this, settings, 'iconOpacity'); });
@@ -525,6 +533,10 @@ function restoreOptions()
 	element = document.getElementById('pinSegmentationTools');
 	element.checked = settings.pinSegmentationTools;
 	element.addEventListener('change', function() { updateGlobalBool(this, settings, 'pinSegmentationTools'); });
+	
+	element = document.getElementById('showEditorInFullscreen');
+	element.checked = settings.showEditorInFullscreen;
+	element.addEventListener('change', function() { updateGlobalBool(this, settings, 'showEditorInFullscreen'); });
 	
 	element = document.getElementById('hideIcon');
 	element.checked = settings.hideIcon;

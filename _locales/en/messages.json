@@ -46,7 +46,7 @@
 		"description": ""
 	},
 	"startCut": {
-		"message": "Cut from now",
+		"message": "Start Cut",
 		"description": ""
 	},
 	"fromCurrentTime": {
@@ -54,7 +54,7 @@
 		"description": ""
 	},
 	"endCut": {
-		"message": "Cut to now",
+		"message": "End Cut",
 		"description": ""
 	},
 	"toCurrentTime": {
@@ -181,12 +181,20 @@
 		"message": "Segmentation tools opacity: ",
 		"description": ""
 	},
+	"segmentationToolsFullscreenOpacity": {
+		"message": "Segmentation tools fullscreen opacity: ",
+		"description": ""
+	},
 	"iconOpacity": {
 		"message": "Icon opacity: ",
 		"description": ""
 	},
 	"hideIcon": {
 		"message": "Hide icon",
+		"description": ""
+	},
+	"showEditorInFullscreen": {
+		"message": "Show editor in fullscreen",
 		"description": ""
 	},
 	"autosaveMessage": {
@@ -320,15 +328,15 @@
 		"description": ""
 	},
 	"rejectedUnlisted": {
-		"message": "Sorry. We can't review unlisted videos.",
+		"message": "Sorry. Anonymous users and users with less than 100 points of reputation can't send unlisted videos.",
 		"description": ""
 	},
 	"rejectedStream": {
-		"message": "Sorry. Anonymous users can't send streams.",
+		"message": "Sorry. Anonymous users and users with less than 5 points of reputation can't send streams.",
 		"description": ""
 	},
 	"rejectedViews": {
-		"message": "Sorry. Anonymous users can't send videos with less than 50 000 views (exception is only for new videos).",
+		"message": "Sorry. Anonymous users and users with less than 3 points of reputation can't send videos with less than 50 000 views (exception is only for new videos).",
 		"description": ""
 	},
 	"rejectedLong": {
@@ -336,11 +344,11 @@
 		"description": ""
 	},
 	"rejectedSegmentation": {
-		"message": "Sorry. Our system think you sended intentionally wrong segmented video.",
+		"message": "Sorry. Our system think you sended intentionally wrong segmented video. Registered users with more than 1 point of reputation can send any segmentation.",
 		"description": ""
 	},
 	"rejectedLanguage": {
-		"message": "Sorry. Seems like video you sending is not english. We can't review this video.",
+		"message": "Sorry. Seems like video you sending is not english. We can't review this video, but users with more than 50 points of reputation can send videos on any language.",
 		"description": ""
 	},
 	"learnMore": {

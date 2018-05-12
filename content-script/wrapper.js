@@ -133,7 +133,14 @@ var Wrapper = {
 			}
 		}
 		
-		let url = document.getElementsByClassName('ytp-title-link')[0].href;
+		let url;
+		if ( typeof document.getElementsByClassName('ytp-title-link')[0] !== 'undefined' ) {
+			url = document.getElementsByClassName('ytp-title-link')[0].href;
+		}
+		else {
+			url = document.getElementsByTagName('video')[0].baseURI;
+		}
+		
 		let match = url.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/ ]{11})/i);
 		if ( match && match[1].length == 11 ) { /* youtube video id == 11 */
 			this.domain = 'youtube';
@@ -452,6 +459,10 @@ var Wrapper = {
 		}
 		
 		let progressBar = document.getElementsByClassName("ytp-progress-bar-container")[0];
+		if ( typeof progressBar === 'undefined' ) {
+			progressBar = document.getElementsByClassName("no-model cue-range-markers")[0];
+		}
+		
 		let segmentsBar = document.createElement('ul');
 		segmentsBar.id = 'vs-segmentsbar';
 		

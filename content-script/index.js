@@ -21,8 +21,8 @@
 
 // I'm not sure that I can safely override console.log to function() {}
 // so I'll use wrapper
-var log = console.log.bind(console);
-// var log = function() {};
+// var log = console.log.bind(console);
+var log = function() {};
 
 if ( typeof this.chrome != 'undefined' ) {
 	this.browser = this.chrome;
@@ -96,9 +96,11 @@ function getSettings(callback) {
 		showPageOnReject: true,
 		popupDurationOnSend: 5.0,
 		databasePriority: 'local',
-		segmentationToolsOpacity: 60,
+		segmentationToolsOpacity: 100,
+		segmentationToolsFullscreenOpacity: 50,
 		iconOpacity: 100,
 		segmentsBarLocation: 'separated',
+		showEditorInFullscreen: false,
 		
 		// moderator settings 
 		displayPending: false,
@@ -134,9 +136,11 @@ function getSettings(callback) {
 		editor: {
 			posX: 200,
 			posY: 200,
+			fullscreenPosX: 200,
+			fullscreenPosY: 200,
 		},
 		
-		lastVersionChanges: '1.8.7', 
+		lastVersionChanges: '1.9.2', 
 		
 		// user notification  
 		// messages: {

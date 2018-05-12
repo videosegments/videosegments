@@ -309,12 +309,13 @@
 
 #vs-compact-editor {
 	position: absolute;
-	z-index: 2000;
+	z-index: 2500; /* youtube video 2024-2025 */
 	
 	background: white;
 	/* box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.19); */
 	box-shadow: 0 0 4px 1px rgba(0, 0, 0, 0.2);
 	border-radius: 5px;
+	color: #000 !important; /* force black for fullscreen mode */
 	
 	padding: 2px 5px;
 }
@@ -335,13 +336,20 @@
 	font-weight: bold;
 }
 
+#vs-compact-editor-header-pin-fullscreen {
+	padding: 5px 5px;
+	cursor: pointer;
+}
+
 #vs-compact-editor-opacity * {
+	font-size: 12px !important;
 	vertical-align: middle;
 }
 
 #vs-compact-editor-header i {
 	margin-top: 2px;
 	height: 10px;
+	font-size: 10px;
 }
 
 #vs-compact-editor-header-minimize {
@@ -396,18 +404,21 @@
 
 #vs-compact-editor-entries span, input {
 	font-family: courier; 
-	font-size: 12px;
+	font-size: 12px !important;
 }
 
 .vs-segment-entry {
 	text-align: center;
+	font-size: 10px;
+}
+
+.vs-segment-entry i {
+	text-align: center;
+	font-size: 10px;
 }
 
 .vs-segment-entry input {
 	text-align: center;
-}
-
-.vs-segment-start-time {
 }
 
 .vs-segment-editing-restricted {

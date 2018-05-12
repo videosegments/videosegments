@@ -30,6 +30,7 @@ var CompactEditor = {
 	
 	wrapper: null,
 	settings: null,
+	fullscreen: false,
 	
 	timestamps: null,
 	types: null,
@@ -68,7 +69,7 @@ var CompactEditor = {
 		let leftActions = document.createElement('div');
 		leftActions.style.display = 'inline';
 		leftActions.appendChild(this.createMoveButton(this.panel));
-		leftActions.appendChild(this.createInfoButton(this.panel));
+		leftActions.appendChild(this.createPinFullscreenButton(this.panel));
 		header.appendChild(leftActions);
 		
 		header.appendChild(this.createOpacityChanger(this.panel));
@@ -130,15 +131,7 @@ var CompactEditor = {
 			buttons.appendChild(this.createSendButton());
 		}
 		
-		this.panel.style.opacity = this.settings.segmentationToolsOpacity / 100.0;
-		if ( window.innerWidth < this.settings.editor.posX + this.panel.clientWidth ) {
-			this.panel.style.left = (window.innerWidth - (this.panel.clientWidth + 10)) + 'px';
-		}
-		else {
-			this.panel.style.left = this.settings.editor.posX + 'px';
-		}
-		this.panel.style.top = this.settings.editor.posY + 'px';
-		document.body.appendChild(this.panel);
+		// https://www.youtube.com/tv#/watch/video/control?v=HqREW1syEIU
 
 		// show youtube controls on hover  
 		let mouseMoveEvent = document.createEvent("Events");
@@ -179,6 +172,55 @@ var CompactEditor = {
 
 		this.panel.addEventListener('mouseenter', mouseEnterFn);
 		this.panel.addEventListener('mouseleave', mouseLeaveFn);
+		// block click event if clicked when panel is hovering over youtube video 
+		this.panel.addEventListener('click', function(event) {event.stopPropagation()}); 
+		
+		// allow panel to work in fullscreen 
+		function handleFullscreen(element) {
+			if ( element !== null ) {
+				self.fullscreen = true;
+				
+				if ( self.settings.showEditorInFullscreen ) {
+					document.getElementsByClassName('html5-video-player')[0].appendChild(self.panel);
+					
+					setTimeout(function() {
+						if ( window.innerWidth < self.settings.editor.fullscreenPosX + self.panel.clientWidth ) {
+							self.panel.style.left = (window.innerWidth - (self.panel.clientWidth + 10)) + 'px';
+						}
+						else {
+							self.panel.style.left = self.settings.editor.fullscreenPosX + 'px';
+						}
+						self.panel.style.top = self.settings.editor.fullscreenPosY + 'px';
+						
+						document.getElementById('vs-compact-editor-opacity-range').value = (self.settings.segmentationToolsFullscreenOpacity / 100.0).toFixed(2);
+					}, 100);
+				
+					self.panel.style.opacity = self.settings.segmentationToolsFullscreenOpacity / 100.0;
+				}
+			}
+			else {
+				document.body.appendChild(self.panel);
+				self.fullscreen = false;
+				
+				if ( window.innerWidth < self.settings.editor.posX + self.panel.clientWidth ) {
+					self.panel.style.left = (window.innerWidth - (self.panel.clientWidth + 10)) + 'px';
+				}
+				else {
+					self.panel.style.left = self.settings.editor.posX + 'px';
+				}
+				self.panel.style.top = self.settings.editor.posY + 'px';
+				
+				self.panel.style.opacity = self.settings.segmentationToolsOpacity / 100.0;
+				document.getElementById('vs-compact-editor-opacity-range').value = (self.settings.segmentationToolsOpacity / 100.0).toFixed(2);
+			}
+		}
+		
+		document.addEventListener('webkitfullscreenchange', function() { handleFullscreen(document.webkitFullscreenElement); });
+		document.addEventListener('fullscreenchange', function() { handleFullscreen(document.fullscreenElement); });
+		document.addEventListener('mozFullScreen', function() { handleFullscreen(document.mozFullscreenElement); });
+		
+		// fullscreen 
+		handleFullscreen(document.webkitFullscreenElement || document.mozFullScreenElement || document.fullscreenElement || null);
 		
 		if ( origin === 'noSegmentation' ) {
 			document.getElementById('vs-compact-editor-sharing').style.display = 'none';
@@ -198,7 +240,7 @@ var CompactEditor = {
 			}
 		});
 		
-		this.settings.tutorial = 0;
+		// this.settings.tutorial = 0;
 		if ( this.settings.tutorial === 0 ) {
 			let tutorial = new Object(Tutorial);
 			tutorial.start(settings);
@@ -258,9 +300,16 @@ var CompactEditor = {
 			document.removeEventListener('mousemove', drag);
 			document.removeEventListener('mouseup', endDrag);
 
-			self.settings.editor.posX = parseInt(owner.style.left.slice(0, -2));
-			if ( self.settings.minimized && !self.settings.maximizePanelOnHover ) self.settings.editor.posX -= 225;
-			self.settings.editor.posY = parseInt(owner.style.top.slice(0, -2));
+			if ( self.fullscreen ) {
+				self.settings.editor.fullscreenPosX = parseInt(owner.style.left.slice(0, -2));
+				if ( self.settings.minimized && !self.settings.maximizePanelOnHover ) self.settings.editor.fullscreenPosX -= 225;
+				self.settings.editor.fullscreenPosY = parseInt(owner.style.top.slice(0, -2));
+			}
+			else {
+				self.settings.editor.posX = parseInt(owner.style.left.slice(0, -2));
+				if ( self.settings.minimized && !self.settings.maximizePanelOnHover ) self.settings.editor.posX -= 225;
+				self.settings.editor.posY = parseInt(owner.style.top.slice(0, -2));
+			}
 
 			browser.storage.local.set({ settings: self.settings });
 		}
@@ -268,19 +317,45 @@ var CompactEditor = {
 		return move;
 	},
 	
-	createInfoButton: function(owner) {
+	// createInfoButton: function(owner) {
+	// 	let self = this;
+    // 
+	// 	let info = document.createElement('i');
+	// 	info.id = 'vs-compact-editor-header-info';
+	// 	info.innerHTML = '?';
+	// 	
+	// 	info.addEventListener('click', function() {
+	// 		let tutorial = new Object(Tutorial);
+	// 		tutorial.start(self.settings);
+	// 	});
+	// 	
+	// 	return info;
+	// },
+	
+	createPinFullscreenButton: function(owner) {
 		let self = this;
-
-		let info = document.createElement('i');
-		info.id = 'vs-compact-editor-header-info';
-		info.innerHTML = '?';
+    
+		let pin = document.createElement('i');
+		pin.id = 'vs-compact-editor-header-pin-fullscreen';
+		pin.classList.add('fa');
+		if ( self.settings.showEditorInFullscreen ) pin.classList.add('fa-unlock');
+		else pin.classList.add('fa-lock')
 		
-		info.addEventListener('click', function() {
-			let tutorial = new Object(Tutorial);
-			tutorial.start(self.settings);
+		pin.addEventListener('click', function() {
+			self.settings.showEditorInFullscreen = !self.settings.showEditorInFullscreen;
+			browser.storage.local.set({ settings: self.settings });
+			
+			if ( self.settings.showEditorInFullscreen ) {
+					pin.classList.remove('fa-lock');
+					pin.classList.add('fa-unlock');
+			}
+			else { 
+				pin.classList.remove('fa-unlock');
+				pin.classList.add('fa-lock');
+			}
 		});
 		
-		return info;
+		return pin;
 	},
 	
 	createOpacityChanger: function(owner) {
@@ -294,7 +369,7 @@ var CompactEditor = {
 		container.appendChild(span);
 
 		let input = document.createElement('input');
-		input.id = 'vs-compact-editor-opacity';
+		input.id = 'vs-compact-editor-opacity-range';
 		input.type = 'range';
 		
 		input.setAttribute('step', '0.01');
@@ -309,7 +384,13 @@ var CompactEditor = {
 			owner.style.opacity = this.value;
 			owner.classList.add('vs-compact-editor-hovering');
 
-			self.settings.segmentationToolsOpacity = this.value * 100;
+			if ( self.fullscreen ) {
+				self.settings.segmentationToolsFullscreenOpacity = this.value * 100.0;
+			}
+			else {
+				self.settings.segmentationToolsOpacity = this.value * 100.0;
+			}
+			
 			browser.storage.local.set({ settings: self.settings });
 		});
 		
@@ -376,7 +457,7 @@ var CompactEditor = {
 			document.getElementById('vs-compact-editor-sharing').style.display = 'none';
 			document.getElementById('vs-compact-editor-opacity').style.display = 'none';
 			document.getElementById('vs-compact-editor-entries').style.display = 'none';
-			document.getElementById('vs-compact-editor-header-info').style.display = 'none';
+			document.getElementById('vs-compact-editor-header-pin-fullscreen').style.display = 'none';
 			document.getElementById('vs-compact-editor-header-close').style.display = 'none';
 			button.classList.remove('fa-window-minimize');
 			button.classList.add('fa-window-maximize');
@@ -388,7 +469,7 @@ var CompactEditor = {
 			if ( this.types.length > 0 ) document.getElementById('vs-compact-editor-sharing').style.display = 'flex';
 			document.getElementById('vs-compact-editor-opacity').style.display = 'block';
 			document.getElementById('vs-compact-editor-entries').style.display = 'block';
-			document.getElementById('vs-compact-editor-header-info').style.display = 'inline';
+			document.getElementById('vs-compact-editor-header-pin-fullscreen').style.display = 'inline';
 			document.getElementById('vs-compact-editor-header-close').style.display = 'inline';
 			button.classList.remove('fa-window-maximize');
 			button.classList.add('fa-window-minimize');
@@ -1094,7 +1175,7 @@ var CompactEditor = {
 			modalBody.appendChild(document.createElement('br'));
 			modalBody.appendChild(link);
 		}
-		if ( type == 'success' ) {
+		else if ( type == 'success' ) {
 			let link = document.createElement('a');
 			link.appendChild(document.createTextNode(browser.i18n.getMessage('openReviewQueue')));
 			link.target = '_blank';
