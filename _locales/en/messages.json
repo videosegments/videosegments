@@ -336,7 +336,7 @@
 		"description": ""
 	},
 	"rejectedViews": {
-		"message": "Sorry. Anonymous users and users with less than 3 points of reputation can't send videos with less than 50 000 views (exception is only for new videos).",
+		"message": "Sorry. Anonymous users and users with less than 3 points of reputation can't send videos with less than 50 000 views (exception is only for registered users and new videos).",
 		"description": ""
 	},
 	"rejectedLong": {

@@ -32,7 +32,9 @@ var CompactEditor = {
 	settings: null,
 	fullscreen: false,
 	
+	timestampsSecondary: null, 
 	timestamps: null,
+	typesSecondary: null, 
 	types: null,
 	origin: null,
 	iterations: null,
@@ -41,12 +43,15 @@ var CompactEditor = {
 	domain: null,
 	id: null,
 	
-	start: function(wrapper, timestamps, types, origin, settings, domain, id) {
+	start: function(wrapper, timestamps, types, origin, settings, domain, id, timestampsSecondary, typesSecondary) {
 		log('CompactEditor::start()');
 		this.injectStylesheet();
 		let self = this;
 		
 		this.wrapper = wrapper;
+		
+		this.timestampsSecondary = timestampsSecondary;
+		this.typesSecondary = typesSecondary;
 		this.timestamps = timestamps;
 		this.types = types;
 		this.origin = origin;
@@ -89,7 +94,7 @@ var CompactEditor = {
 			self.addSegmentBefore(self.wrapper.video.currentTime, 'sk');
 			self.addSegmentAfter(self.wrapper.video.currentTime, 'pl');
 			
-			self.updateSegmentation(self.wrapper.video.currentTime, false);
+			self.updateSegmentation(self.wrapper.video.currentTime, false, true);
 			document.getElementById('vs-compact-editor-sharing').style.display = 'flex';
 		});
 		buttons.appendChild(buttonEndCut);
@@ -99,7 +104,7 @@ var CompactEditor = {
 			self.addSegmentBefore(self.wrapper.video.currentTime, 'pl');
 			self.addSegmentAfter(self.wrapper.video.currentTime, 'sk');
 			
-			self.updateSegmentation(self.wrapper.video.currentTime, true);
+			self.updateSegmentation(self.wrapper.video.currentTime, true, true);
 			document.getElementById('vs-compact-editor-sharing').style.display = 'flex';
 		});
 		buttons.appendChild(buttonStartCut);
@@ -559,9 +564,11 @@ var CompactEditor = {
 		}
 	},
 	
-	updateSegmentation: function(currentTime, left) {
+	updateSegmentation: function(currentTime, left, saveLocally=true) {
 		this.wrapper.updateSegmentsBar(false);
-		this.saveLocally();
+		if ( saveLocally === true ) {
+			this.saveLocally();
+		}
 		
 		let entries = document.getElementById('vs-compact-editor-entries');
 		while ( entries.firstChild ) {
@@ -608,7 +615,7 @@ var CompactEditor = {
 			this.origin = 'noSegmentation';
 			
 			let segmentationOrigin = document.getElementById('vs-segmentation-origin');
-			segmentationOrigin.firstChild.remove();
+			while (segmentationOrigin.firstChild) segmentationOrigin.firstChild.remove();
 			segmentationOrigin.appendChild(document.createTextNode(browser.i18n.getMessage(this.origin) + ' (' + this.iterations + ')'));
 		}
 		else {
@@ -628,7 +635,7 @@ var CompactEditor = {
 				[video_id]: segmentation
 			}, function() {
 				let segmentationOrigin = document.getElementById('vs-segmentation-origin');
-				segmentationOrigin.firstChild.remove();
+				while (segmentationOrigin.firstChild) segmentationOrigin.firstChild.remove();
 				segmentationOrigin.appendChild(document.createTextNode(browser.i18n.getMessage(self.origin) + ' [' + self.iterations + ']'));
 			});
 			this.origin = 'savedLocally';
@@ -667,7 +674,7 @@ var CompactEditor = {
 			}
 			
 			log('delete');
-			self.updateSegmentation(undefined, false);
+			self.updateSegmentation(undefined, false, true);
 		});
 		
 		let span;
@@ -963,11 +970,50 @@ var CompactEditor = {
 	},
 	
 	createOriginText: function() {
-		let text = document.createElement('span');
-		text.id = 'vs-segmentation-origin';
-		text.appendChild(document.createTextNode(browser.i18n.getMessage(this.origin)));
-		text.style.fontSize = '12px';
-		return text;
+		let self = this;
+		
+		let element;
+		if ( this.timestampsSecondary === null ) {
+			element = document.createElement('span');
+			element.id = 'vs-segmentation-origin';
+			element.appendChild(document.createTextNode(browser.i18n.getMessage(this.origin)));
+			element.style.fontSize = '12px';
+		}
+		else {
+			element = document.createElement('select');
+			element.id = 'vs-segmentation-origin';
+			
+			let option = document.createElement('option');
+			option.id = 'official';
+			option.appendChild(document.createTextNode(browser.i18n.getMessage('officialDatabase')));
+			if ( this.origin === 'officialDatabase' ) option.setAttribute('selected', 'selected');
+			element.appendChild(option);
+			
+			option = document.createElement('option');
+			option.id = 'local';
+			option.appendChild(document.createTextNode(browser.i18n.getMessage('localDatabase')));
+			if ( this.origin === 'localDatabase' ) option.setAttribute('selected', 'selected');
+			element.appendChild(option);
+			
+			element.addEventListener('change', function() {
+				// let buffer = self.timestampsSecondary;
+				// self.timestampsSecondary = self.timestamps;
+				// self.timestamps = self.timestampsSecondary;
+				
+				// buffer = self.typesSecondary;
+				// self.typesSecondary = self.types;
+				// self.types = buffer;
+				
+				[self.wrapper.timestamps, self.wrapper.timestampsSecondary] = [self.wrapper.timestampsSecondary, self.wrapper.timestamps];
+				[self.wrapper.types, self.wrapper.typesSecondary] = [self.wrapper.typesSecondary, self.wrapper.types];
+				self.wrapper.simplifySegmentation();
+				
+				[self.timestamps, self.types] = [self.wrapper.timestamps, self.wrapper.types];
+				self.updateSegmentation(undefined, false, false);
+			});
+		}
+		
+		return element;
 	},
 	
 	createSendButton: function() {

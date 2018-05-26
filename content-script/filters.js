@@ -132,7 +132,7 @@ var Filters = {
 				sum += v;
 			}
 			
-			log(sum);
+			// log(sum);
 			
 			if ( sum <= settings.filters.silence.threshold ) {
 				if ( typeof silenceStart === 'undefined' ) {

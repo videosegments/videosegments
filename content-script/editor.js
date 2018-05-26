@@ -998,48 +998,48 @@ var Editor = {
 		
 		if ( response.message === 'sended' ) {
 			this.sendModal('success', 'segmentationSendedToReview');
+			
+			let segmentationOrigin = document.getElementById('vs-segmentation-origin');
+			segmentationOrigin.firstChild.remove();
+			
+			let link = document.createElement('a');
+			link.target = '_blank';
+			link.href = 'https://db.videosegments.org/queue.php';
+			link.appendChild(document.createTextNode(browser.i18n.getMessage('inReviewQueue')));
+			segmentationOrigin.append(link);
+			
+			document.getElementById('vs-share-segmentation').disabled = true;
 		}
 		else if ( response.message === 'added' ) {
 			this.sendModal('success', 'segmentationAddedToDatabase');
 			this.updateBadge();
-			
-			this.origin = 'officialDatabase';
-			document.getElementById('vs-segmentation-buttons').remove();
-			this.createButtonsContainer(document.getElementById('vs-segmentation-panel-segments'));
 		}
 		else if ( response.message === 'updated' ) {
 			this.sendModal('success', 'segmentationUpdatedInDatabase');
-			
-			this.origin = 'officialDatabase';
-			document.getElementById('vs-segmentation-buttons').remove();
-			this.createButtonsContainer(document.getElementById('vs-segmentation-panel-segments'));
-		}
-		else if ( response.message === 'accepted' ) {
-			this.sendModal('success', 'segmentationAccepted');
-			
-			this.origin = 'officialDatabase';
-			document.getElementById('vs-segmentation-buttons').remove();
-			this.createButtonsContainer(document.getElementById('vs-segmentation-panel-segments'));
-		}
-		else if ( response.message === 'rejected' ) {
-			this.sendModal('success', 'segmentationRejected');
-			
-			this.origin = 'noSegmentation';
-			document.getElementById('vs-segmentation-buttons').remove();
-			this.createButtonsContainer(document.getElementById('vs-segmentation-panel-segments'));
-		}
-		else if ( response.message === 'overriden' ) {
-			this.sendModal('success', 'segmentationOverriden');
-			
-			this.origin = 'officialDatabase';
-			document.getElementById('vs-segmentation-buttons').remove();
-			this.createButtonsContainer(document.getElementById('vs-segmentation-panel-segments'));
 		}
 		else if ( response.message === 'timeout' ) {
 			this.sendModal('failed', 'segmentationSendTimeout');
 		}
 		else if ( response.message === 'segmented' ) {
 			this.sendModal('failed', 'segmentationExistsInDatabase');
+		}
+		else if ( response.message === 'unlisted' || response.message === 'auto-rejected: video is unlisted' ) {
+			this.sendModal('rejected', 'rejectedUnlisted');
+		}
+		else if ( response.message === 'stream' || response.message === 'auto-rejected: video is stream' ) {
+			this.sendModal('rejected', 'rejectedStream');
+		}
+		else if ( response.message === 'views' || response.message === 'auto-rejected: less than 50000 views' ) {
+			this.sendModal('rejected', 'rejectedViews');
+		}
+		else if ( response.message === 'long' || response.message === 'auto-rejected: video is too long' ) {
+			this.sendModal('rejected', 'rejectedLong');
+		}
+		else if ( response.message === 'segmentation' || response.message === 'auto-rejected: suspicious segmentation' ) {
+			this.sendModal('rejected', 'rejectedSegmentation');
+		}
+		else if ( response.message === 'language' || response.message === 'auto-rejected: unsupported video language' ) {
+			this.sendModal('rejected', 'rejectedLanguage');
 		}
 		else {
 			window.alert('VideoSegments: ' + response.message);
@@ -1068,20 +1068,22 @@ var Editor = {
 			modalBody.appendChild(document.createElement('br'));
 			modalBody.appendChild(link);
 		}
+		else if ( type == 'success' ) {
+			let link = document.createElement('a');
+			link.appendChild(document.createTextNode(browser.i18n.getMessage('openReviewQueue')));
+			link.target = '_blank';
+			link.href = 'https://db.videosegments.org/queue.php';
+			modalBody.appendChild(document.createElement('br'));
+			modalBody.appendChild(link);
+		}
 		
 		modal.appendChild(head);
 		modal.appendChild(modalBody);
 		setTimeout(function() { modal.classList.add('vs-messages-modal-animation'); }, 100);
 		document.body.appendChild(modal);
 		
-		if ( type != 'rejected' ) {
-			setTimeout(function() { modal.classList.remove('vs-messages-modal-animation'); }, this.settings.popupDurationOnSend*1000);
-			setTimeout(function() { modal.remove(); }, this.settings.popupDurationOnSend*1000+1000);
-		}
-		else {
-			setTimeout(function() { modal.classList.remove('vs-messages-modal-animation'); }, 8000);
-			setTimeout(function() { modal.remove(); }, 9000);
-		}
+		setTimeout(function() { modal.classList.remove('vs-messages-modal-animation'); }, this.settings.popupDurationOnSend*1000);
+		setTimeout(function() { modal.remove(); }, 8000+1000);
 	},
 	
 	updateBadge: function() {

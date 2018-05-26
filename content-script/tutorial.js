@@ -178,6 +178,7 @@ var Tutorial = {
 		element = document.createElement('div');
 		link = document.createElement('a');
 		link.href = 'https://videosegments.org/examples.php';
+		link.target = '_blank';
 		link.appendChild(document.createTextNode('Some of already segmented videos'));
 		element.appendChild(link);
 		container.appendChild(element);
@@ -186,6 +187,7 @@ var Tutorial = {
 		element = document.createElement('div');
 		link = document.createElement('a');
 		link.href = 'https://www.facebook.com/videosegments/';
+		link.target = '_blank';
 		link.appendChild(document.createTextNode('Facebook (dev blog)'));
 		element.appendChild(link);
 		container.appendChild(element);

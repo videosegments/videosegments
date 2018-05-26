@@ -42,8 +42,10 @@ var Wrapper = {
 	requestTime: null,
 	
 	/* segments data */
+	timestampsSecondary: null, // for switching between official-local  
 	timestampsCopy: null, // for simplified mode 
 	timestamps: null,
+	typesSecondary: null, // for switching between official-local 
 	typesCopy: null, // for simplified mode 
 	types: null,
 	origin: null,
@@ -78,9 +80,11 @@ var Wrapper = {
 		this.onPauseContext = this.onPause.bind(this);
 		this.onRateChangeContext = this.onRateChange.bind(this);
 		
+		this.timestampsSecondary = null;
+		this.typesSecondary = null;
 		this.timestamps = [];
 		this.types = [];
-		this.origin = 'none';
+		this.origin = 'noSegmentation';
 		
 		if ( muteFirstEvents ) {
 			// chrome calls pause/play event at video start
@@ -129,6 +133,9 @@ var Wrapper = {
 				this.timer = setTimeout(function() {
 					self.video.play();
 					log('autopause timeout');
+					
+					self.origin = 'noSegmentation';
+					self.onSegmentationReady();
 				}, this.settings.autoPauseDuration*1000);
 			}
 		}
@@ -164,10 +171,10 @@ var Wrapper = {
 			let pid = getQueryString('vs-pid');
 			if ( pid === null ) {
 				if ( this.settings.databasePriority === 'local' ) {
-					pipelineFn(this, [this.getPendingSegmentation, this.getLocalSegmentation, this.getOfficialSegmentation, this.tryFilter, this.clearPauseTimer]);
+					pipelineFn(this, [this.getLocalSegmentation, this.getOfficialSegmentation, this.tryFilter, this.clearPauseTimer]);
 				}
 				else {
-					pipelineFn(this, [this.getPendingSegmentation, this.getOfficialSegmentation, this.getLocalSegmentation, this.tryFilter, this.clearPauseTimer]);
+					pipelineFn(this, [this.getOfficialSegmentation, this.getLocalSegmentation, this.tryFilter, this.clearPauseTimer]);
 				}
 			}
 			else {
@@ -176,53 +183,30 @@ var Wrapper = {
 		}
 	},
 	
-	getPendingSegmentation: function(self, callback) {
-		log('Wrapper::getPendingSegmentation()');
-		
-		browser.storage.local.get({ pending: '' }, function(result) {
-			if ( result.pending !== '' ) {
-				var response = result.pending;
-				if ( response.timestamps.indexOf(',') > 0 ) {
-					response.timestamps = response.timestamps.split(',').map(parseFloat);
-				}
-				else {
-					if ( response.timestamps === '' ) {
-						response.timestamps = [];
-					}
-					else {
-						response.timestamps = [parseFloat(response.timestamps)];
-					}
-				}
-				response.types = response.types.split(',');
-				browser.storage.local.remove(['pending']);
-				
-				self.timestamps = response.timestamps;
-				self.timestamps.unshift(0.0);
-				self.timestamps.push(parseFloat(self.video.duration.toFixed(2)));
-						
-				self.types = response.types;
-				self.origin = 'pendingDatabase';
-				self.onSegmentationReady();
-			}
-			else {
-				callback();
-			}
-		});
-	},
-	
 	getLocalSegmentation: function(self, callback) {
 		log('Wrapper::getLocalSegmentation()');
 		
 		let video_id = self.domain + '-' + self.id;
 		browser.storage.local.get({[video_id]: ''}, function(result) {
 			if ( result[video_id] !== '' ) {
-				self.timestamps = result[video_id].timestamps;
-				self.timestamps.unshift(0.0);
-				self.timestamps.push(parseFloat(self.video.duration.toFixed(2)));
-						
-				self.types = result[video_id].types;
-				self.origin = 'localDatabase';
-				self.onSegmentationReady();
+				if ( self.origin === 'noSegmentation' ) {
+					self.timestamps = result[video_id].timestamps;
+					self.timestamps.unshift(0.0);
+					self.timestamps.push(parseFloat(self.video.duration.toFixed(2)));
+							
+					self.types = result[video_id].types;
+					self.origin = 'localDatabase';
+					self.onSegmentationReady();
+					callback();
+				}
+				else {
+					self.timestampsSecondary = result[video_id].timestamps;
+					self.timestampsSecondary.unshift(0.0);
+					self.timestampsSecondary.push(parseFloat(self.video.duration.toFixed(2)));
+							
+					self.typesSecondary = result[video_id].types;
+					self.startEditor();
+				}
 			}
 			else {
 				callback();
@@ -240,24 +224,41 @@ var Wrapper = {
 				if ( xhr.status == 200 ) {
 					let response = JSON.parse(xhr.responseText);
 					if ( typeof response.timestamps !== 'undefined' ) {
-						self.timestamps = response.timestamps;
-						
-						if ( self.timestamps[0] !== 0.0 ) {
-							self.timestamps.unshift(0.0);
-							self.timestamps.push(self.video.duration);
+						if ( self.origin === 'noSegmentation' ) {
+							self.timestamps = response.timestamps;
+							
+							if ( self.timestamps[0] !== 0.0 ) {
+								self.timestamps.unshift(0.0);
+								self.timestamps.push(self.video.duration);
+							}
+							else {
+								self.timestamps = [0.0, self.video.duration];
+							}
+							
+							self.types = response.types;
+							self.origin = 'officialDatabase';
+							self.onSegmentationReady();
+							callback();
 						}
 						else {
-							self.timestamps = [0.0, self.video.duration];
+							self.timestampsSecondary = response.timestamps;
+							
+							if ( self.timestampsSecondary[0] !== 0.0 ) {
+								self.timestampsSecondary.unshift(0.0);
+								self.timestampsSecondary.push(self.video.duration);
+							}
+							else {
+								self.timestampsSecondary = [0.0, self.video.duration];
+							}
+							
+							self.typesSecondary = response.types;
+							self.startEditor();
 						}
-						
-						self.types = response.types;
-						self.origin = 'officialDatabase';
-						self.onSegmentationReady();
 					}
 					else {
 						if ( typeof response.channel !== 'undefined' ) {
 							self.channel = response.channel;
-							log(self.channel);
+							// log(self.channel);
 						}
 						callback();
 					}
@@ -281,7 +282,7 @@ var Wrapper = {
 				self.timestamps = [];
 				self.types = [];
 				
-				log(filter);
+				// log(filter);
 				if ( typeof filter !== 'undefined' ) {
 					if ( filter[0] !== filter[1] ) {
 						if ( filter[0] === 0.0 ) {
@@ -391,8 +392,8 @@ var Wrapper = {
 		self.timer = null;
 		self.video.play();
 		
-		self.origin = 'noSegmentation';
 		self.onSegmentationReady();
+		self.startEditor();
 	},
 	
 	onSegmentationReady: function() {
@@ -437,17 +438,21 @@ var Wrapper = {
 		if ( rewindSegment !== null ) {
 			this.tryRewind(rewindSegment);
 		}
+	},
+	
+	startEditor: function() {
+		log('Wrapper::startEditor()', this.origin);
 		
 		// if it's not iframe 
 		if ( window.parent === window ) {
-			// craete editor 
+			// create editor 
 			if ( this.settings.mode === 'simplified' ) {
 				this.editor = new Object(CompactEditor);
 			}
 			else {
 				this.editor = new Object(Editor);
 			}
-			this.editor.start(this, this.timestamps, this.types, this.origin, this.settings, 'youtube', this.id);
+			this.editor.start(this, this.timestamps, this.types, this.origin, this.settings, 'youtube', this.id, this.timestampsSecondary, this.typesSecondary);
 		}
 	},
 	
@@ -503,6 +508,8 @@ var Wrapper = {
 	},
 	
 	updateSegmentsBar: function(leftButton=true) {
+		log(this.timestamps, this.types, this.timestampsSecondary, this.typesSecondary);
+		
 		this.removeSegmentsBar();
 		this.mergeDuplicateSegments(leftButton);
 		this.insertSegmentsBar();
@@ -734,14 +741,14 @@ var Wrapper = {
 		if ( window.parent === window ) {
 			this.editor.end();
 			
-			// craete editor 
+			// create editor 
 			if ( this.settings.mode === 'simplified' ) {
 				this.editor = new Object(CompactEditor);
 			}
 			else {
 				this.editor = new Object(Editor);
 			}
-			this.editor.start(this, this.timestamps, this.types, this.origin, this.settings, 'youtube', this.id);
+			this.editor.start(this, this.timestamps, this.types, this.origin, this.settings, 'youtube', this.id, this.timestampsSecondary, this.typesSecondary);
 		}
 	},
 	
