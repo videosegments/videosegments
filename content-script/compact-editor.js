@@ -615,8 +615,14 @@ var CompactEditor = {
 			this.origin = 'noSegmentation';
 			
 			let segmentationOrigin = document.getElementById('vs-segmentation-origin');
-			while (segmentationOrigin.firstChild) segmentationOrigin.firstChild.remove();
-			segmentationOrigin.appendChild(document.createTextNode(browser.i18n.getMessage(this.origin) + ' (' + this.iterations + ')'));
+			
+			let element = document.createElement('span');
+			element.id = 'vs-segmentation-origin';
+			element.appendChild(document.createTextNode(browser.i18n.getMessage(this.origin) + ' (' + this.iterations + ')'));
+			element.style.fontSize = '12px';
+			
+			segmentationOrigin.parentNode.appendChild(element);
+			segmentationOrigin.remove();
 		}
 		else {
 			// save locally
@@ -635,8 +641,14 @@ var CompactEditor = {
 				[video_id]: segmentation
 			}, function() {
 				let segmentationOrigin = document.getElementById('vs-segmentation-origin');
-				while (segmentationOrigin.firstChild) segmentationOrigin.firstChild.remove();
-				segmentationOrigin.appendChild(document.createTextNode(browser.i18n.getMessage(self.origin) + ' [' + self.iterations + ']'));
+				
+				let element = document.createElement('span');
+				element.id = 'vs-segmentation-origin';
+				element.appendChild(document.createTextNode(browser.i18n.getMessage(self.origin) + ' (' + self.iterations + ')'));
+				element.style.fontSize = '12px';
+			
+				segmentationOrigin.parentNode.insertAdjacentElement('afterBegin', element);
+				segmentationOrigin.remove();
 			});
 			this.origin = 'savedLocally';
 		}

@@ -215,7 +215,7 @@ var Wrapper = {
 	},
 	
 	getOfficialSegmentation: function(self, callback) {
-		log('Wrapper::getOfficialSegmentation()', 'https://db.videosegments.org/api/v3/get.php?id=' + self.id);
+		log('Wrapper::getOfficialSegmentation()', 'https://db.videosegments.org/api/v3/get.php?id=' + self.id + '&addinfo=', (self.settings.filters.channelBased.enabled===true?'1':'0'));
 		
 		let xhr = new XMLHttpRequest();
 		xhr.open('GET', 'https://db.videosegments.org/api/v3/get.php?id=' + self.id);
@@ -508,8 +508,6 @@ var Wrapper = {
 	},
 	
 	updateSegmentsBar: function(leftButton=true) {
-		log(this.timestamps, this.types, this.timestampsSecondary, this.typesSecondary);
-		
 		this.removeSegmentsBar();
 		this.mergeDuplicateSegments(leftButton);
 		this.insertSegmentsBar();
