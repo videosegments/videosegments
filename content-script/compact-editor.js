@@ -43,6 +43,8 @@ var CompactEditor = {
 	domain: null,
 	id: null,
 	
+	handleFullscreenCtx: null,
+	
 	start: function(wrapper, timestamps, types, origin, settings, domain, id, timestampsSecondary, typesSecondary) {
 		log('CompactEditor::start()');
 		this.injectStylesheet();
@@ -74,7 +76,7 @@ var CompactEditor = {
 		let leftActions = document.createElement('div');
 		leftActions.style.display = 'inline';
 		leftActions.appendChild(this.createMoveButton(this.panel));
-		leftActions.appendChild(this.createPinFullscreenButton(this.panel));
+		leftActions.appendChild(this.createHideShowPlayingSegmentsButton(this.panel));
 		header.appendChild(leftActions);
 		
 		header.appendChild(this.createOpacityChanger(this.panel));
@@ -181,7 +183,7 @@ var CompactEditor = {
 		this.panel.addEventListener('click', function(event) {event.stopPropagation()}); 
 		
 		// allow panel to work in fullscreen 
-		function handleFullscreen(element) {
+		this.handleFullscreenCtx = function handleFullscreen(element) {
 			if ( element !== null ) {
 				self.fullscreen = true;
 				
@@ -220,12 +222,12 @@ var CompactEditor = {
 			}
 		}
 		
-		document.addEventListener('webkitfullscreenchange', function() { handleFullscreen(document.webkitFullscreenElement); });
-		document.addEventListener('fullscreenchange', function() { handleFullscreen(document.fullscreenElement); });
-		document.addEventListener('mozFullScreen', function() { handleFullscreen(document.mozFullscreenElement); });
+		document.addEventListener('webkitfullscreenchange', this.handleFullscreenCtx);
+		document.addEventListener('fullscreenchange', this.handleFullscreenCtx);
+		document.addEventListener('mozFullScreen', this.handleFullscreenCtx);
 		
 		// fullscreen 
-		handleFullscreen(document.webkitFullscreenElement || document.mozFullScreenElement || document.fullscreenElement || null);
+		this.handleFullscreenCtx(document.webkitFullscreenElement || document.mozFullScreenElement || document.fullscreenElement || null);
 		
 		if ( origin === 'noSegmentation' ) {
 			document.getElementById('vs-compact-editor-sharing').style.display = 'none';
@@ -337,30 +339,58 @@ var CompactEditor = {
 	// 	return info;
 	// },
 	
-	createPinFullscreenButton: function(owner) {
+	// createPinFullscreenButton: function(owner) {
+	// 	let self = this;
+    // 
+	// 	let pin = document.createElement('i');
+	// 	pin.id = 'vs-compact-editor-header-pin-fullscreen';
+	// 	pin.classList.add('fa');
+	// 	if ( self.settings.showEditorInFullscreen ) pin.classList.add('fa-unlock');
+	// 	else pin.classList.add('fa-lock')
+	// 	
+	// 	pin.addEventListener('click', function() {
+	// 		self.settings.showEditorInFullscreen = !self.settings.showEditorInFullscreen;
+	// 		browser.storage.local.set({ settings: self.settings });
+	// 		
+	// 		if ( self.settings.showEditorInFullscreen ) {
+	// 				pin.classList.remove('fa-lock');
+	// 				pin.classList.add('fa-unlock');
+	// 		}
+	// 		else { 
+	// 			pin.classList.remove('fa-unlock');
+	// 			pin.classList.add('fa-lock');
+	// 		}
+	// 	});
+	// 	
+	// 	return pin;
+	// },
+	
+	createHideShowPlayingSegmentsButton: function(owner) {
 		let self = this;
     
-		let pin = document.createElement('i');
-		pin.id = 'vs-compact-editor-header-pin-fullscreen';
-		pin.classList.add('fa');
-		if ( self.settings.showEditorInFullscreen ) pin.classList.add('fa-unlock');
-		else pin.classList.add('fa-lock')
+		let showHide = document.createElement('i');
+		showHide.id = 'vs-compact-editor-header-hide-playing-segments';
+		showHide.classList.add('fa');
+		if ( self.settings.hidePlayingSegmentBars ) showHide.classList.add('fa-eye-slash');
+		else showHide.classList.add('fa-eye')
 		
-		pin.addEventListener('click', function() {
-			self.settings.showEditorInFullscreen = !self.settings.showEditorInFullscreen;
+		showHide.addEventListener('click', function() {
+			self.settings.hidePlayingSegmentBars = !self.settings.hidePlayingSegmentBars;
 			browser.storage.local.set({ settings: self.settings });
 			
-			if ( self.settings.showEditorInFullscreen ) {
-					pin.classList.remove('fa-lock');
-					pin.classList.add('fa-unlock');
+			if ( self.settings.hidePlayingSegmentBars ) {
+				showHide.classList.remove('fa-eye');
+				showHide.classList.add('fa-eye-slash');
 			}
 			else { 
-				pin.classList.remove('fa-unlock');
-				pin.classList.add('fa-lock');
+				showHide.classList.remove('fa-eye-slash');
+				showHide.classList.add('fa-eye');
 			}
+			
+			self.wrapper.updateSegmentsBar();
 		});
 		
-		return pin;
+		return showHide;
 	},
 	
 	createOpacityChanger: function(owner) {
@@ -462,7 +492,7 @@ var CompactEditor = {
 			document.getElementById('vs-compact-editor-sharing').style.display = 'none';
 			document.getElementById('vs-compact-editor-opacity').style.display = 'none';
 			document.getElementById('vs-compact-editor-entries').style.display = 'none';
-			document.getElementById('vs-compact-editor-header-pin-fullscreen').style.display = 'none';
+			document.getElementById('vs-compact-editor-header-hide-playing-segments').style.display = 'none';
 			document.getElementById('vs-compact-editor-header-close').style.display = 'none';
 			button.classList.remove('fa-window-minimize');
 			button.classList.add('fa-window-maximize');
@@ -474,7 +504,7 @@ var CompactEditor = {
 			if ( this.types.length > 0 ) document.getElementById('vs-compact-editor-sharing').style.display = 'flex';
 			document.getElementById('vs-compact-editor-opacity').style.display = 'block';
 			document.getElementById('vs-compact-editor-entries').style.display = 'block';
-			document.getElementById('vs-compact-editor-header-pin-fullscreen').style.display = 'inline';
+			document.getElementById('vs-compact-editor-header-hide-playing-segments').style.display = 'inline';
 			document.getElementById('vs-compact-editor-header-close').style.display = 'inline';
 			button.classList.remove('fa-window-maximize');
 			button.classList.add('fa-window-minimize');
@@ -1261,5 +1291,12 @@ var CompactEditor = {
 		if ( this.panel != null ) {
 			this.panel.remove();
 		}
+		
+		let panel = document.getElementById('vs-compact-editor');
+		if ( panel ) panel.remove();
+		
+		document.removeEventListener('webkitfullscreenchange', this.handleFullscreenCtx);
+		document.removeEventListener('fullscreenchange', this.handleFullscreenCtx);
+		document.removeEventListener('mozFullScreen', this.handleFullscreenCtx);
 	}
 }

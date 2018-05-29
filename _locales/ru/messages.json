@@ -185,6 +185,10 @@
 		"message": "Видимость панели сегментации в полном экране: ",
 		"description": ""
 	},
+	"hidePlayingSegmentBars" : {
+		"message": "Скрыть проигрываемые сегменты.",
+		"description": ""
+	},
 	"iconOpacity": {
 		"message": "Видимость иконки: ",
 		"description": ""

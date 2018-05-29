@@ -100,7 +100,8 @@ function getSettings(callback) {
 		segmentationToolsFullscreenOpacity: 50,
 		iconOpacity: 100,
 		segmentsBarLocation: 'separated',
-		showEditorInFullscreen: false,
+		showEditorInFullscreen: true,
+		hidePlayingSegmentBars: false,
 		
 		// moderator settings 
 		displayPending: false,

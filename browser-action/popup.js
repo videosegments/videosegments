@@ -347,7 +347,8 @@ function loadSettings()
 		segmentationToolsOpacity: 60,
 		iconOpacity: 100,
 		segmentsBarLocation: 'separated',
-		showEditorInFullscreen: false,
+		showEditorInFullscreen: true,
+		hidePlayingSegmentBars: false,
 		
 		// segmentation settings 
 		// sendToDatabase: false,
@@ -541,6 +542,10 @@ function restoreOptions()
 	element = document.getElementById('hideIcon');
 	element.checked = settings.hideIcon;
 	element.addEventListener('change', function() { updateGlobalBool(this, settings, 'hideIcon'); });
+	
+	element = document.getElementById('hidePlayingSegmentBars');
+	element.checked = settings.hidePlayingSegmentBars;
+	element.addEventListener('change', function() { updateGlobalBool(this, settings, 'hidePlayingSegmentBars'); });
 	
 	element = document.getElementById('databasePriority');
 	element.value = settings.databasePriority;

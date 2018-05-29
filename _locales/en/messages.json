@@ -197,6 +197,10 @@
 		"message": "Show editor in fullscreen",
 		"description": ""
 	},
+	"hidePlayingSegmentBars" : {
+		"message": "Hide segments to play",
+		"description": ""
+	},
 	"autosaveMessage": {
 		"message": "Segmentation is automatically saved at your PC",
 		"description": ""

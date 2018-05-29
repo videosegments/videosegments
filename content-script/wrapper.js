@@ -354,6 +354,7 @@ var Wrapper = {
 						self.types = response.types;
 						self.origin = 'pendingDatabase';
 						self.onSegmentationReady();
+						self.startEditor();
 					}
 					else {
 						// https://stackoverflow.com/a/16941754
@@ -495,6 +496,12 @@ var Wrapper = {
 			segment.style.backgroundColor = this.settings.segments[this.types[i]].color;
 			segment.innerHTML = '&nbsp;';
 			segmentsBar.insertAdjacentElement('beforeEnd', segment);
+			
+			if ( this.settings.segments[this.types[i]].skip === false ) {
+				if ( this.settings.hidePlayingSegmentBars ) {
+					segment.style.opacity = 0.0;
+				}
+			}
 		}
 	},
 	
@@ -502,8 +509,9 @@ var Wrapper = {
 		log('Wrapper::removeSegmentsBar()');
 	
 		let segmentsBar = document.getElementById('vs-segmentsbar');
-		if ( segmentsBar ) {
+		while ( segmentsBar ) {
 			segmentsBar.remove();
+			segmentsBar = document.getElementById('vs-segmentsbar');
 		}
 	},
 	

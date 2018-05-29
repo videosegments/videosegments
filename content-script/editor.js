@@ -1100,5 +1100,8 @@ var Editor = {
 		this.icon.remove();
 		this.panel.remove();
 		this.modal.remove();
+		
+		let panel = document.getElementById('vs-segmentation-panel');
+		if ( panel ) panel.remove();
 	},
 };

@@ -341,6 +341,11 @@
 	cursor: pointer;
 }
 
+#vs-compact-editor-header-hide-playing-segments {
+	padding: 5px 5px;
+	cursor: pointer;
+}
+
 #vs-compact-editor-opacity * {
 	font-size: 12px !important;
 	vertical-align: middle;

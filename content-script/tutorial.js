@@ -39,7 +39,7 @@ var Tutorial = {
 		// pure callback hell. yay! some of indents will be omitted for sake of sanity
 		this.showPopup(document.getElementById('vs-compact-editor'), 'Quick tutorial.', 'top', function() {
 		self.showPopup(document.getElementById('vs-compact-editor-header-move'), 'Drag&move panel.', 'top', function() {
-		self.showPopup(document.getElementById('vs-compact-editor-header-pin-fullscreen'), 'Enable panel in fullscreen mode. Panel position and opacity in fullscreen and outside are independent. Click again to disable.', 'top', function() {
+		self.showPopup(document.getElementById('vs-compact-editor-header-hide-playing-segments'), 'Hide/show playing segments (green bars below video\'s progress bar).', 'top', function() {
 		self.showPopup(document.getElementById('vs-compact-editor-opacity'), 'Panel opacity when mouse outside.<br>Can be reset in the settings.', 'top', function() {
 		self.showPopup(document.getElementById('vs-compact-editor-header-minimize'), 'Minimize panel.', 'top', function() {
 		self.showPopup(document.getElementById('vs-compact-editor-header-close'), 'Close panel.<br>Can be reset in the settings.', 'top', function() {
