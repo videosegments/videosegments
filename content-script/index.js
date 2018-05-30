@@ -96,7 +96,7 @@ function getSettings(callback) {
 		showPageOnReject: true,
 		popupDurationOnSend: 5.0,
 		databasePriority: 'local',
-		segmentationToolsOpacity: 100,
+		segmentationToolsOpacity: 60,
 		segmentationToolsFullscreenOpacity: 50,
 		iconOpacity: 100,
 		segmentsBarLocation: 'separated',
@@ -112,7 +112,7 @@ function getSettings(callback) {
 		simplified: true,
 		// addon working in simplified (skip-play) mode 
 		mode: 'simplified', 
-		lastTab: 'tab-filters',
+		lastTab: 'tab-settings',
 		minimized: false,
 		
 		filters: {

@@ -345,6 +345,7 @@ function loadSettings()
 		popupDurationOnSend: 5.0,
 		databasePriority: 'local',
 		segmentationToolsOpacity: 60,
+		segmentationToolsFullscreenOpacity: 50,
 		iconOpacity: 100,
 		segmentsBarLocation: 'separated',
 		showEditorInFullscreen: true,
@@ -360,7 +361,7 @@ function loadSettings()
 		simplified: true,
 		// addon working in simplified (skip-play) mode 
 		mode: 'simplified', 
-		lastTab: 'tab-filters',
+		lastTab: 'tab-settings',
 		minimized: false,
 		
 		filters: {
@@ -395,7 +396,7 @@ function loadSettings()
 			totalTime: 0,
 		}, function(result) {
 			settings = Object.assign({}, defaultSettings, result.settings);
-			console.log(settings);
+			// console.log(settings);
 			
 			if ( settings.lastVersionChanges !== '1.8.8' ) {
 				if ( settings.mode === 'simplified' ) {

@@ -113,11 +113,6 @@ var Wrapper = {
 			// wait for canplay event 
 			this.video.addEventListener('canplay', ctx);
 		}
-		
-		if ( this.filters === null ) {
-			this.filters = new Object(Filters);
-			this.filters.start(this.settings, this, this);
-		}
 	},
 	
 	// request segmentation from server 
@@ -438,6 +433,11 @@ var Wrapper = {
 		let rewindSegment = this.getNextRewindSegment(0);
 		if ( rewindSegment !== null ) {
 			this.tryRewind(rewindSegment);
+		}
+		
+		if ( this.filters === null ) {
+			this.filters = new Object(Filters);
+			this.filters.start(this.settings, this, this);
 		}
 	},
 	
@@ -776,7 +776,7 @@ var Wrapper = {
 	getChannel: function() {
 		log('Wrapper::getChannel()');
 		
-		let container = document.getElementById('owner-name');
+		let container = document.querySelector('yt-formatted-string#owner-name.style-scope.ytd-video-owner-renderer');
 		if ( container ) {
 			browser.runtime.sendMessage( { gotChannel: container.getElementsByTagName('a')[0].innerHTML } );
 			log(container.getElementsByTagName('a')[0].innerHTML);

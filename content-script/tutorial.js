@@ -43,8 +43,8 @@ var Tutorial = {
 		self.showPopup(document.getElementById('vs-compact-editor-opacity'), 'Panel opacity when mouse outside.<br>Can be reset in the settings.', 'top', function() {
 		self.showPopup(document.getElementById('vs-compact-editor-header-minimize'), 'Minimize panel.', 'top', function() {
 		self.showPopup(document.getElementById('vs-compact-editor-header-close'), 'Close panel.<br>Can be reset in the settings.', 'top', function() {
-		self.showPopup(document.getElementById('vs-segment-pl'), 'Add autoskip for next time starting from current time.', 'bottom', function() {
-		self.showPopup(document.getElementById('vs-segment-sk'), 'End autoskip for next time from current time.<br>Can be used without start if needed (to add skip at video start).', 'bottom', function() {
+		self.showPopup(document.getElementById('vs-segment-pl'), 'End autoskip for next time from current time.<br>Can be used without start if needed (to add skip at video start).', 'bottom', function() {
+		self.showPopup(document.getElementById('vs-segment-sk'), 'Add autoskip for next time starting from current time.', 'bottom', function() {
 		
 		let p;
 		let entries = document.getElementsByClassName('vs-segment-entry');

@@ -102,20 +102,17 @@ var Filters = {
 						log('end silence', self.wrapper.video.duration-silenceStart, self.wrapper.video.currentTime, silenceStart);
 							
 						self.wrapper.video.currentTime = silenceStart - 0.1;
+						
 						if ( self.settings.mode === 'simplified' ) {
-							document.getElementById('vs-left-button-pl').click();
+							document.getElementById('vs-segment-sk').click();
 						}
 						else {
 							document.getElementById('vs-left-button-c').click();
+							document.getElementById('vs-right-button-cs').click();
 						}
 						
-						self.wrapper.video.currentTime = self.wrapper.video.duration;
-						if ( self.settings.mode === 'simplified' ) {
-							document.getElementById('vs-left-button-sk').click();
-						}
-						else {
-							document.getElementById('vs-left-button-cs').click();
-						}
+						self.wrapper.video.currentTime = self.wrapper.video.duration - 0.1;
+						self.wrapper.video.pause();
 					}
 					
 					silenceStart = undefined;
@@ -150,7 +147,7 @@ var Filters = {
 							self.wrapper.video.currentTime = silenceStart;
 							
 							if ( self.settings.mode === 'simplified' ) {
-								document.getElementById('vs-left-button-pl').click();
+								document.getElementById('vs-segment-sk').click();
 							}
 							else {
 								document.getElementById('vs-left-button-c').click();
@@ -159,7 +156,7 @@ var Filters = {
 						
 						self.wrapper.video.currentTime = currentTime - 0.1;
 						if ( self.settings.mode === 'simplified' ) {
-							document.getElementById('vs-left-button-sk').click();
+							document.getElementById('vs-segment-pl').click();
 						}
 						else {
 							document.getElementById('vs-left-button-cs').click();

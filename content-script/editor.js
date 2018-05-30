@@ -1011,11 +1011,40 @@ var Editor = {
 			document.getElementById('vs-share-segmentation').disabled = true;
 		}
 		else if ( response.message === 'added' ) {
-			this.sendModal('success', 'segmentationAddedToDatabase');
-			this.updateBadge();
+ 			this.sendModal('success', 'segmentationAddedToDatabase');
+ 			this.updateBadge();
+			
+			this.origin = 'officialDatabase';
+			document.getElementById('vs-segmentation-buttons').remove();
+			this.createButtonsContainer(document.getElementById('vs-segmentation-panel-segments'));
 		}
 		else if ( response.message === 'updated' ) {
 			this.sendModal('success', 'segmentationUpdatedInDatabase');
+			
+			this.origin = 'officialDatabase';
+			document.getElementById('vs-segmentation-buttons').remove();
+			this.createButtonsContainer(document.getElementById('vs-segmentation-panel-segments'));
+		}
+		else if ( response.message === 'accepted' ) {
+			this.sendModal('success', 'segmentationAccepted');
+			
+			this.origin = 'officialDatabase';
+			document.getElementById('vs-segmentation-buttons').remove();
+			this.createButtonsContainer(document.getElementById('vs-segmentation-panel-segments'));
+		}
+		else if ( response.message === 'rejected' ) {
+			this.sendModal('success', 'segmentationRejected');
+			
+			this.origin = 'noSegmentation';
+			document.getElementById('vs-segmentation-buttons').remove();
+			this.createButtonsContainer(document.getElementById('vs-segmentation-panel-segments'));
+		}
+		else if ( response.message === 'overriden' ) {
+			this.sendModal('success', 'segmentationOverriden');
+			
+			this.origin = 'officialDatabase';
+			document.getElementById('vs-segmentation-buttons').remove();
+			this.createButtonsContainer(document.getElementById('vs-segmentation-panel-segments'));
 		}
 		else if ( response.message === 'timeout' ) {
 			this.sendModal('failed', 'segmentationSendTimeout');
