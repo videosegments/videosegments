@@ -271,7 +271,7 @@ var Wrapper = {
 	tryFilter: function(self, callback) {
 		log('Wrapper::tryFilter()', self.channel, self.channel !== null && self.settings.filters.channelBased.enabled);
 		
-		if ( self.channel !== null && self.settings.filters.channelBased.enabled ) {
+		if ( self.channel !== null && self.settings.filters.channelBased.enabled && self.origin === 'noSegmentation' ) {
 			browser.storage.local.get({['|c|'+self.channel]: []}, function(result) {
 				let filter = result['|c|'+self.channel];
 				self.timestamps = [];
@@ -384,11 +384,13 @@ var Wrapper = {
 	clearPauseTimer: function(self) {
 		log('Wrapper::clearPauseTimer()');
 		
-		clearTimeout(self.timer);
-		self.timer = null;
-		self.video.play();
-		
-		self.onSegmentationReady();
+		if ( self.origin === 'noSegmentation' ) {
+			clearTimeout(self.timer);
+			self.timer = null;
+			self.video.play();
+			
+			self.onSegmentationReady();
+		}
 		self.startEditor();
 	},
 	
@@ -639,7 +641,7 @@ var Wrapper = {
 		if ( duration > this.settings.segments[this.types[segment]].duration ) {
 			browser.runtime.sendMessage({ 'updateTotalTime': this.timestamps[segment+1] - this.video.currentTime });
 			if ( this.timestamps.length === segment+2 && (this.video.duration - this.timestamps[segment+1]) < 0.1 ) {
-				this.video.currentTime = this.video.duration;
+				this.video.currentTime = this.video.duration - 0.1;
 				this.video.pause();
 			}
 			else {

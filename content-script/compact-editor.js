@@ -44,6 +44,7 @@ var CompactEditor = {
 	id: null,
 	
 	handleFullscreenCtx: null,
+	modalReject: null,
 	
 	start: function(wrapper, timestamps, types, origin, settings, domain, id, timestampsSecondary, typesSecondary) {
 		log('CompactEditor::start()');
@@ -252,6 +253,8 @@ var CompactEditor = {
 			let tutorial = new Object(Tutorial);
 			tutorial.start(settings);
 		}
+		
+		this.doImport(browser.extension.getURL('content-script/rejection.html'), function(element) { self.modalReject = element.getElementsByClassName('vs-modal-background')[0] });
 	},
 	
 	// https://stackoverflow.com/a/9345038
@@ -1219,22 +1222,52 @@ var CompactEditor = {
 			this.sendModal('failed', 'segmentationExistsInDatabase');
 		}
 		else if ( response.message === 'unlisted' || response.message === 'auto-rejected: video is unlisted' ) {
-			this.sendModal('rejected', 'rejectedUnlisted');
+			if ( this.settings.showPageOnReject ) {
+				this.sendWindow('rejected', 'rejectedUnlisted');
+			}
+			else {
+				this.sendModal('rejected', 'rejectedUnlisted');
+			}
 		}
 		else if ( response.message === 'stream' || response.message === 'auto-rejected: video is stream' ) {
-			this.sendModal('rejected', 'rejectedStream');
+			if ( this.settings.showPageOnReject ) {
+				this.sendWindow('rejected', 'rejectedStream');
+			}
+			else {
+				this.sendModal('rejected', 'rejectedStream');
+			}
 		}
 		else if ( response.message === 'views' || response.message === 'auto-rejected: less than 50000 views' ) {
-			this.sendModal('rejected', 'rejectedViews');
+			if ( this.settings.showPageOnReject ) {
+				this.sendWindow('rejected', 'rejectedViews');
+			}
+			else {
+				this.sendModal('rejected', 'rejectedViews');
+			}
 		}
 		else if ( response.message === 'long' || response.message === 'auto-rejected: video is too long' ) {
-			this.sendModal('rejected', 'rejectedLong');
+			if ( this.settings.showPageOnReject ) {
+				this.sendWindow('rejected', 'rejectedLong');
+			}
+			else {
+				this.sendModal('rejected', 'rejectedLong');
+			}
 		}
 		else if ( response.message === 'segmentation' || response.message === 'auto-rejected: suspicious segmentation' ) {
-			this.sendModal('rejected', 'rejectedSegmentation');
+			if ( this.settings.showPageOnReject ) {
+				this.sendWindow('rejected', 'rejectedSegmentation');
+			}
+			else {
+				this.sendModal('rejected', 'rejectedSegmentation');
+			}
 		}
 		else if ( response.message === 'language' || response.message === 'auto-rejected: unsupported video language' ) {
-			this.sendModal('rejected', 'rejectedLanguage');
+			if ( this.settings.showPageOnReject ) {
+				this.sendWindow('rejected', 'rejectedLanguage');
+			}
+			else {
+				this.sendModal('rejected', 'rejectedLanguage');
+			}
 		}
 		else {
 			window.alert('VideoSegments: ' + response.message);
@@ -1279,6 +1312,36 @@ var CompactEditor = {
 		
 		setTimeout(function() { modal.classList.remove('vs-messages-modal-animation'); }, this.settings.popupDurationOnSend*1000);
 		setTimeout(function() { modal.remove(); }, 8000+1000);
+	},
+	
+	sendWindow: function(type, bodyText) {
+		log('Editor::sendWindow()');
+		
+		let self = this;
+		let modal = this.modalReject.cloneNode(true);
+		document.body.appendChild(modal);
+		
+		modal.getElementsByClassName('vs-modal-reason')[0].appendChild(document.createTextNode(browser.i18n.getMessage(bodyText)));
+		
+		modal.getElementsByClassName('vs-modal-close')[0].addEventListener('click', function() {
+			if ( modal.getElementsByClassName('vs-show-page-on-reject')[0].checked ) {
+				self.settings.showPageOnReject = false;
+				browser.storage.local.set({ settings: self.settings });
+			}
+			modal.remove();
+		});
+	},
+	
+	doImport: function(file, callback) {
+		let link = document.createElement('link');
+		link.rel = 'import';
+		link.href = file;
+		link.onload = function(e) {
+			let content = link.import;
+			callback(content.body);
+		}
+		
+		document.head.appendChild(link);
 	},
 	
 	updateBadge: function() {

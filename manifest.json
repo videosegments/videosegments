@@ -1,7 +1,7 @@
 {
 	"manifest_version": 2,
 	"name": "__MSG_extensionName__",
-	"version": "1.9.5",
+	"version": "1.9.6",
 	
 	"applications": {
 		"gecko": {
@@ -49,6 +49,7 @@
 	],
 	
 	"web_accessible_resources": [
+		"content-script/rejection.html",
 		"images/sprites-options.png",
 		"images/sprites-editor.png",
 		"images/scissors.png",
