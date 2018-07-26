@@ -1,0 +1,57 @@
+<!doctype html>
+
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title class="translate-me">VideoSegments</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css" integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ"
+        crossorigin="anonymous">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <nav>
+        <ul class="navbar-nav flex-row justify-content-between">
+            <li id="tab-settings" class="nav-item m-auto w-100 text-dark text-center"><i class="fa fa-cog"></i></li>
+            <li id="tab-playback" class="nav-item m-auto w-100 text-dark text-center"><i class="fa fa-play"></i></li>
+            <li id="tab-acceleration" class="nav-item m-auto w-100 text-dark text-center"><i class="fa fa-forward"></i></li>
+            <li id="tab-filters" class="nav-item m-auto w-100 text-dark text-center"><i class="fa fa-filter"></i></li>
+            <li id="tab-community" class="nav-item m-auto w-100 text-dark text-center"><i class="fa fa-globe"></i></li>
+        </ul>
+    </nav>
+
+    <div id="settings" class="tab-content" style="display: none">
+        <div class="tab-header translate-me">TabSettings</div>
+        
+        
+    </div>
+
+    <div id="playback" class="tab-content" style="display: none">
+        <div class="tab-header translate-me">TabPlayback</div>
+    </div>
+
+    <div id="acceleration" class="tab-content" style="display: none">
+        <div class="tab-header translate-me">TabAcceleration</div>
+    </div>
+
+    <div id="filters" class="tab-content" style="display: none">
+        <div class="tab-header translate-me">TabFilters</div>
+    </div>
+
+    <div id="community" class="tab-content" style="display: none">
+        <div class="tab-header translate-me">TabCommunity</div>
+    </div>
+
+    <script src="storage.js"></script>
+    <script src="scripts.js"></script>
+</body>
+
+</html>

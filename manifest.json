@@ -1,7 +1,7 @@
 {
 	"manifest_version": 2,
 	"name": "__MSG_extensionName__",
-	"version": "1.9.6",
+	"version": "1.10.0",
 	
 	"applications": {
 		"gecko": {
@@ -17,10 +17,8 @@
 		"128": "icons/icon-128.png"
 	},
 	
-	"author": "VideoSegments Team",
-	
 	"background": {
-		"scripts": ["background-script/background.js"]
+		"scripts": ["background/background.js"]
 	},
 	
 	"browser_action": {
@@ -28,18 +26,20 @@
 			"64": "icons/icon-64.png"
 		},
 		"default_title": "VideoSegments",
-		"default_popup": "browser-action/popup.html"
+		"default_popup": "settings/popup.html"
 	},
 
 	"content_scripts": [
 		{
 			"matches": ["*://*.youtube.com/*"],
-			"js": ["browser-action/popper.js", "content-script/observer.js", "content-script/wrapper.js", "content-script/tutorial.js", "content-script/editor.js", "content-script/compact-editor.js", "content-script/filters.js", "content-script/index.js"],
-			"css": ["content-script/styles.css"],
+			"js": ["utils/utils.js", "storage/storage.js", "observer/observer.js", "player/player.js", "segmentsbar/segmentsbar.js", "smart-cursor/smart-cursor.js", "editor/editor.js", "modals/modals.js", "tutorial/tutorial.js", "content/content.js"],
+			"css": ["css/styles.css"],
 			"run_at": "document_start",
 			"all_frames": true
 		}
 	],
+
+	"content_security_policy": "script-src 'self' https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js; object-src 'self'",
 
 	"permissions": [
 		"https://*.videosegments.org/*",
@@ -49,10 +49,10 @@
 	],
 	
 	"web_accessible_resources": [
-		"content-script/rejection.html",
-		"images/sprites-options.png",
-		"images/sprites-editor.png",
-		"images/scissors.png",
-		"images/tutorial.png"
+		"editor/editor.html",
+		"editor/entry.html",
+		"modals/small.html",
+		"modals/big.html",
+		"modals/captcha.html"
 	]
 }
