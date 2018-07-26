@@ -19,406 +19,21 @@
 */
 
 /*
-    Segmentsbar styles 
-*/
-#vs-segmentsbar {
-    height: 0; 
-    overflow: visible;
-    padding: 0;
-    margin: 0;
-    margin-top: 1px;
-
-    position: absolute;
-    width: 100%;
-    pointer-events: none;
-}
-
-.vs-segmentbar {
-    display: inline-block;
-	height: 3px;
-}
-
-.vs-segmentsbar-overlay {
-    z-index: 100;
-    opacity: 0.5;
-}
-
-/*
-    Panel 
-*/
-#vs-editor {
-    position: absolute;
-    z-index: 2500;
-    
-    background: white;
-    box-shadow: 0 0 4px 1px rgba(0, 0, 0, 0.2);
-
-    border-radius: 5px;
-	color: #000 !important; /* force black text color in fullscreen mode */
-	
-    padding: 2px;
-}
-
-.vs-editor-maximized
-{
-    width: 285px;
-}
-
-.vs-editor-minimized
-{
-    margin-left: 245px;
-    width: 40px;
-}
-
-.vs-editor-allow-hover:hover {
-	opacity: 1 !important;
-}
-
-#vs-editor-controls {
-    display: flex;
-    justify-content: space-between;
-    font-size: 11px !important; /* fullscreen */ 
-}
-
-#vs-editor-controls div {
-    padding: 2px;
-    display: inline;
-}
-
-#vs-editor-controls #vs-editor-move {
-    padding-right: 8px;
-	cursor: move;
-}
-
-#vs-editor-controls #vs-editor-eye {
-    cursor: pointer;
-    visibility: hidden;
-}
-
-#vs-editor-controls #vs-editor-minimize {
-	cursor: pointer;
-}
-
-#vs-editor-controls #vs-editor-close {
-    padding-left: 8px;
-	cursor: pointer;
-}
-
-#vs-editor-opacity {
-    margin-bottom: 6px;
-}
-
-#vs-editor-opacity-slider {
-    -webkit-appearance: none;
-    vertical-align: middle;
-    border: 1px solid gray;
-    outline: none;
-    width: 100px;
-    height: 0px;
-}
-
-#vs-editor-opacity-slider::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    background-color: #ecf0f1;
-    border: 1px solid #bdc3c7;
-    width: 9px;
-    height: 18px;
-    cursor: pointer;
-}
-
-#vs-editor-opacity-slider::-moz-range-track {
-    border: 1px solid gray;
-    outline: none;
-    width: 100px;
-    height: 0px;
-}
-
-#vs-editor-opacity-slider::-moz-range-thumb {
-    background-color: #ecf0f1;
-    border: 1px solid #bdc3c7;
-    width: 9px;
-    height: 18px;
-    cursor: pointer;
-}
-
-#vs-editor-simplified-buttons, #vs-editor-expert-buttons {
-    text-align: center;
-    display: flex;
-    justify-content: space-evenly;
-    padding-bottom: 5px;
-    border-bottom: 2px solid #ddd;
-    flex-wrap: wrap;
-    line-height: 0px;
-}
-
-#vs-editor-simplified-buttons button {
-    width: 30%;
-    font-size: 10px;
-    margin-top: 3px;
-}
-
-#vs-editor-expert-buttons .vs-editor-expert-buttons-container {
-    width: 90px;
-    font-size: 10px;
-    margin-top: 3px;
-}
-
-.vs-editor-expert-buttons-container button
-{
-    font-family: courier; 
-    text-align: center;
-    font-size: 11px;
-    padding: 2px 0;
-}
-
-.vs-editor-expert-buttons-container button:first-child
-{
-    width: 60px;
-    margin: 0;
-}
-
-.vs-editor-expert-buttons-container button:last-child
-{
-    width: 20px;
-    margin: 0;
-}
-
-#vs-editor-segments {
-    border-bottom: 2px solid #ddd;
-    text-align: center;
-    padding: 3px 0;
-    font-size: 11px !important; /* fullscreen */ 
-}
-
-.vs-editor-segment-entry { 
-    display: flex;
-    align-items: center;
-    line-height: 20px;
-    justify-content: center;
-}
-
-.vs-editor-segment-entry .fa-times {
-    cursor: pointer;
-    color: #ED4337;
-    margin-right: 3px;
-}
-
-.vs-editor-segment-entry .fa-forward {
-    cursor: pointer;
-    color: #4B71E6;
-    margin-left: 4px;
-}
-
-.vs-editor-segment-entry-time { 
-    outline-width: 0;
-    font-family: courier; 
-    text-align: center;
-    font-size: 11px;
-    padding: 0px;
-
-    border: none;
-    border-bottom: 1px solid black;
-}
-
-.vs-editor-segment-entry-start-time {
-    cursor: not-allowed;
-    background: #f8f8f8;
-}
-
-.vs-editor-segment-entry-end-time:focus {
-    border: 1px solid black;
-}
-
-.vs-editor-segment-entry-type {
-    font-family: courier; 
-    font-size: 11px;
-
-    border: none;
-    border-bottom: 1px solid black;
-}
-
-.vs-editor-segment-entry-type-simplified {
-    font-family: courier; 
-    font-size: 11px;
-}
-
-.vs-editor-segment-entry-time-holder {
-    font-family: courier; 
-    margin-left: 2px;
-    direction: rtl;
-    width: 4em;
-}
-
-#vs-editor-actions {
-    display: flex;
-    justify-content: space-evenly;
-    align-items: center;
-    padding: 5px 0;
-    font-size: 11px !important; /* fullscreen */ 
-}
-
-#vs-editor-origin
-{
-    text-align: center;
-    width: 40%;
-}
-
-#vs-editor-share
-{
-    font-family: courier; 
-    font-size: 11px;
-    width: 40%;
-}
-
-.vs-editor-display-none {
-    display: none;
-}
-
-/*
-    Modals
-*/
-.vs-small-modal
-{
-    display: inline-block; 
-	position: fixed; 
-	z-index: 2147483647;  /* youtube have pretty high z-index for top menu */
-	right: 5%;
-	top: -20%;
-	background-color: #fff; 
-	box-shadow: 0 0 4px 1px rgba(0, 0, 0, 0.2);
-	transition: top 0.4s ease;
-	border-radius: 3px;
-	overflow: hidden;
-	max-width: 30%;
-}
-
-.vs-small-modal-animation {
-	top: 10% !important;
-	transition: top 0.4s ease;
-}
-
-.vs-small-modal-header {
-	padding: 5px 10px;
-	font-size: 180%;
-	color: #000;
-}
-
-.vs-small-modal-body {
-    padding: 5px 10px;
-	font-size: 140%;
-}
-
-.vs-big-modal {
-    position: fixed;
-    z-index: 100000;
-    padding-top: 100px;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto; 
-    background-color: rgba(0, 0, 0, 0.8);
-}
-
-.vs-big-modal-content {
-    position: relative;
-    background-color: #fefefe;
-    margin: auto;
-    padding: 0;
-    border: 1px solid #888;
-    box-shadow: 0 0 4px 1px rgba(0, 0, 0, 0.2);
-    animation-name: animatetop;
-    animation-duration: 0.4s;
-	width: 400px;
-	top: 100px;
-}
-
-.vs-big-modal-header {
-	padding: 5px 10px;
-	font-size: 180%;
-	color: #000;
-}
-
-.vs-big-modal-body {
-    padding: 10px 20px;
-	font-size: 140%;
-}
-
-.vs-big-modal-footer {
-    padding: 5px 10px;
-    font-size: 140%;
-    text-align: center;
-}
-
-.vs-big-modal-disable {
-    vertical-align: middle;
-    margin-bottom: 5px;
-}
-
-.vs-big-modal-disable-text {
-    font-size: 100%;
-}
-
-@keyframes animatetop {
-    from {top: -300px; opacity: 0}
-    to {top: 100px; opacity: 1}
-} 
-
-.vs-captcha-modal {
-    display: inline-block; 
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-	z-index: 2147483647;  /* youtube have pretty high z-index for top menu */
-	background-color: #fff; 
-	box-shadow: 0 0 4px 1px rgba(0, 0, 0, 0.2);
-	transition: top 0.4s ease;
-	border-radius: 3px;
-	overflow: hidden;
-    width: 450px;
-    height: 700px;
-}
-
-.vs-captcha-modal-header {
-    text-align: center;
-    padding: 5px 10px;
-    color: #000;
-    height: 60px;
-}
-
-.vs-captcha-modal-header-extension {
-    font-size: 24px;
-}
-
-.vs-captcha-modal-header-confirm {
-    font-size: 18px;
-}
-
-.vs-captcha-modal-iframe {
-    position: absolute;
-    left: 0px;
-    width: 100%;
-    top: 60px;
-    height: calc(100vh - 60px);
-}
-
-/*
     Settings 
 */
 
 * {
-	font-size: 12px;
-	font-family: "Segoe UI", Tahoma, sans-serif;
+    font-size: 12px;
+    font-family: "Segoe UI", Tahoma, sans-serif;
 }
 
 body {
-	height: 500px;
-	width: 400px;
-	margin: 0;
-	padding: 0;
-	overflow: hidden;
-	background-color: white;
+    height: 500px;
+    width: 400px;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: white;
 }
 
 .tab-content {
@@ -429,4 +44,25 @@ body {
     font-size: 18px;
     font-weight: bold;
     text-align: center;
+}
+
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 20px;
+    line-height: 20px;
+    background-color: #f5f5f5;
+}
+
+.input-sm {
+    max-width: 30px;
+}
+
+#settings select {
+    width: 80px;
+}
+
+.input-md {
+    max-width: 60px;
 }

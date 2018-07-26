@@ -27,44 +27,54 @@ window.browser = window.browser || window.chrome;
 let settings, log;
 
 document.addEventListener('DOMContentLoaded', () => {
-    translateNodes(document.body);
+    translateNodes(document);
     hookTabs();
 
     getSettings().then((result) => {
-        if ( result.debug === true ) {
+        if (result.debug === true) {
             log = console.log.bind(console);
             log('settings loaded');
-        }
-        else {
-            log = function() {};
+        } else {
+            log = function () {};
         }
 
         settings = result;
         changeTab('settings');
     });
+
+    // little bit of jQuery 
+    $('[data-toggle="tooltip"]').tooltip();
 });
 
-function hookTabs()
-{
-    document.getElementById('tab-settings').addEventListener('click', function() { changeTab(this.id.slice(4)) });
-    document.getElementById('tab-playback').addEventListener('click', function() { changeTab(this.id.slice(4)) });
-    document.getElementById('tab-acceleration').addEventListener('click', function() { changeTab(this.id.slice(4)) });
-    document.getElementById('tab-filters').addEventListener('click', function() { changeTab(this.id.slice(4)) });
-    document.getElementById('tab-community').addEventListener('click', function() { changeTab(this.id.slice(4)) });
+function hookTabs() {
+    document.getElementById('tab-settings').addEventListener('click', function () {
+        changeTab(this.id.slice(4))
+    });
+    document.getElementById('tab-playback').addEventListener('click', function () {
+        changeTab(this.id.slice(4))
+    });
+    document.getElementById('tab-acceleration').addEventListener('click', function () {
+        changeTab(this.id.slice(4))
+    });
+    document.getElementById('tab-filters').addEventListener('click', function () {
+        changeTab(this.id.slice(4))
+    });
+    document.getElementById('tab-community').addEventListener('click', function () {
+        changeTab(this.id.slice(4))
+    });
 }
 
-function changeTab(tabName)
-{
+function changeTab(tabName) {
     let lastActiveTab = document.getElementsByClassName('active')[0];
-    if ( typeof lastActiveTab !== 'undefined' ) {
+    if (typeof lastActiveTab !== 'undefined') {
         lastActiveTab.classList.remove('active');
 
         let lastActiveContent = document.getElementById(lastActiveTab.id.slice(4));
-        if ( typeof lastActiveContent !== 'undefined' ) {
+        if (typeof lastActiveContent !== 'undefined') {
             lastActiveContent.style.display = 'none';
         }
     }
-    
+
     let newActiveTab = document.getElementById('tab-' + tabName);
     newActiveTab.classList.add('active');
 
@@ -72,31 +82,27 @@ function changeTab(tabName)
     newActveContent.style.display = 'block';
 }
 
-function translateNodes(target)
-{
+function translateNodes(target) {
     let nodes = target.getElementsByClassName('translate-me');
-    for ( let node of nodes ) {
-        node.classList.remove('vs-translate-me');
+    for (let node of nodes) {
+        // node.classList.remove('translate-me');
         translateNode(node);
     }
 }
 
-function translateNode(node)
-{
+function translateNode(node) {
     translateNodeText(node, node.innerHTML);
 }
 
-function translateNodeText(node, text)
-{
-    while ( node.firstChild ) {
+function translateNodeText(node, text) {
+    while (node.firstChild) {
         node.removeChild(node.firstChild);
-    } 
+    }
 
     let textNode = document.createTextNode(translateText(text));
     node.appendChild(textNode);
 }
 
-function translateText(text)
-{
+function translateText(text) {
     return browser.i18n.getMessage(text);
 }

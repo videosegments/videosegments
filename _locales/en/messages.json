@@ -4,7 +4,7 @@
 	},
 	"extensionDescription": {
 		"message": "Easiest way to remove boring content from YouTube videos. Great for listening to music."
-    },
+	},
 
 	"TabSettings": {
 		"message": "Settings"
@@ -20,6 +20,86 @@
 	},
 	"TabCommunity": {
 		"message": "Community"
+	},
+
+	"Parameter": {
+		"message": "Parameter"
+	},
+	"Value": {
+		"message": "Value"
+	},
+
+	"DatabasePriority": {
+		"message": "Database priority"
+	},
+	"Local": {
+		"message": "Local"
+	},
+	"Community": {
+		"message": "Community"
+	},
+	"ShowPanel": {
+		"message": "Show panel"
+	},
+	"Always": {
+		"message": "Always"
+	},
+	"Empty": {
+		"message": "Empty"
+	},
+	"Never": {
+		"message": "Never"
+	},
+	"PanelSize": {
+		"message": "Panel size"
+	},
+	"Maximized": {
+		"message": "Maximized"
+	},
+	"Hoverable": {
+		"message": "Hoverable"
+	},
+	"Minimized": {
+		"message": "Minimized"
+	},
+	"DisplaySegments": {
+		"message": "Display segments (?)"
+	},
+	"Below": {
+		"message": "Below"
+	},
+	"Overlay": {
+		"message": "Overlay"
+	},
+	"Behind": {
+		"message": "Behind"
+	},
+	"Hide": {
+		"message": "Hide"
+	},
+	"PanelMode": {
+		"message": "Panel mode"
+	},
+	"Normal": {
+		"message": "Normal"
+	},
+	"Expert": {
+		"message": "Expert"
+	},
+	"RequestTimeout": {
+		"message": "Request timeout, seconds (?)"
+	},
+	"NotificationsDuration": {
+		"message": "Notifications duration, seconds (?)"
+	},
+	"PanelOpacity": {
+		"message": "Panel opacity, %"
+	},
+	"FullscreenPanelOpacity": {
+		"message": "Fullscreen panel opacity, %"
+	},
+	"ResetPanelPosition": {
+		"message": "Reset panel position"
 	},
 
 	"Blank": {

@@ -20,24 +20,22 @@
 
 'use strict';
 
-class Segmentsbar
-{
-    constructor(parent) {
-        this.container = document.createElement('ul');
+class Segmentsbar {
+	constructor(parent) {
+		this.container = document.createElement('ul');
 		this.container.id = 'vs-segmentsbar';
 		this.bars = []
 
-        if ( settings.segmentsBarLocation === 'separated' ) {
+		if (settings.segmentsBarLocation === 'separated') {
 			parent.insertAdjacentElement("afterEnd", this.container);
-		}
-		else {
+		} else {
 			parent.insertAdjacentElement("afterBegin", this.container);
-			if ( settings.segmentsBarLocation === 'overlay' ) {
+			if (settings.segmentsBarLocation === 'overlay') {
 				this.container.classList.add('vs-segmentsbar-overlay');
 			}
-        }
+		}
 	}
-	
+
 	set(timestamps, types, duration) {
 		while (this.container.firstChild) {
 			this.container.removeChild(this.container.firstChild);
@@ -50,17 +48,17 @@ class Segmentsbar
 		// to avoid rounding error resulting in width more than 100% 
 		duration = Math.floor(duration * 100) / 100;
 		let width;
-		for ( let i = 0; i < types.length; ++i ) {
-			width = (timestamps[i+1] - timestamps[i]) / duration * 100;
+		for (let i = 0; i < types.length; ++i) {
+			width = (timestamps[i + 1] - timestamps[i]) / duration * 100;
 			width = Math.floor(width * 100) / 100;
 
 			let bar = this.createBar();
 			bar.style.backgroundColor = settings.segments[types[i]].color;
-			bar.style.width = width+'%';
-            
+			bar.style.width = width + '%';
+
 			this.container.insertAdjacentElement('beforeEnd', bar);
-			if ( settings.segments[types[i]].skip === false ) {
-				if ( settings.hidePlayingSegmentBars === true ) {
+			if (settings.segments[types[i]].skip === false) {
+				if (settings.hidePlayingSegmentBars === true) {
 					bar.style.opacity = 0.0;
 				}
 			}
@@ -69,94 +67,84 @@ class Segmentsbar
 		}
 	}
 
-	createBar()
-	{
+	createBar() {
 		let bar = document.createElement('li');
 		bar.classList.add('vs-segmentbar');
 		bar.innerHTML = '&nbsp;';
 		return bar;
 	}
 
-	updateWidth(timestamps, index, duration, updateNeighbor)
-	{
-		if ( timestamps.length === 0 ) {
+	updateWidth(timestamps, index, duration, updateNeighbor) {
+		if (timestamps.length === 0) {
 			return;
-		}
-		else if ( timestamps.length === 2 ) {
+		} else if (timestamps.length === 2) {
 			index = 1;
 		}
 
-		let width = (timestamps[index] - timestamps[index-1]) / duration * 100;
+		let width = (timestamps[index] - timestamps[index - 1]) / duration * 100;
 		width = Math.floor(width * 100) / 100;
-		this.bars[index-1].style.width = width+'%';
+		this.bars[index - 1].style.width = width + '%';
 
 		// TODO: remove this.bars[index] check (called from smart cursor when only 1 segment exists)
-		if ( updateNeighbor && this.bars[index] ) {
-			width = (timestamps[index+1] - timestamps[index]) / duration * 100;
+		if (updateNeighbor && this.bars[index]) {
+			width = (timestamps[index + 1] - timestamps[index]) / duration * 100;
 			width = Math.floor(width * 100) / 100;
-			this.bars[index].style.width = width+'%';
-		} 
+			this.bars[index].style.width = width + '%';
+		}
 	}
 
-	updateType(type, index)
-	{
+	updateType(type, index) {
 		this.bars[index].style.backgroundColor = settings.segments[type].color;
 	}
 
-	addSegment(timestamps, types, duration, index, left)
-	{
+	addSegment(timestamps, types, duration, index, left) {
 		let bar = this.createBar();
 		bar.style.backgroundColor = settings.segments[types[index]].color;
-		if ( settings.segments[types[index]].skip === false ) {
-			if ( settings.hidePlayingSegmentBars === true ) {
+		if (settings.segments[types[index]].skip === false) {
+			if (settings.hidePlayingSegmentBars === true) {
 				bar.style.opacity = 0.0;
 			}
 		}
 
 		this.bars.splice(index, 0, bar);
 
-		if ( types.length === 1 ) {
+		if (types.length === 1) {
 			this.container.appendChild(bar);
-		}
-		else {
-			if ( left ) {
+		} else {
+			if (left) {
 				this.container.childNodes[index].insertAdjacentElement('beforeBegin', bar);
-			}
-			else {
-				this.container.childNodes[index-1].insertAdjacentElement('afterEnd', bar);
+			} else {
+				this.container.childNodes[index - 1].insertAdjacentElement('afterEnd', bar);
 			}
 		}
-		
-		this.updateWidth(timestamps, (left?index+1:index), duration, (timestamps.length===2?false:true));
+
+		this.updateWidth(timestamps, (left ? index + 1 : index), duration, (timestamps.length === 2 ? false : true));
 	}
 
-	removeSegment(timestamps, duration, index)
-	{
+	removeSegment(timestamps, duration, index) {
 		this.bars[index].remove();
 		this.bars.splice(index, 1);
 
-		if ( timestamps.length !== index + 1 ) {
+		if (timestamps.length !== index + 1) {
 			this.updateWidth(timestamps, index + 1, duration, false);
 		}
 	}
 
-	updateOpacity(types)
-	{
+	updateOpacity(types) {
 		let i;
-		for ( i = 0; i < this.bars.length; ++i ) {
-			if ( settings.segments[types[i]].skip === false ) {
-				if ( settings.hidePlayingSegmentBars === true ) {
+		for (i = 0; i < this.bars.length; ++i) {
+			if (settings.segments[types[i]].skip === false) {
+				if (settings.hidePlayingSegmentBars === true) {
 					this.bars[i].style.opacity = 0.0;
-				}
-				else {
+				} else {
 					this.bars[i].style.opacity = 1.0;
 				}
 			}
 		}
 	}
 
-    remove() {
+	remove() {
 		this.container.remove();
 		this.container = undefined;
-    }
+	}
 }

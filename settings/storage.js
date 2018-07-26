@@ -21,37 +21,91 @@
 'use strict';
 
 // function to get settings 
-function getSettings() 
-{
+function getSettings() {
     // default settings 
     let settings = {
         // segments configuration
         segments: {
             // expert mode 
             // content 
-            c: 	{ skip: false, color: '#00c853', duration: 0.0, speed: 1.0 },
+            c: {
+                skip: false,
+                color: '#00c853',
+                duration: 0.0,
+                speed: 1.0
+            },
             // adcontent 
-            ac: { skip: false, color: '#00897b', duration: 0.0, speed: 1.0 },
+            ac: {
+                skip: false,
+                color: '#00897b',
+                duration: 0.0,
+                speed: 1.0
+            },
             // advertisement 
-            a: 	{ skip: true,  color: '#e53935', duration: 0.0, speed: 5.0 },
+            a: {
+                skip: true,
+                color: '#e53935',
+                duration: 0.0,
+                speed: 5.0
+            },
             // intro 
-            i: 	{ skip: true,  color: '#3949ab', duration: 0.0, speed: 5.0 },
+            i: {
+                skip: true,
+                color: '#3949ab',
+                duration: 0.0,
+                speed: 5.0
+            },
             // credits 
-            cr: { skip: true,  color: '#ffb300', duration: 0.0, speed: 5.0 },
+            cr: {
+                skip: true,
+                color: '#ffb300',
+                duration: 0.0,
+                speed: 5.0
+            },
             // cutscene 
-            cs: { skip: true,  color: '#757575', duration: 0.0, speed: 2.0 },
+            cs: {
+                skip: true,
+                color: '#757575',
+                duration: 0.0,
+                speed: 2.0
+            },
             // offtop 
-            o: 	{ skip: true,  color: '#8e24aa', duration: 0.0, speed: 3.0 },
+            o: {
+                skip: true,
+                color: '#8e24aa',
+                duration: 0.0,
+                speed: 3.0
+            },
             // interactive 
-            ia: { skip: true,  color: '#00acc1', duration: 0.0, speed: 4.0 },
+            ia: {
+                skip: true,
+                color: '#00acc1',
+                duration: 0.0,
+                speed: 4.0
+            },
             // scam 
-            s:	{ skip: true,  color: '#6d4c41', duration: 0.0, speed: 5.0 },
-            
+            s: {
+                skip: true,
+                color: '#6d4c41',
+                duration: 0.0,
+                speed: 5.0
+            },
+
             // simplified mode 
             // play 
-            pl: { skip: false, color: '#00c853', duration: 0.0, speed: 1.0 },
+            pl: {
+                skip: false,
+                color: '#00c853',
+                duration: 0.0,
+                speed: 1.0
+            },
             // skip 
-            sk:	{ skip: true,  color: '#757575', duration: 0.0, speed: 5.0 },
+            sk: {
+                skip: true,
+                color: '#757575',
+                duration: 0.0,
+                speed: 5.0
+            },
         },
 
         // global settings 
@@ -78,24 +132,24 @@ function getSettings()
         highlightIcon: true,
 
         // settings 
-        mode: 'simplified', 
+        mode: 'simplified',
         lastTab: 'tab-settings',
-        
+
         // filtration 
         filters: {
             apiKey: '',
-            
+
             channelBased: {
                 enabled: false,
             },
-            
+
             silence: {
                 enabled: false,
                 threshold: 0,
                 duration: 2.0,
             },
         },
-        
+
         // tutorial
         tutorial: 0,
 
@@ -106,7 +160,7 @@ function getSettings()
             fullscreenPosX: 200,
             fullscreenPosY: 200,
         },
-        
+
         // backward compatibility
         lastUpdateId: 0,
 
@@ -121,7 +175,9 @@ function getSettings()
     // make function async 
     return new Promise(resolve => {
         // request settings 
-        browser.storage.local.get({settings}, (result) => {
+        browser.storage.local.get({
+            settings
+        }, (result) => {
             // backward compatibility 
             settings = Object.assign({}, settings, result.settings);
             // return promise 
@@ -130,7 +186,8 @@ function getSettings()
     });
 }
 
-function saveSettings()
-{
-    browser.storage.local.set({ settings: settings });
+function saveSettings() {
+    browser.storage.local.set({
+        settings: settings
+    });
 }

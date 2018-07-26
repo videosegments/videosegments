@@ -21,13 +21,13 @@
 /*
     Segmentsbar styles 
 */
+
 #vs-segmentsbar {
-    height: 0; 
+    height: 0;
     overflow: visible;
     padding: 0;
     margin: 0;
     margin-top: 1px;
-
     position: absolute;
     width: 100%;
     pointer-events: none;
@@ -35,7 +35,7 @@
 
 .vs-segmentbar {
     display: inline-block;
-	height: 3px;
+    height: 3px;
 }
 
 .vs-segmentsbar-overlay {
@@ -46,38 +46,36 @@
 /*
     Panel 
 */
+
 #vs-editor {
     position: absolute;
     z-index: 2500;
-    
     background: white;
     box-shadow: 0 0 4px 1px rgba(0, 0, 0, 0.2);
-
     border-radius: 5px;
-	color: #000 !important; /* force black text color in fullscreen mode */
-	
+    color: #000 !important;
+    /* force black text color in fullscreen mode */
     padding: 2px;
 }
 
-.vs-editor-maximized
-{
+.vs-editor-maximized {
     width: 285px;
 }
 
-.vs-editor-minimized
-{
+.vs-editor-minimized {
     margin-left: 245px;
     width: 40px;
 }
 
 .vs-editor-allow-hover:hover {
-	opacity: 1 !important;
+    opacity: 1 !important;
 }
 
 #vs-editor-controls {
     display: flex;
     justify-content: space-between;
-    font-size: 11px !important; /* fullscreen */ 
+    font-size: 11px !important;
+    /* fullscreen */
 }
 
 #vs-editor-controls div {
@@ -87,7 +85,7 @@
 
 #vs-editor-controls #vs-editor-move {
     padding-right: 8px;
-	cursor: move;
+    cursor: move;
 }
 
 #vs-editor-controls #vs-editor-eye {
@@ -96,12 +94,12 @@
 }
 
 #vs-editor-controls #vs-editor-minimize {
-	cursor: pointer;
+    cursor: pointer;
 }
 
 #vs-editor-controls #vs-editor-close {
     padding-left: 8px;
-	cursor: pointer;
+    cursor: pointer;
 }
 
 #vs-editor-opacity {
@@ -141,7 +139,8 @@
     cursor: pointer;
 }
 
-#vs-editor-simplified-buttons, #vs-editor-expert-buttons {
+#vs-editor-simplified-buttons,
+#vs-editor-expert-buttons {
     text-align: center;
     display: flex;
     justify-content: space-evenly;
@@ -163,22 +162,19 @@
     margin-top: 3px;
 }
 
-.vs-editor-expert-buttons-container button
-{
-    font-family: courier; 
+.vs-editor-expert-buttons-container button {
+    font-family: courier;
     text-align: center;
     font-size: 11px;
     padding: 2px 0;
 }
 
-.vs-editor-expert-buttons-container button:first-child
-{
+.vs-editor-expert-buttons-container button:first-child {
     width: 60px;
     margin: 0;
 }
 
-.vs-editor-expert-buttons-container button:last-child
-{
+.vs-editor-expert-buttons-container button:last-child {
     width: 20px;
     margin: 0;
 }
@@ -187,10 +183,11 @@
     border-bottom: 2px solid #ddd;
     text-align: center;
     padding: 3px 0;
-    font-size: 11px !important; /* fullscreen */ 
+    font-size: 11px !important;
+    /* fullscreen */
 }
 
-.vs-editor-segment-entry { 
+.vs-editor-segment-entry {
     display: flex;
     align-items: center;
     line-height: 20px;
@@ -209,13 +206,12 @@
     margin-left: 4px;
 }
 
-.vs-editor-segment-entry-time { 
+.vs-editor-segment-entry-time {
     outline-width: 0;
-    font-family: courier; 
+    font-family: courier;
     text-align: center;
     font-size: 11px;
     padding: 0px;
-
     border: none;
     border-bottom: 1px solid black;
 }
@@ -230,20 +226,19 @@
 }
 
 .vs-editor-segment-entry-type {
-    font-family: courier; 
+    font-family: courier;
     font-size: 11px;
-
     border: none;
     border-bottom: 1px solid black;
 }
 
 .vs-editor-segment-entry-type-simplified {
-    font-family: courier; 
+    font-family: courier;
     font-size: 11px;
 }
 
 .vs-editor-segment-entry-time-holder {
-    font-family: courier; 
+    font-family: courier;
     margin-left: 2px;
     direction: rtl;
     width: 4em;
@@ -254,18 +249,17 @@
     justify-content: space-evenly;
     align-items: center;
     padding: 5px 0;
-    font-size: 11px !important; /* fullscreen */ 
+    font-size: 11px !important;
+    /* fullscreen */
 }
 
-#vs-editor-origin
-{
+#vs-editor-origin {
     text-align: center;
     width: 40%;
 }
 
-#vs-editor-share
-{
-    font-family: courier; 
+#vs-editor-share {
+    font-family: courier;
     font-size: 11px;
     width: 40%;
 }
@@ -277,35 +271,36 @@
 /*
     Modals
 */
-.vs-small-modal
-{
-    display: inline-block; 
-	position: fixed; 
-	z-index: 2147483647;  /* youtube have pretty high z-index for top menu */
-	right: 5%;
-	top: -20%;
-	background-color: #fff; 
-	box-shadow: 0 0 4px 1px rgba(0, 0, 0, 0.2);
-	transition: top 0.4s ease;
-	border-radius: 3px;
-	overflow: hidden;
-	max-width: 30%;
+
+.vs-small-modal {
+    display: inline-block;
+    position: fixed;
+    z-index: 2147483647;
+    /* youtube have pretty high z-index for top menu */
+    right: 5%;
+    top: -20%;
+    background-color: #fff;
+    box-shadow: 0 0 4px 1px rgba(0, 0, 0, 0.2);
+    transition: top 0.4s ease;
+    border-radius: 3px;
+    overflow: hidden;
+    max-width: 30%;
 }
 
 .vs-small-modal-animation {
-	top: 10% !important;
-	transition: top 0.4s ease;
+    top: 10% !important;
+    transition: top 0.4s ease;
 }
 
 .vs-small-modal-header {
-	padding: 5px 10px;
-	font-size: 180%;
-	color: #000;
+    padding: 5px 10px;
+    font-size: 180%;
+    color: #000;
 }
 
 .vs-small-modal-body {
     padding: 5px 10px;
-	font-size: 140%;
+    font-size: 140%;
 }
 
 .vs-big-modal {
@@ -316,7 +311,7 @@
     top: 0;
     width: 100%;
     height: 100%;
-    overflow: auto; 
+    overflow: auto;
     background-color: rgba(0, 0, 0, 0.8);
 }
 
@@ -329,19 +324,19 @@
     box-shadow: 0 0 4px 1px rgba(0, 0, 0, 0.2);
     animation-name: animatetop;
     animation-duration: 0.4s;
-	width: 400px;
-	top: 100px;
+    width: 400px;
+    top: 100px;
 }
 
 .vs-big-modal-header {
-	padding: 5px 10px;
-	font-size: 180%;
-	color: #000;
+    padding: 5px 10px;
+    font-size: 180%;
+    color: #000;
 }
 
 .vs-big-modal-body {
     padding: 10px 20px;
-	font-size: 140%;
+    font-size: 140%;
 }
 
 .vs-big-modal-footer {
@@ -360,22 +355,28 @@
 }
 
 @keyframes animatetop {
-    from {top: -300px; opacity: 0}
-    to {top: 100px; opacity: 1}
-} 
+    from {
+        top: -300px;
+        opacity: 0
+    }
+    to {
+        top: 100px;
+        opacity: 1
+    }
+}
 
 .vs-captcha-modal {
-    display: inline-block; 
+    display: inline-block;
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-	z-index: 2147483647;  /* youtube have pretty high z-index for top menu */
-	background-color: #fff; 
-	box-shadow: 0 0 4px 1px rgba(0, 0, 0, 0.2);
-	transition: top 0.4s ease;
-	border-radius: 3px;
-	overflow: hidden;
+    z-index: 2147483647;
+    background-color: #fff;
+    box-shadow: 0 0 4px 1px rgba(0, 0, 0, 0.2);
+    transition: top 0.4s ease;
+    border-radius: 3px;
+    overflow: hidden;
     width: 450px;
     height: 700px;
 }
@@ -401,32 +402,4 @@
     width: 100%;
     top: 60px;
     height: calc(100vh - 60px);
-}
-
-/*
-    Settings 
-*/
-
-* {
-	font-size: 12px;
-	font-family: "Segoe UI", Tahoma, sans-serif;
-}
-
-body {
-	height: 500px;
-	width: 400px;
-	margin: 0;
-	padding: 0;
-	overflow: hidden;
-	background-color: white;
-}
-
-.tab-content {
-    padding: 10px 20px;
-}
-
-.tab-header {
-    font-size: 18px;
-    font-weight: bold;
-    text-align: center;
 }

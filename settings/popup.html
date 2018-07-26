@@ -15,40 +15,198 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css" integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ"
         crossorigin="anonymous">
     <link rel="stylesheet" href="styles.css">
+
 </head>
 
 <body>
-    <nav>
-        <ul class="navbar-nav flex-row justify-content-between">
-            <li id="tab-settings" class="nav-item m-auto w-100 text-dark text-center"><i class="fa fa-cog"></i></li>
-            <li id="tab-playback" class="nav-item m-auto w-100 text-dark text-center"><i class="fa fa-play"></i></li>
-            <li id="tab-acceleration" class="nav-item m-auto w-100 text-dark text-center"><i class="fa fa-forward"></i></li>
-            <li id="tab-filters" class="nav-item m-auto w-100 text-dark text-center"><i class="fa fa-filter"></i></li>
-            <li id="tab-community" class="nav-item m-auto w-100 text-dark text-center"><i class="fa fa-globe"></i></li>
+    <nav class="navbar navbar-dark bg-dark">
+        <ul class="navbar-nav flex-row justify-content-between w-100">
+            <li id="tab-settings" class="nav-item m-auto text-center w-100">
+                <a class="nav-link fa fa-cog w-100" href="#"></a>
+            </li>
+            <li id="tab-playback" class="nav-item m-auto text-center w-100">
+                <a class="nav-link fa fa-play w-100" href="#"></a>
+            </li>
+            <li id="tab-acceleration" class="nav-item m-auto text-center w-100">
+                <a class="nav-link fa fa-forward w-100" href="#"></a>
+            </li>
+            <li id="tab-filters" class="nav-item m-auto text-center w-100">
+                <a class="nav-link fa fa-filter w-100" href="#"></a>
+            </li>
+            <li id="tab-community" class="nav-item m-auto text-center w-100">
+                <a class="nav-link fa fa-globe w-100" href="#"></a>
+            </li>
         </ul>
     </nav>
 
     <div id="settings" class="tab-content" style="display: none">
-        <div class="tab-header translate-me">TabSettings</div>
-        
-        
+        <h2 class="text-center translate-me">TabSettings</h2>
+
+        <table class="table table-bordered table-sm mt-3">
+            <thead>
+                <tr>
+                    <th class="translate-me">Parameter</th>
+                    <th class="translate-me">Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="translate-me">DatabasePriority</td>
+                    <td class="text-center">
+                        <select class="border-top-0 border-left-0 border-right-0 ouline-none">
+                            <option class="translate-me">Local</option>
+                            <option class="translate-me">Community</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="translate-me">ShowPanel</td>
+                    <td class="text-center">
+                        <select class="border-top-0 border-left-0 border-right-0 ouline-none">
+                            <option class="translate-me">Always</option>
+                            <option class="translate-me">Empty</option>
+                            <option class="translate-me">Never</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="translate-me">PanelSize</td>
+                    <td class="text-center">
+                        <select class="border-top-0 border-left-0 border-right-0 ouline-none">
+                            <option class="translate-me">Maximized</option>
+                            <option class="translate-me">Hoverable</option>
+                            <option class="translate-me">Minimized</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="translate-me" title="Position of segmentsbar relative to YouTube progress bar" data-toggle="tooltip">DisplaySegments</td>
+                    <td class="text-center">
+                        <select class="border-top-0 border-left-0 border-right-0 ouline-none">
+                            <option class="translate-me">Below</option>
+                            <option class="translate-me">Overlay</option>
+                            <option class="translate-me">Behind</option>
+                            <option class="translate-me">Hide</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="translate-me">PanelMode</td>
+                    <td class="text-center">
+                        <select class="border-top-0 border-left-0 border-right-0 ouline-none">
+                            <option class="translate-me">Normal</option>
+                            <option class="translate-me">Expert</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="translate-me" title="Max. duration of autopause before segmentation is recieved" data-toggle="tooltip">RequestTimeout</td>
+                    <td>
+                        <input type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
+                    </td>
+                </tr>
+                <tr>
+                    <td class="translate-me" title="How long popup with information will be displayed after segmentation sharing" data-toggle="tooltip">NotificationsDuration</td>
+                    <td>
+                        <input type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
+                    </td>
+                </tr>
+                <tr>
+                    <td class="translate-me">PanelOpacity</td>
+                    <td>
+                        <input type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
+                    </td>
+                </tr>
+                <tr>
+                    <td class="translate-me">FullscreenPanelOpacity</td>
+                    <td>
+                        <input type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="text-center">
+            <button class="translate-me btn btn-outline-secondary mx-auto my-3">ResetPanelPosition</button>
+        </div>
     </div>
 
     <div id="playback" class="tab-content" style="display: none">
-        <div class="tab-header translate-me">TabPlayback</div>
+        <h2 class="text-center translate-me">TabPlayback</h2>
+
+        <table class="table table-bordered table-sm mt-3 text-center">
+            <thead>
+                <tr>
+                    <th>Action</th>
+                    <th>Segment</th>
+                    <th>Color</th>
+                    <th>Opacity</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <select class="border-top-0 border-left-0 border-right-0 ouline-none">
+                            <option>Play</option>
+                            <option>Skip</option>
+                        </select>
+                    </td>
+                    <td class="text-center">
+                        <span>Content</span>
+                    </td>
+                    <td class="text-center">
+                        <input type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-md">
+                    </td>
+                    <td class="text-center">
+                        <input type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 
     <div id="acceleration" class="tab-content" style="display: none">
-        <div class="tab-header translate-me">TabAcceleration</div>
+        <h2 class="text-center translate-me">TabAcceleration</h2>
+
+        <table class="table table-bordered table-sm mt-3 mx-auto text-center" style="width: auto">
+            <thead>
+                <tr>
+                    <th>Segment</th>
+                    <th title="Max. duration of segment in seconds to be accelerated" data-toggle="tooltip">Length (?)</th>
+                    <th title="Accelerated speed in %" data-toggle="tooltip">Speed (?)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="text-center">
+                        <span>Content</span>
+                    </td>
+                    <td class="text-center">
+                        <input type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
+                    </td>
+                    <td class="text-center">
+                        <input type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 
     <div id="filters" class="tab-content" style="display: none">
-        <div class="tab-header translate-me">TabFilters</div>
+        <h2 class="text-center translate-me">TabFilters</h2>
     </div>
 
     <div id="community" class="tab-content" style="display: none">
-        <div class="tab-header translate-me">TabCommunity</div>
+        <h2 class="text-center translate-me">TabCommunity</h2>
     </div>
+
+    <footer class="footer">
+        <div class="d-flex justify-content-between container">
+            <a class="text-muted" href="https://github.com/videosegments/videosegments/issues" target="_blank">Report Bug</a>
+            <a class="text-muted" href="https://db.videosegments.org/queue.php" target="_blank">Review Queue</a>
+            <a class="text-muted" href="#" target="_blank">Rate Extension</a>
+        </div>
+    </footer>
 
     <script src="storage.js"></script>
     <script src="scripts.js"></script>

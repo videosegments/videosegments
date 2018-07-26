@@ -20,8 +20,7 @@
 
 'use strict';
 
-class Observer
-{
+class Observer {
     constructor() {
         // look into HTMLcollection instead of hundreds of mutations 
         // https://stackoverflow.com/a/39332340
@@ -29,15 +28,20 @@ class Observer
 
         let self = this;
         // observe mutations in window.body 
-        this.observer = new MutationObserver(() => { self.onBodyMutations() });
-        this.observer.observe(document.documentElement, { childList: true, subtree: true });
+        this.observer = new MutationObserver(() => {
+            self.onBodyMutations()
+        });
+        this.observer.observe(document.documentElement, {
+            childList: true,
+            subtree: true
+        });
 
         log('looking for player...');
     }
 
     onBodyMutations() {
         // if "video" element exists 
-        if ( this.collection[0] && this.collection[0].src ) {
+        if (this.collection[0] && this.collection[0].src) {
             // disable observing of window.body mutations 
             this.observer.disconnect();
 
@@ -45,8 +49,13 @@ class Observer
 
             let self = this;
             // start observing for video.src changes 
-            this.observer = new MutationObserver(() => { self.onVideoChanges() });
-            this.observer.observe(self.collection[0], { attributes: true, attributeFilter: ['src'] });
+            this.observer = new MutationObserver(() => {
+                self.onVideoChanges()
+            });
+            this.observer.observe(self.collection[0], {
+                attributes: true,
+                attributeFilter: ['src']
+            });
 
             // start video player wrapper 
             this.player = new Player(self.collection[0]);
@@ -61,8 +70,13 @@ class Observer
 
         let self = this;
         // observe mutations in window.body 
-        this.observer = new MutationObserver(() => { self.onBodyMutations() });
-        this.observer.observe(document.documentElement, { childList: true, subtree: true });
+        this.observer = new MutationObserver(() => {
+            self.onBodyMutations()
+        });
+        this.observer.observe(document.documentElement, {
+            childList: true,
+            subtree: true
+        });
 
         // cleanup player 
         this.player.remove();

@@ -20,8 +20,7 @@
 
 'use strict';
 
-function makeImport(file)
-{
+function makeImport(file) {
     let link = document.createElement('link');
     link.rel = 'import';
     link.href = file;
@@ -39,37 +38,32 @@ function makeImport(file)
     })
 }
 
-function translateNodes(target)
-{
+function translateNodes(target) {
     let nodes = target.getElementsByClassName('vs-translate-me');
-    for ( let node of nodes ) {
+    for (let node of nodes) {
         node.classList.remove('vs-translate-me');
         translateNode(node);
     }
 }
 
-function translateNode(node)
-{
+function translateNode(node) {
     translateNodeText(node, node.innerHTML);
 }
 
-function translateNodeText(node, text)
-{
-    while ( node.firstChild ) {
+function translateNodeText(node, text) {
+    while (node.firstChild) {
         node.removeChild(node.firstChild);
-    } 
+    }
 
     let textNode = document.createTextNode(translateText(text));
     node.appendChild(textNode);
 }
 
-function translateText(text)
-{
+function translateText(text) {
     return browser.i18n.getMessage(text);
 }
 
-function injectCSS(url)
-{
+function injectCSS(url) {
     let link = document.createElement('link');
     link.href = url;
     link.type = 'text/css';
@@ -77,62 +71,57 @@ function injectCSS(url)
     document.getElementsByTagName('head')[0].appendChild(link);
 }
 
-function secondsToClockTime(timestamp, showMs = false, keepPrecision = false)
-{
-    if ( typeof timestamp === 'undefined' ) {
+function secondsToClockTime(timestamp, showMs = false, keepPrecision = false) {
+    if (typeof timestamp === 'undefined') {
         timestamp = 0.0;
     }
-    
+
     let seconds = parseInt(timestamp) % 60;
     let ms = Math.round(timestamp * 1000);
-    
+
     let hours = parseInt(ms / 3600000);
     ms -= hours * 3600000;
-    
+
     let minutes = parseInt(ms / 60000);
-    
+
     // https://stackoverflow.com/a/19700358
     hours = (hours < 10) ? "0" + hours : hours;
-    hours = (hours != '00')?(hours+':'):''
+    hours = (hours != '00') ? (hours + ':') : ''
     minutes = (minutes < 10) ? "0" + minutes : minutes;
     seconds = (seconds < 10) ? "0" + seconds : seconds;
-    
+
     let time;
-    if ( showMs ) {
+    if (showMs) {
         ms = ms.toString();
-        
-        if ( ms[ms.length-2] == '0' && !keepPrecision ) {
-            ms = ms[ms.length-3];
+
+        if (ms[ms.length - 2] == '0' && !keepPrecision) {
+            ms = ms[ms.length - 3];
+        } else {
+            ms = ms[ms.length - 3] + ms[ms.length - 2];
         }
-        else {
-            ms = ms[ms.length-3] + ms[ms.length-2];
-        }
-        
+
         // TODO: remove this workaround 
-        if ( isNaN(ms) ) ms = '0';
-        
+        if (isNaN(ms)) ms = '0';
+
         time = hours + minutes + ':' + seconds + '.' + ms;
-    }
-    else {
+    } else {
         time = hours + minutes + ':' + seconds;
     }
-    
+
     // log(time);
     return time;
 }
 
-function roundFloat(value, precision = 1e2)
-{
+function roundFloat(value, precision = 1e2) {
     return (Math.round(value * precision) / precision);
 }
 
 // https://www.codingforums.com/javascript-programming/230503-how-get-margin-left-value.html
 function getStyle(e, styleName) {
     let styleValue = "";
-    if ( document.defaultView && document.defaultView.getComputedStyle ) {
+    if (document.defaultView && document.defaultView.getComputedStyle) {
         styleValue = document.defaultView.getComputedStyle(e, "").getPropertyValue(styleName);
-    }
-    else if ( e.currentStyle ) {
+    } else if (e.currentStyle) {
         styleName = styleName.replace(/\-(\w)/g, function (strMatch, p1) {
             return p1.toUpperCase();
         });
@@ -141,24 +130,22 @@ function getStyle(e, styleName) {
     return styleValue;
 }
 
-function xhr_post(url, data)
-{
+function xhr_post(url, data) {
     let xhr = new XMLHttpRequest();
     xhr.open('POST', url);
 
     let post = '';
-    for ( let key in data ) {
+    for (let key in data) {
         post += key + '=' + data[key] + '&';
     }
     post = post.slice(0, -1);
 
     return new Promise((resolve, reject) => {
         xhr.onreadystatechange = () => {
-            if ( xhr.readyState == 4 ) {
-                if ( xhr.status == 200 ) {
+            if (xhr.readyState == 4) {
+                if (xhr.status == 200) {
                     resolve(JSON.parse(xhr.responseText));
-                }
-                else {
+                } else {
                     reject();
                 }
             }
@@ -169,8 +156,9 @@ function xhr_post(url, data)
     })
 }
 
-function convertSimplifiedSegmentation(types)
-{
+function convertSimplifiedSegmentation(types) {
     // https://stackoverflow.com/a/5915891
-    return types.map(function(item) { return item == 'sk' ? 'cs' : 'c'; });
+    return types.map(function (item) {
+        return item == 'sk' ? 'cs' : 'c';
+    });
 }
