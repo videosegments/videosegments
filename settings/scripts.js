@@ -39,11 +39,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         settings = result;
-        changeTab('settings');
+        changeTab('community');
     });
 
     // little bit of jQuery 
     $('[data-toggle="tooltip"]').tooltip();
+
+    setTimeout(() => { document.getElementById('login-page').src = 'https://db.videosegments.org/api/v3/login.php' }, 0); 
 });
 
 function hookTabs() {

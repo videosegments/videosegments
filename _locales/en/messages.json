@@ -62,8 +62,8 @@
 	"Minimized": {
 		"message": "Minimized"
 	},
-	"DisplaySegments": {
-		"message": "Display segments (?)"
+	"SegmentbarLocation": {
+		"message": "Segmentbar location (?)"
 	},
 	"Below": {
 		"message": "Below"
