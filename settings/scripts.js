@@ -39,13 +39,99 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         settings = result;
-        changeTab('community');
+        if (['settings', 'playback', 'acceleration', 'filters', 'community'].indexOf(result.lastTab) === -1) {
+            settings.lastTab = 'settings';
+        }
+
+        changeTab(settings.lastTab);
+        restoreSettings();
+        hookActions();
     });
 
     // little bit of jQuery 
     $('[data-toggle="tooltip"]').tooltip();
 
-    setTimeout(() => { document.getElementById('login-page').src = 'https://db.videosegments.org/api/v3/login.php' }, 0); 
+    setTimeout(() => {
+        document.getElementById('login-page').src = 'https://db.videosegments.org/api/v3/login.php'
+    }, 100);
+
+    document.getElementById('get-current').addEventListener('click', () => {
+        browser.tabs.query({
+            active: true,
+            currentWindow: true
+        }, (tabs) => {
+            browser.tabs.sendMessage(tabs[0].id, {
+                getChannel: true
+            });
+        });
+    });
+
+    document.getElementById('apply-channel-filter').addEventListener('click', () => {
+        let channelName = document.getElementById('channel-name').value;
+        if (channelName.length < 1) {
+            return;
+        }
+
+        let skipFrom = parseFloat(document.getElementById('skip-from').value);
+        let skipTo = parseFloat(document.getElementById('skip-to').value);
+        let skipLast = parseFloat(document.getElementById('skip-last').value);
+        browser.storage.local.set({
+            ['|c|' + document.getElementById('channel-name').value]: [skipFrom, skipTo, skipLast]
+        });
+    });
+
+    document.getElementById('search-channel').addEventListener('click', () => {
+        let channelName = document.getElementById('channel-name').value;
+        if (channelName.length < 1) {
+            return;
+        }
+
+        browser.storage.local.get({
+            ['|c|' + document.getElementById('channel-name').value]: []
+        }, (result) => {
+            let filter = result['|c|' + document.getElementById('channel-name').value];
+            if (filter.length > 0) {
+                document.getElementById('skip-from').value = filter[0];
+                document.getElementById('skip-to').value = filter[1];
+                document.getElementById('skip-last').value = filter[2];
+            } else {
+                document.getElementById('skip-from').value = 0.0;
+                document.getElementById('skip-to').value = 0.0;
+                document.getElementById('skip-last').value = 0.0;
+            }
+        });
+    });
+
+    document.getElementById('delete-channel-filter').addEventListener('click', () => {
+        let channelName = document.getElementById('channel-name').value;
+        if (channelName.length < 1) {
+            return;
+        }
+
+        browser.storage.local.remove(
+            ['|c|' + document.getElementById('channel-name').value], () => {
+                document.getElementById('skip-from').value = 0.0;
+                document.getElementById('skip-to').value = 0.0;
+                document.getElementById('skip-last').value = 0.0;
+            }
+        );
+    });
+});
+
+browser.runtime.onMessage.addListener((message) => {
+    if (typeof message.gotChannel !== 'undefined') {
+        document.getElementById('channel-name').value = message.gotChannel;
+        browser.storage.local.get({
+            ['|c|' + document.getElementById('channel-name').value]: []
+        }, (result) => {
+            let filter = result['|c|' + document.getElementById('channel-name').value];
+            if (filter.length > 0) {
+                document.getElementById('skip-from').value = filter[0];
+                document.getElementById('skip-to').value = filter[1];
+                document.getElementById('skip-last').value = filter[2];
+            }
+        });
+    }
 });
 
 function hookTabs() {
@@ -82,6 +168,9 @@ function changeTab(tabName) {
 
     let newActveContent = document.getElementById(tabName);
     newActveContent.style.display = 'block';
+
+    settings.lastTab = tabName;
+    saveSettings();
 }
 
 function translateNodes(target) {
@@ -107,4 +196,122 @@ function translateNodeText(node, text) {
 
 function translateText(text) {
     return browser.i18n.getMessage(text);
+}
+
+function restoreSettings() {
+    connectSettingValue(document.getElementById('database-priority'), 'databasePriority');
+    connectSettingValue(document.getElementById('show-panel-mode'), 'showPanel');
+    connectSettingValue(document.getElementById('panel-size'), 'panelSize');
+    connectSettingValue(document.getElementById('segmentsbar-location'), 'segmentsBarLocation');
+    connectSettingValue(document.getElementById('panel-mode'), 'mode');
+    connectSettingValue(document.getElementById('autopause-duration'), 'autoPauseDuration');
+    connectSettingValue(document.getElementById('popup-duration'), 'popupDurationOnSend');
+    connectSettingValue(document.getElementById('panel-opacity'), 'segmentationToolsOpacity');
+    connectSettingValue(document.getElementById('panel-fullscreen-opacity'), 'segmentationToolsFullscreenOpacity');
+
+    let colorSegments = ['c', 'ac', 'i', 'a', 'cr', 'ia', 'cs', 'o', 's', 'pl', 'sk'];
+    for (let color of colorSegments) {
+        $('#color-' + color).spectrum({
+            color: tinycolor(settings.segments[color].color).setAlpha(settings.segments[color].opacity),
+            showInput: true,
+            showAlpha: true,
+            cancelText: 'cancel',
+            chooseText: 'select',
+            showInitial: true,
+            preferredFormat: "hex3",
+            clickoutFiresChange: false,
+            showPalette: true,
+            palette: [
+                ["#00c853", "#00897b", "#e53935"],
+                ["#3949ab", "#ffb300", "#757575"],
+                ["#8e24aa", "#00acc1", "#6d4c41"]
+            ],
+            change: (newColor) => {
+                settings.segments[color].color = newColor.toHexString();
+                settings.segments[color].opacity = newColor.getAlpha();
+
+                saveSettings();
+                updateSettings('color', {
+                    segment: color,
+                    newColor: settings.segments[color].color,
+                    opacity: settings.segments[color].opacity
+                });
+            }
+        });
+    }
+
+    let actionSegments = ['c', 'ac', 'i', 'a', 'cr', 'ia', 'cs', 'o', 's'];
+    for (let action of actionSegments) {
+        let element = document.getElementById('action-' + action)
+        element.value = (settings.segments[action].skip === true) ? '0' : '1';
+        element.addEventListener('click', () => {
+            settings.segments[action].skip = (element.value === '1') ? false : true;
+
+            saveSettings();
+            updateSettings('playback', {
+                segment: action,
+                skip: settings.segments[action].skip
+            });
+        });
+    }
+
+    let accelerationSegments = ['c', 'ac', 'i', 'a', 'cr', 'ia', 'cs', 'o', 's', 'pl', 'sk'];
+    for (let acceleration of accelerationSegments) {
+        let elementLength = document.getElementById('length-' + acceleration)
+        elementLength.value = settings.segments[acceleration].duration;
+        elementLength.addEventListener('change', () => {
+            settings.segments[acceleration].duration = parseFloat(elementLength.value);
+
+            saveSettings();
+            updateSettings('accelerationDuration', {
+                segment: acceleration,
+                duration: settings.segments[acceleration].duration
+            });
+        });
+
+        let elementSpeed = document.getElementById('speed-' + acceleration)
+        elementSpeed.value = settings.segments[acceleration].speed * 100;
+        elementSpeed.addEventListener('change', () => {
+            settings.segments[acceleration].speed = parseFloat(elementSpeed.value) / 100;
+
+            saveSettings();
+            updateSettings('accelerationSpeed', {
+                segment: acceleration,
+                speed: settings.segments[acceleration].speed
+            });
+        });
+    }
+}
+
+function connectSettingValue(element, prop) {
+    element.value = settings[prop];
+    element.addEventListener('change', () => {
+        settings[prop] = element.value;
+
+        saveSettings();
+        updateSettings(prop, element.value);
+    })
+}
+
+function updateSettings(prop, value) {
+    browser.tabs.query({}, tabs => {
+        for (let i = 0; i < tabs.length; ++i) {
+            browser.tabs.sendMessage(tabs[i].id, {
+                prop: prop,
+                value: value
+            });
+        }
+    });
+}
+
+function hookActions() {
+    document.getElementById('reset-panel-position').addEventListener('click', () => {
+        settings.editor.posX = 200;
+        settings.editor.posY = 200;
+        settings.editor.fullscreenPosX = 200;
+        settings.editor.fullscreenPosY = 200;
+
+        saveSettings();
+        updateSettings('position', 200);
+    })
 }

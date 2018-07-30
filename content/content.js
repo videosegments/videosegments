@@ -24,20 +24,33 @@
 window.browser = window.browser || window.chrome;
 
 // global variables for settings and console.log output 
-let settings, log;
+let settings, log, observer;
 // load settings 
 getSettings().then((result) => {
     // enable debug 
-    if ( result.debug === true ) {
+    if (result.debug === true) {
         log = console.log.bind(console);
         log('settings loaded');
+    } else {
+        log = function () {};
     }
-    else {
-        log = function() {};
-    }
-    
+
     // save settings 
     settings = result;
     // start observer 
-    new Observer();
+    observer = new Observer();
+});
+
+browser.runtime.onMessage.addListener(request => {
+    if (typeof request.getChannel !== 'undefined') {
+        let container = document.querySelector('yt-formatted-string#owner-name.style-scope.ytd-video-owner-renderer');
+        if (container) {
+            browser.runtime.sendMessage({
+                gotChannel: container.getElementsByTagName('a')[0].innerHTML
+            });
+        }
+    }
+    else if ( typeof request.prop !== 'undefined' ) {
+        observer.updateSettings(request.prop, request.value);
+    }
 });

@@ -83,4 +83,8 @@ class Observer {
         // clear reference 
         this.player = null;
     }
+
+    updateSettings(prop, value) {
+        this.player.updateSettings(prop, value);
+    }
 }

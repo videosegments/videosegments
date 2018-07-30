@@ -66,3 +66,19 @@ body {
 .input-md {
     max-width: 60px;
 }
+
+div .sp-dd {
+    margin-left: 5px;
+}
+
+div .sp-preview {
+    margin-right: 0;
+    border: 0;
+}
+
+div .sp-replacer {
+    padding: 0;
+    border: 0;
+    height: 19px;
+    background: white;
+}

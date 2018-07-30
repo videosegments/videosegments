@@ -31,6 +31,7 @@ function getSettings() {
             c: {
                 skip: false,
                 color: '#00c853',
+                opacity: 0.0,
                 duration: 0.0,
                 speed: 1.0
             },
@@ -38,6 +39,7 @@ function getSettings() {
             ac: {
                 skip: false,
                 color: '#00897b',
+                opacity: 0.0,
                 duration: 0.0,
                 speed: 1.0
             },
@@ -45,6 +47,7 @@ function getSettings() {
             a: {
                 skip: true,
                 color: '#e53935',
+                opacity: 1.0,
                 duration: 0.0,
                 speed: 5.0
             },
@@ -52,6 +55,7 @@ function getSettings() {
             i: {
                 skip: true,
                 color: '#3949ab',
+                opacity: 1.0,
                 duration: 0.0,
                 speed: 5.0
             },
@@ -59,6 +63,7 @@ function getSettings() {
             cr: {
                 skip: true,
                 color: '#ffb300',
+                opacity: 1.0,
                 duration: 0.0,
                 speed: 5.0
             },
@@ -66,6 +71,7 @@ function getSettings() {
             cs: {
                 skip: true,
                 color: '#757575',
+                opacity: 1.0,
                 duration: 0.0,
                 speed: 2.0
             },
@@ -73,6 +79,7 @@ function getSettings() {
             o: {
                 skip: true,
                 color: '#8e24aa',
+                opacity: 1.0,
                 duration: 0.0,
                 speed: 3.0
             },
@@ -80,6 +87,7 @@ function getSettings() {
             ia: {
                 skip: true,
                 color: '#00acc1',
+                opacity: 1.0,
                 duration: 0.0,
                 speed: 4.0
             },
@@ -87,6 +95,7 @@ function getSettings() {
             s: {
                 skip: true,
                 color: '#6d4c41',
+                opacity: 1.0,
                 duration: 0.0,
                 speed: 5.0
             },
@@ -96,6 +105,7 @@ function getSettings() {
             pl: {
                 skip: false,
                 color: '#00c853',
+                opacity: 0.0,
                 duration: 0.0,
                 speed: 1.0
             },
@@ -103,6 +113,7 @@ function getSettings() {
             sk: {
                 skip: true,
                 color: '#757575',
+                opacity: 1.0,
                 duration: 0.0,
                 speed: 5.0
             },
@@ -117,6 +128,8 @@ function getSettings() {
         segmentsBarLocation: 'separated',
         hidePlayingSegmentBars: false,
         minimized: false,
+        showPanel: 'always',
+        panelSize: 'maximized',
 
         // normal mode settings
         maximizePanelOnHover: false,

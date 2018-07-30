@@ -87,7 +87,10 @@ class Player {
         this.segmentation = null;
         // request local and community segmentations 
         this.getCommunitySegmentation().then(segmentation => {
-            self.channel = segmentation.channel;
+            if (typeof segmentation.types === 'undefined') {
+                self.channel = segmentation.channel;
+            }
+
             if (typeof segmentation.types === 'undefined') {
                 self.onGotSegmentation('community', {}, 'local');
             } else {
@@ -116,39 +119,35 @@ class Player {
                 // set as primary 
                 this.segmentation = segmentation;
                 this.segmentation.origin = origin;
+
                 log('primary segmentation is ready');
+                this.onSegmentationReady();
             }
             // if secondary segmentation exists 
             else if (this[secondaryOrigin] && this[secondaryOrigin].types) {
                 // set secondary segmentation as primary 
                 this.segmentation = this[secondaryOrigin];
                 this.segmentation.origin = origin;
+
                 log('no primary segmentation exists, use secondary as primary');
+                this.onSegmentationReady();
             }
         }
         // save this segmentation as secondary 
         else {
             // if no primary segmentation exists 
-            if (typeof this[settings.databasePriority] !== 'undefined' && typeof this[settings.databasePriority].types !== 'undefined') {
+            if (typeof this[settings.databasePriority] !== 'undefined' && typeof this[settings.databasePriority].types === 'undefined' && typeof segmentation.types !== 'undefined') {
                 // set secondary segmentation as primary 
                 this.segmentation = segmentation;
                 this.segmentation.origin = origin;
+
                 log('no primary segmentation exists, use secondary as primary');
+                this.onSegmentationReady();
             }
         }
 
-        // if segmentation ready 
-        if (this.segmentation !== null) {
-            // remove filler for local unfinished segmentation 
-            if ((typeof this.segmentation.types !== 'undefined') && this.segmentation.types[this.segmentation.types.length - 1] === '-') {
-                this.segmentation.timestamps.pop();
-                this.segmentation.types.pop();
-            }
-
-            this.onSegmentationReady();
-        }
-        // in case none of segmentations exists 
-        else if (typeof this[origin] !== 'undefined' && typeof this[secondaryOrigin] !== 'undefined') {
+        // if no segmentation  
+        if (this.segmentation === null && this[origin] && this[secondaryOrigin]) {
             log('no segmentations exists');
             this.segmentation = {
                 origin: 'NoSegmentation'
@@ -157,12 +156,20 @@ class Player {
         }
     }
 
-    onSegmentationReady() {
+    async onSegmentationReady() {
         if (typeof this.editor !== 'undefined') {
             return;
         }
 
+        if (this.segmentation.origin === 'NoSegmentation') {
+            this.segmentation = await tryChannelFilter(this.channel, this.video.duration);
+        }
         log(this.segmentation.origin);
+
+        if ((typeof this.segmentation.types !== 'undefined') && this.segmentation.types[this.segmentation.types.length - 1] === '-') {
+            this.segmentation.timestamps.pop();
+            this.segmentation.types.pop();
+        }
 
         // remove play listener 
         this.video.removeEventListener('play', this.onPlayBeforeLoadedContext);
@@ -177,6 +184,12 @@ class Player {
         this.video.addEventListener('pause', this.onPauseEventContext);
         this.video.addEventListener('ratechange', this.onRateChangeEventContext);
 
+        if (settings.mode === 'simplified') {
+            this.originalSegmentation = this.segmentation;
+            this.segmentation = this.getSimplifiedSegmentation(this.segmentation);
+            this.segmentation.origin = this.originalSegmentation.origin;
+        }
+
         // if autopause timer is working 
         if (this.timer) {
             // round up time again  
@@ -190,12 +203,6 @@ class Player {
         } else {
             // fake play event 
             this.onPlayEventContext();
-        }
-
-        if (settings.mode === 'simplified') {
-            this.originalSegmentation = this.segmentation;
-            this.segmentation = this.simplifySegmentation(this.segmentation);
-            this.segmentation.origin = this.originalSegmentation.origin;
         }
 
         this.segmentsbar.set(this.segmentation.timestamps, this.segmentation.types, this.video.duration);
@@ -261,7 +268,7 @@ class Player {
         return segmentation;
     }
 
-    simplifySegmentation(segmentation) {
+    getSimplifiedSegmentation(segmentation) {
         if (typeof segmentation.types === 'undefined') {
             return {
                 timestamps: undefined,
@@ -292,8 +299,17 @@ class Player {
         return simplified;
     }
 
-    restoreSegmentation(segmentation) {
-
+    getOriginalSegmentation(segmentation) {
+        if (typeof this.originalSegmentation.timestamps === 'undefined') {
+            return {
+                timestamps: segmentation.timestamps,
+                types: segmentation.types.map(item => {
+                    return (item === 'pl' ? 'c' : 'cs');
+                })
+            }
+        } else {
+            return this.originalSegmentation;
+        }
     }
 
     getSegmentSimplifiedType(type) {
@@ -357,6 +373,42 @@ class Player {
         if (this.timer) {
             clearTimeout(this.timer);
             this.timer = undefined;
+        }
+    }
+
+    updateSettings(prop, value) {
+        if (prop === 'databasePriority') {
+            settings[prop] = value;
+        } else if (prop === 'segmentsBarLocation') {
+            settings[prop] = value;
+            this.segmentsbar.updatePosition();
+        } else if (prop === 'mode') {
+            settings[prop] = value;
+        } else if (prop === 'autoPauseDuration') {
+            settings[prop] = value;
+        } else if (prop === 'popupDurationOnSend') {
+            settings[prop] = value;
+        } else if (prop === 'color') {
+            settings.segments[value.segment].color = value.newColor;
+            settings.segments[value.segment].opacity = value.opacity;
+
+            if (settings.mode === 'simplified') {
+                if (value.segment === 'pl' || value.segment === 'sk') {
+                    this.segmentsbar.updateColor(value.segment, settings.segments[value.segment].color, settings.segments[value.segment].opacity);
+                }
+            } else {
+                if (value.segment !== 'pl' && value.segment !== 'sk') {
+                    this.segmentsbar.updateColor(value.segment, settings.segments[value.segment].color, settings.segments[value.segment].opacity);
+                }
+            }
+        } else if (prop === 'playback') {
+            settings.segments[value.segment].skip = value.skip;
+        } else if (prop === 'accelerationDuration') {
+            settings.segments[value.segment].duration = value.duration;
+        } else if (prop === 'accelerationSpeed') {
+            settings.segments[value.segment].speed = value.speed;
+        } else {
+            this.editor.updateSettings(prop, value);
         }
     }
 

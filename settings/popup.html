@@ -10,11 +10,13 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/spectrum/1.8.0/spectrum.min.js"></script>
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css" integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ"
         crossorigin="anonymous">
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/spectrum/1.8.0/spectrum.min.css">
 
 </head>
 
@@ -27,7 +29,7 @@
             <li id="tab-playback" class="nav-item m-auto text-center w-100">
                 <a class="nav-link fa fa-play w-100" href="#"></a>
             </li>
-            <li id="tab-acceleration" class="nav-item m-auto text-center w-100">
+            <li id="tab-acceleration" class="nav-item m-auto text-center w-100" style="display: none">
                 <a class="nav-link fa fa-forward w-100" href="#"></a>
             </li>
             <li id="tab-filters" class="nav-item m-auto text-center w-100">
@@ -42,7 +44,7 @@
     <div id="settings" class="tab-content" style="display: none">
         <h2 class="text-center translate-me">TabSettings</h2>
 
-        <table class="table table-bordered table-sm mt-3">
+        <table class="table table-bordered table-sm mt-3 mb-0">
             <thead>
                 <tr>
                     <th class="translate-me">Parameter</th>
@@ -51,83 +53,91 @@
             </thead>
             <tbody>
                 <tr>
-                    <td class="translate-me">DatabasePriority</td>
+                    <td>
+                        <span class="translate-me">DatabasePriority</span>*</td>
                     <td class="text-center">
-                        <select class="border-top-0 border-left-0 border-right-0 ouline-none">
-                            <option class="translate-me">Local</option>
-                            <option class="translate-me">Community</option>
+                        <select id="database-priority" class="border-top-0 border-left-0 border-right-0 ouline-none">
+                            <option class="translate-me" value="local">Local</option>
+                            <option class="translate-me" value="official">Community</option>
                         </select>
                     </td>
                 </tr>
                 <tr>
                     <td class="translate-me">ShowPanel</td>
                     <td class="text-center">
-                        <select class="border-top-0 border-left-0 border-right-0 ouline-none">
-                            <option class="translate-me">Always</option>
-                            <option class="translate-me">Empty</option>
-                            <option class="translate-me">Never</option>
+                        <select id="show-panel-mode" class="border-top-0 border-left-0 border-right-0 ouline-none">
+                            <option class="translate-me" value="always">Always</option>
+                            <option class="translate-me" value="empty">Empty</option>
+                            <option class="translate-me" value="never">Never</option>
                         </select>
                     </td>
                 </tr>
                 <tr>
                     <td class="translate-me">PanelSize</td>
                     <td class="text-center">
-                        <select class="border-top-0 border-left-0 border-right-0 ouline-none">
-                            <option class="translate-me">Maximized</option>
-                            <option class="translate-me">Hoverable</option>
-                            <option class="translate-me">Minimized</option>
+                        <select id="panel-size" class="border-top-0 border-left-0 border-right-0 ouline-none">
+                            <option class="translate-me" value="maximized">Maximized</option>
+                            <option class="translate-me" value="hoverable">Hoverable</option>
+                            <option class="translate-me" value="minimized">Minimized</option>
                         </select>
                     </td>
                 </tr>
                 <tr>
                     <td class="translate-me" title="Position of segmentsbar relative to YouTube progress bar" data-toggle="tooltip">SegmentbarLocation</td>
                     <td class="text-center">
-                        <select class="border-top-0 border-left-0 border-right-0 ouline-none">
-                            <option class="translate-me">Below</option>
-                            <option class="translate-me">Overlay</option>
-                            <option class="translate-me">Behind</option>
-                            <option class="translate-me">Hide</option>
+                        <select id="segmentsbar-location" class="border-top-0 border-left-0 border-right-0 ouline-none">
+                            <option class="translate-me" value="separated">Below</option>
+                            <option class="translate-me" value="overlay">Overlay</option>
+                            <option class="translate-me" value="below">Behind</option>
+                            <option class="translate-me" value="none">Hide</option>
                         </select>
                     </td>
                 </tr>
                 <tr>
-                    <td class="translate-me">PanelMode</td>
+                    <td>
+                        <span class="translate-me">PanelMode</span>*</td>
                     <td class="text-center">
-                        <select class="border-top-0 border-left-0 border-right-0 ouline-none">
-                            <option class="translate-me">Normal</option>
-                            <option class="translate-me">Expert</option>
+                        <select id="panel-mode" class="border-top-0 border-left-0 border-right-0 ouline-none">
+                            <option class="translate-me" value="simplified">Normal</option>
+                            <option class="translate-me" value="normal">Expert</option>
                         </select>
                     </td>
                 </tr>
                 <tr>
                     <td class="translate-me" title="Max. duration of autopause before segmentation is recieved" data-toggle="tooltip">RequestTimeout</td>
                     <td>
-                        <input type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
+                        <input id="autopause-duration" type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
                     </td>
                 </tr>
                 <tr>
                     <td class="translate-me" title="How long popup with information will be displayed after segmentation sharing" data-toggle="tooltip">NotificationsDuration</td>
                     <td>
-                        <input type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
+                        <input id="popup-duration" type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
                     </td>
                 </tr>
                 <tr>
                     <td class="translate-me">PanelOpacity</td>
                     <td>
-                        <input type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
+                        <input id="panel-opacity" type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
                     </td>
                 </tr>
                 <tr>
                     <td class="translate-me">FullscreenPanelOpacity</td>
                     <td>
-                        <input type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
+                        <input id="panel-fullscreen-opacity" type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
                     </td>
                 </tr>
             </tbody>
         </table>
 
+        <span class="text-muted">
+            <small>*
+                <span class="translate-me">ChangesAfterRestart</span>
+            </small>
+        </span>
+
         <div class="text-center">
-            <button class="translate-me btn btn-outline-secondary mx-auto my-3">ResetPanelPosition</button>
+            <button id="reset-panel-position" class="translate-me btn btn-outline-secondary mx-auto my-3">ResetPanelPosition</button>
         </div>
     </div>
 
@@ -137,166 +147,147 @@
         <table class="table table-bordered table-sm mt-3 text-center">
             <thead>
                 <tr>
-                    <th>Action</th>
-                    <th>Segment</th>
-                    <th>Color</th>
-                    <th>Opacity</th>
+                    <th class="w-25 translate-me">Color</th>
+                    <th class="w-50 translate-me">Segment</th>
+                    <th class="w-25 translate-me">Action</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td>
-                        <select class="border-top-0 border-left-0 border-right-0 ouline-none">
-                            <option>Play</option>
-                            <option>Skip</option>
-                        </select>
+                    <td class="text-center">
+                        <input type="text" id="color-c" class="spectrum">
                     </td>
                     <td class="text-center" title="Content of video." data-toggle="tooltip">
-                        <span>Content (?)</span>
+                        <span class="translate-me">Content</span>
+                        <span> (?)</span>
                     </td>
-                    <td class="text-center">
-                        <input type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-md">
-                    </td>
-                    <td class="text-center">
-                        <input type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
+                    <td>
+                        <select id="action-c" class="border-top-0 border-left-0 border-right-0 ouline-none">
+                            <option class="translate-me" value="1">Play</option>
+                            <option class="translate-me" value="0">Skip</option>
+                        </select>
                     </td>
                 </tr>
                 <tr>
-                    <td>
-                        <select class="border-top-0 border-left-0 border-right-0 ouline-none">
-                            <option>Play</option>
-                            <option>Skip</option>
-                        </select>
+                    <td class="text-center">
+                        <input type="text" id="color-ac" class="spectrum">
                     </td>
-                    <td class="text-center" title="Advertisement + Content in same time. This segment can not be removed without losing important information."
+                    <td class="text-center" title="Advertisement + Content in same time. This segment can not be skipped without losing important information."
                         data-toggle="tooltip">
-                        <span>AdContent (?)</span>
+                        <span class="translate-me">AdContent</span>
+                        <span> (?)</span>
                     </td>
-                    <td class="text-center">
-                        <input type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-md">
-                    </td>
-                    <td class="text-center">
-                        <input type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
+                    <td>
+                        <select id="action-ac" class="border-top-0 border-left-0 border-right-0 ouline-none">
+                            <option class="translate-me" value="1">Play</option>
+                            <option class="translate-me" value="0">Skip</option>
+                        </select>
                     </td>
                 </tr>
                 <tr>
-                    <td>
-                        <select class="border-top-0 border-left-0 border-right-0 ouline-none">
-                            <option>Play</option>
-                            <option>Skip</option>
-                        </select>
+                    <td class="text-center">
+                        <input type="text" id="color-i" class="spectrum">
                     </td>
                     <td class="text-center" title="Introduction in video. Often is repetetive from video to video." data-toggle="tooltip">
-                        <span>Intro (?)</span>
+                        <span class="translate-me">Intro</span>
+                        <span> (?)</span>
                     </td>
-                    <td class="text-center">
-                        <input type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-md">
-                    </td>
-                    <td class="text-center">
-                        <input type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
+                    <td>
+                        <select id="action-i" class="border-top-0 border-left-0 border-right-0 ouline-none">
+                            <option class="translate-me" value="1">Play</option>
+                            <option class="translate-me" value="0">Skip</option>
+                        </select>
                     </td>
                 </tr>
                 <tr>
-                    <td>
-                        <select class="border-top-0 border-left-0 border-right-0 ouline-none">
-                            <option>Play</option>
-                            <option>Skip</option>
-                        </select>
+                    <td class="text-center">
+                        <input type="text" id="color-cr" class="spectrum">
                     </td>
                     <td class="text-center" title="Outro of video. Often is repetetive from video to video. Might contain requests for likes, subscriptions, etc."
                         data-toggle="tooltip">
-                        <span>Credits (?)</span>
+                        <span class="translate-me">Credits</span>
+                        <span> (?)</span>
                     </td>
-                    <td class="text-center">
-                        <input type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-md">
-                    </td>
-                    <td class="text-center">
-                        <input type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
+                    <td>
+                        <select id="action-cr" class="border-top-0 border-left-0 border-right-0 ouline-none">
+                            <option class="translate-me" value="1">Play</option>
+                            <option class="translate-me" value="0">Skip</option>
+                        </select>
                     </td>
                 </tr>
                 <tr>
-                    <td>
-                        <select class="border-top-0 border-left-0 border-right-0 ouline-none">
-                            <option>Play</option>
-                            <option>Skip</option>
-                        </select>
+                    <td class="text-center">
+                        <input type="text" id="color-a" class="spectrum">
                     </td>
                     <td class="text-center" title="Promotion of non-related product in video." data-toggle="tooltip">
-                        <span>Advertisement (?)</span>
+                        <span class="translate-me">Advertisement</span>
+                        <span> (?)</span>
                     </td>
-                    <td class="text-center">
-                        <input type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-md">
-                    </td>
-                    <td class="text-center">
-                        <input type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
+                    <td>
+                        <select id="action-a" class="border-top-0 border-left-0 border-right-0 ouline-none">
+                            <option class="translate-me" value="1">Play</option>
+                            <option class="translate-me" value="0">Skip</option>
+                        </select>
                     </td>
                 </tr>
                 <tr>
-                    <td>
-                        <select class="border-top-0 border-left-0 border-right-0 ouline-none">
-                            <option>Play</option>
-                            <option>Skip</option>
-                        </select>
+                    <td class="text-center">
+                        <input type="text" id="color-cs" class="spectrum">
                     </td>
                     <td class="text-center" title="Barely related to video content." data-toggle="tooltip">
-                        <span>Cutscene (?)</span>
+                        <span class="translate-me">Cutscene</span>
+                        <span> (?)</span>
                     </td>
-                    <td class="text-center">
-                        <input type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-md">
-                    </td>
-                    <td class="text-center">
-                        <input type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
+                    <td>
+                        <select id="action-cs" class="border-top-0 border-left-0 border-right-0 ouline-none">
+                            <option class="translate-me" value="1">Play</option>
+                            <option class="translate-me" value="0">Skip</option>
+                        </select>
                     </td>
                 </tr>
                 <tr>
-                    <td>
-                        <select class="border-top-0 border-left-0 border-right-0 ouline-none">
-                            <option>Play</option>
-                            <option>Skip</option>
-                        </select>
+                    <td class="text-center">
+                        <input type="text" id="color-o" class="spectrum">
                     </td>
                     <td class="text-center" title="Non-related to video content." data-toggle="tooltip">
-                        <span>Offtop (?)</span>
+                        <span class="translate-me">Offtop</span>
+                        <span> (?)</span>
                     </td>
-                    <td class="text-center">
-                        <input type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-md">
-                    </td>
-                    <td class="text-center">
-                        <input type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
+                    <td>
+                        <select id="action-o" class="border-top-0 border-left-0 border-right-0 ouline-none">
+                            <option class="translate-me" value="1">Play</option>
+                            <option class="translate-me" value="0">Skip</option>
+                        </select>
                     </td>
                 </tr>
                 <tr>
-                    <td>
-                        <select class="border-top-0 border-left-0 border-right-0 ouline-none">
-                            <option>Play</option>
-                            <option>Skip</option>
-                        </select>
+                    <td class="text-center">
+                        <input type="text" id="color-ia" class="spectrum">
                     </td>
                     <td class="text-center" title="Interactive with viewers." data-toggle="tooltip">
-                        <span>Interactive (?)</span>
+                        <span class="translate-me">Interactive</span>
+                        <span> (?)</span>
                     </td>
-                    <td class="text-center">
-                        <input type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-md">
-                    </td>
-                    <td class="text-center">
-                        <input type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
+                    <td>
+                        <select id="action-ia" class="border-top-0 border-left-0 border-right-0 ouline-none">
+                            <option class="translate-me" value="1">Play</option>
+                            <option class="translate-me" value="0">Skip</option>
+                        </select>
                     </td>
                 </tr>
                 <tr>
-                    <td>
-                        <select class="border-top-0 border-left-0 border-right-0 ouline-none">
-                            <option>Play</option>
-                            <option>Skip</option>
-                        </select>
+                    <td class="text-center">
+                        <input type="text" id="color-s" class="spectrum">
                     </td>
                     <td class="text-center" title="Agressive advertisement, roulettes, silence with static background, etc." data-toggle="tooltip">
-                        <span>Garbage (?)</span>
+                        <span class="translate-me">Garbage</span>
+                        <span> (?)</span>
                     </td>
-                    <td class="text-center">
-                        <input type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-md">
-                    </td>
-                    <td class="text-center">
-                        <input type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
+                    <td>
+                        <select id="action-s" class="border-top-0 border-left-0 border-right-0 ouline-none">
+                            <option class="translate-me" value="1">Play</option>
+                            <option class="translate-me" value="0">Skip</option>
+                        </select>
                     </td>
                 </tr>
             </tbody>
@@ -305,39 +296,32 @@
         <table class="table table-bordered table-sm mt-3 text-center">
             <thead>
                 <tr>
-                    <th>Action</th>
-                    <th>Segment</th>
-                    <th>Color</th>
-                    <th>Opacity</th>
+                    <th class="w-25 translate-me">Color</th>
+                    <th class="w-50 translate-me">Segment</th>
+                    <th class="w-25 translate-me">Action</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
+                    <td class="text-center">
+                        <input type="text" id="color-pl" class="spectrum">
+                    </td>
+                    <td class="text-center">
+                        <span class="translate-me">Content</span>
+                    </td>
                     <td>
-                        <span>Play</span>
-                    </td>
-                    <td class="text-center">
-                        <span>Content</span>
-                    </td>
-                    <td class="text-center">
-                        <input type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-md">
-                    </td>
-                    <td class="text-center">
-                        <input type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
+                        <span class="translate-me">Play</span>
                     </td>
                 </tr>
                 <tr>
+                    <td class="text-center">
+                        <input type="text" id="color-sk" class="spectrum">
+                    </td>
+                    <td class="text-center">
+                        <span class="translate-me">EverythingElse</span>
+                    </td>
                     <td>
-                        <span>Skip</span>
-                    </td>
-                    <td class="text-center">
-                        <span>Everything else</span>
-                    </td>
-                    <td class="text-center">
-                        <input type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-md">
-                    </td>
-                    <td class="text-center">
-                        <input type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
+                        <span class="translate-me">Skip</span>
                     </td>
                 </tr>
             </tbody>
@@ -350,109 +334,109 @@
         <table class="table table-bordered table-sm mt-3 mx-auto text-center w-75">
             <thead>
                 <tr>
-                    <th>Segment</th>
-                    <th title="Max. length of segment in seconds to be accelerated" data-toggle="tooltip">Max. length (?)</th>
-                    <th title="Accelerated speed in %" data-toggle="tooltip">Speed (?)</th>
+                    <th class="translate-me">Segment</th>
+                    <th class="translate-me" title="Max. length of segment in seconds to be accelerated" data-toggle="tooltip">Max. length (?)</th>
+                    <th class="translate-me" title="Accelerated speed in %" data-toggle="tooltip">Speed (?)</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
                     <td class="text-center">
-                        <span>Content</span>
+                        <span class="translate-me">Content</span>
                     </td>
                     <td class="text-center">
-                        <input type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
+                        <input id="length-c" type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
                     </td>
                     <td class="text-center">
-                        <input type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
-                    </td>
-                </tr>
-                <tr>
-                    <td class="text-center">
-                        <span>AdContent</span>
-                    </td>
-                    <td class="text-center">
-                        <input type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
-                    </td>
-                    <td class="text-center">
-                        <input type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
+                        <input id="speed-c" type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
                     </td>
                 </tr>
                 <tr>
                     <td class="text-center">
-                        <span>Intro</span>
+                        <span class="translate-me">AdContent</span>
                     </td>
                     <td class="text-center">
-                        <input type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
+                        <input id="length-ac" type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
                     </td>
                     <td class="text-center">
-                        <input type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
-                    </td>
-                </tr>
-                <tr>
-                    <td class="text-center">
-                        <span>Credits</span>
-                    </td>
-                    <td class="text-center">
-                        <input type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
-                    </td>
-                    <td class="text-center">
-                        <input type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
+                        <input id="speed-ac" type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
                     </td>
                 </tr>
                 <tr>
                     <td class="text-center">
-                        <span>Advertisement</span>
+                        <span class="translate-me">Intro</span>
                     </td>
                     <td class="text-center">
-                        <input type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
+                        <input id="length-i" type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
                     </td>
                     <td class="text-center">
-                        <input type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
-                    </td>
-                </tr>
-                <tr>
-                    <td class="text-center">
-                        <span>Cutscene</span>
-                    </td>
-                    <td class="text-center">
-                        <input type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
-                    </td>
-                    <td class="text-center">
-                        <input type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
+                        <input id="speed-i" type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
                     </td>
                 </tr>
                 <tr>
                     <td class="text-center">
-                        <span>Offtop</span>
+                        <span class="translate-me">Credits</span>
                     </td>
                     <td class="text-center">
-                        <input type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
+                        <input id="length-cr" type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
                     </td>
                     <td class="text-center">
-                        <input type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
-                    </td>
-                </tr>
-                <tr>
-                    <td class="text-center">
-                        <span>Interactive</span>
-                    </td>
-                    <td class="text-center">
-                        <input type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
-                    </td>
-                    <td class="text-center">
-                        <input type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
+                        <input id="speed-cr" type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
                     </td>
                 </tr>
                 <tr>
                     <td class="text-center">
-                        <span>Garbage</span>
+                        <span class="translate-me">Advertisement</span>
                     </td>
                     <td class="text-center">
-                        <input type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
+                        <input id="length-a" type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
                     </td>
                     <td class="text-center">
-                        <input type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
+                        <input id="speed-a" type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-center">
+                        <span class="translate-me">Cutscene</span>
+                    </td>
+                    <td class="text-center">
+                        <input id="length-cs" type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
+                    </td>
+                    <td class="text-center">
+                        <input id="speed-cs" type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-center">
+                        <span class="translate-me">Offtop</span>
+                    </td>
+                    <td class="text-center">
+                        <input id="length-o" type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
+                    </td>
+                    <td class="text-center">
+                        <input id="speed-o" type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-center">
+                        <span class="translate-me">Interactive</span>
+                    </td>
+                    <td class="text-center">
+                        <input id="length-ia" type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
+                    </td>
+                    <td class="text-center">
+                        <input id="speed-ia" type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-center">
+                        <span class="translate-me">Garbage</span>
+                    </td>
+                    <td class="text-center">
+                        <input id="length-s" type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
+                    </td>
+                    <td class="text-center">
+                        <input id="speed-s" type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
                     </td>
                 </tr>
             </tbody>
@@ -461,32 +445,34 @@
         <table class="table table-bordered table-sm mt-3 mx-auto text-center w-75">
             <thead>
                 <tr>
-                    <th>Segment</th>
-                    <th title="Max. duration of segment in seconds to be accelerated" data-toggle="tooltip">Max. length (?)</th>
-                    <th title="Accelerated speed in %" data-toggle="tooltip">Speed (?)</th>
+                    <th class="translate-me">Segment</th>
+                    <th title="Max. duration of segment in seconds to be accelerated" data-toggle="tooltip">
+                        <span class="translate-me">MaxLength</span> (?)</th>
+                    <th title="Accelerated speed in %" data-toggle="tooltip">
+                        <span class="translate-me">Speed</span> (?)</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
                     <td class="text-center">
-                        <span>Content</span>
+                        <span class="translate-me">Content</span>
                     </td>
                     <td class="text-center">
-                        <input type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
+                        <input id="length-pl" type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
                     </td>
                     <td class="text-center">
-                        <input type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
+                        <input id="speed-pl" type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
                     </td>
                 </tr>
                 <tr>
                     <td class="text-center">
-                        <span>Everything else</span>
+                        <span class="translate-me">EverythingElse</span>
                     </td>
                     <td class="text-center">
-                        <input type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
+                        <input id="length-sk" type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
                     </td>
                     <td class="text-center">
-                        <input type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
+                        <input id="speed-sk" type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
                     </td>
                 </tr>
             </tbody>
@@ -495,40 +481,52 @@
 
     <div id="filters" class="tab-content" style="display: none">
         <h2 class="text-center translate-me mb-0">TabFilters</h2>
-        <h5 class="text-center mb-3">(for videos without segmentation)</h5>
+        <h5 class="text-center translate-me mb-3">ForVideosWithoutSegmentation</h5>
 
         <div class="card">
-            <div class="card-header">Channel-based filter</div>
+            <div class="card-header translate-me">ChannelBasedFilter</div>
             <div class="card-body">
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
-                        <span class="input-group-text">Channel</span>
+                        <button id="get-current" class="btn btn-outline-secondary translate-me">GetCurrent</button>
                     </div>
-                    <input type="text" class="form-control" placeholder="">
+                    <input id="channel-name" type="text" class="form-control" placeholder="Input channel name">
+                    <div class="input-group-append">
+                        <button id="search-channel" class="btn btn-outline-secondary translate-me">Search</button>
+                    </div>
                 </div>
 
                 <div class="text-center">
-                    <span>skip from </span>
-                    <input type="text" class="form-control-inline form-control-sm text-center border-top-0 border-left-0 border-right-0 ouline-none input-sm">
-                    <span> to </span>
-                    <input type="text" class="form-control-inline form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm"> second
-                    <br> skip last
-                    <input type="text" class="form-control-inline form-control-sm text-center border-top-0 border-left-0 border-right-0 ouline-none input-sm"> second(s)
+                    <span class="translate-me">SkipFrom</span>&nbsp;
+                    <input id="skip-from" type="text" class="form-control-inline form-control-sm text-center border-top-0 border-left-0 border-right-0 ouline-none input-sm"
+                        value="0.0">&nbsp;
+                    <span class="translate-me">To</span>&nbsp;
+                    <input id="skip-to" type="text" class="form-control-inline form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm"
+                        value="0.0">&nbsp;
+                    <span class="translate-me">Second</span>
+                    <br>
+                    <span class="translate-me">SkipLast</span>&nbsp;
+                    <input id="skip-last" type="text" class="form-control-inline form-control-sm text-center border-top-0 border-left-0 border-right-0 ouline-none input-sm"
+                        value="0.0">&nbsp;
+                    <span class="translate-me">SecondOrSeconds</span>
                     <br>
                     <br>
 
-                    <button class="btn btn-outline-secondary mx-auto" type="button">Save</button>
+                    <div class="d-flex justify-content-around w-50 mx-auto">
+                        <button id="delete-channel-filter" class="btn btn-outline-danger translate-me" type="button">Delete</button>
+                        <button id="apply-channel-filter" class="btn btn-outline-primary translate-me" type="button">Apply</button>
+                    </div>
                 </div>
             </div>
         </div>
 
         <div class="card mt-3">
-            <div class="card-header">Planned</div>
+            <div class="card-header translate-me">Planned</div>
             <div class="card-body py-3">
                 <ul class="pl-3 mb-0">
-                    <li>Post-silence removal</li>
-                    <li>Sound filter</li>
-                    <li>Image filter</li>
+                    <li class="translate-me">PostSilenceRemoval</li>
+                    <li class="translate-me">SoundFilter</li>
+                    <li class="translate-me">ImageFilter</li>
                 </ul>
             </div>
         </div>
@@ -536,6 +534,29 @@
 
     <div id="community" class="tab-content" style="display: none">
         <h2 class="text-center translate-me">TabCommunity</h2>
+
+        <div class="reviewer-only" style="display: none">
+            <br>
+            <div style="text-align: center">
+                <span id="segmentations-count">loading</span>
+            </div>
+            <div style="text-align: center">
+                <button id="next-segmentation">
+                    <span class="">nextSegmentation</span>
+                </button>
+            </div>
+            <br>
+            <label>
+                <input type="checkbox" id="openSettings">
+                <span class="">openSettings</span>
+                <br>
+            </label>
+            <label>
+                <input type="checkbox" id="displayPending">
+                <span class="">displayPending</span>
+                <br>
+            </label>
+        </div>
 
         <div>
             <iframe id="login-page" width="350" height="350" style="border: none; margin-top: 5px"></iframe>

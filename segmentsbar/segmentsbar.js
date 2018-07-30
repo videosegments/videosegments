@@ -24,15 +24,28 @@ class Segmentsbar {
 	constructor(parent) {
 		this.container = document.createElement('ul');
 		this.container.id = 'vs-segmentsbar';
+		this.parent = parent;
 		this.bars = []
 
+		this.updatePosition();
+	}
+
+	updatePosition() {
 		if (settings.segmentsBarLocation === 'separated') {
-			parent.insertAdjacentElement("afterEnd", this.container);
+			this.parent.insertAdjacentElement("afterEnd", this.container);
 		} else {
-			parent.insertAdjacentElement("afterBegin", this.container);
+			this.parent.insertAdjacentElement("afterBegin", this.container);
 			if (settings.segmentsBarLocation === 'overlay') {
 				this.container.classList.add('vs-segmentsbar-overlay');
 			}
+		}
+	}
+
+	updateColor(segment, color, opacity) {
+		let bars = document.querySelectorAll('[data-vs-segment-type=' + segment + ']');
+		for ( let bar of bars ) {
+			bar.style.backgroundColor = color;
+			bar.style.opacity = opacity;
 		}
 	}
 
@@ -53,16 +66,13 @@ class Segmentsbar {
 			width = Math.floor(width * 100) / 100;
 
 			let bar = this.createBar();
+			bar.setAttribute('data-vs-segment-type', types[i]);
+
 			bar.style.backgroundColor = settings.segments[types[i]].color;
+			bar.style.opacity = settings.segments[types[i]].opacity;
 			bar.style.width = width + '%';
 
 			this.container.insertAdjacentElement('beforeEnd', bar);
-			if (settings.segments[types[i]].skip === false) {
-				if (settings.hidePlayingSegmentBars === true) {
-					bar.style.opacity = 0.0;
-				}
-			}
-
 			this.bars[i] = bar;
 		}
 	}
@@ -95,10 +105,13 @@ class Segmentsbar {
 
 	updateType(type, index) {
 		this.bars[index].style.backgroundColor = settings.segments[type].color;
+		this.bars[index].setAttribute('data-vs-segment-type', type);
 	}
 
 	addSegment(timestamps, types, duration, index, left) {
 		let bar = this.createBar();
+		bar.setAttribute('data-vs-segment-type', types[index]);
+
 		bar.style.backgroundColor = settings.segments[types[index]].color;
 		if (settings.segments[types[index]].skip === false) {
 			if (settings.hidePlayingSegmentBars === true) {
@@ -127,19 +140,6 @@ class Segmentsbar {
 
 		if (timestamps.length !== index + 1) {
 			this.updateWidth(timestamps, index + 1, duration, false);
-		}
-	}
-
-	updateOpacity(types) {
-		let i;
-		for (i = 0; i < this.bars.length; ++i) {
-			if (settings.segments[types[i]].skip === false) {
-				if (settings.hidePlayingSegmentBars === true) {
-					this.bars[i].style.opacity = 0.0;
-				} else {
-					this.bars[i].style.opacity = 1.0;
-				}
-			}
 		}
 	}
 

@@ -35,9 +35,12 @@ class Editor {
         this.segmentation = segmentation;
 
         this.iterations = 0;
-        this.createEditor();
 
-        sendCaptchaModal(this.checkCaptcha);
+        if (settings.showPanel === 'always' || (settings.showPanel === 'empty' && typeof this.segmentation === 'undefined')) {
+            this.createEditor();
+        }
+
+        // sendCaptchaModal(this.checkCaptcha);
     }
 
     async createEditor() {
@@ -61,14 +64,6 @@ class Editor {
         }
         this.panel.style.top = settings.editor.posY + 'px';
 
-        // let eye = document.getElementById('vs-editor-eye');
-        // if ( settings.hidePlayingSegmentBars ) {
-        //     eye.classList.add('fa-eye-slash');
-        // }
-        // else { 
-        //     eye.classList.add('fa-eye');
-        // }
-
         if (this.fullscreen) {
             this.panel.style.opacity = settings.segmentationToolsFullscreenOpacity / 100;
         } else {
@@ -78,7 +73,11 @@ class Editor {
         let opacitySlider = document.getElementById('vs-editor-opacity-slider');
         opacitySlider.value = settings.segmentationToolsOpacity / 100;
 
-        this.minimize();
+        if (settings.panelSize === 'maximized') {
+            this.maximize();
+        } else {
+            this.minimize();
+        }
 
         let entryTemplate = await makeImport(browser.extension.getURL('editor/entry.html'));
         this.segmentEntryTemplate = entryTemplate.getElementsByClassName('vs-editor-segment-entry')[0];
@@ -102,7 +101,7 @@ class Editor {
     createSegmentsEntries() {
         if (!this.segmentation || !this.segmentation.timestamps || !this.segmentation.types) {
             document.getElementById('vs-editor-segments').style.display = 'none';
-            document.getElementById('vs-editor-actions').style.display = 'none';
+            document.getElementById('vs-editor-share').style.display = 'none';
             return;
         }
 
@@ -247,22 +246,26 @@ class Editor {
         let mouseMoveEvent = document.createEvent("Events");
         mouseMoveEvent.initEvent("mousemove", false, false);
 
-        let self = this;
         let moveTimer = null;
-        let mouseEnterFn = function () {
+        this.panel.addEventListener('mouseenter', () => {
             videoPlayerControls.dispatchEvent(mouseMoveEvent);
             moveTimer = setInterval(() => {
                 videoPlayerControls.dispatchEvent(mouseMoveEvent);
             }, 1000);
-        }
 
-        let mouseLeaveFn = function () {
+            if (settings.panelSize === 'hoverable') {
+                this.maximize();
+            }
+        });
+
+        this.panel.addEventListener('mouseleave', () => {
             clearInterval(moveTimer);
             moveTimer = undefined;
-        }
 
-        this.panel.addEventListener('mouseenter', mouseEnterFn);
-        this.panel.addEventListener('mouseleave', mouseLeaveFn);
+            if (settings.panelSize === 'hoverable') {
+                this.minimize();
+            }
+        });
     }
 
     hookMoveIcon() {
@@ -348,42 +351,46 @@ class Editor {
     hookMinimizeIcon() {
         let icon = document.getElementById('vs-editor-minimize');
         icon.addEventListener('click', () => {
-            settings.minimized = !settings.minimized;
-            this.minimize();
+            if (settings.panelSize === 'maximized') {
+                settings.panelSize = 'minimized';
+                this.minimize();
+            } else {
+                settings.panelSize = 'maximized';
+                this.maximize();
+            }
+
             saveSettings();
         });
     }
 
     minimize() {
-        if (settings.minimized) {
-            this.panel.classList.remove('vs-editor-maximized');
-            this.panel.classList.add('vs-editor-minimized');
+        this.panel.classList.remove('vs-editor-maximized');
+        this.panel.classList.add('vs-editor-minimized');
 
-            document.getElementById('vs-editor-buttons').style.display = 'none';
-            document.getElementById('vs-editor-segments').style.display = 'none';
-            document.getElementById('vs-editor-actions').style.display = 'none';
+        document.getElementById('vs-editor-buttons').style.display = 'none';
+        document.getElementById('vs-editor-segments').style.display = 'none';
+        document.getElementById('vs-editor-actions').style.display = 'none';
 
-            document.getElementById('vs-editor-eye').style.display = 'none';
-            document.getElementById('vs-editor-opacity').style.display = 'none';
-            document.getElementById('vs-editor-close').style.display = 'none';
+        document.getElementById('vs-editor-opacity').style.display = 'none';
+        document.getElementById('vs-editor-close').style.display = 'none';
 
-            document.getElementById('vs-editor-move').style.paddingRight = '0px';
-            document.getElementById('vs-editor-close').style.paddingLeft = '0px';
-        } else {
-            this.panel.classList.remove('vs-editor-minimized');
-            this.panel.classList.add('vs-editor-maximized');
+        document.getElementById('vs-editor-move').style.paddingRight = '0px';
+        document.getElementById('vs-editor-close').style.paddingLeft = '0px';
+    }
 
-            document.getElementById('vs-editor-buttons').style.display = 'block';
-            document.getElementById('vs-editor-segments').style.display = 'block';
-            document.getElementById('vs-editor-actions').style.display = 'flex';
+    maximize() {
+        this.panel.classList.remove('vs-editor-minimized');
+        this.panel.classList.add('vs-editor-maximized');
 
-            document.getElementById('vs-editor-eye').style.display = 'inline';
-            document.getElementById('vs-editor-opacity').style.display = 'inline';
-            document.getElementById('vs-editor-close').style.display = 'inline';
+        document.getElementById('vs-editor-buttons').style.display = 'block';
+        document.getElementById('vs-editor-segments').style.display = 'block';
+        document.getElementById('vs-editor-actions').style.display = 'flex';
 
-            document.getElementById('vs-editor-move').style.paddingRight = '8px';
-            document.getElementById('vs-editor-close').style.paddingLeft = '8px';
-        }
+        document.getElementById('vs-editor-opacity').style.display = 'inline';
+        document.getElementById('vs-editor-close').style.display = 'inline';
+
+        document.getElementById('vs-editor-move').style.paddingRight = '8px';
+        document.getElementById('vs-editor-close').style.paddingLeft = '8px';
     }
 
     hookCloseIcon() {
@@ -652,11 +659,11 @@ class Editor {
         if (this.segmentation.types.length === 0) {
             // remove it from local database 
             browser.storage.local.remove([video_id], () => {
-                this.setSegmentationOrigin('deleted');
+                this.setSegmentationOrigin('Deleted');
             });
 
             document.getElementById('vs-editor-segments').style.display = 'none';
-            document.getElementById('vs-editor-actions').style.display = 'none';
+            document.getElementById('vs-editor-share').style.display = 'none';
         } else {
             // save locally
             let segmentation;
@@ -688,7 +695,7 @@ class Editor {
             });
 
             document.getElementById('vs-editor-segments').style.display = 'block';
-            document.getElementById('vs-editor-actions').style.display = 'flex';
+            document.getElementById('vs-editor-share').style.display = 'flex';
         }
 
         this.iterations = this.iterations + 1;
@@ -702,8 +709,61 @@ class Editor {
         this.originElement.appendChild(document.createTextNode(origin))
     }
 
+    updateSettings(prop, value) {
+        if (prop === 'segmentationToolsOpacity') {
+            settings[prop] = value;
+
+            if (this.fullscreen !== true) {
+                this.panel.style.opacity = value / 100.0;
+            }
+        } else if (prop === 'segmentationToolsFullscreenOpacity') {
+            settings[prop] = value;
+
+            if (this.fullscreen === true) {
+                this.panel.style.opacity = value / 100.0;
+            }
+        } else if (prop === 'position') {
+            settings.editor.posX = value;
+            settings.editor.posY = value;
+            settings.editor.fullscreenPosX = value;
+            settings.editor.fullscreenPosY = value;
+
+            this.panel.style.left = value + 'px';
+            this.panel.style.top = value + 'px';
+            this.updatePosition();
+        } else if (prop === 'showPanel') {
+            settings[prop] = value;
+
+            if (settings.showPanel === 'always' || (settings.showPanel === 'empty' && (typeof this.segmentation === 'undefined' || this.iterations !== 0))) {
+                if (typeof this.panel === 'undefined') {
+                    this.createEditor();
+                }
+            } else {
+                if (typeof this.panel !== 'undefined') {
+                    this.remove();
+                }
+            }
+
+        } else if (prop === 'panelSize') {
+            settings[prop] = value;
+
+            if (value === 'maximized') {
+                this.maximize();
+            } else {
+                this.minimize();
+            }
+        }
+    }
+
     remove() {
-        this.panel.remove();
-        this.panel = undefined;
+        if (typeof this.content !== 'undefined') {
+            this.content.remove();
+            this.content = undefined;
+        }
+
+        if (typeof this.panel !== 'undefined') {
+            this.panel.remove();
+            this.panel = undefined;
+        }
     }
 }

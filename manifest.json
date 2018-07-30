@@ -31,13 +31,13 @@
 
 	"content_scripts": [{
 		"matches": ["*://*.youtube.com/*"],
-		"js": ["utils/utils.js", "storage/storage.js", "observer/observer.js", "player/player.js", "segmentsbar/segmentsbar.js", "smart-cursor/smart-cursor.js", "editor/editor.js", "modals/modals.js", "tutorial/tutorial.js", "content/content.js"],
+		"js": ["utils/utils.js", "storage/storage.js", "observer/observer.js", "player/player.js", "segmentsbar/segmentsbar.js", "smart-cursor/smart-cursor.js", "editor/editor.js", "modals/modals.js", "filters/filters.js", "tutorial/tutorial.js", "content/content.js"],
 		"css": ["css/styles.css"],
 		"run_at": "document_start",
 		"all_frames": true
 	}],
 
-	"content_security_policy": "script-src 'self' https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js; object-src 'self'",
+	"content_security_policy": "script-src 'self' https://cdnjs.cloudflare.com/ajax/libs/spectrum/1.8.0/spectrum.min.js https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js; object-src 'self'",
 
 	"permissions": [
 		"https://*.videosegments.org/*",

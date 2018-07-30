@@ -101,6 +101,107 @@
 	"ResetPanelPosition": {
 		"message": "Reset panel position"
 	},
+	"ChangesAfterRestart": {
+		"message": "changes will take effect after video change or page reload"
+	},
+
+	"Color": {
+		"message": "Color"
+	},
+	"Segment": {
+		"message": "Segment"
+	},
+	"Action": {
+		"message": "Action"
+	},
+	"Content": {
+		"message": "Content"
+	},
+	"AdContent": {
+		"message": "AdContent"
+	},
+	"Intro": {
+		"message": "Intro"
+	},
+	"Credits": {
+		"message": "Credits"
+	},
+	"Advertisement": {
+		"message": "Advertisement"
+	},
+	"Cutscene": {
+		"message": "Cutscene"
+	},
+	"Offtop": {
+		"message": "Offtop"
+	},
+	"Interactive": {
+		"message": "Interactive"
+	},
+	"Garbage": {
+		"message": "Garbage"
+	},
+	"EverythingElse": {
+		"message": "Everything else"
+	},
+	"Play": {
+		"message": "Play"
+	},
+	"Skip": {
+		"message": "Skip"
+	},
+	"MaxLength": {
+		"message": "Max. length"
+	},
+	"Speed": {
+		"message": "Speed"
+	},
+
+	"ForVideosWithoutSegmentation": {
+		"message": "(for videos without segmentation)"
+	},
+	"ChannelBasedFilter": {
+		"message": "Channel-based filter"
+	},
+	"GetCurrent": {
+		"message": "Get current"
+	},
+	"Search": {
+		"message": "Search"
+	},
+	"SkipFrom": {
+		"message": "Skip from"
+	},
+	"To": {
+		"message": "to"
+	},
+	"Second": {
+		"message": "second"
+	},
+	"SkipLast": {
+		"message": "Skip last"
+	},
+	"SecondOrSeconds": {
+		"message": "second(s)"
+	},
+	"Delete": {
+		"message": "Delete"
+	},
+	"Apply": {
+		"message": "Apply"
+	},
+	"Planned": {
+		"message": "Planned"
+	},
+	"PostSilenceRemoval": {
+		"message": "Post-silence removal"
+	},
+	"SoundFilter": {
+		"message": "Sound filter"
+	},
+	"ImageFilter": {
+		"message": "Image filter"
+	},
 
 	"Blank": {
 		"message": ""
