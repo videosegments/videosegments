@@ -203,6 +203,83 @@
 		"message": "Image filter"
 	},
 
+	"Loading": {
+		"message": "Loading"
+	},
+	"OpenNextPendingRequest": {
+		"message": "Open next request"
+	},
+	"DisplayPendingRequestsCount": {
+		"message": "Display pending requests count"
+	},
+
+	"ReviewQueue": {
+		"message": "Review Queue"
+	},
+	"ReportBug": {
+		"message": "Report Bug"
+	},
+	"RateExtension": {
+		"message": "Rate Extension"
+	},
+	
+	"StartCut": {
+		"message": "Start Cut"
+	},
+	"EndCut": {
+		"message": "End Cut"
+	},
+
+	"content": {
+		"message": "Content"
+	},
+	"intro": {
+		"message": "Intro"
+	},
+	"credits": {
+		"message": "Credits"
+	},
+	"cutscene": {
+		"message": "Cutscene"
+	},
+	"advert": {
+		"message": "Advert"
+	},
+	"adcont": {
+		"message": "AdCont"
+	},
+	"interact": {
+		"message": "Interact"
+	},
+	"offtop": {
+		"message": "Offtop"
+	},
+	"garbage": {
+		"message": "Garbage"
+	},
+	"origin": {
+		"message": "Origin"
+	},
+	"share": {
+		"message": "Share"
+	},
+
+	"community": {
+		"message": "Community"
+	},
+	"noSegmentation": {
+		"message": "No segmentation"
+	},
+	"local": {
+		"message": "Local"
+	},
+	"filtered": {
+		"message": "Filtered"
+	},
+	"pending": {
+		"message": "Pending"
+	},
+
 	"Blank": {
 		"message": ""
 	}

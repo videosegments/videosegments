@@ -19,7 +19,7 @@
 */
 
 /*
-    Segmentsbar styles 
+    Segmentsbar 
 */
 
 #vs-segmentsbar {
@@ -53,8 +53,8 @@
     background: white;
     box-shadow: 0 0 4px 1px rgba(0, 0, 0, 0.2);
     border-radius: 5px;
-    color: #000 !important;
     /* force black text color in fullscreen mode */
+    color: #000 !important;
     padding: 2px;
 }
 
@@ -75,8 +75,8 @@
 #vs-editor-controls {
     display: flex;
     justify-content: space-between;
-    font-size: 11px !important;
     /* fullscreen */
+    font-size: 11px !important;
 }
 
 #vs-editor-controls div {

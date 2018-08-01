@@ -41,7 +41,6 @@ function makeImport(file) {
 function translateNodes(target) {
     let nodes = target.getElementsByClassName('vs-translate-me');
     for (let node of nodes) {
-        node.classList.remove('vs-translate-me');
         translateNode(node);
     }
 }
@@ -130,6 +129,26 @@ function getStyle(e, styleName) {
     return styleValue;
 }
 
+function xhr_get(url) {
+    let xhr = new XMLHttpRequest();
+    xhr.open('GET', url);
+
+    return new Promise((resolve, reject) => {
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState == 4) {
+                if (xhr.status == 200) {
+                    resolve(JSON.parse(xhr.responseText));
+                } else {
+                    reject();
+                }
+            }
+        }
+
+        xhr.setRequestHeader("content-type", "application/x-www-form-urlencoded");
+        xhr.send();
+    })
+}
+
 function xhr_post(url, data) {
     let xhr = new XMLHttpRequest();
     xhr.open('POST', url);
@@ -162,3 +181,11 @@ function convertSimplifiedSegmentation(types) {
         return item == 'sk' ? 'cs' : 'c';
     });
 }
+
+// https://gomakethings.com/how-to-get-the-value-of-a-querystring-with-native-javascript/
+let getQueryString = function (field, url) {
+    let href = window.location.href;
+    let reg = new RegExp('[?&]' + field + '=([^&#]*)', 'i');
+    let res = reg.exec(href);
+    return res ? res[1] : null;
+};

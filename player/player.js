@@ -80,31 +80,38 @@ class Player {
         }
     }
 
-    getSegmentation() {
+    async getSegmentation() {
         let self = this;
 
         log('requesting segmentation...');
         this.segmentation = null;
-        // request local and community segmentations 
-        this.getCommunitySegmentation().then(segmentation => {
-            if (typeof segmentation.types === 'undefined') {
-                self.channel = segmentation.channel;
-            }
-
-            if (typeof segmentation.types === 'undefined') {
-                self.onGotSegmentation('community', {}, 'local');
-            } else {
-                self.onGotSegmentation('community', {
-                    timestamps: segmentation.timestamps,
-                    types: segmentation.types
-                }, 'local');
-            }
-        });
-        this.getLocalSegmentation().then(segmentation => self.onGotSegmentation('local', segmentation, 'community'));
 
         // create segmentsbar 
         let progressBar = document.getElementsByClassName("ytp-progress-bar-container")[0] || document.getElementsByClassName("no-model cue-range-markers")[0];
         this.segmentsbar = new Segmentsbar(progressBar);
+
+        let pid = getQueryString('vs-pid');
+        if (pid === null) {
+            // request local and community segmentations 
+            this.getCommunitySegmentation().then(segmentation => {
+                if (typeof segmentation.types === 'undefined') {
+                    self.channel = segmentation.channel;
+                }
+
+                if (typeof segmentation.types === 'undefined') {
+                    self.onGotSegmentation('community', {}, 'local');
+                } else {
+                    self.onGotSegmentation('community', {
+                        timestamps: segmentation.timestamps,
+                        types: segmentation.types
+                    }, 'local');
+                }
+            });
+            this.getLocalSegmentation().then(segmentation => self.onGotSegmentation('local', segmentation, 'community'));
+        } else {
+            this.segmentation = await this.getPendingSegmentation(pid);
+            this.onSegmentationReady();
+        }
     }
 
     onGotSegmentation(origin, segmentation, secondaryOrigin) {
@@ -150,7 +157,7 @@ class Player {
         if (this.segmentation === null && this[origin] && this[secondaryOrigin]) {
             log('no segmentations exists');
             this.segmentation = {
-                origin: 'NoSegmentation'
+                origin: 'noSegmentation'
             };
             this.onSegmentationReady();
         }
@@ -161,15 +168,16 @@ class Player {
             return;
         }
 
-        if (this.segmentation.origin === 'NoSegmentation') {
+        if (this.segmentation.origin === 'noSegmentation') {
             this.segmentation = await tryChannelFilter(this.channel, this.video.duration);
         }
-        log(this.segmentation.origin);
 
         if ((typeof this.segmentation.types !== 'undefined') && this.segmentation.types[this.segmentation.types.length - 1] === '-') {
             this.segmentation.timestamps.pop();
             this.segmentation.types.pop();
         }
+
+        this.segmentation = this.prepareSegmentation(this.segmentation);
 
         // remove play listener 
         this.video.removeEventListener('play', this.onPlayBeforeLoadedContext);
@@ -216,13 +224,12 @@ class Player {
     getCommunitySegmentation() {
         return new Promise(resolve => {
             let xhr = new XMLHttpRequest();
-            xhr.open('GET', 'https://db.videosegments.org/api/v3/get.php?id=' + this.id + '&filter=' + (settings.filters.channelBased.enabled === true ? '1' : '0'));
+            xhr.open('GET', 'https://db.videosegments.org/api/v3/get.php?id=' + this.id);
 
             xhr.onreadystatechange = () => {
                 if (xhr.readyState == 4) {
                     if (xhr.status == 200) {
                         let response = JSON.parse(xhr.responseText);
-                        response = this.prepareSegmentation(response);
                         resolve(response || {});
                     } else {
                         resolve({});
@@ -243,10 +250,10 @@ class Player {
                 [storageId]: ''
             }, function (result) {
                 if (result[storageId] !== '') {
-                    let response = self.prepareSegmentation({
+                    let response = {
                         timestamps: result[storageId].timestamps,
                         types: result[storageId].types
-                    });
+                    };
                     resolve(response || {});
                 } else {
                     resolve({});
@@ -255,8 +262,42 @@ class Player {
         });
     }
 
-    getPendingSegmentation() {
+    async getPendingSegmentation(pid) {
+        let response = await xhr_get('https://db.videosegments.org/api/v3/review.php?id=' + pid);
+        if (typeof response.timestamps !== 'undefined' && response.timestamps.length > 0) {
+            let timestamps = response.timestamps;
+            let types = response.types;
+            let origin = 'pending';
+            return {
+                timestamps: timestamps,
+                types: types,
+                origin: origin
+            };
+        } else {
+            // https://stackoverflow.com/a/16941754
+            function removeParam(key, sourceURL) {
+                var rtn = sourceURL.split("?")[0],
+                    param,
+                    params_arr = [],
+                    queryString = (sourceURL.indexOf("?") !== -1) ? sourceURL.split("?")[1] : "";
+                if (queryString !== "") {
+                    params_arr = queryString.split("&");
+                    for (var i = params_arr.length - 1; i >= 0; i -= 1) {
+                        param = params_arr[i].split("=")[0];
+                        if (param === key) {
+                            params_arr.splice(i, 1);
+                        }
+                    }
+                    rtn = rtn + "?" + params_arr.join("&");
+                }
+                return rtn;
+            }
+            
+            // window.location.href = removeParam("vs-pid", window.location.href);
+            window.location = removeParam("vs-pid", window.location.href);
+        }
 
+        return ({});
     }
 
     prepareSegmentation(segmentation) {

@@ -26,7 +26,7 @@ function tryChannelFilter(channel, duration) {
             resolve({
                 timestamps: undefined,
                 types: undefined,
-                origin: 'NoSegmentation'
+                origin: 'noSegmentation'
             });
             return;
         }
@@ -39,7 +39,7 @@ function tryChannelFilter(channel, duration) {
                 resolve({
                     timestamps: undefined,
                     types: undefined,
-                    origin: 'NoSegmentation'
+                    origin: 'noSegmentation'
                 });
                 return;
             }
@@ -67,8 +67,6 @@ function tryChannelFilter(channel, duration) {
                 timestamps.push(duration - filter[2]);
                 types.push('c');
                 types.push('cs');
-
-                self.origin = 'filtered';
             }
 
             timestamps.push(duration);
@@ -76,7 +74,7 @@ function tryChannelFilter(channel, duration) {
             resolve({
                 timestamps: timestamps,
                 types: types,
-                origin: 'Filtered'
+                origin: 'filtered'
             });
         });
     });

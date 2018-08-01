@@ -39,7 +39,7 @@ function getSettings() {
             ac: {
                 skip: false,
                 color: '#00897b',
-                opacity: 0.0,
+                opacity: 1.0,
                 duration: 0.0,
                 speed: 1.0
             },
@@ -121,32 +121,18 @@ function getSettings() {
 
         // global settings 
         autoPauseDuration: 2.0,
-        showPageOnReject: true,
         popupDurationOnSend: 5.0,
         databasePriority: 'local',
         segmentationToolsOpacity: 60,
+        segmentationToolsFullscreenOpacity: 50,
         segmentsBarLocation: 'separated',
-        hidePlayingSegmentBars: false,
-        minimized: false,
         showPanel: 'always',
         panelSize: 'maximized',
-
-        // normal mode settings
-        maximizePanelOnHover: false,
-        segmentationToolsFullscreenOpacity: 50,
-        showEditorInFullscreen: true,
-
-        // expert mode settings 
-        showSegmentationTools: true,
-        hideOnSegmentedVideos: false,
-        pinSegmentationTools: false,
-        hideIcon: false,
-        iconOpacity: 100,
-        highlightIcon: true,
 
         // settings 
         mode: 'simplified',
         lastTab: 'tab-settings',
+        displayPending: false,
 
         // filtration 
         filters: {
@@ -183,6 +169,21 @@ function getSettings() {
         // obsolete vars 
         // simplified
         // lastVersionChanges
+        // showPageOnReject: true 
+        // hidePlayingSegmentBars: false,
+        // minimized: false,
+
+        // expert mode settings 
+        // showSegmentationTools: true,
+        // hideOnSegmentedVideos: false,
+        // pinSegmentationTools: false,
+        // hideIcon: false,
+        // iconOpacity: 100,
+        // highlightIcon: true,
+
+        // normal mode settings
+        // maximizePanelOnHover: false,
+        // showEditorInFullscreen: true,
     };
 
     // make function async 
@@ -190,7 +191,7 @@ function getSettings() {
         // request settings 
         browser.storage.local.get({
             settings
-        }, (result) => {
+        }, result => {
             // backward compatibility 
             settings = Object.assign({}, settings, result.settings);
             // return promise 

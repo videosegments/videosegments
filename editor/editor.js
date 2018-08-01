@@ -44,8 +44,8 @@ class Editor {
     }
 
     async createEditor() {
-        this.content = await makeImport(browser.extension.getURL('editor/editor.html'));
-        this.panel = this.content.getElementById('vs-editor');
+        let content = await makeImport(browser.extension.getURL('editor/editor.html'));
+        this.panel = content.getElementById('vs-editor');
         document.body.appendChild(this.panel);
         log('editor created');
 
@@ -77,6 +77,13 @@ class Editor {
             this.maximize();
         } else {
             this.minimize();
+        }
+
+        if (settings.mode === 'simplified') {
+            document.getElementById('vs-editor-expert-buttons').style.display = 'none';
+        }
+        else {
+            document.getElementById('vs-editor-simplified-buttons').style.display = 'none';
         }
 
         let entryTemplate = await makeImport(browser.extension.getURL('editor/entry.html'));
@@ -705,8 +712,7 @@ class Editor {
     }
 
     setSegmentationOrigin(origin) {
-        this.originElement.firstChild.remove();
-        this.originElement.appendChild(document.createTextNode(origin))
+        translateNodeText(this.originElement, origin);
     }
 
     updateSettings(prop, value) {
@@ -756,11 +762,6 @@ class Editor {
     }
 
     remove() {
-        if (typeof this.content !== 'undefined') {
-            this.content.remove();
-            this.content = undefined;
-        }
-
         if (typeof this.panel !== 'undefined') {
             this.panel.remove();
             this.panel = undefined;

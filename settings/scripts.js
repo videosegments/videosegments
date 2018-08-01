@@ -46,6 +46,12 @@ document.addEventListener('DOMContentLoaded', () => {
         changeTab(settings.lastTab);
         restoreSettings();
         hookActions();
+        toggleMode();
+    });
+
+    // when user logs in 
+    window.addEventListener('message', function (event) {
+        checkAuth();
     });
 
     // little bit of jQuery 
@@ -54,6 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => {
         document.getElementById('login-page').src = 'https://db.videosegments.org/api/v3/login.php'
     }, 100);
+    checkAuth();
 
     document.getElementById('get-current').addEventListener('click', () => {
         browser.tabs.query({
@@ -115,6 +122,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.getElementById('skip-last').value = 0.0;
             }
         );
+    });
+
+    document.getElementById('review-queue').addEventListener('click', () => {
+        window.open('https://db.videosegments.org/queue.php', '_blank');
     });
 });
 
@@ -198,6 +209,27 @@ function translateText(text) {
     return browser.i18n.getMessage(text);
 }
 
+function toggleMode() {
+    let nodesToHide, nodesToShow;
+    if (settings.mode === 'simplified') {
+        nodesToShow = document.getElementsByClassName('simplified-mode');
+        nodesToHide = document.getElementsByClassName('expert-mode');
+    } else {
+        nodesToShow = document.getElementsByClassName('expert-mode');
+        nodesToHide = document.getElementsByClassName('simplified-mode');
+    }
+
+    log(nodesToHide, nodesToShow);
+
+    for (let node of nodesToShow) {
+        node.style.display = 'table'
+    }
+    for (let node of nodesToHide) {
+        node.style.display = 'none';
+        log(node);
+    }
+}
+
 function restoreSettings() {
     connectSettingValue(document.getElementById('database-priority'), 'databasePriority');
     connectSettingValue(document.getElementById('show-panel-mode'), 'showPanel');
@@ -208,6 +240,21 @@ function restoreSettings() {
     connectSettingValue(document.getElementById('popup-duration'), 'popupDurationOnSend');
     connectSettingValue(document.getElementById('panel-opacity'), 'segmentationToolsOpacity');
     connectSettingValue(document.getElementById('panel-fullscreen-opacity'), 'segmentationToolsFullscreenOpacity');
+
+    document.getElementById('panel-mode').addEventListener('click', () => {
+        toggleMode();
+    })
+
+    let displayPending = document.getElementById('display-pending');
+    displayPending.checked = settings.displayPending;
+    displayPending.addEventListener('change', () => {
+        settings.displayPending = displayPending.checked;
+        saveSettings();
+
+        browser.runtime.sendMessage({
+            'displayPending': displayPending.checked
+        });
+    });
 
     let colorSegments = ['c', 'ac', 'i', 'a', 'cr', 'ia', 'cs', 'o', 's', 'pl', 'sk'];
     for (let color of colorSegments) {
@@ -314,4 +361,42 @@ function hookActions() {
         saveSettings();
         updateSettings('position', 200);
     })
+}
+
+function xhr_get(url) {
+    let xhr = new XMLHttpRequest();
+    xhr.open('GET', url);
+
+    return new Promise((resolve, reject) => {
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState == 4) {
+                if (xhr.status == 200) {
+                    resolve(JSON.parse(xhr.responseText));
+                } else {
+                    reject();
+                }
+            }
+        }
+
+        xhr.setRequestHeader("content-type", "application/x-www-form-urlencoded");
+        xhr.send();
+    })
+}
+
+async function checkAuth() {
+    let response = await xhr_get('https://db.videosegments.org/api/v3/status.php');
+    if (response.authorized && response.moderator) {
+        document.getElementById('reviewer-only').style.display = 'block';
+        updatePendingRequestCount();
+    }
+}
+
+async function updatePendingRequestCount() {
+    let response = await xhr_get('https://db.videosegments.org/api/v3/review.php?requests');
+    if (typeof response.requests !== 'undefined') {
+        document.getElementById('pending-review-count').innerHTML = parseInt(response.requests);
+        browser.runtime.sendMessage({
+            'updateBadge': response.requests
+        });
+    }
 }

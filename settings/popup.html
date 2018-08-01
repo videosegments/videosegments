@@ -144,7 +144,7 @@
     <div id="playback" class="tab-content" style="display: none">
         <h2 class="text-center translate-me">TabPlayback</h2>
 
-        <table class="table table-bordered table-sm mt-3 text-center">
+        <table class="table table-bordered table-sm mt-3 text-center expert-mode">
             <thead>
                 <tr>
                     <th class="w-25 translate-me">Color</th>
@@ -293,7 +293,7 @@
             </tbody>
         </table>
 
-        <table class="table table-bordered table-sm mt-3 text-center">
+        <table class="table table-bordered table-sm mt-3 text-center simplified-mode">
             <thead>
                 <tr>
                     <th class="w-25 translate-me">Color</th>
@@ -331,7 +331,7 @@
     <div id="acceleration" class="tab-content" style="display: none">
         <h2 class="text-center translate-me">TabAcceleration</h2>
 
-        <table class="table table-bordered table-sm mt-3 mx-auto text-center w-75">
+        <table class="table table-bordered table-sm mt-3 mx-auto text-center w-75 expert-mode">
             <thead>
                 <tr>
                     <th class="translate-me">Segment</th>
@@ -442,7 +442,7 @@
             </tbody>
         </table>
 
-        <table class="table table-bordered table-sm mt-3 mx-auto text-center w-75">
+        <table class="table table-bordered table-sm mt-3 mx-auto text-center w-75 simplified-mode">
             <thead>
                 <tr>
                     <th class="translate-me">Segment</th>
@@ -535,39 +535,32 @@
     <div id="community" class="tab-content" style="display: none">
         <h2 class="text-center translate-me">TabCommunity</h2>
 
-        <div class="reviewer-only" style="display: none">
-            <br>
-            <div style="text-align: center">
-                <span id="segmentations-count">loading</span>
+        <div id="reviewer-only" style="display: none">
+            <div class="text-center">
+                <span id="pending-review-count" class="translate-me">Loading</span>
             </div>
-            <div style="text-align: center">
-                <button id="next-segmentation">
-                    <span class="">nextSegmentation</span>
-                </button>
+            <div class="text-center mb-3">
+                <button id="review-queue" class="translate-me">ReviewQueue</button>
+            </div>
+            <div class="text-center">
+                <label class="form-check-inline">
+                    <input type="checkbox" id="display-pending">
+                    <span class="translate-me">DisplayPendingRequestsCount</span>
+                </label>
             </div>
             <br>
-            <label>
-                <input type="checkbox" id="openSettings">
-                <span class="">openSettings</span>
-                <br>
-            </label>
-            <label>
-                <input type="checkbox" id="displayPending">
-                <span class="">displayPending</span>
-                <br>
-            </label>
         </div>
 
         <div>
-            <iframe id="login-page" width="350" height="350" style="border: none; margin-top: 5px"></iframe>
+            <iframe id="login-page" width="350" height="350" class="border-0"></iframe>
         </div>
     </div>
 
     <footer class="footer">
         <div class="d-flex justify-content-between container">
-            <a class="text-muted" href="https://github.com/videosegments/videosegments/issues" target="_blank">Report Bug</a>
-            <a class="text-muted" href="https://db.videosegments.org/queue.php" target="_blank">Review Queue</a>
-            <a class="text-muted" href="#" target="_blank">Rate Extension</a>
+            <a class="text-muted translate-me" href="https://github.com/videosegments/videosegments/issues" target="_blank">ReportBug</a>
+            <a class="text-muted translate-me" href="https://db.videosegments.org/queue.php" target="_blank">ReviewQueue</a>
+            <a class="text-muted translate-me" href="#" target="_blank">RateExtension</a>
         </div>
     </footer>
 
