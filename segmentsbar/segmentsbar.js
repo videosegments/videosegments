@@ -43,7 +43,7 @@ class Segmentsbar {
 
 	updateColor(segment, color, opacity) {
 		let bars = document.querySelectorAll('[data-vs-segment-type=' + segment + ']');
-		for ( let bar of bars ) {
+		for (let bar of bars) {
 			bar.style.backgroundColor = color;
 			bar.style.opacity = opacity;
 		}
@@ -105,6 +105,7 @@ class Segmentsbar {
 
 	updateType(type, index) {
 		this.bars[index].style.backgroundColor = settings.segments[type].color;
+		this.bars[index].style.opacity = settings.segments[type].opacity;
 		this.bars[index].setAttribute('data-vs-segment-type', type);
 	}
 
@@ -113,11 +114,8 @@ class Segmentsbar {
 		bar.setAttribute('data-vs-segment-type', types[index]);
 
 		bar.style.backgroundColor = settings.segments[types[index]].color;
-		if (settings.segments[types[index]].skip === false) {
-			if (settings.hidePlayingSegmentBars === true) {
-				bar.style.opacity = 0.0;
-			}
-		}
+		bar.style.opacity = settings.segments[types[index]].opacity;
+		
 
 		this.bars.splice(index, 0, bar);
 

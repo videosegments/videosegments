@@ -176,10 +176,14 @@ function xhr_post(url, data) {
 }
 
 function convertSimplifiedSegmentation(types) {
-    // https://stackoverflow.com/a/5915891
-    return types.map(function (item) {
-        return item == 'sk' ? 'cs' : 'c';
-    });
+    if (typeof types !== 'undefined') {
+        // https://stackoverflow.com/a/5915891
+        return types.map(function (item) {
+            return item == 'sk' ? 'cs' : 'c';
+        });
+    }
+
+    return undefined;
 }
 
 // https://gomakethings.com/how-to-get-the-value-of-a-querystring-with-native-javascript/

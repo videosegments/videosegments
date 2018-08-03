@@ -18,6 +18,8 @@
     along with VideoSegments. If not, see <https://www.gnu.org/licenses/>.
 */
 
+'use strict';
+
 async function sendSmallModal(code, message) {
     let modal = await makeImport(browser.extension.getURL('modals/small.html'));
     modal = modal.getElementsByClassName('vs-small-modal')[0];
@@ -25,20 +27,23 @@ async function sendSmallModal(code, message) {
     let header = modal.getElementsByClassName('vs-small-modal-header')[0];
     let body = modal.getElementsByClassName('vs-small-modal-message')[0];
 
+    // TODO: do it on server side
+    message = message[0].toUpperCase() + message.slice(1);
+
     if (code === '0') {
         header.style.backgroundColor = '#0a0';
-        header.innerHTML = 'success';
-        body.innerHTML = message;
+        translateNodeText(header, 'sharingSuccess');
+        translateNodeText(body, 'success' + message);
     } else if (code === '1') {
+        header.style.color = '#fff';
         header.style.backgroundColor = '#c00';
-        header.style.color = '#fff';
-        header.innerHTML = 'failed';
-        body.innerHTML = message;
+        translateNodeText(header, 'sharingFailed');
+        translateNodeText(body, 'failed' + message);
     } else if (code === '2') {
-        header.style.backgroundColor = '#00a';
         header.style.color = '#fff';
-        header.innerHTML = 'rejected';
-        body.innerHTML = message;
+        header.style.backgroundColor = '#00a';
+        translateNodeText(header, 'sharingRejected');
+        translateNodeText(body, 'rejected' + message);
     }
 
     setTimeout(() => modal.classList.add('vs-small-modal-animation'), 100);
@@ -55,28 +60,30 @@ async function sendBigModal(code, message) {
     let header = modal.getElementsByClassName('vs-big-modal-header')[0];
     let body = modal.getElementsByClassName('vs-big-modal-message')[0];
 
+    // TODO: do it on server side
+    message = message[0].toUpperCase() + message.slice(1);
+
     if (code === '0') {
         header.style.backgroundColor = '#0a0';
-        header.innerHTML = 'success';
-        body.innerHTML = message;
+        translateNodeText(header, 'sharingSuccess');
+        translateNodeText(body, 'success' + message);
     } else if (code === '1') {
+        header.style.color = '#fff';
         header.style.backgroundColor = '#c00';
-        header.style.color = '#fff';
-        header.innerHTML = 'failed';
-        body.innerHTML = message;
+        translateNodeText(header, 'sharingFailed');
+        translateNodeText(body, 'failed' + message);
     } else if (code === '2') {
-        header.style.backgroundColor = '#00a';
         header.style.color = '#fff';
-        header.innerHTML = 'rejected';
-        body.innerHTML = message;
-    } else if (code === '3') {
         header.style.backgroundColor = '#00a';
-        header.style.color = '#fff';
-        header.innerHTML = 'rejected';
-        body.innerHTML = message;
+        translateNodeText(header, 'sharingRejected');
+        translateNodeText(body, 'rejected' + message);
     }
 
     modal.getElementsByClassName('vs-big-modal-close')[0].addEventListener('click', function () {
+        if (document.getElementById('vs-big-modal-disable').checked) {
+            settings.popupSize = 'small';
+            saveSettings();
+        }
         modal.remove();
     });
     document.body.appendChild(modal);

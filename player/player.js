@@ -292,7 +292,7 @@ class Player {
                 }
                 return rtn;
             }
-            
+
             // window.location.href = removeParam("vs-pid", window.location.href);
             window.location = removeParam("vs-pid", window.location.href);
         }
@@ -341,12 +341,10 @@ class Player {
     }
 
     getOriginalSegmentation(segmentation) {
-        if (typeof this.originalSegmentation.timestamps === 'undefined') {
+        if (typeof this.originalSegmentation === 'undefined' || typeof this.originalSegmentation.timestamps === 'undefined') {
             return {
                 timestamps: segmentation.timestamps,
-                types: segmentation.types.map(item => {
-                    return (item === 'pl' ? 'c' : 'cs');
-                })
+                types: convertSimplifiedSegmentation(segmentation.types)
             }
         } else {
             return this.originalSegmentation;
@@ -425,6 +423,14 @@ class Player {
             this.segmentsbar.updatePosition();
         } else if (prop === 'mode') {
             settings[prop] = value;
+
+            if ( value === 'simplified' ) {
+                this.segmentation = this.getSimplifiedSegmentation(this.segmentation);
+            }
+            else {
+                this.segmentation = this.getOriginalSegmentation(this.segmentation);
+            }
+            this.editor.updateSettings(prop, {mode: value, segmentation: this.segmentation});
         } else if (prop === 'autoPauseDuration') {
             settings[prop] = value;
         } else if (prop === 'popupDurationOnSend') {

@@ -34,6 +34,7 @@ class Editor {
         this.id = id;
         this.segmentation = segmentation;
 
+        this.lastShareIteration = -1;
         this.iterations = 0;
 
         if (settings.showPanel === 'always' || (settings.showPanel === 'empty' && typeof this.segmentation === 'undefined')) {
@@ -81,8 +82,7 @@ class Editor {
 
         if (settings.mode === 'simplified') {
             document.getElementById('vs-editor-expert-buttons').style.display = 'none';
-        }
-        else {
+        } else {
             document.getElementById('vs-editor-simplified-buttons').style.display = 'none';
         }
 
@@ -131,7 +131,7 @@ class Editor {
         let select = entry.getElementsByClassName('vs-editor-segment-entry-type')[0];
 
         if (settings.mode === 'simplified') {
-            span.appendChild(document.createTextNode(this.segmentation.types[i]));
+            translateNodeText(span, this.segmentation.types[i]);
             select.style.display = 'none';
         } else {
             select.value = this.segmentation.types[i];
@@ -236,7 +236,7 @@ class Editor {
             }
         }
 
-        this.video.currentTime = this.segmentation.timestamps[i + 1];
+        this.video.currentTime = this.segmentation.timestamps[i + 1] + 0.01;
     }
 
     hookControls() {
@@ -260,7 +260,7 @@ class Editor {
                 videoPlayerControls.dispatchEvent(mouseMoveEvent);
             }, 1000);
 
-            if (settings.panelSize === 'hoverable') {
+            if (settings.panelSize === 'compact') {
                 this.maximize();
             }
         });
@@ -269,7 +269,7 @@ class Editor {
             clearInterval(moveTimer);
             moveTimer = undefined;
 
-            if (settings.panelSize === 'hoverable') {
+            if (settings.panelSize === 'compact') {
                 this.minimize();
             }
         });
@@ -403,8 +403,10 @@ class Editor {
     hookCloseIcon() {
         let icon = document.getElementById('vs-editor-close');
         icon.addEventListener('click', () => {
-            settings.showSegmentationTools = false;
+            settings.showPanel = 'never';
             this.panel.remove();
+            this.panel = undefined;
+            saveSettings();
         })
     }
 
@@ -481,6 +483,7 @@ class Editor {
                 endTimeInput.size = endTimeInput.value.length + 1;
                 setTimeout(() => {
                     endTimeInput.focus();
+                    log('f1');
                 }, 100);
 
                 this.segmentsbar.updateWidth(this.segmentation.timestamps, index - 1, roundFloat(this.video.duration), true);
@@ -492,6 +495,7 @@ class Editor {
                 endTimeInput.size = endTimeInput.value.length + 1;
                 setTimeout(() => {
                     endTimeInput.focus();
+                    log('f2');
                 }, 100);
 
                 this.segmentsbar.updateWidth(this.segmentation.timestamps, index, roundFloat(this.video.duration), true);
@@ -519,6 +523,18 @@ class Editor {
                 // log(this.segmentation.types, index);
 
                 if (left) {
+                    setTimeout(() => {
+                        entry.getElementsByClassName('vs-editor-segment-entry-end-time')[0].focus();
+                        log('f3');
+                    }, 100);
+                } else {
+                    setTimeout(() => {
+                        this.segments.getElementsByClassName('vs-editor-segment-entry-end-time')[index - 1].focus();
+                        log('f4');
+                    }, 100);
+                }
+
+                if (left) {
                     if (outsideOfArray) {
                         this.segments.childNodes[index - 1].insertAdjacentElement('afterEnd', entry);
                         left = false;
@@ -535,16 +551,6 @@ class Editor {
 
                 this.segmentsbar.addSegment(this.segmentation.timestamps, this.segmentation.types, this.video.duration, index, left);
                 this.updateEntryStartTime(entry.getElementsByClassName('vs-editor-segment-entry-end-time')[0]);
-
-                if (left) {
-                    setTimeout(() => {
-                        entry.getElementsByClassName('vs-editor-segment-entry-end-time')[0].focus();
-                    }, 100);
-                } else {
-                    setTimeout(() => {
-                        this.segments.getElementsByClassName('vs-editor-segment-entry-end-time')[index - 1].focus();
-                    }, 100);
-                }
             }
         } else {
             this.segmentation.timestamps = (left ? [0, timestamp] : [0, roundFloat(this.video.duration)]);
@@ -557,6 +563,7 @@ class Editor {
             this.updateEntryEndTime(entry.getElementsByClassName('vs-editor-segment-entry-end-time')[0]);
             setTimeout(() => {
                 entry.getElementsByClassName('vs-editor-segment-entry-end-time')[0].focus();
+                log('f5');
             }, 100);
         }
     }
@@ -594,12 +601,21 @@ class Editor {
     }
 
     async shareSegmentation() {
+        if (this.lastShareIteration === this.iterations) {
+            sendSmallModal('1', 'noChangesInSegmentation');
+            return;
+        }
+        this.lastShareIteration = this.iterations;
+
         let segmentation = {
             id: this.id,
             timestamps: this.segmentation.timestamps.slice(1, -1),
-            types: convertSimplifiedSegmentation(this.segmentation.types.slice())
+            types: this.segmentation.types.slice()
         }
-        // log(segmentation);
+
+        if (settings.mode === 'simplified') {
+            segmentation.types = convertSimplifiedSegmentation(segmentation.types);
+        }
 
         let response = await xhr_post('https://db.videosegments.org/api/v3/set.php', segmentation);
         log(response);
@@ -609,7 +625,11 @@ class Editor {
                 this.checkCaptcha(event, segmentation)
             });
         } else {
-            sendSmallModal(response.code, response.message);
+            if (settings.popupSize === 'big') {
+                sendBigModal(response.code, response.message);
+            } else {
+                sendSmallModal(response.code, response.message);
+            }
         }
     }
 
@@ -666,7 +686,7 @@ class Editor {
         if (this.segmentation.types.length === 0) {
             // remove it from local database 
             browser.storage.local.remove([video_id], () => {
-                this.setSegmentationOrigin('Deleted');
+                this.setSegmentationOrigin('deleted');
             });
 
             document.getElementById('vs-editor-segments').style.display = 'none';
@@ -698,11 +718,11 @@ class Editor {
             browser.storage.local.set({
                 [video_id]: segmentation
             }, () => {
-                this.setSegmentationOrigin('saved locally (' + this.iterations + ')');
+                this.updateIterationsCount();
             });
 
             document.getElementById('vs-editor-segments').style.display = 'block';
-            document.getElementById('vs-editor-share').style.display = 'flex';
+            document.getElementById('vs-editor-share').style.display = 'block';
         }
 
         this.iterations = this.iterations + 1;
@@ -713,6 +733,15 @@ class Editor {
 
     setSegmentationOrigin(origin) {
         translateNodeText(this.originElement, origin);
+    }
+
+    updateIterationsCount() {
+        while (this.originElement.firstChild) {
+            this.originElement.removeChild(this.originElement.firstChild);
+        }
+
+        let textNode = document.createTextNode(translateText('savedLocally') + ' (' + this.iterations + ')');
+        this.originElement.appendChild(textNode);
     }
 
     updateSettings(prop, value) {
@@ -739,6 +768,7 @@ class Editor {
             this.updatePosition();
         } else if (prop === 'showPanel') {
             settings[prop] = value;
+            log(settings.showPanel === 'always', settings.showPanel);
 
             if (settings.showPanel === 'always' || (settings.showPanel === 'empty' && (typeof this.segmentation === 'undefined' || this.iterations !== 0))) {
                 if (typeof this.panel === 'undefined') {
@@ -758,6 +788,28 @@ class Editor {
             } else {
                 this.minimize();
             }
+        } else if (prop === 'mode') {
+            settings[prop] = value.mode;
+            this.segmentation = value.segmentation;
+
+            if (settings.showPanel === 'always' || (settings.showPanel === 'empty' && (typeof this.segmentation === 'undefined' || this.iterations !== 0))) {
+                if (typeof this.panel !== 'undefined') {
+                    while (this.segments.firstChild) {
+                        this.segments.firstChild.remove();
+                    }
+                    this.createSegmentsEntries();
+
+                    if (settings.mode === 'simplified') {
+                        document.getElementById('vs-editor-simplified-buttons').style.display = 'flex';
+                        document.getElementById('vs-editor-expert-buttons').style.display = 'none';
+                    } else {
+                        document.getElementById('vs-editor-simplified-buttons').style.display = 'none';
+                        document.getElementById('vs-editor-expert-buttons').style.display = 'flex';
+                    }
+                }
+            }
+        } else if (prop === 'popupSize') {
+            settings[prop] = value;
         }
     }
 

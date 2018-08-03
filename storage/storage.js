@@ -123,11 +123,12 @@ function getSettings() {
         autoPauseDuration: 2.0,
         popupDurationOnSend: 5.0,
         databasePriority: 'local',
-        segmentationToolsOpacity: 60,
-        segmentationToolsFullscreenOpacity: 50,
+        segmentationToolsOpacity: 80,
+        segmentationToolsFullscreenOpacity: 60,
         segmentsBarLocation: 'separated',
         showPanel: 'always',
         panelSize: 'maximized',
+        popupSize: 'big',
 
         // settings 
         mode: 'simplified',

@@ -219,14 +219,11 @@ function toggleMode() {
         nodesToHide = document.getElementsByClassName('simplified-mode');
     }
 
-    log(nodesToHide, nodesToShow);
-
     for (let node of nodesToShow) {
         node.style.display = 'table'
     }
     for (let node of nodesToHide) {
         node.style.display = 'none';
-        log(node);
     }
 }
 
@@ -234,6 +231,7 @@ function restoreSettings() {
     connectSettingValue(document.getElementById('database-priority'), 'databasePriority');
     connectSettingValue(document.getElementById('show-panel-mode'), 'showPanel');
     connectSettingValue(document.getElementById('panel-size'), 'panelSize');
+    connectSettingValue(document.getElementById('popup-size'), 'popupSize');
     connectSettingValue(document.getElementById('segmentsbar-location'), 'segmentsBarLocation');
     connectSettingValue(document.getElementById('panel-mode'), 'mode');
     connectSettingValue(document.getElementById('autopause-duration'), 'autoPauseDuration');

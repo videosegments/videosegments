@@ -51,13 +51,22 @@
 		"message": "Never"
 	},
 	"PanelSize": {
-		"message": "Panel size"
+		"message": "Panel size (?)"
+	},
+	"ShareNotificationSize": {
+		"message": "Notification size on sharing"
+	},
+	"Big": {
+		"message": "Big"
+	},
+	"Small": {
+		"message": "Small"
 	},
 	"Maximized": {
 		"message": "Maximized"
 	},
-	"Hoverable": {
-		"message": "Hoverable"
+	"Compact": {
+		"message": "Compact"
 	},
 	"Minimized": {
 		"message": "Minimized"
@@ -150,6 +159,12 @@
 	"Skip": {
 		"message": "Skip"
 	},
+	"pl": {
+		"message": "play"
+	},
+	"sk": {
+		"message": "skip"
+	},
 	"MaxLength": {
 		"message": "Max. length"
 	},
@@ -222,7 +237,7 @@
 	"RateExtension": {
 		"message": "Rate Extension"
 	},
-	
+
 	"StartCut": {
 		"message": "Start Cut"
 	},
@@ -278,6 +293,67 @@
 	},
 	"pending": {
 		"message": "Pending"
+	},
+	"savedLocally": {
+		"message": "Saved locally"
+	},
+	"deleted": {
+		"message": "Deleted"
+	},
+
+	"sharingSuccess": {
+		"message": "Success!"
+	},
+	"successSended": {
+		"message": "Your segmentation is sended to manual review. Thank you for your contribution!"
+	},
+	"successAdded": {
+		"message": "Segmentation is added to database."
+	},
+	"successUpdated": {
+		"message": "Segmentation is updated in database."
+	},
+	"successAccepted": {
+		"message": "Pending segmentation is accepted."
+	},
+	"successRejected": {
+		"message": "Pending segmentation is rejected."
+	},
+	"successOverriden": {
+		"message": "Pending segmentation is corrected."
+	},
+	"sharingFailed": {
+		"message": "Sharing failed"
+	},
+	"failedTimeout": {
+		"message": "Too late to update segmentation. Please contact moderator to update segmentation."
+	},
+	"failedSegmented": {
+		"message": "This video already have community-based manually-reviewed segmentation."
+	},
+	"failedNoChangesInSegmentation": {
+		"message": "You already sended this segmentation to review. Yes, if you change something, you will be able to send segmentation again. Please don't do it. Use this feature only if you made mistake in segmentation and want to correct this. I will only review last sended and delete another without review."
+	},
+	"sharingRejected": {
+		"message": "Segmentation is rejected by automatic review system"
+	},
+	"rejectedUnlisted": {
+		"message": "This video is unlisted and I can't manually review it. Only registered users with 100+ points of reputation can send unlisted videos."
+	},
+	"rejectedStream": {
+		"message": "This video is stream. Only registered users with 5+ points of reputation can send streams."
+	},
+	"rejectedViews": {
+		"message": "This video have less than 50000 views. Only registered users with 3+ points of reputation can send videos like this."
+	},
+	"rejectedLong": {
+		"message": "This video is longer than 1 hour. Only registered users can send videos like this."
+	},
+	"rejectedSegmentation": {
+		"message": "My system think that you have sended intentionally wrong segmented video. Registered users with more than 1 point of reputation can send any segmentation."
+	},
+	"rejectedLanguage": {
+		"message": "This is not english video. I can't check is it correct segmentation or not."
 	},
 
 	"Blank": {

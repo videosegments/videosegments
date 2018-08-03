@@ -1,0 +1,362 @@
+{
+	"extensionName": {
+		"message": "Cut YouTube Videos with VideoSegments"
+	},
+	"extensionDescription": {
+		"message": "Самый простой способ удалить скучный контент из видео. Подходит для любителей музыки."
+	},
+
+	"TabSettings": {
+		"message": "Настройки"
+	},
+	"TabPlayback": {
+		"message": "Воспроизведение"
+	},
+	"TabAcceleration": {
+		"message": "Ускорение"
+	},
+	"TabFilters": {
+		"message": "Фильтры"
+	},
+	"TabCommunity": {
+		"message": "Сообщество"
+	},
+
+	"Parameter": {
+		"message": "Параметр"
+	},
+	"Value": {
+		"message": "Значение"
+	},
+
+	"DatabasePriority": {
+		"message": "Приоритет датабазы"
+	},
+	"Local": {
+		"message": "Локальная"
+	},
+	"Community": {
+		"message": "Сообщества"
+	},
+	"ShowPanel": {
+		"message": "Отображение панели"
+	},
+	"Always": {
+		"message": "Всегда"
+	},
+	"Empty": {
+		"message": "Пусто"
+	},
+	"Never": {
+		"message": "Никогда"
+	},
+	"ShareNotificationSize": {
+		"message": "Размер уведомления при отправке"
+	},
+	"Big": {
+		"message": "Большое"
+	},
+	"Small": {
+		"message": "Маленькое"
+	},
+	"PanelSize": {
+		"message": "Размер панели (?)"
+	},
+	"Maximized": {
+		"message": "Раскрыта"
+	},
+	"Compact": {
+		"message": "Компактна"
+	},
+	"Minimized": {
+		"message": "Сжата"
+	},
+	"SegmentbarLocation": {
+		"message": "Полоса сегментов (?)"
+	},
+	"Below": {
+		"message": "Снизу"
+	},
+	"Overlay": {
+		"message": "Поверх"
+	},
+	"Behind": {
+		"message": "Сзади"
+	},
+	"Hide": {
+		"message": "Скрыть"
+	},
+	"PanelMode": {
+		"message": "Режим панели"
+	},
+	"Normal": {
+		"message": "Обычный"
+	},
+	"Expert": {
+		"message": "Эксперт"
+	},
+	"RequestTimeout": {
+		"message": "Ожидание запроса, секунды (?)"
+	},
+	"NotificationsDuration": {
+		"message": "Длительность уведомления, секунды (?)"
+	},
+	"PanelOpacity": {
+		"message": "Прозрачность панели, %"
+	},
+	"FullscreenPanelOpacity": {
+		"message": "Прозрачность панели в полном экране, %"
+	},
+	"ResetPanelPosition": {
+		"message": "Сбросить позицию панели"
+	},
+	"ChangesAfterRestart": {
+		"message": "заработает после смены карты или обновлении страницы"
+	},
+
+	"Color": {
+		"message": "Цвет"
+	},
+	"Segment": {
+		"message": "Сегмент"
+	},
+	"Action": {
+		"message": "Действие"
+	},
+	"Content": {
+		"message": "Контент"
+	},
+	"AdContent": {
+		"message": "Рекл. контент"
+	},
+	"Intro": {
+		"message": "Вступление"
+	},
+	"Credits": {
+		"message": "Титры"
+	},
+	"Advertisement": {
+		"message": "Реклама"
+	},
+	"Cutscene": {
+		"message": "Вставка"
+	},
+	"Offtop": {
+		"message": "Оффтоп"
+	},
+	"Interactive": {
+		"message": "Интерактив"
+	},
+	"Garbage": {
+		"message": "Мусор"
+	},
+	"EverythingElse": {
+		"message": "Всё остальное"
+	},
+	"Play": {
+		"message": "Играть"
+	},
+	"Skip": {
+		"message": "Пропускать"
+	},
+	"pl": {
+		"message": "играть "
+	},
+	"sk": {
+		"message": "пропуск"
+	},
+	"MaxLength": {
+		"message": "Макс. длина"
+	},
+	"Speed": {
+		"message": "Скорость"
+	},
+
+	"ForVideosWithoutSegmentation": {
+		"message": "(для видео без сегментации)"
+	},
+	"ChannelBasedFilter": {
+		"message": "Фильтр по каналу"
+	},
+	"GetCurrent": {
+		"message": "Текущий"
+	},
+	"Search": {
+		"message": "Поиск"
+	},
+	"SkipFrom": {
+		"message": "Пропускать с "
+	},
+	"To": {
+		"message": "до"
+	},
+	"Second": {
+		"message": "секунды"
+	},
+	"SkipLast": {
+		"message": "Пропустить последние"
+	},
+	"SecondOrSeconds": {
+		"message": "секунд"
+	},
+	"Delete": {
+		"message": "Удалить"
+	},
+	"Apply": {
+		"message": "Принять"
+	},
+	"Planned": {
+		"message": "Запланировано"
+	},
+	"PostSilenceRemoval": {
+		"message": "Автоматическое обнаружение тишины"
+	},
+	"SoundFilter": {
+		"message": "Фильтр по звуку"
+	},
+	"ImageFilter": {
+		"message": "Фильтр по изображению"
+	},
+
+	"Loading": {
+		"message": "Загрузка"
+	},
+	"OpenNextPendingRequest": {
+		"message": "Открыть следующий запрос"
+	},
+	"DisplayPendingRequestsCount": {
+		"message": "Отображать число запросов"
+	},
+
+	"ReviewQueue": {
+		"message": "Очередь"
+	},
+	"ReportBug": {
+		"message": "Сообщить об ошибке"
+	},
+	"RateExtension": {
+		"message": "Оценить расширение"
+	},
+
+	"StartCut": {
+		"message": "Начать обрезку"
+	},
+	"EndCut": {
+		"message": "Закончить обрезку"
+	},
+
+	"content": {
+		"message": "Контент"
+	},
+	"intro": {
+		"message": "Вступлен"
+	},
+	"credits": {
+		"message": "Титры"
+	},
+	"cutscene": {
+		"message": "Вставка"
+	},
+	"advert": {
+		"message": "Реклама"
+	},
+	"adcont": {
+		"message": "РеклКонт"
+	},
+	"interact": {
+		"message": "Интеракт"
+	},
+	"offtop": {
+		"message": "Оффтоп"
+	},
+	"garbage": {
+		"message": "Мусор"
+	},
+	"origin": {
+		"message": "Источник"
+	},
+	"share": {
+		"message": "Поделиться"
+	},
+
+	"community": {
+		"message": "Сообщество"
+	},
+	"noSegmentation": {
+		"message": "Нет сегментации"
+	},
+	"local": {
+		"message": "Локальная"
+	},
+	"filtered": {
+		"message": "Фильтры"
+	},
+	"pending": {
+		"message": "Запрос"
+	},
+	"savedLocally": {
+		"message": "Сохранено локально"
+	},
+	"deleted": {
+		"message": "Удалено"
+	},
+
+	"sharingSuccess": {
+		"message": "Успех!"
+	},
+	"successSended": {
+		"message": "Сегментация отправлена на рассмотрение! Спасибо за вклад."
+	},
+	"successAdded": {
+		"message": "Сегментация добавлена в базу данных."
+	},
+	"successUpdated": {
+		"message": "Сегментация обновлена в базе данных."
+	},
+	"successAccepted": {
+		"message": "Запрос принят."
+	},
+	"successRejected": {
+		"message": "Запрос отклонён."
+	},
+	"successOverriden": {
+		"message": "Запрос исправлен."
+	},
+	"sharingFailed": {
+		"message": "Отправка не удалась."
+	},
+	"failedTimeout": {
+		"message": "Вышло время на исправление сегментации. Пожалуйста, сообщите модератору, чтобы обновить сегментацию."
+	},
+	"failedSegmented": {
+		"message": "Это видео уже имеет одобренную вручную сегментацию."
+	},
+	"failedNoChangesInSegmentation": {
+		"message": "Вы уже отправляли эту сегментацию. Да, если вы что-либо измените, то вы сможете отправить сегментацию вновь. Пожалуйста, не делайте этого. Используйте эту возможность только тогда, когда вы хотите внести изменения в уже отправленную сегментацию. Я всё равно рассмотрю только последний запрос, а остальное удалю."
+	},
+	"sharingRejected": {
+		"message": "Сегментация отклонена автоматической системой проверки."
+	},
+	"rejectedUnlisted": {
+		"message": "Это видео скрыто. Я не смогу проверить правильность сегментации. Только зарегистрированные пользователи с 100+ очками репутации могут присылать такие видео."
+	},
+	"rejectedStream": {
+		"message": "Это стрим. Только зарегистрированные пользователи с 5+ очками репутации могут присылать такие видео."
+	},
+	"rejectedViews": {
+		"message": "У видео меньше чем 50000 просмотров. Только зарегистрированные пользователи с 3+ очками репутации могут присылать такие видео."
+	},
+	"rejectedLong": {
+		"message": "Видео длиннее одного часа. Только зарегистрированные пользователи могут присылать такие видео."
+	},
+	"rejectedSegmentation": {
+		"message": "Моя система думает, что это - заведомо неправильная сегментация. Однако для зарегистрированных пользователей с 1+ очками репутации эта система отключена."
+	},
+	"rejectedLanguage": {
+		"message": "Видео не на англ/ру языке. Я не могу проверить, правильная ли это сегментация."
+	},
+
+	"Blank": {
+		"message": ""
+	}
+}

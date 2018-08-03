@@ -261,6 +261,7 @@
 
 #vs-editor-share {
     font-family: courier;
+    text-align: center;
     font-size: 11px;
     width: 40%;
 }
@@ -325,7 +326,7 @@
     box-shadow: 0 0 4px 1px rgba(0, 0, 0, 0.2);
     animation-name: animatetop;
     animation-duration: 0.4s;
-    width: 400px;
+    width: 30%;
     top: 100px;
 }
 
@@ -344,6 +345,7 @@
     padding: 5px 10px;
     font-size: 140%;
     text-align: center;
+    margin-bottom: 5px;
 }
 
 .vs-big-modal-disable {
@@ -353,6 +355,10 @@
 
 .vs-big-modal-disable-text {
     font-size: 100%;
+}
+
+.vs-big-modal-close {
+    margin-top: 10px;
 }
 
 @keyframes animatetop {
