@@ -356,6 +356,25 @@
 		"message": "This is not english video. I can't check is it correct segmentation or not."
 	},
 
+	"ThankYouForInstallation": {
+		"message": "Thank you for installing VideoSegments!"
+	},
+	"SomeTips": {
+		"message": "Here some tips on how to make your expirence more enjoyable:"
+	},
+	"SmartCursor": {
+		"message": "Use keyboard arrows to quickly and precisely adjust time of segment."
+	},
+	"SliderDescription": {
+		"message": "You can make panel transparent or opaque using slider."
+	},
+	"CheckOutSettings": {
+		"message": "Check out settings, extension is very flexible."
+	},
+	"Close": {
+		"message": "Close"
+	},
+
 	"Blank": {
 		"message": ""
 	}

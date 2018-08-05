@@ -51,6 +51,7 @@
 		"editor/entry.html",
 		"modals/small.html",
 		"modals/big.html",
-		"modals/captcha.html"
+		"modals/captcha.html",
+		"tutorial/tutorial.html"
 	]
 }

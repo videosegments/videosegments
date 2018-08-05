@@ -101,8 +101,12 @@ class Editor {
         this.hookButtons();
         this.hookActions();
 
-        let origin = ((typeof this.segmentation.origin !== 'undefined') ? this.segmentation.origin : 'no-segmentation');
+        let origin = ((typeof this.segmentation.origin !== 'undefined') ? this.segmentation.origin : 'noSegmentation');
         this.setSegmentationOrigin(origin);
+
+        if (origin === 'community') {
+            document.getElementById('vs-editor-share').style.display = 'none';
+        }
     }
 
     createSegmentsEntries() {
@@ -287,11 +291,15 @@ class Editor {
         }
 
         function drag(e) {
-            self.panel.style.left = (e.clientX - 12 - parseInt(getStyle(self.panel, 'margin-left').slice(0, -2)) * 2) + 'px';
-            self.panel.style.top = (e.clientY - 7) + 'px';
+            // https://stackoverflow.com/a/3464890
+            let doc = document.documentElement;
+            let top = (window.pageYOffset || doc.scrollTop) - (doc.clientTop || 0);
 
-            self.updatePosition();
+            self.panel.style.left = (e.clientX - 12 - parseInt(getStyle(self.panel, 'margin-left').slice(0, -2)) * 2) + 'px';
+            self.panel.style.top = (top + e.clientY - 7) + 'px';
+
             window.getSelection().removeAllRanges();
+            self.updatePosition();
         }
 
         function endDrag() {
@@ -602,7 +610,11 @@ class Editor {
 
     async shareSegmentation() {
         if (this.lastShareIteration === this.iterations) {
-            sendSmallModal('1', 'noChangesInSegmentation');
+            if (settings.popupSize === 'big') {
+                sendBigModal('1', 'noChangesInSegmentation');
+            } else {
+                sendSmallModal('1', 'noChangesInSegmentation');
+            }
             return;
         }
         this.lastShareIteration = this.iterations;
@@ -625,10 +637,14 @@ class Editor {
                 this.checkCaptcha(event, segmentation)
             });
         } else {
-            if (settings.popupSize === 'big') {
-                sendBigModal(response.code, response.message);
-            } else {
+            if (response.code === '0') {
                 sendSmallModal(response.code, response.message);
+            } else {
+                if (settings.popupSize === 'big') {
+                    sendBigModal(response.code, response.message);
+                } else {
+                    sendSmallModal(response.code, response.message);
+                }
             }
         }
     }

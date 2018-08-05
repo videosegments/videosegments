@@ -39,6 +39,12 @@ getSettings().then((result) => {
     settings = result;
     // start observer 
     observer = new Observer();
+
+    if (settings.tutorial === 0) {
+        if (window.parent === window) {
+            displayTutorial();
+        }
+    }
 });
 
 browser.runtime.onMessage.addListener(request => {
@@ -49,8 +55,7 @@ browser.runtime.onMessage.addListener(request => {
                 gotChannel: container.getElementsByTagName('a')[0].innerHTML
             });
         }
-    }
-    else if ( typeof request.prop !== 'undefined' ) {
+    } else if (typeof request.prop !== 'undefined') {
         observer.updateSettings(request.prop, request.value);
     }
 });

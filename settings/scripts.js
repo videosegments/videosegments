@@ -127,6 +127,28 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('review-queue').addEventListener('click', () => {
         window.open('https://db.videosegments.org/queue.php', '_blank');
     });
+
+    let clicks = 0;
+    document.getElementById('toggle-debug').addEventListener('click', () => {
+        window.getSelection().removeAllRanges();
+        clicks = clicks + 1;
+        if ( clicks > 4 ) {
+            settings.debug = !settings.debug;
+            clicks = 0;
+
+            if ( settings.debug ) {
+                document.getElementById('toggle-debug').style.color = 'red';
+            } 
+            else {
+                document.getElementById('toggle-debug').style.color = 'blue';
+            }
+
+            setTimeout(() => {
+                document.getElementById('toggle-debug').style.color = 'black';
+            }, 1000);
+            saveSettings();
+        }
+    });
 });
 
 browser.runtime.onMessage.addListener((message) => {

@@ -216,8 +216,10 @@ class Player {
         this.segmentsbar.set(this.segmentation.timestamps, this.segmentation.types, this.video.duration);
         log('segmentsbar created');
 
-        // start editor 
-        this.editor = new Editor(this, this.segmentsbar, this.video, this.id, this.segmentation);
+        if (window.parent === window) {
+            // start editor 
+            this.editor = new Editor(this, this.segmentsbar, this.video, this.id, this.segmentation);
+        }
     }
 
     // TODO: move get request to utils 
@@ -405,7 +407,7 @@ class Player {
     }
 
     onRateChangeEvent() {
-        onPlayEvent();
+        this.onPlayEvent();
     }
 
     onPauseEvent() {
@@ -424,13 +426,15 @@ class Player {
         } else if (prop === 'mode') {
             settings[prop] = value;
 
-            if ( value === 'simplified' ) {
+            if (value === 'simplified') {
                 this.segmentation = this.getSimplifiedSegmentation(this.segmentation);
-            }
-            else {
+            } else {
                 this.segmentation = this.getOriginalSegmentation(this.segmentation);
             }
-            this.editor.updateSettings(prop, {mode: value, segmentation: this.segmentation});
+            this.editor.updateSettings(prop, {
+                mode: value,
+                segmentation: this.segmentation
+            });
         } else if (prop === 'autoPauseDuration') {
             settings[prop] = value;
         } else if (prop === 'popupDurationOnSend') {

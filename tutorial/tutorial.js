@@ -18,3 +18,26 @@
     along with VideoSegments. If not, see <https://www.gnu.org/licenses/>.
 */
 
+'use strict';
+
+async function displayTutorial() {
+    injectCSS('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css');
+
+    if (document.body === null) {
+        document.addEventListener('DOMContentLoaded', () => {
+            displayTutorial()
+        })
+        return;
+    }
+
+    let content = await makeImport(browser.extension.getURL('tutorial/tutorial.html'));
+    content.getElementById('vs-tutorial-close').addEventListener('click', () => {
+        tutorial.remove();
+
+        settings.tutorial = 1;
+        saveSettings();
+    });
+
+    let tutorial = content.getElementById('vs-tutorial');
+    document.body.appendChild(tutorial);
+}

@@ -165,7 +165,7 @@ function getSettings() {
         lastUpdateId: 0,
 
         // developer
-        debug: true,
+        debug: false,
 
         // obsolete vars 
         // simplified
