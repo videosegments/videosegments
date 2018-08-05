@@ -414,7 +414,7 @@ async function checkAuth() {
 async function updatePendingRequestCount() {
     let response = await xhr_get('https://db.videosegments.org/api/v3/review.php?requests');
     if (typeof response.requests !== 'undefined') {
-        document.getElementById('pending-review-count').innerHTML = parseInt(response.requests);
+        document.getElementById('pending-review-count').textContent = parseInt(response.requests);
         browser.runtime.sendMessage({
             'updateBadge': response.requests
         });

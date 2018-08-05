@@ -32,12 +32,6 @@
 	"DatabasePriority": {
 		"message": "Приоритет датабазы"
 	},
-	"Local": {
-		"message": "Локальная"
-	},
-	"Community": {
-		"message": "Сообщества"
-	},
 	"ShowPanel": {
 		"message": "Отображение панели"
 	},
@@ -123,31 +117,31 @@
 	"Action": {
 		"message": "Действие"
 	},
-	"Content": {
+	"ContentFull": {
 		"message": "Контент"
 	},
-	"AdContent": {
+	"AdContentFull": {
 		"message": "Рекл. контент"
 	},
-	"Intro": {
+	"IntroFull": {
 		"message": "Вступление"
 	},
-	"Credits": {
+	"CreditsFull": {
 		"message": "Титры"
 	},
-	"Advertisement": {
+	"AdvertisementFull": {
 		"message": "Реклама"
 	},
-	"Cutscene": {
+	"CutsceneFull": {
 		"message": "Вставка"
 	},
-	"Offtop": {
+	"OfftopFull": {
 		"message": "Оффтоп"
 	},
-	"Interactive": {
+	"InteractiveFull": {
 		"message": "Интерактив"
 	},
-	"Garbage": {
+	"GarbageFull": {
 		"message": "Мусор"
 	},
 	"EverythingElse": {

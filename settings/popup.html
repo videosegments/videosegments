@@ -7,10 +7,10 @@
     <title class="translate-me">VideoSegments</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/spectrum/1.8.0/spectrum.min.js"></script>
+    <script src="jquery.min.js"></script>
+    <script src="popper.min.js"></script>
+    <script src="bootstrap.min.js"></script>
+    <script src="spectrum.min.js"></script>
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css" integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ"
@@ -57,8 +57,8 @@
                         <span class="translate-me">DatabasePriority</span>*</td>
                     <td class="text-center">
                         <select id="database-priority" class="border-top-0 border-left-0 border-right-0 ouline-none">
-                            <option class="translate-me" value="local">Local</option>
-                            <option class="translate-me" value="official">Community</option>
+                            <option class="translate-me" value="local">local</option>
+                            <option class="translate-me" value="official">community</option>
                         </select>
                     </td>
                 </tr>
@@ -167,7 +167,7 @@
                         <input type="text" id="color-c" class="spectrum">
                     </td>
                     <td class="text-center" title="Content of video." data-toggle="tooltip">
-                        <span class="translate-me">Content</span>
+                        <span class="translate-me">ContentFull</span>
                         <span> (?)</span>
                     </td>
                     <td>
@@ -183,7 +183,7 @@
                     </td>
                     <td class="text-center" title="Advertisement + Content in same time. This segment can not be skipped without losing important information."
                         data-toggle="tooltip">
-                        <span class="translate-me">AdContent</span>
+                        <span class="translate-me">AdContentFull</span>
                         <span> (?)</span>
                     </td>
                     <td>
@@ -198,7 +198,7 @@
                         <input type="text" id="color-i" class="spectrum">
                     </td>
                     <td class="text-center" title="Introduction in video. Often is repetetive from video to video." data-toggle="tooltip">
-                        <span class="translate-me">Intro</span>
+                        <span class="translate-me">IntroFull</span>
                         <span> (?)</span>
                     </td>
                     <td>
@@ -214,7 +214,7 @@
                     </td>
                     <td class="text-center" title="Outro of video. Often is repetetive from video to video. Might contain requests for likes, subscriptions, etc."
                         data-toggle="tooltip">
-                        <span class="translate-me">Credits</span>
+                        <span class="translate-me">CreditsFull</span>
                         <span> (?)</span>
                     </td>
                     <td>
@@ -229,7 +229,7 @@
                         <input type="text" id="color-a" class="spectrum">
                     </td>
                     <td class="text-center" title="Promotion of non-related product in video." data-toggle="tooltip">
-                        <span class="translate-me">Advertisement</span>
+                        <span class="translate-me">AdvertisementFull</span>
                         <span> (?)</span>
                     </td>
                     <td>
@@ -244,7 +244,7 @@
                         <input type="text" id="color-cs" class="spectrum">
                     </td>
                     <td class="text-center" title="Barely related to video content." data-toggle="tooltip">
-                        <span class="translate-me">Cutscene</span>
+                        <span class="translate-me">CutsceneFull</span>
                         <span> (?)</span>
                     </td>
                     <td>
@@ -259,7 +259,7 @@
                         <input type="text" id="color-o" class="spectrum">
                     </td>
                     <td class="text-center" title="Non-related to video content." data-toggle="tooltip">
-                        <span class="translate-me">Offtop</span>
+                        <span class="translate-me">OfftopFull</span>
                         <span> (?)</span>
                     </td>
                     <td>
@@ -274,7 +274,7 @@
                         <input type="text" id="color-ia" class="spectrum">
                     </td>
                     <td class="text-center" title="Interactive with viewers." data-toggle="tooltip">
-                        <span class="translate-me">Interactive</span>
+                        <span class="translate-me">InteractiveFull</span>
                         <span> (?)</span>
                     </td>
                     <td>
@@ -289,7 +289,7 @@
                         <input type="text" id="color-s" class="spectrum">
                     </td>
                     <td class="text-center" title="Agressive advertisement, roulettes, silence with static background, etc." data-toggle="tooltip">
-                        <span class="translate-me">Garbage</span>
+                        <span class="translate-me">GarbageFull</span>
                         <span> (?)</span>
                     </td>
                     <td>
@@ -316,7 +316,7 @@
                         <input type="text" id="color-pl" class="spectrum">
                     </td>
                     <td class="text-center">
-                        <span class="translate-me">Content</span>
+                        <span class="translate-me">ContentFull</span>
                     </td>
                     <td>
                         <span class="translate-me">Play</span>
@@ -351,7 +351,7 @@
             <tbody>
                 <tr>
                     <td class="text-center">
-                        <span class="translate-me">Content</span>
+                        <span class="translate-me">ContentFull</span>
                     </td>
                     <td class="text-center">
                         <input id="length-c" type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
@@ -362,7 +362,7 @@
                 </tr>
                 <tr>
                     <td class="text-center">
-                        <span class="translate-me">AdContent</span>
+                        <span class="translate-me">AdContentFull</span>
                     </td>
                     <td class="text-center">
                         <input id="length-ac" type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
@@ -373,7 +373,7 @@
                 </tr>
                 <tr>
                     <td class="text-center">
-                        <span class="translate-me">Intro</span>
+                        <span class="translate-me">IntroFull</span>
                     </td>
                     <td class="text-center">
                         <input id="length-i" type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
@@ -384,7 +384,7 @@
                 </tr>
                 <tr>
                     <td class="text-center">
-                        <span class="translate-me">Credits</span>
+                        <span class="translate-me">CreditsFull</span>
                     </td>
                     <td class="text-center">
                         <input id="length-cr" type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
@@ -395,7 +395,7 @@
                 </tr>
                 <tr>
                     <td class="text-center">
-                        <span class="translate-me">Advertisement</span>
+                        <span class="translate-me">AdvertisementFull</span>
                     </td>
                     <td class="text-center">
                         <input id="length-a" type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
@@ -406,7 +406,7 @@
                 </tr>
                 <tr>
                     <td class="text-center">
-                        <span class="translate-me">Cutscene</span>
+                        <span class="translate-me">CutsceneFull</span>
                     </td>
                     <td class="text-center">
                         <input id="length-cs" type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
@@ -417,7 +417,7 @@
                 </tr>
                 <tr>
                     <td class="text-center">
-                        <span class="translate-me">Offtop</span>
+                        <span class="translate-me">OfftopFull</span>
                     </td>
                     <td class="text-center">
                         <input id="length-o" type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
@@ -428,7 +428,7 @@
                 </tr>
                 <tr>
                     <td class="text-center">
-                        <span class="translate-me">Interactive</span>
+                        <span class="translate-me">InteractiveFull</span>
                     </td>
                     <td class="text-center">
                         <input id="length-ia" type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
@@ -439,7 +439,7 @@
                 </tr>
                 <tr>
                     <td class="text-center">
-                        <span class="translate-me">Garbage</span>
+                        <span class="translate-me">GarbageFull</span>
                     </td>
                     <td class="text-center">
                         <input id="length-s" type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
@@ -464,7 +464,7 @@
             <tbody>
                 <tr>
                     <td class="text-center">
-                        <span class="translate-me">Content</span>
+                        <span class="translate-me">ContentFull</span>
                     </td>
                     <td class="text-center">
                         <input id="length-pl" type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">

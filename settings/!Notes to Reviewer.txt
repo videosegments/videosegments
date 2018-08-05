@@ -1,0 +1,17 @@
+links to minified versions:
+https://cdnjs.cloudflare.com/ajax/libs/spectrum/1.8.0/spectrum.min.js 
+https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js 
+https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js 
+https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js
+
+their full version:
+https://cdnjs.cloudflare.com/ajax/libs/spectrum/1.8.0/spectrum.js 
+https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.js 
+https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.js 
+https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.js
+
+instructions on how to produce minified versions is somewhere there (ikd where exactly):
+https://github.com/bgrins/spectrum - spectrum.js 
+https://github.com/jquery/jquery - jquery.js 
+https://github.com/FezVrasta/popper.js - popper.js 
+https://github.com/twbs/bootstrap - bootstrap.js

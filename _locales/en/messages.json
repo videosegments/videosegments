@@ -32,12 +32,6 @@
 	"DatabasePriority": {
 		"message": "Database priority"
 	},
-	"Local": {
-		"message": "Local"
-	},
-	"Community": {
-		"message": "Community"
-	},
 	"ShowPanel": {
 		"message": "Show panel"
 	},
@@ -123,31 +117,31 @@
 	"Action": {
 		"message": "Action"
 	},
-	"Content": {
+	"ContentFull": {
 		"message": "Content"
 	},
-	"AdContent": {
+	"AdContentFull": {
 		"message": "AdContent"
 	},
-	"Intro": {
+	"IntroFull": {
 		"message": "Intro"
 	},
-	"Credits": {
+	"CreditsFull": {
 		"message": "Credits"
 	},
-	"Advertisement": {
+	"AdvertisementFull": {
 		"message": "Advertisement"
 	},
-	"Cutscene": {
+	"CutsceneFull": {
 		"message": "Cutscene"
 	},
-	"Offtop": {
+	"OfftopFull": {
 		"message": "Offtop"
 	},
-	"Interactive": {
+	"InteractiveFull": {
 		"message": "Interactive"
 	},
-	"Garbage": {
+	"GarbageFull": {
 		"message": "Garbage"
 	},
 	"EverythingElse": {
