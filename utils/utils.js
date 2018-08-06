@@ -21,21 +21,45 @@
 'use strict';
 
 function makeImport(file) {
-    let link = document.createElement('link');
-    link.rel = 'import';
-    link.href = file;
+    if (isFirefox) {
+        let xhr = new XMLHttpRequest();
+        xhr.open('GET', file);
+        log('firefox');
 
-    return new Promise(resolve => {
-        link.onload = () => {
-            let content = link.import.cloneNode(true);
-            translateNodes(content);
-            link.remove();
+        return new Promise(resolve => {
+            xhr.onreadystatechange = () => {
+                if (xhr.readyState == 4) {
+                    if (xhr.status == 200) {
+                        let parser = new DOMParser()
+                        let doc = parser.parseFromString(xhr.responseText, "text/html");
+                        translateNodes(doc);
+                        resolve(doc);
+                    }
+                }
+            }
 
-            resolve(content);
-        }
+            xhr.setRequestHeader("content-type", "application/x-www-form-urlencoded");
+            xhr.send();
+        });
+    }
+    else {
+        let link = document.createElement('link');
+        link.rel = 'import';
+        link.href = file;
+        log('chrome');
 
-        document.head.appendChild(link);
-    })
+        return new Promise(resolve => {
+            link.onload = () => {
+                let content = link.import.cloneNode(true);
+                translateNodes(content);
+                link.remove();
+
+                resolve(content);
+            }
+
+            document.head.appendChild(link);
+        });
+    }
 }
 
 function translateNodes(target) {

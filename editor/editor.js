@@ -70,6 +70,8 @@ class Editor {
         } else {
             this.panel.style.opacity = settings.segmentationToolsOpacity / 100;
         }
+        
+        log(this.panel.style.left,this.panel.style.top,this.panel.style.opacity);
 
         let opacitySlider = document.getElementById('vs-editor-opacity-slider');
         opacitySlider.value = settings.segmentationToolsOpacity / 100;

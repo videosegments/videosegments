@@ -23,6 +23,8 @@
 // cross browser support 
 window.browser = window.browser || window.chrome;
 
+let isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
+
 // global variables for settings and console.log output 
 let settings, log, observer;
 // load settings 
