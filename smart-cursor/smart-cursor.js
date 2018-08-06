@@ -98,7 +98,7 @@ class SmartCursor {
         element.setSelectionRange(selectionStart, selectionEnd);
     }
 
-    onKeyDown() {
+    onKeyDown(event) {
         let element = this.parent;
         if (element.readOnly) {
             return;
@@ -219,7 +219,7 @@ class SmartCursor {
         }
     }
 
-    onKeyUp() {
+    onKeyUp(event) {
         let element = this.parent;
         if (element.readOnly) {
             return;
