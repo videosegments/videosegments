@@ -24,7 +24,6 @@ function makeImport(file) {
     if (isFirefox) {
         let xhr = new XMLHttpRequest();
         xhr.open('GET', file);
-        log('firefox');
 
         return new Promise(resolve => {
             xhr.onreadystatechange = () => {
@@ -46,7 +45,6 @@ function makeImport(file) {
         let link = document.createElement('link');
         link.rel = 'import';
         link.href = file;
-        log('chrome');
 
         return new Promise(resolve => {
             link.onload = () => {
