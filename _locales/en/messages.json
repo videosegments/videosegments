@@ -273,6 +273,9 @@
 		"message": "Share"
 	},
 
+	"official": {
+		"message": "Community"
+	},
 	"community": {
 		"message": "Community"
 	},
@@ -348,6 +351,9 @@
 	},
 	"rejectedLanguage": {
 		"message": "This is not english video. I can't check is it correct segmentation or not."
+	},
+	"NextTimeInSmallPopup": {
+		"message": "Next time show it in very small popup"
 	},
 
 	"ThankYouForInstallation": {

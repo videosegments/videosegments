@@ -639,6 +639,13 @@ class Editor {
         } else {
             if (response.code === '0') {
                 sendSmallModal(response.code, response.message);
+
+                if (response.message === 'added' || response.message === 'updated' || response.message === 'accepted' || response.message === 'overriden') {
+                    this.setSegmentationOrigin('official');
+                }
+                else if (response.message === 'sended') {
+
+                }
             } else {
                 if (settings.popupSize === 'big') {
                     sendBigModal(response.code, response.message);
@@ -766,12 +773,18 @@ class Editor {
 
             if (this.fullscreen !== true) {
                 this.panel.style.opacity = value / 100.0;
+                
+                let opacitySlider = document.getElementById('vs-editor-opacity-slider');
+                opacitySlider.value = value / 100;
             }
         } else if (prop === 'segmentationToolsFullscreenOpacity') {
             settings[prop] = value;
 
             if (this.fullscreen === true) {
                 this.panel.style.opacity = value / 100.0;
+
+                let opacitySlider = document.getElementById('vs-editor-opacity-slider');
+                opacitySlider.value = value / 100;
             }
         } else if (prop === 'position') {
             settings.editor.posX = value;

@@ -116,7 +116,6 @@ class Player {
 
     onGotSegmentation(origin, segmentation, secondaryOrigin) {
         log('got ' + ((settings.databasePriority === origin) ? 'primary' : 'secondary') + ' segmentation:', origin, segmentation);
-        log(settings.databasePriority, origin);
 
         // save current segmentation 
         this[origin] = segmentation;

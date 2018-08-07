@@ -273,6 +273,9 @@
 		"message": "Поделиться"
 	},
 
+	"official": {
+		"message": "Сообщество"
+	},
 	"community": {
 		"message": "Сообщество"
 	},
@@ -348,6 +351,9 @@
 	},
 	"rejectedLanguage": {
 		"message": "Видео не на англ/ру языке. Я не могу проверить, правильная ли это сегментация."
+	},
+	"NextTimeInSmallPopup": {
+		"message": "В следующий раз показывать это сообщение в маленьком окне"
 	},
 
 	"ThankYouForInstallation": {
