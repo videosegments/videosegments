@@ -21,36 +21,44 @@
 'use strict';
 
 class Player {
-    constructor(video) {
+    constructor(video, mutePlayEvent) {
         // save video reference 
         this.video = video;
+
+        // acceleration vars 
+        this.prevPlaybackRate = null;
+        this.preventRateChangedEvent = false;
+        this.muteEvent = -1;
+
+        if (mutePlayEvent) {
+            this.muteEvent = 1;
+        }
 
         // extract youtube video ID 
         let tmp = document.getElementsByClassName('ytp-title-link')[0];
         let src = (tmp ? tmp.href : null) || (this.video ? this.video.src : null);
         this.id = src.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/ ]{11})/i)[1];
 
-        let self = this;
         // play event will be called several times before video start 
         this.onPlayBeforeLoadedContext = () => {
             // if autopause enabled 
             if (settings.autoPauseDuration > 0.0) {
                 // round video's current time because it already played 0.0001'th of second  
-                self.video.currentTime = Math.round(self.video.currentTime);
-                log('autopausing video at: ', self.video.currentTime);
+                this.video.currentTime = Math.round(this.video.currentTime);
+                log('autopausing video at: ', this.video.currentTime);
 
                 // if video is not paused 
-                if (self.video.paused === false) {
+                if (this.video.paused === false) {
                     // pause video 
-                    self.video.pause();
+                    this.video.pause();
 
                     // if autopause timer doesn't exists 
-                    if (!self.timer) {
+                    if (!this.timer) {
                         // set autopause timer 
-                        self.timer = setTimeout(() => {
+                        this.timer = setTimeout(() => {
                             log('autopause timeout');
                             this.video.removeEventListener('play', this.onPlayBeforeLoadedContext);
-                            self.video.play();
+                            this.video.play();
                         }, settings.autoPauseDuration * 1000);
                     }
                 }
@@ -69,9 +77,9 @@ class Player {
             log('video stream is ready');
         } else {
             // when video is ready to play 
-            let ctx = function () {
-                self.video.removeEventListener('canplay', ctx);
-                self.getSegmentation();
+            let ctx = () => {
+                this.video.removeEventListener('canplay', ctx);
+                this.getSegmentation();
             }
 
             // wait for video 
@@ -361,14 +369,25 @@ class Player {
         }
     }
 
-    onPlayEvent() {
+    onPlayEvent(event) {
         log('player::onPlayEvent: ', this.video.currentTime);
+        if (typeof event === 'undefined') {
+            return;
+        }
+
+        log(this.muteEvent === 0);
+        if (this.muteEvent === 0) {
+            return;
+        }
+        this.muteEvent = this.muteEvent - 1;
 
         if (this.segmentation) {
             if (this.timer) {
                 clearTimeout(this.timer);
                 this.timer = undefined;
             }
+
+            this.restoreSpeed();
 
             let segmentToRewind = this.findNextSegmentToRewind(0);
             if (segmentToRewind !== null) {
@@ -380,16 +399,41 @@ class Player {
     tryRewind(toSegmentNumber) {
         let delay = this.segmentation.timestamps[toSegmentNumber] - this.video.currentTime;
         if (delay <= 0) {
-            this.video.currentTime = this.segmentation.timestamps[toSegmentNumber + 1];
-            toSegmentNumber = this.findNextSegmentToRewind(toSegmentNumber);
-            delay = this.segmentation.timestamps[toSegmentNumber] - this.video.currentTime;
+            let duration = this.segmentation.timestamps[toSegmentNumber + 1] - this.video.currentTime;
+            if (duration <= settings.segments[this.segmentation.types[toSegmentNumber]].duration) {
+                this.prevPlaybackRate = this.video.playbackRate;
+                this.preventRateChangedEvent = true;
+
+                this.video.playbackRate = settings.segments[this.segmentation.types[toSegmentNumber]].speed;
+
+                delay = duration * (1000 / this.video.playbackRate);
+                // timers have awful precision so start a little bit earlier
+                if (delay > 500) {
+                    // TODO: timers precision is about 10ms, so it can be calculated more precisily depending on speed
+                    delay -= 40;
+                }
+                this.timer = setTimeout(() => { this.restoreSpeed(toSegmentNumber); this.onPlayEvent(); }, delay);
+            }
+            else {
+                this.video.currentTime = this.segmentation.timestamps[toSegmentNumber + 1];
+
+                toSegmentNumber = this.findNextSegmentToRewind(toSegmentNumber);
+                delay = this.segmentation.timestamps[toSegmentNumber] - this.video.currentTime;
+            }
         }
 
         if (toSegmentNumber !== null) {
-            let self = this;
-            this.timer = setTimeout(function () {
-                self.tryRewind(toSegmentNumber);
+            this.timer = setTimeout(() => {
+                this.tryRewind(toSegmentNumber);
             }, delay * (1000 / this.video.playbackRate));
+        }
+    }
+
+    restoreSpeed() {
+        if (this.prevPlaybackRate !== null) {
+            this.preventRateChangedEvent = true;
+            this.video.playbackRate = this.prevPlaybackRate;
+            this.prevPlaybackRate = null;
         }
     }
 
@@ -407,7 +451,14 @@ class Player {
     }
 
     onRateChangeEvent() {
-        this.onPlayEvent();
+        log('player::onRateChangeEvent: ', this.video.currentTime);
+
+        if (this.preventRateChangedEvent === false) {
+            this.onPlayEvent();
+        }
+        else {
+            this.preventRateChangedEvent = false;
+        }
     }
 
     onPauseEvent() {

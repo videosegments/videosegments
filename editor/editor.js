@@ -26,7 +26,7 @@ class Editor {
         //     return;
         // }
 
-        injectCSS('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css');
+        injectCSS('https://use.fontawesome.com/releases/v5.2.0/css/all.css');
 
         this.player = player;
         this.segmentsbar = segmentsbar;
@@ -246,7 +246,7 @@ class Editor {
     hookControls() {
         this.showYouTubeControlsOnHover();
         this.hookMoveIcon();
-        // this.hookVisibilityIcon();
+        this.hookAccelerationIcon();
         this.hookOpacitySlider();
         this.hookMinimizeIcon();
         this.hookCloseIcon();
@@ -318,21 +318,36 @@ class Editor {
         }
     }
 
-    hookVisibilityIcon() {
-        let icon = document.getElementById('vs-editor-eye');
-        icon.addEventListener('click', () => {
-            settings.hidePlayingSegmentBars = !settings.hidePlayingSegmentBars;
-            saveSettings();
-
-            if (settings.hidePlayingSegmentBars) {
-                icon.classList.remove('fa-eye');
-                icon.classList.add('fa-eye-slash');
-            } else {
-                icon.classList.remove('fa-eye-slash');
-                icon.classList.add('fa-eye');
+    hookAccelerationIcon() {
+        let icon = document.getElementById('vs-editor-acceleration');
+        icon.addEventListener('wheel', event => {
+            log(event);
+            if (event.deltaY < 0.0) {
+                // chrome will throw error if playback rate > 16.0
+                let newPlaybackRate = this.video.playbackRate + 0.5;
+                if (newPlaybackRate > 16.0) {
+                    newPlaybackRate = 16.0;
+                }
+                this.video.playbackRate = newPlaybackRate;
             }
+            else if (event.deltaY > 0.0) {
+                let newPlaybackRate = this.video.playbackRate - 0.5;
+                if (newPlaybackRate <= 0.0) {
+                    newPlaybackRate = 0.0;
+                }
+                this.video.playbackRate = newPlaybackRate;
+                
+            }
+            event.preventDefault();
+        })
 
-            this.segmentsbar.updateOpacity(this.segmentation.types);
+        icon.addEventListener('click', () => {
+            if (this.video.playbackRate !== 1.0) {
+                this.video.playbackRate = 1.0;
+            }
+            else {
+                this.video.playbackRate = 2.0;
+            }
         })
     }
 

@@ -355,6 +355,9 @@
 	"NextTimeInSmallPopup": {
 		"message": "Next time show it in very small popup"
 	},
+	"ClosePopup": {
+		"message": "Close popup"
+	},
 
 	"ThankYouForInstallation": {
 		"message": "Thank you for installing VideoSegments!"

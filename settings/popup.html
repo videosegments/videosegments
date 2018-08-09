@@ -29,7 +29,7 @@
             <li id="tab-playback" class="nav-item m-auto text-center w-100">
                 <a class="nav-link fa fa-play w-100" href="#"></a>
             </li>
-            <li id="tab-acceleration" class="nav-item m-auto text-center w-100" style="display: none">
+            <li id="tab-acceleration" class="nav-item m-auto text-center w-100">
                 <a class="nav-link fa fa-forward w-100" href="#"></a>
             </li>
             <li id="tab-filters" class="nav-item m-auto text-center w-100">
@@ -104,7 +104,8 @@
                 </tr>
                 <tr>
                     <td>
-                        <span class="translate-me">PanelMode</span></td>
+                        <span class="translate-me">PanelMode</span>
+                    </td>
                     <td class="text-center">
                         <select id="panel-mode" class="border-top-0 border-left-0 border-right-0 ouline-none">
                             <option class="translate-me" value="simplified">Normal</option>
@@ -344,8 +345,10 @@
             <thead>
                 <tr>
                     <th class="translate-me">Segment</th>
-                    <th class="translate-me" title="Max. length of segment in seconds to be accelerated" data-toggle="tooltip">Max. length (?)</th>
-                    <th class="translate-me" title="Accelerated speed in %" data-toggle="tooltip">Speed (?)</th>
+                    <th title="Max. duration of segment in seconds to be accelerated. 0 = disabled" data-toggle="tooltip">
+                        <span class="translate-me">MaxLength</span> (?)</th>
+                    <th title="Accelerated speed in %" data-toggle="tooltip">
+                        <span class="translate-me">Speed</span> (?)</th>
                 </tr>
             </thead>
             <tbody>
@@ -455,7 +458,7 @@
             <thead>
                 <tr>
                     <th class="translate-me">Segment</th>
-                    <th title="Max. duration of segment in seconds to be accelerated" data-toggle="tooltip">
+                    <th title="Max. duration of segment in seconds to be accelerated. 0 = disabled" data-toggle="tooltip">
                         <span class="translate-me">MaxLength</span> (?)</th>
                     <th title="Accelerated speed in %" data-toggle="tooltip">
                         <span class="translate-me">Speed</span> (?)</th>

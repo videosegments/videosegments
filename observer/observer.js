@@ -26,16 +26,23 @@ class Observer {
         // https://stackoverflow.com/a/39332340
         this.collection = document.getElementsByTagName('video');
 
-        let self = this;
         // observe mutations in window.body 
         this.observer = new MutationObserver(() => {
-            self.onBodyMutations()
+            this.onBodyMutations()
         });
         this.observer.observe(document.documentElement, {
             childList: true,
             subtree: true
         });
 
+        // youtube throw second "play" event in chrome if new tab is video 
+        this.mutePlayEvent = false;
+        if (typeof InstallTrigger === 'undefined') {
+            let match = window.location.href.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/ ]{11})/i);
+            if (match && match[1].length == 11) { 
+                this.mutePlayEvent = true;
+            }
+        }
         log('looking for player...');
     }
 
@@ -47,18 +54,18 @@ class Observer {
 
             log('player found');
 
-            let self = this;
             // start observing for video.src changes 
             this.observer = new MutationObserver(() => {
-                self.onVideoChanges()
+                this.onVideoChanges()
             });
-            this.observer.observe(self.collection[0], {
+            this.observer.observe(this.collection[0], {
                 attributes: true,
                 attributeFilter: ['src']
             });
 
             // start video player wrapper 
-            this.player = new Player(self.collection[0]);
+            this.player = new Player(this.collection[0], this.mutePlayEvent);
+            this.mutePlayEvent = false;
         }
     }
 
@@ -68,10 +75,9 @@ class Observer {
 
         log('video src changed');
 
-        let self = this;
         // observe mutations in window.body 
         this.observer = new MutationObserver(() => {
-            self.onBodyMutations()
+            this.onBodyMutations()
         });
         this.observer.observe(document.documentElement, {
             childList: true,
