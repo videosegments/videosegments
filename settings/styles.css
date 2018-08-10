@@ -82,3 +82,8 @@ div .sp-replacer {
     height: 19px;
     background: white;
 }
+
+#table-settings {
+    max-height: 340px;
+    overflow-y: scroll;
+}

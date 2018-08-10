@@ -44,101 +44,121 @@
     <div id="settings" class="tab-content" style="display: none">
         <h2 class="text-center translate-me">TabSettings</h2>
 
-        <table class="table table-bordered table-sm mt-3 mb-0">
-            <thead>
-                <tr>
-                    <th class="translate-me">Parameter</th>
-                    <th id="toggle-debug" class="translate-me">Value</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>
-                        <span class="translate-me">DatabasePriority</span>*</td>
-                    <td class="text-center">
-                        <select id="database-priority" class="border-top-0 border-left-0 border-right-0 ouline-none">
-                            <option class="translate-me" value="local">local</option>
-                            <option class="translate-me" value="official">community</option>
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="translate-me">ShowPanel</td>
-                    <td class="text-center">
-                        <select id="show-panel-mode" class="border-top-0 border-left-0 border-right-0 ouline-none">
-                            <option class="translate-me" value="always">Always</option>
-                            <option class="translate-me" value="empty">Empty</option>
-                            <option class="translate-me" value="never">Never</option>
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="translate-me" title="Compact size is minimized size but when mouse is hovering panel will be maximized" data-toggle="tooltip">PanelSize</td>
-                    <td class="text-center">
-                        <select id="panel-size" class="border-top-0 border-left-0 border-right-0 ouline-none">
-                            <option class="translate-me" value="maximized">Maximized</option>
-                            <option class="translate-me" value="compact">Compact</option>
-                            <option class="translate-me" value="minimized">Minimized</option>
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="translate-me">ShareNotificationSize</td>
-                    <td class="text-center">
-                        <select id="popup-size" class="border-top-0 border-left-0 border-right-0 ouline-none">
-                            <option class="translate-me" value="big">Big</option>
-                            <option class="translate-me" value="small">Small</option>
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="translate-me" title="Position of segmentsbar relative to YouTube progress bar" data-toggle="tooltip">SegmentbarLocation</td>
-                    <td class="text-center">
-                        <select id="segmentsbar-location" class="border-top-0 border-left-0 border-right-0 ouline-none">
-                            <option class="translate-me" value="separated">Below</option>
-                            <option class="translate-me" value="overlay">Overlay</option>
-                            <option class="translate-me" value="below">Behind</option>
-                            <option class="translate-me" value="none">Hide</option>
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <span class="translate-me">PanelMode</span>
-                    </td>
-                    <td class="text-center">
-                        <select id="panel-mode" class="border-top-0 border-left-0 border-right-0 ouline-none">
-                            <option class="translate-me" value="simplified">Normal</option>
-                            <option class="translate-me" value="normal">Expert</option>
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="translate-me" title="Max. duration of autopause before segmentation is recieved" data-toggle="tooltip">RequestTimeout</td>
-                    <td>
-                        <input id="autopause-duration" type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
-                    </td>
-                </tr>
-                <tr>
-                    <td class="translate-me" title="How long popup with information will be displayed after segmentation sharing" data-toggle="tooltip">NotificationsDuration</td>
-                    <td>
-                        <input id="popup-duration" type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
-                    </td>
-                </tr>
-                <tr>
-                    <td class="translate-me">PanelOpacity</td>
-                    <td>
-                        <input id="panel-opacity" type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
-                    </td>
-                </tr>
-                <tr>
-                    <td class="translate-me">FullscreenPanelOpacity</td>
-                    <td>
-                        <input id="panel-fullscreen-opacity" type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+        <div id="table-settings">
+            <table class="table table-bordered table-sm mt-3 mb-0">
+                <thead>
+                    <tr>
+                        <th class="translate-me">Parameter</th>
+                        <th id="toggle-debug" class="translate-me">Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <span class="translate-me">DatabasePriority</span>*</td>
+                        <td class="text-center">
+                            <select id="database-priority" class="border-top-0 border-left-0 border-right-0 ouline-none">
+                                <option class="translate-me" value="local">local</option>
+                                <option class="translate-me" value="official">community</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="translate-me">ShowPanel</td>
+                        <td class="text-center">
+                            <select id="show-panel-mode" class="border-top-0 border-left-0 border-right-0 ouline-none">
+                                <option class="translate-me" value="always">Always</option>
+                                <option class="translate-me" value="empty">Empty</option>
+                                <option class="translate-me" value="never">Never</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="translate-me" title="Compact size is minimized size but when mouse is hovering panel will be maximized" data-toggle="tooltip">PanelSize</td>
+                        <td class="text-center">
+                            <select id="panel-size" class="border-top-0 border-left-0 border-right-0 ouline-none">
+                                <option class="translate-me" value="maximized">Maximized</option>
+                                <option class="translate-me" value="compact">Compact</option>
+                                <option class="translate-me" value="minimized">Minimized</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="translate-me">ShareNotificationSize</td>
+                        <td class="text-center">
+                            <select id="popup-size" class="border-top-0 border-left-0 border-right-0 ouline-none">
+                                <option class="translate-me" value="big">Big</option>
+                                <option class="translate-me" value="small">Small</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="translate-me" title="Position of segmentsbar relative to YouTube progress bar" data-toggle="tooltip">SegmentbarLocation</td>
+                        <td class="text-center">
+                            <select id="segmentsbar-location" class="border-top-0 border-left-0 border-right-0 ouline-none">
+                                <option class="translate-me" value="separated">Below</option>
+                                <option class="translate-me" value="overlay">Overlay</option>
+                                <option class="translate-me" value="below">Behind</option>
+                                <option class="translate-me" value="none">Hide</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="translate-me">PanelMode</span>
+                        </td>
+                        <td class="text-center">
+                            <select id="panel-mode" class="border-top-0 border-left-0 border-right-0 ouline-none">
+                                <option class="translate-me" value="simplified">Normal</option>
+                                <option class="translate-me" value="normal">Expert</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="translate-me" title="Max. duration of autopause before segmentation is recieved" data-toggle="tooltip">RequestTimeout</td>
+                        <td>
+                            <input id="autopause-duration" type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="translate-me" title="How long popup with information will be displayed after segmentation sharing" data-toggle="tooltip">NotificationsDuration</td>
+                        <td>
+                            <input id="popup-duration" type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="translate-me">PanelOpacity</td>
+                        <td>
+                            <input id="panel-opacity" type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="translate-me">FullscreenPanelOpacity</td>
+                        <td>
+                            <input id="panel-fullscreen-opacity" type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="translate-me" title="Default speed if clicked on gauge icon. Cant be less than 100 and more than 1600" data-toggle="tooltip">PrimaryGaugeSpeed</td>
+                        <td>
+                            <input id="primary-gauge-speed" type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="translate-me" title="If current speed is default speed, this will be new speed after click. Cant be less than 100 and more than 1600" data-toggle="tooltip">SecondaryGaugeSpeed</td>
+                        <td>
+                            <input id="secondary-gauge-speed" type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="translate-me" title="When mouse hover over gauge icon, mouse wheel up/down will change speed by this value" data-toggle="tooltip">GaugeSpeedStep</td>
+                        <td>
+                            <input id="gauge-speed-step" type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
         <span class="text-muted">
             <small>*

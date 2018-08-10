@@ -44,6 +44,11 @@ async function sendSmallModal(code, message) {
         header.style.backgroundColor = '#00a';
         translateNodeText(header, 'sharingRejected');
         translateNodeText(body, 'rejected' + message);
+    }else if (code === '3') {
+        header.style.color = '#31708f';
+        header.style.backgroundColor = '#d9edf7';
+        translateNodeText(header, 'Information');
+        translateNodeText(body, message);
     }
 
     setTimeout(() => modal.classList.add('vs-small-modal-animation'), 100);

@@ -127,8 +127,12 @@ function getSettings() {
         segmentationToolsFullscreenOpacity: 60,
         segmentsBarLocation: 'separated',
         showPanel: 'always',
-        panelSize: 'maximized',
+        panelSize: 'compact',
         popupSize: 'big',
+
+        primaryGaugeSpeed: 100,
+        secondaryGaugeSpeed: 200,
+        gaugeSpeedStep: 50,
 
         // settings 
         mode: 'simplified',

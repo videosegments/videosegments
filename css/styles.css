@@ -86,12 +86,11 @@
 
 #vs-editor-controls #vs-editor-move {
     padding-right: 8px;
-    cursor: move;
+    cursor: grab;
 }
 
-#vs-editor-controls #vs-editor-eye {
-    cursor: pointer;
-    visibility: hidden;
+#vs-editor-controls #vs-editor-acceleration {
+    cursor: n-resize;
 }
 
 #vs-editor-controls #vs-editor-minimize {

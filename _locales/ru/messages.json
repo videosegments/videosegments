@@ -96,16 +96,25 @@
 		"message": "Длительность уведомления, секунды (?)"
 	},
 	"PanelOpacity": {
-		"message": "Прозрачность панели, %"
+		"message": "Прозрачн. панели, %"
 	},
 	"FullscreenPanelOpacity": {
-		"message": "Прозрачность панели в полном экране, %"
+		"message": "Прозрачн. панели в полном экране, %"
 	},
 	"ResetPanelPosition": {
 		"message": "Сбросить позицию панели"
 	},
 	"ChangesAfterRestart": {
 		"message": "заработает после смены видео или обновлении страницы"
+	},
+	"PrimaryGaugeSpeed": {
+		"message": "Базовая скорость, % (?)"
+	},
+	"SecondaryGaugeSpeed": {
+		"message": "Вторичная скорость, % (?)"
+	},
+	"GaugeSpeedStep": {
+		"message": "Шаг ускорения, % (?)"
 	},
 
 	"Color": {
@@ -357,6 +366,12 @@
 	},
 	"ClosePopup": {
 		"message": "Закрыть окно"
+	},
+	"Information": {
+		"message": "Информация"
+	},
+	"OpenUsingSettings": {
+		"message": "Для включения панели используйте иконку расширения на панели инструментов (вкладка настройки -> Отображение панели -> Всегда или Пусто (когда нет сегментации))."
 	},
 
 	"ThankYouForInstallation": {

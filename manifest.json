@@ -1,14 +1,12 @@
 {
 	"manifest_version": 2,
 	"name": "__MSG_extensionName__",
-	"version": "1.10.4",
-
+	"version": "1.10.5",
 	"applications": {
 		"gecko": {
 			"id": "{fca9d8e4-a5f2-4c00-9873-f38176edcba0}"
 		}
 	},
-
 	"default_locale": "en",
 	"description": "__MSG_extensionDescription__",
 	"icons": {
@@ -16,11 +14,11 @@
 		"64": "icons/icon-64.png",
 		"128": "icons/icon-128.png"
 	},
-
 	"background": {
-		"scripts": ["background/background.js"]
+		"scripts": [
+			"background/background.js"
+		]
 	},
-
 	"browser_action": {
 		"default_icon": {
 			"64": "icons/icon-64.png"
@@ -28,22 +26,37 @@
 		"default_title": "VideoSegments",
 		"default_popup": "settings/popup.html"
 	},
-
-	"content_scripts": [{
-		"matches": ["*://*.youtube.com/*"],
-		"js": ["utils/utils.js", "storage/storage.js", "observer/observer.js", "player/player.js", "segmentsbar/segmentsbar.js", "smart-cursor/smart-cursor.js", "editor/editor.js", "modals/modals.js", "filters/filters.js", "tutorial/tutorial.js", "content/content.js"],
-		"css": ["css/styles.css"],
-		"run_at": "document_start",
-		"all_frames": true
-	}],
-
+	"content_scripts": [
+		{
+			"matches": [
+				"*://*.youtube.com/*"
+			],
+			"js": [
+				"utils/utils.js",
+				"storage/storage.js",
+				"observer/observer.js",
+				"player/player.js",
+				"segmentsbar/segmentsbar.js",
+				"smart-cursor/smart-cursor.js",
+				"editor/editor.js",
+				"modals/modals.js",
+				"filters/filters.js",
+				"tutorial/tutorial.js",
+				"content/content.js"
+			],
+			"css": [
+				"css/styles.css"
+			],
+			"run_at": "document_start",
+			"all_frames": true
+		}
+	],
 	"permissions": [
 		"https://*.videosegments.org/*",
 		"unlimitedStorage",
 		"storage",
 		"tabs"
 	],
-
 	"web_accessible_resources": [
 		"editor/editor.html",
 		"editor/entry.html",

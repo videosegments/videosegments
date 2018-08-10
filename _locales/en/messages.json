@@ -107,6 +107,15 @@
 	"ChangesAfterRestart": {
 		"message": "changes will take effect after video change or page reload"
 	},
+	"PrimaryGaugeSpeed": {
+		"message": "Primary acceleration speed, % (?)"
+	},
+	"SecondaryGaugeSpeed": {
+		"message": "Secondary acceleration speed, % (?)"
+	},
+	"GaugeSpeedStep": {
+		"message": "Acceleration step, % (?)"
+	},
 
 	"Color": {
 		"message": "Color"
@@ -357,6 +366,12 @@
 	},
 	"ClosePopup": {
 		"message": "Close popup"
+	},
+	"Information": {
+		"message": "Information"
+	},
+	"OpenUsingSettings": {
+		"message": "You can enable panel later using toolbar button (Settings tab -> Show panel -> Always or Empty (when no segmentation))."
 	},
 
 	"ThankYouForInstallation": {

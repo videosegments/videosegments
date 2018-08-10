@@ -260,6 +260,9 @@ function restoreSettings() {
     connectSettingValue(document.getElementById('popup-duration'), 'popupDurationOnSend');
     connectSettingValue(document.getElementById('panel-opacity'), 'segmentationToolsOpacity');
     connectSettingValue(document.getElementById('panel-fullscreen-opacity'), 'segmentationToolsFullscreenOpacity');
+    connectSettingValue(document.getElementById('primary-gauge-speed'), 'primaryGaugeSpeed');
+    connectSettingValue(document.getElementById('secondary-gauge-speed'), 'secondaryGaugeSpeed');
+    connectSettingValue(document.getElementById('gauge-speed-step'), 'gaugeSpeedStep');
 
     document.getElementById('panel-mode').addEventListener('click', () => {
         toggleMode();

@@ -285,7 +285,7 @@ class Editor {
 
         icon.addEventListener('mousedown', startDrag);
 
-        function startDrag() {
+        function startDrag(e) {
             document.addEventListener('mousemove', drag);
             document.addEventListener('mouseup', endDrag);
         }
@@ -321,17 +321,16 @@ class Editor {
     hookAccelerationIcon() {
         let icon = document.getElementById('vs-editor-acceleration');
         icon.addEventListener('wheel', event => {
-            log(event);
             if (event.deltaY < 0.0) {
                 // chrome will throw error if playback rate > 16.0
-                let newPlaybackRate = this.video.playbackRate + 0.5;
+                let newPlaybackRate = this.video.playbackRate + settings.gaugeSpeedStep / 100;
                 if (newPlaybackRate > 16.0) {
                     newPlaybackRate = 16.0;
                 }
                 this.video.playbackRate = newPlaybackRate;
             }
             else if (event.deltaY > 0.0) {
-                let newPlaybackRate = this.video.playbackRate - 0.5;
+                let newPlaybackRate = this.video.playbackRate - settings.gaugeSpeedStep / 100;
                 if (newPlaybackRate <= 0.0) {
                     newPlaybackRate = 0.0;
                 }
@@ -342,12 +341,13 @@ class Editor {
         })
 
         icon.addEventListener('click', () => {
-            if (this.video.playbackRate !== 1.0) {
-                this.video.playbackRate = 1.0;
+            if (this.video.playbackRate !== settings.primaryGaugeSpeed / 100) {
+                this.video.playbackRate = settings.primaryGaugeSpeed / 100;
             }
             else {
-                this.video.playbackRate = 2.0;
+                this.video.playbackRate = settings.secondaryGaugeSpeed / 100;
             }
+            log(this.video.playbackRate);
         })
     }
 
@@ -397,12 +397,16 @@ class Editor {
         this.panel.classList.remove('vs-editor-maximized');
         this.panel.classList.add('vs-editor-minimized');
 
+        document.getElementById('vs-editor-minimize').classList.remove('fa-window-minimize');
+        document.getElementById('vs-editor-minimize').classList.add('fa-window-maximize');
+
         document.getElementById('vs-editor-buttons').style.display = 'none';
         document.getElementById('vs-editor-segments').style.display = 'none';
         document.getElementById('vs-editor-actions').style.display = 'none';
 
         document.getElementById('vs-editor-opacity').style.display = 'none';
         document.getElementById('vs-editor-close').style.display = 'none';
+        document.getElementById('vs-editor-acceleration').style.display = 'none';
 
         document.getElementById('vs-editor-move').style.paddingRight = '0px';
         document.getElementById('vs-editor-close').style.paddingLeft = '0px';
@@ -412,12 +416,16 @@ class Editor {
         this.panel.classList.remove('vs-editor-minimized');
         this.panel.classList.add('vs-editor-maximized');
 
+        document.getElementById('vs-editor-minimize').classList.remove('fa-window-maximize');
+        document.getElementById('vs-editor-minimize').classList.add('fa-window-minimize');
+
         document.getElementById('vs-editor-buttons').style.display = 'block';
         document.getElementById('vs-editor-segments').style.display = 'block';
         document.getElementById('vs-editor-actions').style.display = 'flex';
 
         document.getElementById('vs-editor-opacity').style.display = 'inline';
         document.getElementById('vs-editor-close').style.display = 'inline';
+        document.getElementById('vs-editor-acceleration').style.display = 'inline';
 
         document.getElementById('vs-editor-move').style.paddingRight = '8px';
         document.getElementById('vs-editor-close').style.paddingLeft = '8px';
@@ -430,6 +438,8 @@ class Editor {
             this.panel.remove();
             this.panel = undefined;
             saveSettings();
+
+            sendSmallModal('3', 'OpenUsingSettings');
         })
     }
 
