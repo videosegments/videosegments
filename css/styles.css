@@ -63,12 +63,15 @@
 }
 
 .vs-editor-minimized {
-    margin-left: 245px;
     width: 40px;
     height: 20px;
 }
 
 .vs-editor-allow-hover:hover {
+    opacity: 1 !important;
+}
+
+.vs-editor-opaque {
     opacity: 1 !important;
 }
 

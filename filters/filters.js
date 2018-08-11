@@ -35,7 +35,8 @@ function tryChannelFilter(channel, duration) {
             ['|c|' + channel]: []
         }, result => {
             let filter = result['|c|' + channel];
-            if (filter.length < 3) {
+
+            if (filter.length < 3 || (filter[0] === filter[1] && filter[2] === 0.0)) {
                 resolve({
                     timestamps: undefined,
                     types: undefined,

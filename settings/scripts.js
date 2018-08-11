@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
             log = console.log.bind(console);
             log('settings loaded');
         } else {
-            log = function () {};
+            log = function () { };
         }
 
         settings = result;
@@ -82,9 +82,22 @@ document.addEventListener('DOMContentLoaded', () => {
         let skipFrom = parseFloat(document.getElementById('skip-from').value);
         let skipTo = parseFloat(document.getElementById('skip-to').value);
         let skipLast = parseFloat(document.getElementById('skip-last').value);
-        browser.storage.local.set({
-            ['|c|' + document.getElementById('channel-name').value]: [skipFrom, skipTo, skipLast]
-        });
+        log(skipFrom !== skipTo || skipLast !== 0.0);
+
+        if (skipFrom !== skipTo || skipLast !== 0.0) {
+            browser.storage.local.set({
+                ['|c|' + document.getElementById('channel-name').value]: [skipFrom, skipTo, skipLast]
+            });
+        }
+        else {
+            browser.storage.local.remove(
+                ['|c|' + document.getElementById('channel-name').value], () => {
+                    document.getElementById('skip-from').value = 0.0;
+                    document.getElementById('skip-to').value = 0.0;
+                    document.getElementById('skip-last').value = 0.0;
+                }
+            );
+        }
     });
 
     document.getElementById('search-channel').addEventListener('click', () => {
@@ -132,13 +145,13 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('toggle-debug').addEventListener('click', () => {
         window.getSelection().removeAllRanges();
         clicks = clicks + 1;
-        if ( clicks > 4 ) {
+        if (clicks > 4) {
             settings.debug = !settings.debug;
             clicks = 0;
 
-            if ( settings.debug ) {
+            if (settings.debug) {
                 document.getElementById('toggle-debug').style.color = 'red';
-            } 
+            }
             else {
                 document.getElementById('toggle-debug').style.color = 'blue';
             }

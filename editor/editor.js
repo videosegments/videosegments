@@ -36,6 +36,7 @@ class Editor {
 
         this.lastShareIteration = -1;
         this.iterations = 0;
+        this.dragging = false;
 
         if (settings.showPanel === 'always' || (settings.showPanel === 'empty' && typeof this.segmentation === 'undefined')) {
             this.createEditor();
@@ -273,7 +274,8 @@ class Editor {
             clearInterval(moveTimer);
             moveTimer = undefined;
 
-            if (settings.panelSize === 'compact') {
+            log(this.dragging);
+            if (settings.panelSize === 'compact' && this.dragging === false) {
                 this.minimize();
             }
         });
@@ -288,6 +290,9 @@ class Editor {
         function startDrag(e) {
             document.addEventListener('mousemove', drag);
             document.addEventListener('mouseup', endDrag);
+
+            self.panel.classList.add('vs-editor-opaque');
+            self.dragging = true;
         }
 
         function drag(e) {
@@ -313,6 +318,9 @@ class Editor {
                 settings.editor.posX = parseInt(self.panel.style.left.slice(0, -2));
                 settings.editor.posY = parseInt(self.panel.style.top.slice(0, -2));
             }
+
+            self.panel.classList.remove('vs-editor-opaque');
+            self.dragging = false;
 
             saveSettings();
         }
@@ -347,7 +355,6 @@ class Editor {
             else {
                 this.video.playbackRate = settings.secondaryGaugeSpeed / 100;
             }
-            log(this.video.playbackRate);
         })
     }
 

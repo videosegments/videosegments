@@ -179,13 +179,14 @@ class Player {
         if (this.segmentation.origin === 'noSegmentation') {
             this.segmentation = await tryChannelFilter(this.channel, this.video.duration);
         }
+        else {
+            if ((typeof this.segmentation.types !== 'undefined') && this.segmentation.types[this.segmentation.types.length - 1] === '-') {
+                this.segmentation.timestamps.pop();
+                this.segmentation.types.pop();
+            }
 
-        if ((typeof this.segmentation.types !== 'undefined') && this.segmentation.types[this.segmentation.types.length - 1] === '-') {
-            this.segmentation.timestamps.pop();
-            this.segmentation.types.pop();
+            this.segmentation = this.prepareSegmentation(this.segmentation);
         }
-
-        this.segmentation = this.prepareSegmentation(this.segmentation);
 
         // remove play listener 
         this.video.removeEventListener('play', this.onPlayBeforeLoadedContext);
@@ -375,7 +376,6 @@ class Player {
             return;
         }
 
-        log(this.muteEvent === 0);
         if (this.muteEvent === 0) {
             return;
         }
