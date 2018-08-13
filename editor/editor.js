@@ -101,6 +101,7 @@ class Editor {
         this.hookControls();
         this.hookButtons();
         this.hookActions();
+        this.hookHotkeys();
 
         let origin = ((typeof this.segmentation.origin !== 'undefined') ? this.segmentation.origin : 'noSegmentation');
         this.setSegmentationOrigin(origin);
@@ -226,8 +227,8 @@ class Editor {
         }
         this.segments.childNodes[i].remove();
 
-        this.segmentsbar.removeSegment(this.segmentation.timestamps, this.video.duration, i);
         this.saveSegmentation();
+        this.segmentsbar.removeSegment(this.segmentation.timestamps, this.video.duration, i);
     }
 
     rewindSegment(e) {
@@ -274,7 +275,6 @@ class Editor {
             clearInterval(moveTimer);
             moveTimer = undefined;
 
-            log(this.dragging);
             if (settings.panelSize === 'compact' && this.dragging === false) {
                 this.minimize();
             }
@@ -330,23 +330,14 @@ class Editor {
         let icon = document.getElementById('vs-editor-acceleration');
         icon.addEventListener('wheel', event => {
             if (event.deltaY < 0.0) {
-                // chrome will throw error if playback rate > 16.0
-                let newPlaybackRate = this.video.playbackRate + settings.gaugeSpeedStep / 100;
-                if (newPlaybackRate > 16.0) {
-                    newPlaybackRate = 16.0;
-                }
-                this.video.playbackRate = newPlaybackRate;
+                this.changePlaybackRate(1);
             }
             else if (event.deltaY > 0.0) {
-                let newPlaybackRate = this.video.playbackRate - settings.gaugeSpeedStep / 100;
-                if (newPlaybackRate <= 0.0) {
-                    newPlaybackRate = 0.0;
-                }
-                this.video.playbackRate = newPlaybackRate;
-                
+                this.changePlaybackRate(-1);
+
             }
             event.preventDefault();
-        })
+        });
 
         icon.addEventListener('click', () => {
             if (this.video.playbackRate !== settings.primaryGaugeSpeed / 100) {
@@ -355,7 +346,19 @@ class Editor {
             else {
                 this.video.playbackRate = settings.secondaryGaugeSpeed / 100;
             }
-        })
+        });
+    }
+
+    changePlaybackRate(sign) {
+        let newPlaybackRate = this.video.playbackRate + sign * settings.gaugeSpeedStep / 100;
+        // chrome will throw error if playback rate > 16.0
+        if (newPlaybackRate > 16.0) {
+            newPlaybackRate = 16.0;
+        }
+        else if (newPlaybackRate < 0.0) {
+            newPlaybackRate = 0.0;
+        }
+        this.video.playbackRate = newPlaybackRate;
     }
 
     hookOpacitySlider() {
@@ -408,12 +411,17 @@ class Editor {
         document.getElementById('vs-editor-minimize').classList.add('fa-window-maximize');
 
         document.getElementById('vs-editor-buttons').style.display = 'none';
-        document.getElementById('vs-editor-segments').style.display = 'none';
+        // document.getElementById('vs-editor-segments').style.display = 'none';
         document.getElementById('vs-editor-actions').style.display = 'none';
+
+        document.getElementById('vs-editor-segments').style.width = '1px';
+        document.getElementById('vs-editor-segments').style.height = '1px';
+        document.getElementById('vs-editor-segments').style.padding = '0px';
 
         document.getElementById('vs-editor-opacity').style.display = 'none';
         document.getElementById('vs-editor-close').style.display = 'none';
         document.getElementById('vs-editor-acceleration').style.display = 'none';
+        document.getElementById('vs-editor-segments').style.borderBottom = '0px';
 
         document.getElementById('vs-editor-move').style.paddingRight = '0px';
         document.getElementById('vs-editor-close').style.paddingLeft = '0px';
@@ -427,8 +435,13 @@ class Editor {
         document.getElementById('vs-editor-minimize').classList.add('fa-window-minimize');
 
         document.getElementById('vs-editor-buttons').style.display = 'block';
-        document.getElementById('vs-editor-segments').style.display = 'block';
+        // document.getElementById('vs-editor-segments').style.display = 'block';
         document.getElementById('vs-editor-actions').style.display = 'flex';
+
+        document.getElementById('vs-editor-segments').style.width = 'auto';
+        document.getElementById('vs-editor-segments').style.height = 'auto';
+        document.getElementById('vs-editor-segments').style.padding = '3px 0px';
+        document.getElementById('vs-editor-segments').style.borderBottom = '2px solid #ddd';
 
         document.getElementById('vs-editor-opacity').style.display = 'inline';
         document.getElementById('vs-editor-close').style.display = 'inline';
@@ -523,7 +536,6 @@ class Editor {
                 endTimeInput.size = endTimeInput.value.length + 1;
                 setTimeout(() => {
                     endTimeInput.focus();
-                    log('f1');
                 }, 100);
 
                 this.segmentsbar.updateWidth(this.segmentation.timestamps, index - 1, roundFloat(this.video.duration), true);
@@ -535,7 +547,6 @@ class Editor {
                 endTimeInput.size = endTimeInput.value.length + 1;
                 setTimeout(() => {
                     endTimeInput.focus();
-                    log('f2');
                 }, 100);
 
                 this.segmentsbar.updateWidth(this.segmentation.timestamps, index, roundFloat(this.video.duration), true);
@@ -565,12 +576,10 @@ class Editor {
                 if (left) {
                     setTimeout(() => {
                         entry.getElementsByClassName('vs-editor-segment-entry-end-time')[0].focus();
-                        log('f3');
                     }, 100);
                 } else {
                     setTimeout(() => {
                         this.segments.getElementsByClassName('vs-editor-segment-entry-end-time')[index - 1].focus();
-                        log('f4');
                     }, 100);
                 }
 
@@ -583,7 +592,7 @@ class Editor {
                     }
                 } else {
                     if (outsideOfArray) {
-                        index--;
+                        index = this.segments.childNodes.length - 1;
                     }
                     this.segments.childNodes[index - 1].insertAdjacentElement('afterEnd', entry);
                     this.updateEntryEndTime(entry.getElementsByClassName('vs-editor-segment-entry-end-time')[0]);
@@ -603,7 +612,6 @@ class Editor {
             this.updateEntryEndTime(entry.getElementsByClassName('vs-editor-segment-entry-end-time')[0]);
             setTimeout(() => {
                 entry.getElementsByClassName('vs-editor-segment-entry-end-time')[0].focus();
-                log('f5');
             }, 100);
         }
     }
@@ -725,6 +733,33 @@ class Editor {
         this.updatePosition();
     }
 
+    hookHotkeys() {
+        document.addEventListener('keydown', e => {
+            let combination = getPressedCombination(e);
+            if (settings.hotkeys[combination]) {
+                if (['BODY', 'DIV', 'BUTTON'].indexOf(document.activeElement.tagName) !== -1 || (document.activeElement.tagName === 'INPUT' && document.activeElement.classList.contains('vs-editor-segment-entry-time') === true)) {
+                    document.getElementById(settings.hotkeys[combination]).click();
+                    e.stopImmediatePropagation();
+                    e.stopPropagation();
+                    e.preventDefault();
+
+                    let videoPlayerControls = document.getElementsByClassName('html5-video-player')[0];
+                    let mouseMoveEvent = document.createEvent("Events");
+                    mouseMoveEvent.initEvent("mousemove", false, false);
+                    videoPlayerControls.dispatchEvent(mouseMoveEvent);
+                    return false;
+                }
+            }
+        }, {capture: true});
+
+        document.getElementById('vs-editor-inc-gauge').addEventListener('click', () => {
+            this.changePlaybackRate(1);
+        });
+        document.getElementById('vs-editor-dec-gauge').addEventListener('click', () => {
+            this.changePlaybackRate(-1);
+        });
+    }
+
     updatePosition() {
         if (this.panel.offsetLeft < 0) {
             this.panel.style.left = '0px';
@@ -737,7 +772,6 @@ class Editor {
 
     saveSegmentation() {
         let video_id = 'youtube-' + this.id;
-        log(this.segmentation.types.length);
         if (this.segmentation.types.length === 0) {
             // remove it from local database 
             browser.storage.local.remove([video_id], () => {
@@ -756,18 +790,19 @@ class Editor {
                     types: convertSimplifiedSegmentation(this.segmentation.types)
                 };
             } else {
+                // break link between segments data and saved data
                 segmentation = {
                     timestamps: this.segmentation.timestamps.slice(),
                     types: this.segmentation.types.slice()
-                }; // break link between segments data and saved data 
+                };  
             }
+
+            segmentation.timestamps.shift(); // remove first 
             if (segmentation.timestamps[segmentation.timestamps.length - 1] !== this.video.duration) {
                 // abstract segment to prevent segmentation extending  
                 segmentation.timestamps.push(this.video.duration);
                 segmentation.types.push('-');
             }
-
-            segmentation.timestamps.shift(); // remove first 
             segmentation.timestamps.pop(); // remove last 
 
             browser.storage.local.set({
@@ -805,7 +840,7 @@ class Editor {
 
             if (this.fullscreen !== true) {
                 this.panel.style.opacity = value / 100.0;
-                
+
                 let opacitySlider = document.getElementById('vs-editor-opacity-slider');
                 opacitySlider.value = value / 100;
             }
@@ -827,6 +862,8 @@ class Editor {
             this.panel.style.left = value + 'px';
             this.panel.style.top = value + 'px';
             this.updatePosition();
+        } else if (prop === 'hotkeys') {
+            settings.hotkeys = value;
         } else if (prop === 'showPanel') {
             settings[prop] = value;
             log(settings.showPanel === 'always', settings.showPanel);

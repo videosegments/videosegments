@@ -175,6 +175,8 @@ class SmartCursor {
             // block input of non-digit 
             // allow:                 1-0                                            numpad                                              f1-f12
             if (!(event.keyCode >= 48 && event.keyCode <= 57) && !(event.keyCode >= 96 && event.keyCode <= 105) && !(event.keyCode >= 112 && event.keyCode <= 123)) {
+                element.blur();
+                setTimeout(() => { element.focus(); }, 0);
                 event.preventDefault();
             }
 
@@ -190,9 +192,7 @@ class SmartCursor {
         element.value = secondsToClockTime(this.timestamps[this.index], true, keepPrecision);
         element.size = element.value.length + 1;
 
-        setTimeout(function () {
-            element.setSelectionRange(pos, pos + 1)
-        }, 0);
+        setTimeout(() => { element.setSelectionRange(pos, pos + 1) }, 0);
 
         // change timestamp according to current digit 
         function handleArrow(text, cursorPosition, sign) {
@@ -217,6 +217,11 @@ class SmartCursor {
             if (self.timestamps[self.index] < 0.0) self.timestamps[self.index] = 0.0;
             else if (self.timestamps[self.index] > self.video.duration) self.timestamps[self.index] = roundFloat(self.video.duration);
         }
+
+        let videoPlayerControls = document.getElementsByClassName('html5-video-player')[0];
+        let mouseMoveEvent = document.createEvent("Events");
+        mouseMoveEvent.initEvent("mousemove", false, false);
+        videoPlayerControls.dispatchEvent(mouseMoveEvent);
     }
 
     onKeyUp(event) {

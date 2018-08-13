@@ -209,9 +209,25 @@ function convertSimplifiedSegmentation(types) {
 }
 
 // https://gomakethings.com/how-to-get-the-value-of-a-querystring-with-native-javascript/
-let getQueryString = function (field, url) {
+function getQueryString(field) {
     let href = window.location.href;
     let reg = new RegExp('[?&]' + field + '=([^&#]*)', 'i');
     let res = reg.exec(href);
     return res ? res[1] : null;
 };
+
+function getPressedCombination(e) {
+    if (e.key === 'Shift' || e.key === 'Control' || e.key === 'Alt') {
+        return '';
+    }
+
+    if (e.key === 'Backspace') {
+        return '';
+    }
+
+    let shiftmod = e.shiftKey === true ? 'SHIFT+' : '';
+    let ctrlmod = e.ctrlKey === true ? 'CTRL+' : '';
+    let altmod = e.altKey === true ? 'ALT+' : '';
+
+    return ctrlmod + altmod + shiftmod + e.key.toUpperCase();
+}

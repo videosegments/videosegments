@@ -221,6 +221,13 @@
 		"message": "Image filter"
 	},
 
+	"TabHotkeys": {
+		"message": "Hotkeys"
+	},
+	"Combination": {
+		"message": "Combination"
+	},
+
 	"Loading": {
 		"message": "Loading"
 	},
@@ -233,6 +240,9 @@
 
 	"ReviewQueue": {
 		"message": "Review Queue"
+	},
+	"Changelog": {
+		"message": "Changelog"
 	},
 	"ReportBug": {
 		"message": "Report Bug"
@@ -378,15 +388,18 @@
 		"message": "Thank you for installing VideoSegments!"
 	},
 	"SomeTips": {
-		"message": "Here some tips on how to make your expirence more enjoyable:"
+		"message": "Here some tips on how to make your expirence better:"
 	},
-	"SmartCursor": {
+	"TutorialHotkeys": {
+		"message": "Configure and use hotkeys. This way you don't even have to use mouse."
+	},
+	"TutorialSmartCursor": {
 		"message": "Use keyboard arrows to quickly and precisely adjust time of segment."
 	},
-	"SliderDescription": {
+	"TutorialSliderDescription": {
 		"message": "You can make panel transparent or opaque using slider."
 	},
-	"CheckOutSettings": {
+	"TutorialCheckOutSettings": {
 		"message": "Check out settings, extension is very flexible."
 	},
 	"Close": {

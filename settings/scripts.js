@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         settings = result;
-        if (['settings', 'playback', 'acceleration', 'filters', 'community'].indexOf(result.lastTab) === -1) {
+        if (['settings', 'playback', 'acceleration', 'hotkeys', 'filters', 'community'].indexOf(result.lastTab) === -1) {
             settings.lastTab = 'settings';
         }
 
@@ -47,6 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
         restoreSettings();
         hookActions();
         toggleMode();
+        hookHotkeys();
     });
 
     // when user logs in 
@@ -182,19 +183,22 @@ browser.runtime.onMessage.addListener((message) => {
 
 function hookTabs() {
     document.getElementById('tab-settings').addEventListener('click', function () {
-        changeTab(this.id.slice(4))
+        changeTab(this.id.slice(4));
     });
     document.getElementById('tab-playback').addEventListener('click', function () {
-        changeTab(this.id.slice(4))
+        changeTab(this.id.slice(4));
     });
     document.getElementById('tab-acceleration').addEventListener('click', function () {
-        changeTab(this.id.slice(4))
+        changeTab(this.id.slice(4));
+    });
+    document.getElementById('tab-hotkeys').addEventListener('click', function () {
+        changeTab(this.id.slice(4));
     });
     document.getElementById('tab-filters').addEventListener('click', function () {
-        changeTab(this.id.slice(4))
+        changeTab(this.id.slice(4));
     });
     document.getElementById('tab-community').addEventListener('click', function () {
-        changeTab(this.id.slice(4))
+        changeTab(this.id.slice(4));
     });
 }
 
@@ -219,10 +223,65 @@ function changeTab(tabName) {
     saveSettings();
 }
 
+function hookHotkeys() {
+    let shortcuts = reverseArray(settings.hotkeys);
+
+    connectHotkey(shortcuts, 'hk-start-cut', 'vs-editor-segment-sk');
+    connectHotkey(shortcuts, 'hk-end-cut', 'vs-editor-segment-pl');
+    connectHotkey(shortcuts, 'hk-toggle-gauge', 'vs-editor-acceleration');
+    connectHotkey(shortcuts, 'hk-inc-gauge', 'vs-editor-inc-gauge');
+    connectHotkey(shortcuts, 'hk-dec-gauge', 'vs-editor-dec-gauge');
+
+    let segments = ['c', 'ac', 'i', 'a', 'cr', 'ia', 'cs', 'o', 's'];
+    for (let segment of segments) {
+        connectHotkey(shortcuts, 'hk-end-' + segment, 'vs-editor-segment-' + segment);
+        connectHotkey(shortcuts, 'hk-start-' + segment, 'vs-editor-segment-end-' + segment);
+    }
+}
+
+function getPressedCombination(e) {
+    if (e.key === 'Shift' || e.key === 'Control' || e.key === 'Alt') {
+        return '';
+    }
+
+    let shiftmod = e.shiftKey === true ? 'SHIFT+' : '';
+    let ctrlmod = e.ctrlKey === true ? 'CTRL+' : '';
+    let altmod = e.altKey === true ? 'ALT+' : '';
+
+    return ctrlmod + altmod + shiftmod + e.key.toUpperCase();
+}
+
+function connectHotkey(shortcuts, id, shortcut)
+{
+    let element = document.getElementById(id);
+    element.value = shortcuts[shortcut] || '';
+    element.addEventListener('keydown', e => {
+        updateHotkey(e, id, shortcut);
+    });
+}
+
+function updateHotkey(e, element, callee) {
+    let shortcut = getPressedCombination(e);
+    if (shortcut.length > 0) {
+        if (e.key === 'Backspace') {
+            delete settings.hotkeys[document.getElementById(element).value];
+            document.getElementById(element).value = '';
+        }
+        else {
+            delete settings.hotkeys[document.getElementById(element).value];
+            document.getElementById(element).value = shortcut;
+            settings.hotkeys[shortcut] = callee;
+        }
+        
+        e.preventDefault();
+        saveSettings();
+        updateSettings('hotkeys', settings.hotkeys);
+    }
+}
+
 function translateNodes(target) {
     let nodes = target.getElementsByClassName('translate-me');
     for (let node of nodes) {
-        // node.classList.remove('translate-me');
         translateNode(node);
     }
 }
@@ -247,15 +306,29 @@ function translateText(text) {
 function toggleMode() {
     let nodesToHide, nodesToShow;
     if (settings.mode === 'simplified') {
-        nodesToShow = document.getElementsByClassName('simplified-mode');
-        nodesToHide = document.getElementsByClassName('expert-mode');
+        nodesToShow = document.getElementsByClassName('simplified-mode-table');
+        nodesToHide = document.getElementsByClassName('expert-mode-table');
     } else {
-        nodesToShow = document.getElementsByClassName('expert-mode');
-        nodesToHide = document.getElementsByClassName('simplified-mode');
+        nodesToShow = document.getElementsByClassName('expert-mode-table');
+        nodesToHide = document.getElementsByClassName('simplified-mode-table');
     }
 
     for (let node of nodesToShow) {
         node.style.display = 'table'
+    }
+    for (let node of nodesToHide) {
+        node.style.display = 'none';
+    }
+    if (settings.mode === 'simplified') {
+        nodesToShow = document.getElementsByClassName('simplified-mode-row');
+        nodesToHide = document.getElementsByClassName('expert-mode-row');
+    } else {
+        nodesToShow = document.getElementsByClassName('expert-mode-row');
+        nodesToHide = document.getElementsByClassName('simplified-mode-row');
+    }
+
+    for (let node of nodesToShow) {
+        node.style.display = 'table-row'
     }
     for (let node of nodesToHide) {
         node.style.display = 'none';
@@ -435,4 +508,14 @@ async function updatePendingRequestCount() {
             'updateBadge': response.requests
         });
     }
+}
+
+function reverseArray(kv) {
+    let result = {};
+    for (let k in kv) {
+        if (kv.hasOwnProperty(k)) {
+            result[kv[k]] = k;
+        }
+    }
+    return result;
 }

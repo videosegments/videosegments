@@ -180,12 +180,11 @@ class Player {
             this.segmentation = await tryChannelFilter(this.channel, this.video.duration);
         }
         else {
+            this.segmentation = this.prepareSegmentation(this.segmentation);
             if ((typeof this.segmentation.types !== 'undefined') && this.segmentation.types[this.segmentation.types.length - 1] === '-') {
                 this.segmentation.timestamps.pop();
                 this.segmentation.types.pop();
             }
-
-            this.segmentation = this.prepareSegmentation(this.segmentation);
         }
 
         // remove play listener 
@@ -377,6 +376,8 @@ class Player {
         }
 
         if (this.muteEvent === 0) {
+            this.muteEvent = -1;
+            log('muted');
             return;
         }
         this.muteEvent = this.muteEvent - 1;
@@ -423,6 +424,7 @@ class Player {
         }
 
         if (toSegmentNumber !== null) {
+            log(delay * (1000 / this.video.playbackRate));
             this.timer = setTimeout(() => {
                 this.tryRewind(toSegmentNumber);
             }, delay * (1000 / this.video.playbackRate));
@@ -462,7 +464,9 @@ class Player {
     }
 
     onPauseEvent() {
-        if (this.timer) {
+        log('player::onPauseEvent: ', this.video.currentTime);
+
+        if (this.timer && this.muteEvent !== 0) {
             clearTimeout(this.timer);
             this.timer = undefined;
         }

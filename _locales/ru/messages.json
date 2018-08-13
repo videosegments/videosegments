@@ -234,6 +234,9 @@
 	"ReviewQueue": {
 		"message": "Очередь"
 	},
+	"Changelog": {
+		"message": "Обновления"
+	},
 	"ReportBug": {
 		"message": "Сообщить об ошибке"
 	},
@@ -380,13 +383,16 @@
 	"SomeTips": {
 		"message": "Несколько советов о том, как эффективно использовать VideoSegments:"
 	},
-	"SmartCursor": {
+	"TutorialHotkeys": {
+		"message": "Настройте горячие клавиши. Таким образом вам даже не придётся использовать мышку."
+	},
+	"TutorialSmartCursor": {
 		"message": "Используйте стрелки на клавиатуре, чтобы быстро и точно выбрать время сегмента."
 	},
-	"SliderDescription": {
+	"TutorialSliderDescription": {
 		"message": "Панель можно сделать прозрачной, используя слайдер."
 	},
-	"CheckOutSettings": {
+	"TutorialCheckOutSettings": {
 		"message": "Так же посмотрите настройки, расширение очень гибкое."
 	},
 	"Close": {

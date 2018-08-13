@@ -32,6 +32,9 @@
             <li id="tab-acceleration" class="nav-item m-auto text-center w-100">
                 <a class="nav-link fa fa-forward w-100" href="#"></a>
             </li>
+            <li id="tab-hotkeys" class="nav-item m-auto text-center w-100">
+                <a class="nav-link fa fa-keyboard w-100" href="#"></a>
+            </li>
             <li id="tab-filters" class="nav-item m-auto text-center w-100">
                 <a class="nav-link fa fa-filter w-100" href="#"></a>
             </li>
@@ -44,7 +47,7 @@
     <div id="settings" class="tab-content" style="display: none">
         <h2 class="text-center translate-me">TabSettings</h2>
 
-        <div id="table-settings">
+        <div class="scrollable-table">
             <table class="table table-bordered table-sm mt-3 mb-0">
                 <thead>
                     <tr>
@@ -145,7 +148,8 @@
                         </td>
                     </tr>
                     <tr>
-                        <td class="translate-me" title="If current speed is default speed, this will be new speed after click. Cant be less than 100 and more than 1600" data-toggle="tooltip">SecondaryGaugeSpeed</td>
+                        <td class="translate-me" title="If current speed is default speed, this will be new speed after click. Cant be less than 100 and more than 1600"
+                            data-toggle="tooltip">SecondaryGaugeSpeed</td>
                         <td>
                             <input id="secondary-gauge-speed" type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
                         </td>
@@ -174,7 +178,7 @@
     <div id="playback" class="tab-content" style="display: none">
         <h2 class="text-center translate-me">TabPlayback</h2>
 
-        <table class="table table-bordered table-sm mt-3 text-center expert-mode">
+        <table class="table table-bordered table-sm mt-3 text-center expert-mode-table">
             <thead>
                 <tr>
                     <th class="w-25 translate-me">Color</th>
@@ -323,7 +327,7 @@
             </tbody>
         </table>
 
-        <table class="table table-bordered table-sm mt-3 text-center simplified-mode">
+        <table class="table table-bordered table-sm mt-3 text-center simplified-mode-table">
             <thead>
                 <tr>
                     <th class="w-25 translate-me">Color</th>
@@ -361,7 +365,7 @@
     <div id="acceleration" class="tab-content" style="display: none">
         <h2 class="text-center translate-me">TabAcceleration</h2>
 
-        <table class="table table-bordered table-sm mt-3 mx-auto text-center w-75 expert-mode">
+        <table class="table table-bordered table-sm mt-3 mx-auto text-center w-75 expert-mode-table">
             <thead>
                 <tr>
                     <th class="translate-me">Segment</th>
@@ -474,7 +478,7 @@
             </tbody>
         </table>
 
-        <table class="table table-bordered table-sm mt-3 mx-auto text-center w-75 simplified-mode">
+        <table class="table table-bordered table-sm mt-3 mx-auto text-center w-75 simplified-mode-table">
             <thead>
                 <tr>
                     <th class="translate-me">Segment</th>
@@ -509,6 +513,262 @@
                 </tr>
             </tbody>
         </table>
+    </div>
+
+    <div id="hotkeys" class="tab-content" style="display: none">
+        <h2 class="text-center translate-me">TabHotkeys</h2>
+
+        <div class="scrollable-table">
+            <table class="table table-bordered table-sm mt-3 mx-auto text-center w-100">
+                <thead>
+                    <tr>
+                        <th class="translate-me">Combination</th>
+                        <th class="translate-me">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="text-center">
+                            <span>ArrowUp</span>
+                        </td>
+                        <td class="text-center" title="Works only when segment is added or time editor has focus" data-toggle="tooltip">
+                            Add +1 to segment time (?)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">
+                            <span>ArrowDown</span>
+                        </td>
+                        <td class="text-center" title="Works only when segment is added or time editor has focus" data-toggle="tooltip">
+                            Add -1 to segment time (?)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">
+                            <span>ArrowLeft</span>
+                        </td>
+                        <td class="text-center" title="Works only when segment is added or time editor has focus. Will move current selection from milliseconds to seconds, from seconds to minumes, from minutes to hours" data-toggle="tooltip">
+                            Move ms->s->m->h (?)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">
+                            <span>ArrowRight</span>
+                        </td>
+                        <td class="text-center" title="Works only when segment is added or time editor has focus. Will move current selection from hours to minutes, from minutes to seconds, from seconds to milliseconds" data-toggle="tooltip">
+                            Move h->m->s->ms (?)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">
+                            <input id="hk-toggle-gauge" type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-lg"
+                                placeholder="Input combination">
+                        </td>
+                        <td class="text-center">
+                            Toggle playback rate
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">
+                            <input id="hk-inc-gauge" type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-lg"
+                                placeholder="Input combination">
+                        </td>
+                        <td class="text-center">
+                            Inscrease playback rate
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">
+                            <input id="hk-dec-gauge" type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-lg"
+                                placeholder="Input combination">
+                        </td>
+                        <td class="text-center">
+                            Decrease playback rate
+                        </td>
+                    </tr>
+                    <tr class="simplified-mode-row">
+                        <td class="text-center">
+                            <input id="hk-end-cut" type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-lg"
+                                placeholder="Input combination">
+                        </td>
+                        <td class="text-center">
+                            End Cut
+                        </td>
+                    </tr>
+                    <tr class="simplified-mode-row">
+                        <td class="text-center">
+                            <input id="hk-start-cut" type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-lg"
+                                placeholder="Input combination">
+                        </td>
+                        <td class="text-center">
+                            Start Cut
+                        </td>
+                    </tr>
+                    <tr class="expert-mode-row">
+                        <td class="text-center">
+                            <input id="hk-end-c" type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-lg"
+                                placeholder="Input combination">
+                        </td>
+                        <td class="text-center">
+                            End Content
+                        </td>
+                    </tr>
+                    <tr class="expert-mode-row">
+                        <td class="text-center">
+                            <input id="hk-start-c" type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-lg"
+                                placeholder="Input combination">
+                        </td>
+                        <td class="text-center">
+                            Start Content (>)
+                        </td>
+                    </tr>
+                    <tr class="expert-mode-row">
+                        <td class="text-center">
+                            <input id="hk-end-ac" type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-lg"
+                                placeholder="Input combination">
+                        </td>
+                        <td class="text-center">
+                            End AdContent
+                        </td>
+                    </tr>
+                    <tr class="expert-mode-row">
+                        <td class="text-center">
+                            <input id="hk-start-ac" type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-lg expert-mode"
+                                placeholder="Input combination">
+                        </td>
+                        <td class="text-center">
+                            Start AdContent (>)
+                        </td>
+                    </tr>
+                    <tr class="expert-mode-row">
+                        <td class="text-center">
+                            <input id="hk-end-i" type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-lg"
+                                placeholder="Input combination">
+                        </td>
+                        <td class="text-center">
+                            End Intro
+                        </td>
+                    </tr>
+                    <tr class="expert-mode-row">
+                        <td class="text-center">
+                            <input id="hk-start-i" type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-lg"
+                                placeholder="Input combination">
+                        </td>
+                        <td class="text-center">
+                            Start Intro (>)
+                        </td>
+                    </tr>
+                    <tr class="expert-mode-row">
+                        <td class="text-center">
+                            <input id="hk-end-cr" type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-lg"
+                                placeholder="Input combination">
+                        </td>
+                        <td class="text-center">
+                            End Credits
+                        </td>
+                    </tr>
+                    <tr class="expert-mode-row">
+                        <td class="text-center">
+                            <input id="hk-start-cr" type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-lg"
+                                placeholder="Input combination">
+                        </td>
+                        <td class="text-center">
+                            Start Credits (>)
+                        </td>
+                    </tr>
+                    <tr class="expert-mode-row">
+                        <td class="text-center">
+                            <input id="hk-end-a" type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-lg"
+                                placeholder="Input combination">
+                        </td>
+                        <td class="text-center">
+                            End Advertisement
+                        </td>
+                    </tr>
+                    <tr class="expert-mode-row">
+                        <td class="text-center">
+                            <input id="hk-start-a" type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-lg"
+                                placeholder="Input combination">
+                        </td>
+                        <td class="text-center">
+                            Start Advertisement (>)
+                        </td>
+                    </tr>
+                    <tr class="expert-mode-row">
+                        <td class="text-center">
+                            <input id="hk-end-cs" type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-lg"
+                                placeholder="Input combination">
+                        </td>
+                        <td class="text-center">
+                            End Cutscene
+                        </td>
+                    </tr>
+                    <tr class="expert-mode-row">
+                        <td class="text-center">
+                            <input id="hk-start-cs" type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-lg"
+                                placeholder="Input combination">
+                        </td>
+                        <td class="text-center">
+                            Start Cutscene (>)
+                        </td>
+                    </tr>
+                    <tr class="expert-mode-row">
+                        <td class="text-center">
+                            <input id="hk-end-o" type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-lg"
+                                placeholder="Input combination">
+                        </td>
+                        <td class="text-center">
+                            End Offtop
+                        </td>
+                    </tr>
+                    <tr class="expert-mode-row">
+                        <td class="text-center">
+                            <input id="hk-start-o" type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-lg"
+                                placeholder="Input combination">
+                        </td>
+                        <td class="text-center">
+                            Start Offtop (>)
+                        </td>
+                    </tr>
+                    <tr class="expert-mode-row">
+                        <td class="text-center">
+                            <input id="hk-end-ia" type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-lg"
+                                placeholder="Input combination">
+                        </td>
+                        <td class="text-center">
+                            End Interactive
+                        </td>
+                    </tr>
+                    <tr class="expert-mode-row">
+                        <td class="text-center">
+                            <input id="hk-start-ia" type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-lg"
+                                placeholder="Input combination">
+                        </td>
+                        <td class="text-center">
+                            Start Interactive (>)
+                        </td>
+                    </tr>
+                    <tr class="expert-mode-row">
+                        <td class="text-center">
+                            <input id="hk-end-s" type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-lg"
+                                placeholder="Input combination">
+                        </td>
+                        <td class="text-center">
+                            End Scam
+                        </td>
+                    </tr>
+                    <tr class="expert-mode-row">
+                        <td class="text-center">
+                            <input id="hk-start-s" type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-lg"
+                                placeholder="Input combination">
+                        </td>
+                        <td class="text-center">
+                            Start Scam (>)
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <div id="filters" class="tab-content" style="display: none">
@@ -591,6 +851,7 @@
     <footer class="footer">
         <div class="d-flex justify-content-between container">
             <a class="text-muted translate-me" href="https://github.com/videosegments/videosegments/issues" target="_blank">ReportBug</a>
+            <a class="text-muted translate-me" href="https://twitter.com/videosegments" target="_blank">Changelog</a>
             <a class="text-muted translate-me" href="https://db.videosegments.org/queue.php" target="_blank">ReviewQueue</a>
             <!-- <a class="text-muted translate-me" href="#" target="_blank">RateExtension</a> -->
         </div>

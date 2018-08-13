@@ -165,6 +165,9 @@ function getSettings() {
             fullscreenPosY: 200,
         },
 
+        // hotkeys 
+        hotkeys: {},
+
         // backward compatibility
         lastUpdateId: 0,
 

@@ -58,13 +58,18 @@
     padding: 2px;
 }
 
+#vs-editor-hidden {
+    display: none;
+}
+
 .vs-editor-maximized {
     width: 285px;
 }
 
 .vs-editor-minimized {
-    width: 40px;
-    height: 20px;
+    max-width: 40px;
+    max-height: 20px;
+    overflow: hidden;
 }
 
 .vs-editor-allow-hover:hover {
@@ -184,10 +189,11 @@
 
 #vs-editor-segments {
     border-bottom: 2px solid #ddd;
+    overflow: hidden;
     text-align: center;
     padding: 3px 0;
-    font-size: 11px !important;
     /* fullscreen */
+    font-size: 11px !important;
 }
 
 .vs-editor-segment-entry {
@@ -431,6 +437,7 @@
 #vs-tutorial ul {
     display: table;
     margin: 0 auto;
+    padding-left: 1.5em;
 }
 
 #vs-tutorial-header {

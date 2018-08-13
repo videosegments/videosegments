@@ -1,7 +1,7 @@
 {
 	"manifest_version": 2,
 	"name": "__MSG_extensionName__",
-	"version": "1.10.6",
+	"version": "1.10.8",
 	"applications": {
 		"gecko": {
 			"id": "{fca9d8e4-a5f2-4c00-9873-f38176edcba0}"
