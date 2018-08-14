@@ -224,6 +224,9 @@
 	"TabHotkeys": {
 		"message": "Hotkeys"
 	},
+	"OnlyWhenPanelIsActive": {
+		"message": "(work only if panel is not closed)"
+	},
 	"Combination": {
 		"message": "Combination"
 	},

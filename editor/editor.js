@@ -504,6 +504,9 @@ class Editor {
     addSegment(timestamp, type, left) {
         // log(timestamp, type, left);
 
+        // clear focus 
+        document.activeElement.blur();
+
         let entry;
         if (typeof this.segmentation.timestamps !== 'undefined' && this.segmentation.timestamps.length > 0) {
             let index = this.segmentation.timestamps.findIndex((element) => {
@@ -592,7 +595,7 @@ class Editor {
                     }
                 } else {
                     if (outsideOfArray) {
-                        index = this.segments.childNodes.length - 1;
+                        index--;
                     }
                     this.segments.childNodes[index - 1].insertAdjacentElement('afterEnd', entry);
                     this.updateEntryEndTime(entry.getElementsByClassName('vs-editor-segment-entry-end-time')[0]);

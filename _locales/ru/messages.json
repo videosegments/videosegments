@@ -221,6 +221,16 @@
 		"message": "Фильтр по изображению"
 	},
 
+	"TabHotkeys": {
+		"message": "Горячие клавиши"
+	},
+	"OnlyWhenPanelIsActive": {
+		"message": "(только если панель не закрыта)"
+	},
+	"Combination": {
+		"message": "Комбинация"
+	},
+
 	"Loading": {
 		"message": "Загрузка"
 	},

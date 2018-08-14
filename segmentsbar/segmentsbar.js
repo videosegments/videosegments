@@ -115,8 +115,6 @@ class Segmentsbar {
 
 		bar.style.backgroundColor = settings.segments[types[index]].color;
 		bar.style.opacity = settings.segments[types[index]].opacity;
-		
-
 		this.bars.splice(index, 0, bar);
 
 		if (types.length === 1) {

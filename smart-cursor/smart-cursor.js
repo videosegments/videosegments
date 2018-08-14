@@ -175,8 +175,7 @@ class SmartCursor {
             // block input of non-digit 
             // allow:                 1-0                                            numpad                                              f1-f12
             if (!(event.keyCode >= 48 && event.keyCode <= 57) && !(event.keyCode >= 96 && event.keyCode <= 105) && !(event.keyCode >= 112 && event.keyCode <= 123)) {
-                element.blur();
-                setTimeout(() => { element.focus(); }, 0);
+                setTimeout(() => { element.focus(); }, 100);
                 event.preventDefault();
             }
 
