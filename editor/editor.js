@@ -75,10 +75,12 @@ class Editor {
         let opacitySlider = document.getElementById('vs-editor-opacity-slider');
         opacitySlider.value = settings.segmentationToolsOpacity / 100;
 
-        if (settings.panelSize === 'maximized') {
-            this.maximize();
-        } else {
+        if (settings.panelSize === 'compact') {
+            this.compactize();
+        } else if (settings.panelSize === 'minimized') {
             this.minimize();
+        } else {
+            this.maximize();
         }
 
         if (settings.mode === 'simplified') {
@@ -109,6 +111,8 @@ class Editor {
         if (origin === 'community') {
             document.getElementById('vs-editor-share').style.display = 'none';
         }
+
+        showTutorial();
     }
 
     createSegmentsEntries() {
@@ -268,6 +272,10 @@ class Editor {
 
             if (settings.panelSize === 'compact') {
                 this.maximize();
+
+                document.getElementById('vs-editor-minimize').classList.remove('fa-window-maximize');
+                document.getElementById('vs-editor-minimize').classList.remove('fa-window-minimize');
+                document.getElementById('vs-editor-minimize').classList.add('fa-compress');
             }
         });
 
@@ -277,6 +285,10 @@ class Editor {
 
             if (settings.panelSize === 'compact' && this.dragging === false) {
                 this.minimize();
+
+                document.getElementById('vs-editor-minimize').classList.remove('fa-window-maximize');
+                document.getElementById('vs-editor-minimize').classList.remove('fa-window-minimize');
+                document.getElementById('vs-editor-minimize').classList.add('fa-compress');
             }
         });
     }
@@ -331,8 +343,7 @@ class Editor {
         icon.addEventListener('wheel', event => {
             if (event.deltaY < 0.0) {
                 this.changePlaybackRate(1);
-            }
-            else if (event.deltaY > 0.0) {
+            } else if (event.deltaY > 0.0) {
                 this.changePlaybackRate(-1);
 
             }
@@ -342,8 +353,7 @@ class Editor {
         icon.addEventListener('click', () => {
             if (this.video.playbackRate !== settings.primaryGaugeSpeed / 100) {
                 this.video.playbackRate = settings.primaryGaugeSpeed / 100;
-            }
-            else {
+            } else {
                 this.video.playbackRate = settings.secondaryGaugeSpeed / 100;
             }
         });
@@ -354,8 +364,7 @@ class Editor {
         // chrome will throw error if playback rate > 16.0
         if (newPlaybackRate > 16.0) {
             newPlaybackRate = 16.0;
-        }
-        else if (newPlaybackRate < 0.0) {
+        } else if (newPlaybackRate < 0.0) {
             newPlaybackRate = 0.0;
         }
         this.video.playbackRate = newPlaybackRate;
@@ -392,12 +401,17 @@ class Editor {
         let icon = document.getElementById('vs-editor-minimize');
         icon.addEventListener('click', () => {
             if (settings.panelSize === 'maximized') {
+                settings.panelSize = 'compact';
+                this.compactize();
+            } else if (settings.panelSize === 'compact') {
                 settings.panelSize = 'minimized';
                 this.minimize();
             } else {
                 settings.panelSize = 'maximized';
                 this.maximize();
             }
+
+            log(settings.panelSize);
 
             saveSettings();
         });
@@ -408,10 +422,10 @@ class Editor {
         this.panel.classList.add('vs-editor-minimized');
 
         document.getElementById('vs-editor-minimize').classList.remove('fa-window-minimize');
+        document.getElementById('vs-editor-minimize').classList.remove('fa-compress');
         document.getElementById('vs-editor-minimize').classList.add('fa-window-maximize');
 
         document.getElementById('vs-editor-buttons').style.display = 'none';
-        // document.getElementById('vs-editor-segments').style.display = 'none';
         document.getElementById('vs-editor-actions').style.display = 'none';
 
         document.getElementById('vs-editor-segments').style.width = '1px';
@@ -423,8 +437,32 @@ class Editor {
         document.getElementById('vs-editor-acceleration').style.display = 'none';
         document.getElementById('vs-editor-segments').style.borderBottom = '0px';
 
-        document.getElementById('vs-editor-move').style.paddingRight = '0px';
-        document.getElementById('vs-editor-close').style.paddingLeft = '0px';
+        document.getElementById('vs-editor-move').style.marginRight = '0px';
+        document.getElementById('vs-editor-close').style.marginLeft = '0px';
+    }
+
+    compactize() {
+        this.panel.classList.remove('vs-editor-maximized');
+        this.panel.classList.add('vs-editor-minimized');
+
+        document.getElementById('vs-editor-minimize').classList.remove('fa-window-maximize');
+        document.getElementById('vs-editor-minimize').classList.remove('fa-window-minimize');
+        document.getElementById('vs-editor-minimize').classList.add('fa-compress');
+
+        document.getElementById('vs-editor-buttons').style.display = 'none';
+        document.getElementById('vs-editor-actions').style.display = 'none';
+
+        document.getElementById('vs-editor-segments').style.width = '1px';
+        document.getElementById('vs-editor-segments').style.height = '1px';
+        document.getElementById('vs-editor-segments').style.padding = '0px';
+
+        document.getElementById('vs-editor-opacity').style.display = 'none';
+        document.getElementById('vs-editor-close').style.display = 'none';
+        document.getElementById('vs-editor-acceleration').style.display = 'none';
+        document.getElementById('vs-editor-segments').style.borderBottom = '0px';
+
+        document.getElementById('vs-editor-move').style.marginRight = '0px';
+        document.getElementById('vs-editor-close').style.marginLeft = '0px';
     }
 
     maximize() {
@@ -432,10 +470,10 @@ class Editor {
         this.panel.classList.add('vs-editor-maximized');
 
         document.getElementById('vs-editor-minimize').classList.remove('fa-window-maximize');
+        document.getElementById('vs-editor-minimize').classList.remove('fa-compress');
         document.getElementById('vs-editor-minimize').classList.add('fa-window-minimize');
 
         document.getElementById('vs-editor-buttons').style.display = 'block';
-        // document.getElementById('vs-editor-segments').style.display = 'block';
         document.getElementById('vs-editor-actions').style.display = 'flex';
 
         document.getElementById('vs-editor-segments').style.width = 'auto';
@@ -447,8 +485,8 @@ class Editor {
         document.getElementById('vs-editor-close').style.display = 'inline';
         document.getElementById('vs-editor-acceleration').style.display = 'inline';
 
-        document.getElementById('vs-editor-move').style.paddingRight = '8px';
-        document.getElementById('vs-editor-close').style.paddingLeft = '8px';
+        document.getElementById('vs-editor-move').style.marginRight = '8px';
+        document.getElementById('vs-editor-close').style.marginLeft = '8px';
     }
 
     hookCloseIcon() {
@@ -685,8 +723,7 @@ class Editor {
 
                 if (response.message === 'added' || response.message === 'updated' || response.message === 'accepted' || response.message === 'overriden') {
                     this.setSegmentationOrigin('official');
-                }
-                else if (response.message === 'sended') {
+                } else if (response.message === 'sended') {
 
                 }
             } else {
@@ -753,7 +790,9 @@ class Editor {
                     return false;
                 }
             }
-        }, {capture: true});
+        }, {
+            capture: true
+        });
 
         document.getElementById('vs-editor-inc-gauge').addEventListener('click', () => {
             this.changePlaybackRate(1);
@@ -797,7 +836,7 @@ class Editor {
                 segmentation = {
                     timestamps: this.segmentation.timestamps.slice(),
                     types: this.segmentation.types.slice()
-                };  
+                };
             }
 
             segmentation.timestamps.shift(); // remove first 

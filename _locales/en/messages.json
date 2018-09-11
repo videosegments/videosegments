@@ -409,6 +409,28 @@
 		"message": "Close"
 	},
 
+	"TutorialClose": {
+		"message": "OK"
+	},
+	"TutorialMove": {
+		"message": "Click and hold to move panel"
+	},
+	"TutorialAcceleration": {
+		"message": "Click or scroll (or configure hotkeys in settings) to change video playback speed"
+	},
+	"TutorialOpacitySlider": {
+		"message": "Use this slider to make panel transparent when mouse is outside of panel"
+	},
+	"TutorialMinimize": {
+		"message": "Cycle through panel sizes: maximized (default) -> compact (maximized on hover) -> minimized (small)"
+	},
+	"TutorialCut": {
+		"message": "You can use \"start cut\"/\"end cut\" buttons or configure hotkeys (in settings) to cut videos"
+	},
+	"TutorialShare": {
+		"message": "Send your segmentation to manual review. Accepted segmentations is visible to everyone"
+	},
+
 	"Blank": {
 		"message": ""
 	}

@@ -127,7 +127,7 @@ function getSettings() {
         segmentationToolsFullscreenOpacity: 60,
         segmentsBarLocation: 'separated',
         showPanel: 'always',
-        panelSize: 'compact',
+        panelSize: 'maximized',
         popupSize: 'big',
 
         primaryGaugeSpeed: 100,
@@ -155,7 +155,17 @@ function getSettings() {
         },
 
         // tutorial
-        tutorial: 0,
+        tutorial: {
+            move: false,
+            gauge: false,
+            opacity: false,
+            minimize: false,
+            close: false,
+            startCut: false,
+            endCut: false,
+            origin: false,
+            share: false
+        },
 
         // editor settings 
         editor: {
@@ -202,6 +212,20 @@ function getSettings() {
         }, result => {
             // backward compatibility 
             settings = Object.assign({}, settings, result.settings);
+            if (typeof settings.tutorial.move === 'undefined') {
+                settings.tutorial = {
+                    move: true,
+                    gauge: true,
+                    opacity: true,
+                    minimize: true,
+                    close: true,
+                    startCut: true,
+                    endCut: true,
+                    origin: true,
+                    share: true
+                };
+            }
+
             // return promise 
             resolve(settings);
         });

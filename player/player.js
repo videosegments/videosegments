@@ -178,8 +178,7 @@ class Player {
 
         if (this.segmentation.origin === 'noSegmentation') {
             this.segmentation = await tryChannelFilter(this.channel, this.video.duration);
-        }
-        else {
+        } else {
             this.segmentation = this.prepareSegmentation(this.segmentation);
             if ((typeof this.segmentation.types !== 'undefined') && this.segmentation.types[this.segmentation.types.length - 1] === '-') {
                 this.segmentation.timestamps.pop();
@@ -413,9 +412,11 @@ class Player {
                     // TODO: timers precision is about 10ms, so it can be calculated more precisily depending on speed
                     delay -= 40;
                 }
-                this.timer = setTimeout(() => { this.restoreSpeed(toSegmentNumber); this.onPlayEvent(); }, delay);
-            }
-            else {
+                this.timer = setTimeout(() => {
+                    this.restoreSpeed(toSegmentNumber);
+                    this.onPlayEvent();
+                }, delay);
+            } else {
                 this.video.currentTime = this.segmentation.timestamps[toSegmentNumber + 1];
 
                 toSegmentNumber = this.findNextSegmentToRewind(toSegmentNumber);
@@ -424,7 +425,6 @@ class Player {
         }
 
         if (toSegmentNumber !== null) {
-            log(delay * (1000 / this.video.playbackRate));
             this.timer = setTimeout(() => {
                 this.tryRewind(toSegmentNumber);
             }, delay * (1000 / this.video.playbackRate));
@@ -457,8 +457,7 @@ class Player {
 
         if (this.preventRateChangedEvent === false) {
             this.onPlayEvent();
-        }
-        else {
+        } else {
             this.preventRateChangedEvent = false;
         }
     }

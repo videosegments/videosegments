@@ -17,11 +17,9 @@
     You should have received a copy of the GNU General Public License
     along with VideoSegments. If not, see <https://www.gnu.org/licenses/>.
 */
-
 /*
     Segmentsbar 
 */
-
 #vs-segmentsbar {
     height: 0;
     overflow: visible;
@@ -46,7 +44,6 @@
 /*
     Panel 
 */
-
 #vs-editor {
     position: absolute;
     z-index: 2500;
@@ -93,7 +90,7 @@
 }
 
 #vs-editor-controls #vs-editor-move {
-    padding-right: 8px;
+    margin-right: 8px;
     cursor: grab;
 }
 
@@ -106,7 +103,7 @@
 }
 
 #vs-editor-controls #vs-editor-close {
-    padding-left: 8px;
+    margin-left: 8px;
     cursor: pointer;
 }
 
@@ -280,7 +277,6 @@
 /*
     Modals
 */
-
 .vs-small-modal {
     display: inline-block;
     position: fixed;
@@ -373,6 +369,7 @@
         top: -300px;
         opacity: 0
     }
+
     to {
         top: 100px;
         opacity: 1
@@ -421,7 +418,6 @@
 /*
     tutorial
 */
-
 #vs-tutorial {
     position: absolute;
     left: 50%;
@@ -459,4 +455,59 @@
 
 #vs-tutorial-footer {
     text-align: center;
+}
+
+.vs-tutorial {
+    text-align: center;
+    padding: 5px;
+    background-color: #343a40;
+    font-size: 14px;
+    line-height: 150%;
+    color: white;
+    max-width: 250px;
+    z-index: 9000;
+    cursor: context-menu;
+}
+
+.vs-tutorial[x-placement="top"] {
+    margin-bottom: 10px;
+}
+
+.vs-tutorial[x-placement="top"]:after {
+    content: "";
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-top: 10px solid red;
+    z-index: 9000;
+    position: absolute;
+    left: calc(50% - 10px);
+    bottom: -10px;
+}
+
+.vs-tutorial[x-placement="bottom"] {
+    margin-top: 10px;
+}
+
+.vs-tutorial[x-placement="bottom"]:after {
+    content: "";
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-bottom: 10px solid red;
+    z-index: 9000;
+    position: absolute;
+    left: 50%;
+    margin-left: -10px;
+    top: -10px;
+}
+
+.vs-tutorial-message {
+    margin-bottom: 0.5rem;
+}
+
+.vs-tutorial-close {
+    width: 50%;
 }

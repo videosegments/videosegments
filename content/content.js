@@ -41,12 +41,6 @@ getSettings().then((result) => {
     settings = result;
     // start observer 
     observer = new Observer();
-
-    if (settings.tutorial === 0) {
-        if (window.parent === window) {
-            displayTutorial();
-        }
-    }
 });
 
 browser.runtime.onMessage.addListener(request => {

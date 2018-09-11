@@ -88,6 +88,6 @@ div .sp-replacer {
 }
 
 .scrollable-table {
-    max-height: 340px;
+    max-height: 330px;
     overflow-y: auto;
 }
