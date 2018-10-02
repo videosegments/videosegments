@@ -129,6 +129,7 @@ function getSettings() {
         showPanel: 'always',
         panelSize: 'maximized',
         popupSize: 'big',
+        hideEndScreenCards: 'no',
 
         primaryGaugeSpeed: 100,
         secondaryGaugeSpeed: 200,
@@ -173,13 +174,14 @@ function getSettings() {
             posY: 200,
             fullscreenPosX: 200,
             fullscreenPosY: 200,
+            colorPanel: '#ffffff',
+            colorText: '#000000',
+            colorBorders: '#000000',
+            colorButtons: '#dddddd',
         },
 
         // hotkeys 
         hotkeys: {},
-
-        // backward compatibility
-        lastUpdateId: 0,
 
         // developer
         debug: false,
@@ -202,6 +204,9 @@ function getSettings() {
         // normal mode settings
         // maximizePanelOnHover: false,
         // showEditorInFullscreen: true,
+
+        // backward compatibility
+        // lastUpdateId: 0,
     };
 
     // make function async 
@@ -224,6 +229,13 @@ function getSettings() {
                     origin: true,
                     share: true
                 };
+            }
+
+            if (typeof settings.editor.colorPanel === 'undefined') {
+                settings.editor.colorPanel = '#ffffff';
+                settings.editor.colorText = '#000000';
+                settings.editor.colorBorders = '#000000';
+                settings.editor.colorButtons = '#dddddd';
             }
 
             // return promise 

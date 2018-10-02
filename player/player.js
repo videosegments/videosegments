@@ -30,6 +30,9 @@ class Player {
         this.preventRateChangedEvent = false;
         this.muteEvent = -1;
 
+        this.startTime = null;
+        this.seekTime = null;
+
         if (mutePlayEvent) {
             this.muteEvent = 1;
         }
@@ -85,6 +88,13 @@ class Player {
             // wait for video 
             this.video.addEventListener('canplay', ctx);
             log('waiting for video to load...');
+        }
+
+        if (settings.hideEndScreenCards === 'yes') {
+            injectCSSRule('.ytp-ce-channel {visibility: hidden !important;}');
+            injectCSSRule('.ytp-ce-playlist {visibility: hidden !important;}');
+            injectCSSRule('.annotation {visibility: hidden !important;}');
+            injectCSSRule('.ytp-cards-button {visibility: hidden !important;}');
         }
     }
 
@@ -186,9 +196,6 @@ class Player {
             }
         }
 
-        // remove play listener 
-        this.video.removeEventListener('play', this.onPlayBeforeLoadedContext);
-
         // bind events so "this" will be reference to object instead of "video"
         this.onPlayEventContext = this.onPlayEvent.bind(this);
         this.onPauseEventContext = this.onPauseEvent.bind(this);
@@ -199,21 +206,37 @@ class Player {
         this.video.addEventListener('pause', this.onPauseEventContext);
         this.video.addEventListener('ratechange', this.onRateChangeEventContext);
 
+        // sometime player reset video to 0 at start
+        this.video.addEventListener('seeked', () => {
+            log('seeked', this.video.currentTime);
+            if (this.seekTime !== null && Math.abs(this.seekTime-this.video.currentTime) > 0.1 ) {
+                this.video.currentTime = this.seekTime;
+                this.seekTime = null;
+                log('corrected seek time');
+            }
+        });
+
         if (settings.mode === 'simplified') {
             this.originalSegmentation = this.segmentation;
             this.segmentation = this.getSimplifiedSegmentation(this.segmentation);
             this.segmentation.origin = this.originalSegmentation.origin;
         }
 
+        // remove play listener 
+        this.video.removeEventListener('play', this.onPlayBeforeLoadedContext);
+
         // if autopause timer is working 
         if (this.timer) {
             // round up time again  
+            this.startTime = Math.round(this.video.currentTime);
             this.video.currentTime = Math.round(this.video.currentTime);
+            log(this.video.currentTime);
 
             // disable timer 
             clearTimeout(this.timer);
             this.timer = undefined;
             // start video playback 
+
             this.video.play();
         } else {
             // fake play event 
@@ -369,7 +392,7 @@ class Player {
     }
 
     onPlayEvent(event) {
-        log('player::onPlayEvent: ', this.video.currentTime);
+        log('player::onPlayEvent: ', this.video.currentTime, this.startTime, this.seekTime);
         if (typeof event === 'undefined') {
             return;
         }
@@ -397,7 +420,13 @@ class Player {
     }
 
     tryRewind(toSegmentNumber) {
+        if ( this.startTime !== null ) {
+            this.video.currentTime = this.startTime;
+            this.startTime = null;
+        }
+
         let delay = this.segmentation.timestamps[toSegmentNumber] - this.video.currentTime;
+        log('onPlayEvent', this.video.currentTime, this.startTime, this.seekTime, delay);
         if (delay <= 0) {
             let duration = this.segmentation.timestamps[toSegmentNumber + 1] - this.video.currentTime;
             if (duration <= settings.segments[this.segmentation.types[toSegmentNumber]].duration) {
@@ -417,6 +446,7 @@ class Player {
                     this.onPlayEvent();
                 }, delay);
             } else {
+                this.seekTime = this.segmentation.timestamps[toSegmentNumber + 1];
                 this.video.currentTime = this.segmentation.timestamps[toSegmentNumber + 1];
 
                 toSegmentNumber = this.findNextSegmentToRewind(toSegmentNumber);

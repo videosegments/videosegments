@@ -102,8 +102,6 @@ function showTutorial() {
 }
 
 async function tutorial(owner, element, message, placement, section) {
-    log(settings.tutorial);
-    log(settings.tutorial[section]);
     if (settings.tutorial[section] !== false) {
         return;
     }

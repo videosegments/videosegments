@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
             log = console.log.bind(console);
             log('settings loaded');
         } else {
-            log = function () { };
+            log = function () {};
         }
 
         settings = result;
@@ -89,8 +89,7 @@ document.addEventListener('DOMContentLoaded', () => {
             browser.storage.local.set({
                 ['|c|' + document.getElementById('channel-name').value]: [skipFrom, skipTo, skipLast]
             });
-        }
-        else {
+        } else {
             browser.storage.local.remove(
                 ['|c|' + document.getElementById('channel-name').value], () => {
                     document.getElementById('skip-from').value = 0.0;
@@ -152,8 +151,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (settings.debug) {
                 document.getElementById('toggle-debug').style.color = 'red';
-            }
-            else {
+            } else {
                 document.getElementById('toggle-debug').style.color = 'blue';
             }
 
@@ -251,8 +249,7 @@ function getPressedCombination(e) {
     return ctrlmod + altmod + shiftmod + e.key.toUpperCase();
 }
 
-function connectHotkey(shortcuts, id, shortcut)
-{
+function connectHotkey(shortcuts, id, shortcut) {
     let element = document.getElementById(id);
     element.value = shortcuts[shortcut] || '';
     element.addEventListener('keydown', e => {
@@ -266,13 +263,12 @@ function updateHotkey(e, element, callee) {
         if (e.key === 'Backspace') {
             delete settings.hotkeys[document.getElementById(element).value];
             document.getElementById(element).value = '';
-        }
-        else {
+        } else {
             delete settings.hotkeys[document.getElementById(element).value];
             document.getElementById(element).value = shortcut;
             settings.hotkeys[shortcut] = callee;
         }
-        
+
         e.preventDefault();
         saveSettings();
         updateSettings('hotkeys', settings.hotkeys);
@@ -349,6 +345,7 @@ function restoreSettings() {
     connectSettingValue(document.getElementById('primary-gauge-speed'), 'primaryGaugeSpeed');
     connectSettingValue(document.getElementById('secondary-gauge-speed'), 'secondaryGaugeSpeed');
     connectSettingValue(document.getElementById('gauge-speed-step'), 'gaugeSpeedStep');
+    connectSettingValue(document.getElementById('hide-end-screen-cards'), 'hideEndScreenCards');
 
     document.getElementById('panel-mode').addEventListener('click', () => {
         toggleMode();
@@ -435,6 +432,34 @@ function restoreSettings() {
                 segment: acceleration,
                 speed: settings.segments[acceleration].speed
             });
+        });
+    }
+
+    let panelColors = ['panel', 'text', 'borders', 'buttons'];
+    for (let color of panelColors) {
+        let variableName = 'color' + color.charAt(0).toUpperCase() + color.slice(1)
+
+        $('#color-' + color).spectrum({
+            color: tinycolor(settings.editor[variableName]),
+            showInput: true,
+            showAlpha: false,
+            cancelText: 'cancel',
+            chooseText: 'select',
+            showInitial: true,
+            preferredFormat: "hex3",
+            clickoutFiresChange: false,
+            showPalette: true,
+            palette: [
+                ["#222", "#bbb"],
+                ["#000", "#fff"],
+                ["#555", "#999"],
+            ],
+            change: (newColor) => {
+                settings.editor[variableName] = newColor.toHexString();
+
+                saveSettings();
+                updateSettings(variableName, settings.editor[variableName]);
+            }
         });
     }
 }

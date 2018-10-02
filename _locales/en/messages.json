@@ -89,6 +89,15 @@
 	"Expert": {
 		"message": "Expert"
 	},
+	"HideEndScreenCards": {
+		"message": "Hide end-screen cards"
+	},
+	"Yes": {
+		"message": "Yes"
+	},
+	"No": {
+		"message": "No"
+	},
 	"RequestTimeout": {
 		"message": "Request timeout, seconds (?)"
 	},
@@ -115,6 +124,21 @@
 	},
 	"GaugeSpeedStep": {
 		"message": "Acceleration step, % (?)"
+	},
+	"ColorPanel": {
+		"message": "Color of panel"
+	},
+	"ColorText": {
+		"message": "Color of text"
+	},
+	"ColorButtons": {
+		"message": "Color of buttons"
+	},
+	"ColorIcons": {
+		"message": "Color of icons"
+	},
+	"ColorBorders": {
+		"message": "Color of borders"
 	},
 
 	"Color": {

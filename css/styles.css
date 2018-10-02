@@ -47,11 +47,11 @@
 #vs-editor {
     position: absolute;
     z-index: 2500;
-    background: white;
+    /* background: white; */
     box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.25);
     border-radius: 5px;
     /* force black text color in fullscreen mode */
-    color: #000 !important;
+    /* color: #000 !important; */
     padding: 2px;
 }
 
@@ -59,12 +59,22 @@
     display: none;
 }
 
-.vs-editor-maximized {
+.vs-editor-simplified {
+    width: 200px;
+}
+
+.vs-editor-expert {
     width: 285px;
 }
 
 .vs-editor-minimized {
     max-width: 40px;
+    max-height: 20px;
+    overflow: hidden;
+}
+
+.vs-editor-compactized {
+    max-width: 20px;
     max-height: 20px;
     overflow: hidden;
 }
@@ -150,7 +160,7 @@
     display: flex;
     justify-content: space-evenly;
     padding-bottom: 5px;
-    border-bottom: 2px solid #ddd;
+    /* border-bottom: 2px solid #ddd; */
     flex-wrap: wrap;
     line-height: 0px;
 }
@@ -185,7 +195,7 @@
 }
 
 #vs-editor-segments {
-    border-bottom: 2px solid #ddd;
+    /* border-bottom: 2px solid #ddd; */
     overflow: hidden;
     text-align: center;
     padding: 3px 0;
@@ -260,14 +270,14 @@
 
 #vs-editor-origin {
     text-align: center;
-    width: 40%;
+    width: 45%;
 }
 
 #vs-editor-share {
     font-family: courier;
     text-align: center;
     font-size: 11px;
-    width: 40%;
+    width: 45%;
 }
 
 .vs-editor-display-none {

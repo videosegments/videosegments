@@ -116,6 +116,21 @@
 	"GaugeSpeedStep": {
 		"message": "Шаг ускорения, % (?)"
 	},
+	"ColorPanel": {
+		"message": "Цвет панели"
+	},
+	"ColorText": {
+		"message": "Цвет текста"
+	},
+	"ColorButtons": {
+		"message": "Цвет кнопок"
+	},
+	"ColorIcons": {
+		"message": "Цвет иконок"
+	},
+	"ColorBorders": {
+		"message": "Цвет границ"
+	},
 
 	"Color": {
 		"message": "Цвет"

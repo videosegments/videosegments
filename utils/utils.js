@@ -40,8 +40,7 @@ function makeImport(file) {
             xhr.setRequestHeader("content-type", "application/x-www-form-urlencoded");
             xhr.send();
         });
-    }
-    else {
+    } else {
         let link = document.createElement('link');
         link.rel = 'import';
         link.href = file;
@@ -91,6 +90,16 @@ function injectCSS(url) {
     link.rel = 'stylesheet';
     document.getElementsByTagName('head')[0].appendChild(link);
 }
+
+// https://stackoverflow.com/a/38063486
+function injectCSSRule(rule) {
+    var css = document.createElement('style');
+    css.type = 'text/css';
+    if (css.styleSheet) css.styleSheet.cssText = rule; // Support for IE
+    else css.appendChild(document.createTextNode(rule)); // Support for the rest
+    document.getElementsByTagName("head")[0].appendChild(css);
+}
+
 
 function secondsToClockTime(timestamp, showMs = false, keepPrecision = false) {
     if (typeof timestamp === 'undefined') {

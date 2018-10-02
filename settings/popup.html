@@ -118,6 +118,17 @@
                         </td>
                     </tr>
                     <tr>
+                        <td>
+                            <span class="translate-me">HideEndScreenCards</span>
+                        </td>
+                        <td class="text-center">
+                            <select id="hide-end-screen-cards" class="border-top-0 border-left-0 border-right-0 ouline-none">
+                                <option class="translate-me" value="yes">Yes</option>
+                                <option class="translate-me" value="no">No</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
                         <td class="translate-me" title="Max. duration of autopause before segmentation is recieved" data-toggle="tooltip">RequestTimeout</td>
                         <td>
                             <input id="autopause-duration" type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
@@ -158,6 +169,30 @@
                         <td class="translate-me" title="When mouse hover over gauge icon, mouse wheel up/down will change speed by this value" data-toggle="tooltip">GaugeSpeedStep</td>
                         <td>
                             <input id="gauge-speed-step" type="text" class="form-control form-control-sm text-center m-auto border-top-0 border-left-0 border-right-0 ouline-none input-sm">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="translate-me">ColorPanel</td>
+                        <td style="text-align: center">
+                            <input type="text" id="color-panel" class="spectrum">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="translate-me">ColorText</td>
+                        <td style="text-align: center">
+                            <input type="text" id="color-text" class="spectrum">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="translate-me">ColorBorders</td>
+                        <td style="text-align: center">
+                            <input type="text" id="color-borders" class="spectrum">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="translate-me">ColorButtons</td>
+                        <td style="text-align: center">
+                            <input type="text" id="color-buttons" class="spectrum">
                         </td>
                     </tr>
                 </tbody>
@@ -858,7 +893,7 @@
         </div>
     </footer>
 
-    <script src="storage.js"></script>
+    <script src="../storage/storage.js"></script>
     <script src="scripts.js"></script>
 </body>
 

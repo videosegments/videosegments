@@ -51,6 +51,12 @@ class Editor {
         document.body.appendChild(this.panel);
         log('editor created');
 
+        if (settings.mode === 'simplified') {
+            this.panel.classList.add('vs-editor-simplified');
+        } else {
+            this.panel.classList.add('vs-editor-expert');
+        }
+
         this.originElement = document.getElementById('vs-editor-origin');
 
         this.fullscreen = false;
@@ -112,6 +118,19 @@ class Editor {
             document.getElementById('vs-editor-share').style.display = 'none';
         }
 
+        this.panel.style.background = settings.editor.colorPanel;
+        // https://stackoverflow.com/a/463134
+        this.panel.style.setProperty("color", settings.editor.colorText, "important");
+
+        let buttons = this.panel.getElementsByTagName('button');
+        for (let button of buttons) {
+            button.style.color = settings.editor.colorText;
+            button.style.background = settings.editor.colorButtons;
+            button.style.borderColor = settings.editor.colorBorders;
+        }
+
+        document.getElementById('vs-editor-buttons').style.borderBottom = '2px solid ' + settings.editor.colorBorders;
+
         showTutorial();
     }
 
@@ -132,10 +151,12 @@ class Editor {
 
     createSegmentEntry(i) {
         let entry = this.segmentEntryTemplate.cloneNode(true);
+        entry.getElementsByClassName('vs-editor-segment-entry-end-time')[0].style.color = settings.editor.colorText;
+        entry.getElementsByClassName('vs-editor-segment-entry-end-time')[0].style.background = settings.editor.colorPanel;
 
-        let startTimeInput = entry.getElementsByClassName('vs-editor-segment-entry-start-time')[0];
-        startTimeInput.value = secondsToClockTime(this.segmentation.timestamps[i]);
-        startTimeInput.size = startTimeInput.value.length + 1;
+        // let startTimeInput = entry.getElementsByClassName('vs-editor-segment-entry-start-time')[0];
+        // startTimeInput.value = secondsToClockTime(this.segmentation.timestamps[i]);
+        // startTimeInput.size = startTimeInput.value.length + 1;
 
         let span = entry.getElementsByClassName('vs-editor-segment-entry-type-simplified')[0];
         let select = entry.getElementsByClassName('vs-editor-segment-entry-type')[0];
@@ -163,22 +184,22 @@ class Editor {
         return entry;
     }
 
-    updateEntryStartTime(endTime) {
-        let entry = endTime.parentNode.parentNode;
-
-        let nextEntry, index;
-        for (index = 0; index < this.segments.childNodes.length; ++index) {
-            if (this.segments.childNodes[index] === entry) {
-                nextEntry = this.segments.childNodes[index + 1];
-                break;
-            }
-        }
-
-        if (typeof nextEntry !== 'undefined') {
-            let startTime = nextEntry.getElementsByClassName('vs-editor-segment-entry-start-time')[0];
-            startTime.value = secondsToClockTime(this.segmentation.timestamps[index + 1]);
-        }
-    }
+    // updateEntryStartTime(endTime) {
+    //     let entry = endTime.parentNode.parentNode;
+    // 
+    //     let nextEntry, index;
+    //     for (index = 0; index < this.segments.childNodes.length; ++index) {
+    //         if (this.segments.childNodes[index] === entry) {
+    //             nextEntry = this.segments.childNodes[index + 1];
+    //             break;
+    //         }
+    //     }
+    // 
+    //     if (typeof nextEntry !== 'undefined') {
+    //         let startTime = nextEntry.getElementsByClassName('vs-editor-segment-entry-start-time')[0];
+    //         startTime.value = secondsToClockTime(this.segmentation.timestamps[index + 1]);
+    //     }
+    // }
 
     updateEntryEndTime(startTime) {
         let entry = startTime.parentNode.parentNode;
@@ -284,7 +305,7 @@ class Editor {
             moveTimer = undefined;
 
             if (settings.panelSize === 'compact' && this.dragging === false) {
-                this.minimize();
+                this.compactize();
 
                 document.getElementById('vs-editor-minimize').classList.remove('fa-window-maximize');
                 document.getElementById('vs-editor-minimize').classList.remove('fa-window-minimize');
@@ -356,6 +377,7 @@ class Editor {
             } else {
                 this.video.playbackRate = settings.secondaryGaugeSpeed / 100;
             }
+            this.player.onPlayEvent(null);
         });
     }
 
@@ -368,6 +390,7 @@ class Editor {
             newPlaybackRate = 0.0;
         }
         this.video.playbackRate = newPlaybackRate;
+        this.player.onPlayEvent(null);
     }
 
     hookOpacitySlider() {
@@ -411,13 +434,14 @@ class Editor {
                 this.maximize();
             }
 
-            log(settings.panelSize);
+            // log(settings.panelSize);
 
             saveSettings();
         });
     }
 
     minimize() {
+        this.panel.classList.remove('vs-editor-compactized');
         this.panel.classList.remove('vs-editor-maximized');
         this.panel.classList.add('vs-editor-minimized');
 
@@ -425,6 +449,10 @@ class Editor {
         document.getElementById('vs-editor-minimize').classList.remove('fa-compress');
         document.getElementById('vs-editor-minimize').classList.add('fa-window-maximize');
 
+        document.getElementById('vs-editor-move').classList.remove('fa-cut');
+        document.getElementById('vs-editor-move').classList.add('fa-arrows-alt');
+
+        document.getElementById('vs-editor-minimize').style.display = 'inline';
         document.getElementById('vs-editor-buttons').style.display = 'none';
         document.getElementById('vs-editor-actions').style.display = 'none';
 
@@ -443,12 +471,17 @@ class Editor {
 
     compactize() {
         this.panel.classList.remove('vs-editor-maximized');
-        this.panel.classList.add('vs-editor-minimized');
+        this.panel.classList.remove('vs-editor-minimized');
+        this.panel.classList.add('vs-editor-compactized');
 
         document.getElementById('vs-editor-minimize').classList.remove('fa-window-maximize');
         document.getElementById('vs-editor-minimize').classList.remove('fa-window-minimize');
         document.getElementById('vs-editor-minimize').classList.add('fa-compress');
 
+        document.getElementById('vs-editor-move').classList.remove('fa-arrows-alt');
+        document.getElementById('vs-editor-move').classList.add('fa-cut');
+
+        document.getElementById('vs-editor-minimize').style.display = 'none';
         document.getElementById('vs-editor-buttons').style.display = 'none';
         document.getElementById('vs-editor-actions').style.display = 'none';
 
@@ -466,6 +499,7 @@ class Editor {
     }
 
     maximize() {
+        this.panel.classList.remove('vs-editor-compactized');
         this.panel.classList.remove('vs-editor-minimized');
         this.panel.classList.add('vs-editor-maximized');
 
@@ -473,20 +507,24 @@ class Editor {
         document.getElementById('vs-editor-minimize').classList.remove('fa-compress');
         document.getElementById('vs-editor-minimize').classList.add('fa-window-minimize');
 
+        document.getElementById('vs-editor-move').classList.remove('fa-cut');
+        document.getElementById('vs-editor-move').classList.add('fa-arrows-alt');
+
+        document.getElementById('vs-editor-minimize').style.display = 'inline';
         document.getElementById('vs-editor-buttons').style.display = 'block';
         document.getElementById('vs-editor-actions').style.display = 'flex';
 
         document.getElementById('vs-editor-segments').style.width = 'auto';
         document.getElementById('vs-editor-segments').style.height = 'auto';
         document.getElementById('vs-editor-segments').style.padding = '3px 0px';
-        document.getElementById('vs-editor-segments').style.borderBottom = '2px solid #ddd';
+        document.getElementById('vs-editor-segments').style.borderBottom = '2px solid ' + settings.editor.colorBorders;
 
         document.getElementById('vs-editor-opacity').style.display = 'inline';
         document.getElementById('vs-editor-close').style.display = 'inline';
         document.getElementById('vs-editor-acceleration').style.display = 'inline';
 
-        document.getElementById('vs-editor-move').style.marginRight = '8px';
-        document.getElementById('vs-editor-close').style.marginLeft = '8px';
+        document.getElementById('vs-editor-move').style.marginRight = '4px';
+        document.getElementById('vs-editor-close').style.marginLeft = '4px';
     }
 
     hookCloseIcon() {
@@ -580,7 +618,7 @@ class Editor {
                 }, 100);
 
                 this.segmentsbar.updateWidth(this.segmentation.timestamps, index - 1, roundFloat(this.video.duration), true);
-                this.updateEntryStartTime(endTimeInput);
+                //this.updateEntryStartTime(endTimeInput);
             } else if (left === false && this.segmentation.types[index] === type) {
                 let endTimeInput = document.getElementsByClassName('vs-editor-segment-entry-end-time')[index - 1];
                 this.segmentation.timestamps[index] = timestamp;
@@ -591,7 +629,7 @@ class Editor {
                 }, 100);
 
                 this.segmentsbar.updateWidth(this.segmentation.timestamps, index, roundFloat(this.video.duration), true);
-                this.updateEntryStartTime(endTimeInput);
+                //this.updateEntryStartTime(endTimeInput);
                 this.updateEntryEndTime(endTimeInput);
             } else {
                 index = tempIndex;
@@ -640,7 +678,7 @@ class Editor {
                 }
 
                 this.segmentsbar.addSegment(this.segmentation.timestamps, this.segmentation.types, this.video.duration, index, left);
-                this.updateEntryStartTime(entry.getElementsByClassName('vs-editor-segment-entry-end-time')[0]);
+                //this.updateEntryStartTime(entry.getElementsByClassName('vs-editor-segment-entry-end-time')[0]);
             }
         } else {
             this.segmentation.timestamps = (left ? [0, timestamp] : [0, roundFloat(this.video.duration)]);
@@ -649,7 +687,7 @@ class Editor {
             entry = this.createSegmentEntry(0);
             this.segments.appendChild(entry);
             this.segmentsbar.addSegment(this.segmentation.timestamps, this.segmentation.types, this.video.duration, 0, left);
-            this.updateEntryStartTime(entry.getElementsByClassName('vs-editor-segment-entry-end-time')[0]);
+            //this.updateEntryStartTime(entry.getElementsByClassName('vs-editor-segment-entry-end-time')[0]);
             this.updateEntryEndTime(entry.getElementsByClassName('vs-editor-segment-entry-end-time')[0]);
             setTimeout(() => {
                 entry.getElementsByClassName('vs-editor-segment-entry-end-time')[0].focus();
@@ -950,6 +988,51 @@ class Editor {
             }
         } else if (prop === 'popupSize') {
             settings[prop] = value;
+        } else if (prop === 'colorPanel') {
+            settings.editor[prop] = value;
+
+            this.panel.style.background = settings.editor.colorPanel;
+            log(settings.editor[prop], value, settings.editor.colorPanel);
+
+            let entries = document.getElementsByClassName('vs-editor-segment-entry-end-time');
+            for (let entry of entries) {
+                entry.style.background = settings.editor.colorPanel;
+            }
+        } else if (prop === 'colorText') {
+            settings.editor[prop] = value;
+
+            // https://stackoverflow.com/a/463134
+            this.panel.style.setProperty("color", settings.editor.colorText, "important");
+
+            let entries = document.getElementsByClassName('vs-editor-segment-entry-end-time');
+            for (let entry of entries) {
+                entry.style.color = settings.editor.colorText;
+            }
+
+            let buttons = this.panel.getElementsByTagName('button');
+            for (let button of buttons) {
+                button.style.color = settings.editor.colorText;
+            }
+        } else if (prop === 'colorButtons') {
+            settings.editor[prop] = value;
+
+            let buttons = this.panel.getElementsByTagName('button');
+            for (let button of buttons) {
+                button.style.background = settings.editor.colorButtons;
+            }
+
+        } else if (prop === 'colorBorders') {
+            settings.editor[prop] = value;
+
+            let buttons = this.panel.getElementsByTagName('button');
+            for (let button of buttons) {
+                button.style.borderColor = settings.editor.colorBorders;
+            }
+
+            document.getElementById('vs-editor-buttons').style.borderBottom = '2px solid ' + settings.editor.colorBorders;
+            document.getElementById('vs-editor-segments').style.borderBottom = '2px solid ' + settings.editor.colorBorders;
+        } else {
+            log('unhandled prop change', prop);
         }
     }
 
