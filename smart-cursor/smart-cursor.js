@@ -184,7 +184,7 @@ class SmartCursor {
 
         this.video.currentTime = this.timestamps[this.index] + 0.01;
         this.segmentsbar.updateWidth(this.timestamps, this.index, roundFloat(this.video.duration), true);
-        this.editor.updateEntryStartTime(this.parent);
+        // this.editor.updateEntryStartTime(this.parent);
         this.editor.saveSegmentation();
 
         let pos = element.selectionStart;
@@ -237,7 +237,7 @@ class SmartCursor {
         this.timestamps[this.index] = this.clockTimeToSeconds(element.value);
         this.video.currentTime = this.timestamps[this.index] + 0.01;
         this.segmentsbar.updateWidth(this.timestamps, this.index, roundFloat(this.video.duration), true);
-        this.editor.updateEntryStartTime(this.parent);
+        // this.editor.updateEntryStartTime(this.parent);
         this.editor.saveSegmentation();
 
         element.value = secondsToClockTime(this.timestamps[this.index], true);

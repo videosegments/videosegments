@@ -176,7 +176,7 @@ function getSettings() {
             fullscreenPosY: 200,
             colorPanel: '#ffffff',
             colorText: '#000000',
-            colorBorders: '#000000',
+            colorBorders: '#dddddd',
             colorButtons: '#dddddd',
         },
 

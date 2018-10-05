@@ -89,6 +89,15 @@
 	"Expert": {
 		"message": "Эксперт"
 	},
+	"HideEndScreenCards": {
+		"message": "Скрывать end-screen карты"
+	},
+	"Yes": {
+		"message": "Да"
+	},
+	"No": {
+		"message": "Нет"
+	},
 	"RequestTimeout": {
 		"message": "Ожидание запроса, секунды (?)"
 	},
@@ -270,10 +279,10 @@
 	},
 
 	"StartCut": {
-		"message": "Начать обрезку"
+		"message": "Начало"
 	},
 	"EndCut": {
-		"message": "Закончить обрезку"
+		"message": "Конец"
 	},
 
 	"content": {

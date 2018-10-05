@@ -184,7 +184,7 @@ class Editor {
         return entry;
     }
 
-    // updateEntryStartTime(endTime) {
+    updateEntryStartTime(endTime) {
     //     let entry = endTime.parentNode.parentNode;
     // 
     //     let nextEntry, index;
@@ -199,7 +199,8 @@ class Editor {
     //         let startTime = nextEntry.getElementsByClassName('vs-editor-segment-entry-start-time')[0];
     //         startTime.value = secondsToClockTime(this.segmentation.timestamps[index + 1]);
     //     }
-    // }
+        log('remove this call');
+    }
 
     updateEntryEndTime(startTime) {
         let entry = startTime.parentNode.parentNode;
@@ -980,9 +981,13 @@ class Editor {
                     if (settings.mode === 'simplified') {
                         document.getElementById('vs-editor-simplified-buttons').style.display = 'flex';
                         document.getElementById('vs-editor-expert-buttons').style.display = 'none';
+                        this.panel.classList.remove('vs-editor-expert');
+                        this.panel.classList.add('vs-editor-simplified');
                     } else {
                         document.getElementById('vs-editor-simplified-buttons').style.display = 'none';
                         document.getElementById('vs-editor-expert-buttons').style.display = 'flex';
+                        this.panel.classList.remove('vs-editor-simplified');
+                        this.panel.classList.add('vs-editor-expert');
                     }
                 }
             }

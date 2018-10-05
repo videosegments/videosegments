@@ -450,9 +450,6 @@ function restoreSettings() {
             clickoutFiresChange: false,
             showPalette: true,
             palette: [
-                ["#222", "#bbb"],
-                ["#000", "#fff"],
-                ["#555", "#999"],
             ],
             change: (newColor) => {
                 settings.editor[variableName] = newColor.toHexString();

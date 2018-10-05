@@ -95,6 +95,7 @@ class Player {
             injectCSSRule('.ytp-ce-playlist {visibility: hidden !important;}');
             injectCSSRule('.annotation {visibility: hidden !important;}');
             injectCSSRule('.ytp-cards-button {visibility: hidden !important;}');
+            injectCSSRule('.ytp-ce-video {visibility: hidden !important;}');
         }
     }
 
@@ -207,14 +208,14 @@ class Player {
         this.video.addEventListener('ratechange', this.onRateChangeEventContext);
 
         // sometime player reset video to 0 at start
-        this.video.addEventListener('seeked', () => {
-            log('seeked', this.video.currentTime);
-            if (this.seekTime !== null && Math.abs(this.seekTime-this.video.currentTime) > 0.1 ) {
-                this.video.currentTime = this.seekTime;
-                this.seekTime = null;
-                log('corrected seek time');
-            }
-        });
+        // this.video.addEventListener('seeked', () => {
+        //     log('seeked', this.video.currentTime);
+        //     if (this.seekTime !== null && Math.abs(this.seekTime-this.video.currentTime) > 0.1 ) {
+        //         this.video.currentTime = this.seekTime;
+        //         this.seekTime = null;
+        //         log('corrected seek time');
+        //     }
+        // });
 
         if (settings.mode === 'simplified') {
             this.originalSegmentation = this.segmentation;
