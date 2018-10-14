@@ -343,6 +343,9 @@
 	"deleted": {
 		"message": "Deleted"
 	},
+	"inReviewQueue": {
+		"message": "Sent to Review"
+	},
 
 	"sharingSuccess": {
 		"message": "Success!"
@@ -433,11 +436,11 @@
 		"message": "Close"
 	},
 
-	"TutorialClose": {
+	"TutorialOK": {
 		"message": "OK"
 	},
 	"TutorialMove": {
-		"message": "Click and hold to move panel"
+		"message": "Click and drag to move panel"
 	},
 	"TutorialAcceleration": {
 		"message": "Click or scroll (or configure hotkeys in settings) to change video playback speed"
@@ -446,10 +449,16 @@
 		"message": "Use this slider to make panel transparent when mouse is outside of panel"
 	},
 	"TutorialMinimize": {
-		"message": "Cycle through panel sizes: maximized (default) -> compact (maximized on hover) -> minimized (small)"
+		"message": "Cycle through panel sizes: maximized -> minimized"
+	},
+	"TutorialClose": {
+		"message": "Close panel (you can enable panel later using settings)"
 	},
 	"TutorialCut": {
 		"message": "You can use \"start cut\"/\"end cut\" buttons or configure hotkeys (in settings) to cut videos"
+	},
+	"TutorialOrigin": {
+		"message": "This is segmentation origin. Can be \"local\", \"community\" or \"saved locally\" on save"
 	},
 	"TutorialShare": {
 		"message": "Send your segmentation to manual review. Accepted segmentations is visible to everyone"

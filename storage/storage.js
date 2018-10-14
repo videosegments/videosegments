@@ -157,6 +157,7 @@ function getSettings() {
 
         // tutorial
         tutorial: {
+            started: false,
             move: false,
             gauge: false,
             opacity: false,
@@ -217,8 +218,10 @@ function getSettings() {
         }, result => {
             // backward compatibility 
             settings = Object.assign({}, settings, result.settings);
-            if (typeof settings.tutorial.move === 'undefined') {
+            settings.tutorial.started = false;
+            if (typeof settings.tutorial.started === 'undefined') {
                 settings.tutorial = {
+                    started: true,
                     move: true,
                     gauge: true,
                     opacity: true,
@@ -236,6 +239,11 @@ function getSettings() {
                 settings.editor.colorText = '#000000';
                 settings.editor.colorBorders = '#000000';
                 settings.editor.colorButtons = '#dddddd';
+            }
+
+            if (settings.panelSize === 'compact') {
+                settings.panelSize === 'minimized';
+                saveSettings();
             }
 
             // return promise 

@@ -80,10 +80,8 @@ class Editor {
 
         let opacitySlider = document.getElementById('vs-editor-opacity-slider');
         opacitySlider.value = settings.segmentationToolsOpacity / 100;
-
-        if (settings.panelSize === 'compact') {
-            this.compactize();
-        } else if (settings.panelSize === 'minimized') {
+        
+        if (settings.panelSize === 'minimized') {
             this.minimize();
         } else {
             this.maximize();
@@ -114,7 +112,7 @@ class Editor {
         let origin = ((typeof this.segmentation.origin !== 'undefined') ? this.segmentation.origin : 'noSegmentation');
         this.setSegmentationOrigin(origin);
 
-        if (origin === 'community') {
+        if (origin === 'official') {
             document.getElementById('vs-editor-share').style.display = 'none';
         }
 
@@ -185,20 +183,20 @@ class Editor {
     }
 
     updateEntryStartTime(endTime) {
-    //     let entry = endTime.parentNode.parentNode;
-    // 
-    //     let nextEntry, index;
-    //     for (index = 0; index < this.segments.childNodes.length; ++index) {
-    //         if (this.segments.childNodes[index] === entry) {
-    //             nextEntry = this.segments.childNodes[index + 1];
-    //             break;
-    //         }
-    //     }
-    // 
-    //     if (typeof nextEntry !== 'undefined') {
-    //         let startTime = nextEntry.getElementsByClassName('vs-editor-segment-entry-start-time')[0];
-    //         startTime.value = secondsToClockTime(this.segmentation.timestamps[index + 1]);
-    //     }
+        //     let entry = endTime.parentNode.parentNode;
+        // 
+        //     let nextEntry, index;
+        //     for (index = 0; index < this.segments.childNodes.length; ++index) {
+        //         if (this.segments.childNodes[index] === entry) {
+        //             nextEntry = this.segments.childNodes[index + 1];
+        //             break;
+        //         }
+        //     }
+        // 
+        //     if (typeof nextEntry !== 'undefined') {
+        //         let startTime = nextEntry.getElementsByClassName('vs-editor-segment-entry-start-time')[0];
+        //         startTime.value = secondsToClockTime(this.segmentation.timestamps[index + 1]);
+        //     }
         log('remove this call');
     }
 
@@ -292,12 +290,11 @@ class Editor {
                 videoPlayerControls.dispatchEvent(mouseMoveEvent);
             }, 1000);
 
-            if (settings.panelSize === 'compact') {
+            if (settings.panelSize === 'minimized') {
                 this.maximize();
-
-                document.getElementById('vs-editor-minimize').classList.remove('fa-window-maximize');
+                
                 document.getElementById('vs-editor-minimize').classList.remove('fa-window-minimize');
-                document.getElementById('vs-editor-minimize').classList.add('fa-compress');
+                document.getElementById('vs-editor-minimize').classList.add('fa-window-maximize');
             }
         });
 
@@ -305,12 +302,8 @@ class Editor {
             clearInterval(moveTimer);
             moveTimer = undefined;
 
-            if (settings.panelSize === 'compact' && this.dragging === false) {
-                this.compactize();
-
-                document.getElementById('vs-editor-minimize').classList.remove('fa-window-maximize');
-                document.getElementById('vs-editor-minimize').classList.remove('fa-window-minimize');
-                document.getElementById('vs-editor-minimize').classList.add('fa-compress');
+            if (settings.panelSize === 'minimized' && this.dragging === false) {
+                this.minimize();
             }
         });
     }
@@ -425,9 +418,6 @@ class Editor {
         let icon = document.getElementById('vs-editor-minimize');
         icon.addEventListener('click', () => {
             if (settings.panelSize === 'maximized') {
-                settings.panelSize = 'compact';
-                this.compactize();
-            } else if (settings.panelSize === 'compact') {
                 settings.panelSize = 'minimized';
                 this.minimize();
             } else {
@@ -435,49 +425,16 @@ class Editor {
                 this.maximize();
             }
 
-            // log(settings.panelSize);
-
             saveSettings();
         });
     }
 
     minimize() {
-        this.panel.classList.remove('vs-editor-compactized');
         this.panel.classList.remove('vs-editor-maximized');
         this.panel.classList.add('vs-editor-minimized');
 
         document.getElementById('vs-editor-minimize').classList.remove('fa-window-minimize');
-        document.getElementById('vs-editor-minimize').classList.remove('fa-compress');
         document.getElementById('vs-editor-minimize').classList.add('fa-window-maximize');
-
-        document.getElementById('vs-editor-move').classList.remove('fa-cut');
-        document.getElementById('vs-editor-move').classList.add('fa-arrows-alt');
-
-        document.getElementById('vs-editor-minimize').style.display = 'inline';
-        document.getElementById('vs-editor-buttons').style.display = 'none';
-        document.getElementById('vs-editor-actions').style.display = 'none';
-
-        document.getElementById('vs-editor-segments').style.width = '1px';
-        document.getElementById('vs-editor-segments').style.height = '1px';
-        document.getElementById('vs-editor-segments').style.padding = '0px';
-
-        document.getElementById('vs-editor-opacity').style.display = 'none';
-        document.getElementById('vs-editor-close').style.display = 'none';
-        document.getElementById('vs-editor-acceleration').style.display = 'none';
-        document.getElementById('vs-editor-segments').style.borderBottom = '0px';
-
-        document.getElementById('vs-editor-move').style.marginRight = '0px';
-        document.getElementById('vs-editor-close').style.marginLeft = '0px';
-    }
-
-    compactize() {
-        this.panel.classList.remove('vs-editor-maximized');
-        this.panel.classList.remove('vs-editor-minimized');
-        this.panel.classList.add('vs-editor-compactized');
-
-        document.getElementById('vs-editor-minimize').classList.remove('fa-window-maximize');
-        document.getElementById('vs-editor-minimize').classList.remove('fa-window-minimize');
-        document.getElementById('vs-editor-minimize').classList.add('fa-compress');
 
         document.getElementById('vs-editor-move').classList.remove('fa-arrows-alt');
         document.getElementById('vs-editor-move').classList.add('fa-cut');
@@ -500,12 +457,10 @@ class Editor {
     }
 
     maximize() {
-        this.panel.classList.remove('vs-editor-compactized');
         this.panel.classList.remove('vs-editor-minimized');
         this.panel.classList.add('vs-editor-maximized');
 
         document.getElementById('vs-editor-minimize').classList.remove('fa-window-maximize');
-        document.getElementById('vs-editor-minimize').classList.remove('fa-compress');
         document.getElementById('vs-editor-minimize').classList.add('fa-window-minimize');
 
         document.getElementById('vs-editor-move').classList.remove('fa-cut');
@@ -763,7 +718,7 @@ class Editor {
                 if (response.message === 'added' || response.message === 'updated' || response.message === 'accepted' || response.message === 'overriden') {
                     this.setSegmentationOrigin('official');
                 } else if (response.message === 'sended') {
-
+                    this.setSegmentationOriginLink();
                 }
             } else {
                 if (settings.popupSize === 'big') {
@@ -906,6 +861,20 @@ class Editor {
         translateNodeText(this.originElement, origin);
     }
 
+    setSegmentationOriginLink() {
+        while (this.originElement.firstChild) {
+            this.originElement.removeChild(this.originElement.firstChild);
+        }
+
+        let link = document.createElement('a');
+        link.href = 'https://videosegments.org/queue.php';
+        link.target = '_blank';
+        translateNodeText(link, 'inReviewQueue');
+        this.originElement.appendChild(link);
+
+        document.getElementById('vs-editor-share').style.display = 'none';
+    }
+
     updateIterationsCount() {
         while (this.originElement.firstChild) {
             this.originElement.removeChild(this.originElement.firstChild);
@@ -913,6 +882,8 @@ class Editor {
 
         let textNode = document.createTextNode(translateText('savedLocally') + ' (' + this.iterations + ')');
         this.originElement.appendChild(textNode);
+
+        document.getElementById('vs-editor-share').style.display = 'block';
     }
 
     updateSettings(prop, value) {
@@ -997,7 +968,6 @@ class Editor {
             settings.editor[prop] = value;
 
             this.panel.style.background = settings.editor.colorPanel;
-            log(settings.editor[prop], value, settings.editor.colorPanel);
 
             let entries = document.getElementsByClassName('vs-editor-segment-entry-end-time');
             for (let entry of entries) {
@@ -1036,6 +1006,8 @@ class Editor {
 
             document.getElementById('vs-editor-buttons').style.borderBottom = '2px solid ' + settings.editor.colorBorders;
             document.getElementById('vs-editor-segments').style.borderBottom = '2px solid ' + settings.editor.colorBorders;
+        } else if (prop === 'tutorial') {
+            showTutorial();
         } else {
             log('unhandled prop change', prop);
         }

@@ -343,6 +343,9 @@
 	"deleted": {
 		"message": "Удалено"
 	},
+	"inReviewQueue": {
+		"message": "На рассмотрении"
+	},
 
 	"sharingSuccess": {
 		"message": "Успех!"

@@ -1,7 +1,7 @@
 {
 	"manifest_version": 2,
 	"name": "__MSG_extensionName__",
-	"version": "1.11.3.1",
+	"version": "1.11.4",
 	"applications": {
 		"gecko": {
 			"id": "{fca9d8e4-a5f2-4c00-9873-f38176edcba0}"
@@ -64,6 +64,7 @@
 		"modals/small.html",
 		"modals/big.html",
 		"modals/captcha.html",
-		"tutorial/tutorial.html"
+		"tutorial/tutorial.html",
+		"tutorial/welcome.html"
 	]
 }

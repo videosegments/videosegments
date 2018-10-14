@@ -25,6 +25,7 @@ class Observer {
         // look into HTMLcollection instead of hundreds of mutations 
         // https://stackoverflow.com/a/39332340
         this.collection = document.getElementsByTagName('video');
+        this.player = null;
 
         // observe mutations in window.body 
         this.observer = new MutationObserver(() => {
@@ -43,7 +44,7 @@ class Observer {
                 this.mutePlayEvent = true;
             }
         }
-        log('looking for player...');
+        log('looking for player...');        
     }
 
     onBodyMutations() {
@@ -91,6 +92,8 @@ class Observer {
     }
 
     updateSettings(prop, value) {
-        this.player.updateSettings(prop, value);
+        if (this.player !== null) {
+            this.player.updateSettings(prop, value);
+        }
     }
 }

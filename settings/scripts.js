@@ -138,7 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.getElementById('review-queue').addEventListener('click', () => {
-        window.open('https://db.videosegments.org/queue.php', '_blank');
+        window.open('https://videosegments.org/queue.php', '_blank');
     });
 
     let clicks = 0;

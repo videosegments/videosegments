@@ -43,6 +43,10 @@ getSettings().then((result) => {
     observer = new Observer();
 });
 
+document.addEventListener('DOMContentLoaded', () => {
+    showWelcomePopup(observer);
+})
+
 browser.runtime.onMessage.addListener(request => {
     if (typeof request.getChannel !== 'undefined') {
         let container = document.querySelector('yt-formatted-string#owner-name.style-scope.ytd-video-owner-renderer');

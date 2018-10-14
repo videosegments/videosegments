@@ -1,0 +1,105 @@
+<div class="vs-welcome">
+    <div class="vs-welcome-header">
+        Thank you for installing VideoSegments!<br>
+    </div>
+    <div class="vs-welcome-content">
+        <div class="vs-welcome-color-scheme">
+            <p class="vs-welcome-subheader">Select color scheme</p>
+            <p class="vs-welcome-subheader-small">(actual panel is 50% smaller)</p>
+
+            <select id="vs-welcome-color-scheme-selector">
+                <option value="light">Light</option>
+                <option value="dark">Dark</option>
+            </select>
+
+            <div id="vs-dummy-editor">
+                <div id="vs-dummy-editor-controls">
+                    <div style="display: flex">
+                        <div id="vs-dummy-editor-move" class="fa fa-arrows-alt"></div>
+                        <div id="vs-dummy-editor-acceleration" class="fa fa-tachometer-alt"></div>
+                    </div>
+
+                    <div id="vs-dummy-editor-opacity" style="display: inline;">
+                        <input id="vs-dummy-editor-opacity-slider" type="range" min="0" step="0.05" max="1">
+                    </div>
+
+                    <div style="display: flex">
+                        <div id="vs-dummy-editor-minimize" class="fa fa-window-minimize"></div>
+                        <div id="vs-dummy-editor-close" class="fa fa-times"></div>
+                    </div>
+                </div>
+
+                <div id="vs-dummy-editor-buttons">
+                    <button id="vs-dummy-editor-segment-pl" class="vs-translate-me">EndCut</button>
+                    <button id="vs-dummy-editor-segment-sk" class="vs-translate-me">StartCut</button>
+                </div>
+
+                <div id="vs-dummy-editor-segments">
+                    <div class="vs-editor-segment-entry">
+                        <i class="fa fa-times vs-editor-segment-entry-delete"></i>
+                        <span class="vs-editor-segment-entry-type-simplified">skip</span>
+                        &nbsp;&nbsp;<span class="vs-translate-me">to</span>&nbsp;&nbsp;
+                        <div class="vs-editor-segment-entry-time-holder">
+                            <input class="vs-editor-segment-entry-time vs-editor-segment-entry-end-time" size="6" value="0:12"
+                                readonly>
+                        </div>
+                        <i class="fa fa-forward vs-editor-segment-entry-rewind"></i>
+                    </div>
+                    <div class="vs-editor-segment-entry">
+                        <i class="fa fa-times vs-editor-segment-entry-delete"></i>
+                        <span class="vs-editor-segment-entry-type-simplified">play</span>
+                        &nbsp;&nbsp;<span class="vs-translate-me">to</span>&nbsp;&nbsp;
+                        <div class="vs-editor-segment-entry-time-holder">
+                            <input class="vs-editor-segment-entry-time vs-editor-segment-entry-end-time" size="6" value="3:28"
+                                readonly>
+                        </div>
+                        <i class="fa fa-forward vs-editor-segment-entry-rewind"></i>
+                    </div>
+                    <div class="vs-editor-segment-entry">
+                        <i class="fa fa-times vs-editor-segment-entry-delete"></i>
+                        <span class="vs-editor-segment-entry-type-simplified">skip</span>
+                        &nbsp;&nbsp;<span class="vs-translate-me">to</span>&nbsp;&nbsp;
+                        <div class="vs-editor-segment-entry-time-holder">
+                            <input class="vs-editor-segment-entry-time vs-editor-segment-entry-end-time" size="6" value="3:45"
+                                readonly>
+                        </div>
+                        <i class="fa fa-forward vs-editor-segment-entry-rewind"></i>
+                    </div>
+                </div>
+
+                <div id="vs-dummy-editor-actions" style="display: flex;">
+                    <span id="vs-dummy-editor-origin" class="vs-translate-me">Local</span>
+                    <button id="vs-dummy-editor-share" class="vs-translate-me">Share</button>
+                </div>
+            </div>
+        </div>
+        <div class="vs-welcome-tutorial">
+            <p class="vs-welcome-subheader">Select tutorial mode</p>
+            <p class="vs-welcome-subheader-small">(tutorial use tooltips)</p>
+
+            <div class="vs-welcome-tutorial-mode-selector">
+                <div class="vs-welcome-tutorial-mode">
+                    <input type="radio" name="group1" id="vs-welcome-tutorial-mode-full" checked="checked">
+                    <label for="vs-welcome-tutorial-mode-full"><span class="vs-welcome-tutorial-mode-text">Full
+                            tutorial</span></label>
+                    <p class="vs-welcome-subheader-small" style="padding-left: 3rem">learn about everything</p>
+                </div>
+                <div class="vs-welcome-tutorial-mode">
+                    <input type="radio" name="group1" id="vs-welcome-tutorial-mode-short">
+                    <label for="vs-welcome-tutorial-mode-short"><span class="vs-welcome-tutorial-mode-text">Short
+                            tutorial</span></label>
+                    <p class="vs-welcome-subheader-small" style="padding-left: 3rem">learn some basics</p>
+                </div>
+                <div class="vs-welcome-tutorial-mode">
+                    <input type="radio" name="group1" id="vs-welcome-tutorial-mode-skip">
+                    <label for="vs-welcome-tutorial-mode-skip"><span class="vs-welcome-tutorial-mode-text">Skip
+                            tutorial</span></label>
+                    <p class="vs-welcome-subheader-small" style="padding-left: 3rem">disable tutorial</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div style="text-align: center">
+        <button id="vs-welcome-start">Continue</button>
+    </div>
+</div>
