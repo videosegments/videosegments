@@ -89,11 +89,24 @@ async function showWelcomePopup(observer) {
         let colorScheme = colorSchemeSelect.options[colorSchemeSelect.selectedIndex].value;
 
         if (colorScheme === 'light') {
+            settings.editor.colorPanel = '#fff';
+            settings.editor.colorText = '#000';
+            settings.editor.colorBorders = '#000';
+            settings.editor.colorButtons = '#ddd';
+            saveSettings();
+
             updateSettings(observer, 'colorPanel', '#fff');
             updateSettings(observer, 'colorText', '#000');
             updateSettings(observer, 'colorButtons', '#ddd');
             updateSettings(observer, 'colorBorders', '#ccc');
+
         } else if (colorScheme === 'dark') {
+            settings.editor.colorPanel = '#222';
+            settings.editor.colorText = '#ddd';
+            settings.editor.colorBorders = '#111';
+            settings.editor.colorButtons = '#000';
+            saveSettings();
+
             updateSettings(observer, 'colorPanel', '#222');
             updateSettings(observer, 'colorText', '#ddd');
             updateSettings(observer, 'colorButtons', '#111');

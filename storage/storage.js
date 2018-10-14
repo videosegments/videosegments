@@ -187,6 +187,9 @@ function getSettings() {
         // developer
         debug: false,
 
+        // backward compatibility
+        lastUpdateId: 0,
+
         // obsolete vars 
         // simplified
         // lastVersionChanges
@@ -205,9 +208,6 @@ function getSettings() {
         // normal mode settings
         // maximizePanelOnHover: false,
         // showEditorInFullscreen: true,
-
-        // backward compatibility
-        // lastUpdateId: 0,
     };
 
     // make function async 
@@ -218,7 +218,7 @@ function getSettings() {
         }, result => {
             // backward compatibility 
             settings = Object.assign({}, settings, result.settings);
-            if (typeof settings.tutorial.started === 'undefined') {
+            if (typeof settings.tutorial.opacity === true) {
                 settings.tutorial = {
                     started: true,
                     move: true,
@@ -234,10 +234,10 @@ function getSettings() {
             }
 
             if (typeof settings.editor.colorPanel === 'undefined') {
-                settings.editor.colorPanel = '#ffffff';
-                settings.editor.colorText = '#000000';
-                settings.editor.colorBorders = '#000000';
-                settings.editor.colorButtons = '#dddddd';
+                settings.editor.colorPanel = '#fff';
+                settings.editor.colorText = '#000';
+                settings.editor.colorBorders = '#000';
+                settings.editor.colorButtons = '#ddd';
             }
 
             if (settings.panelSize === 'compact') {
