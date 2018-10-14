@@ -218,7 +218,6 @@ function getSettings() {
         }, result => {
             // backward compatibility 
             settings = Object.assign({}, settings, result.settings);
-            settings.tutorial.started = false;
             if (typeof settings.tutorial.started === 'undefined') {
                 settings.tutorial = {
                     started: true,
