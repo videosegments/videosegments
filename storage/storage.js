@@ -157,16 +157,16 @@ function getSettings() {
 
         // tutorial
         tutorial: {
-            started: false,
-            move: false,
-            gauge: false,
-            opacity: false,
-            minimize: false,
-            close: false,
-            startCut: false,
-            endCut: false,
-            origin: false,
-            share: false
+            started: true,
+            move: true,
+            gauge: true,
+            opacity: true,
+            minimize: true,
+            close: true,
+            startCut: true,
+            endCut: true,
+            origin: true,
+            share: true
         },
 
         // editor settings 
@@ -218,20 +218,19 @@ function getSettings() {
         }, result => {
             // backward compatibility 
             settings = Object.assign({}, settings, result.settings);
-            if (typeof settings.tutorial.opacity === true) {
-                settings.tutorial = {
-                    started: true,
-                    move: true,
-                    gauge: true,
-                    opacity: true,
-                    minimize: true,
-                    close: true,
-                    startCut: true,
-                    endCut: true,
-                    origin: true,
-                    share: true
-                };
-            }
+            settings.tutorial = {
+                started: true,
+                move: true,
+                gauge: true,
+                opacity: true,
+                minimize: true,
+                close: true,
+                startCut: true,
+                endCut: true,
+                origin: true,
+                share: true
+            };
+            saveSettings();
 
             if (typeof settings.editor.colorPanel === 'undefined') {
                 settings.editor.colorPanel = '#fff';
@@ -252,7 +251,9 @@ function getSettings() {
 }
 
 function saveSettings() {
-    browser.storage.local.set({
-        settings: settings
-    });
+    if ( typeof settings !== 'undefined' ) {
+        browser.storage.local.set({
+            settings: settings
+        });
+    }
 }

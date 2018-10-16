@@ -80,7 +80,7 @@ class Editor {
 
         let opacitySlider = document.getElementById('vs-editor-opacity-slider');
         opacitySlider.value = settings.segmentationToolsOpacity / 100;
-        
+
         if (settings.panelSize === 'minimized') {
             this.minimize();
         } else {
@@ -151,6 +151,8 @@ class Editor {
         let entry = this.segmentEntryTemplate.cloneNode(true);
         entry.getElementsByClassName('vs-editor-segment-entry-end-time')[0].style.color = settings.editor.colorText;
         entry.getElementsByClassName('vs-editor-segment-entry-end-time')[0].style.background = settings.editor.colorPanel;
+        entry.getElementsByClassName('vs-editor-segment-entry-type')[0].style.color = settings.editor.colorText;
+        entry.getElementsByClassName('vs-editor-segment-entry-type')[0].style.background = settings.editor.colorPanel;
 
         // let startTimeInput = entry.getElementsByClassName('vs-editor-segment-entry-start-time')[0];
         // startTimeInput.value = secondsToClockTime(this.segmentation.timestamps[i]);
@@ -292,7 +294,7 @@ class Editor {
 
             if (settings.panelSize === 'minimized') {
                 this.maximize();
-                
+
                 document.getElementById('vs-editor-minimize').classList.remove('fa-window-minimize');
                 document.getElementById('vs-editor-minimize').classList.add('fa-window-maximize');
             }
@@ -973,6 +975,11 @@ class Editor {
             for (let entry of entries) {
                 entry.style.background = settings.editor.colorPanel;
             }
+
+            entries = document.getElementsByClassName('vs-editor-segment-entry-type');
+            for (let entry of entries) {
+                entry.style.background = settings.editor.colorPanel;
+            }
         } else if (prop === 'colorText') {
             settings.editor[prop] = value;
 
@@ -982,6 +989,11 @@ class Editor {
             let entries = document.getElementsByClassName('vs-editor-segment-entry-end-time');
             for (let entry of entries) {
                 entry.style.color = settings.editor.colorText;
+            }
+
+            entries = document.getElementsByClassName('vs-editor-segment-entry-type');
+            for (let entry of entries) {
+                entry.style.color = settings.editor.colorPanel;
             }
 
             let buttons = this.panel.getElementsByTagName('button');
