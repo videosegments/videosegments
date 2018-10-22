@@ -455,7 +455,7 @@
 		"message": "Close panel (you can enable panel later using settings)"
 	},
 	"TutorialCut": {
-		"message": "You can use \"start cut\"/\"end cut\" buttons or configure hotkeys (in settings) to cut videos"
+		"message": "Use \"start cut\" and \"end cut\" buttons or configure hotkeys (in settings) to cut videos"
 	},
 	"TutorialOrigin": {
 		"message": "This is segmentation origin. Can be \"local\", \"community\" or \"saved locally\" on save"

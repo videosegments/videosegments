@@ -157,16 +157,16 @@ function getSettings() {
 
         // tutorial
         tutorial: {
-            started: true,
-            move: true,
-            gauge: true,
-            opacity: true,
-            minimize: true,
-            close: true,
-            startCut: true,
-            endCut: true,
-            origin: true,
-            share: true
+            started: false,
+            move: false,
+            gauge: false,
+            opacity: false,
+            minimize: false,
+            close: false,
+            startCut: false,
+            endCut: false,
+            origin: false,
+            share: false
         },
 
         // editor settings 
@@ -218,31 +218,6 @@ function getSettings() {
         }, result => {
             // backward compatibility 
             settings = Object.assign({}, settings, result.settings);
-            settings.tutorial = {
-                started: true,
-                move: true,
-                gauge: true,
-                opacity: true,
-                minimize: true,
-                close: true,
-                startCut: true,
-                endCut: true,
-                origin: true,
-                share: true
-            };
-            saveSettings();
-
-            if (typeof settings.editor.colorPanel === 'undefined') {
-                settings.editor.colorPanel = '#fff';
-                settings.editor.colorText = '#000';
-                settings.editor.colorBorders = '#000';
-                settings.editor.colorButtons = '#ddd';
-            }
-
-            if (settings.panelSize === 'compact') {
-                settings.panelSize === 'minimized';
-                saveSettings();
-            }
 
             // return promise 
             resolve(settings);
