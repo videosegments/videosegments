@@ -29,6 +29,11 @@ async function showWelcomePopup(observer) {
         return;
     }
 
+    // if it is iframe
+    if (window.parent !== window) {
+        return;
+    }
+
     injectCSS('https://use.fontawesome.com/releases/v5.2.0/css/all.css');
 
     let content = await makeImport(
@@ -54,6 +59,8 @@ async function showWelcomePopup(observer) {
     });
 
     document.getElementById('vs-welcome-start').addEventListener('click', () => {
+        popup.style.display = 'none';
+        
         settings.tutorial.started = true;
         if (document.getElementById('vs-welcome-tutorial-mode-full').checked === true) {
             settings.tutorial.move = false;

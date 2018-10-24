@@ -247,6 +247,7 @@ class Player {
         this.segmentsbar.set(this.segmentation.timestamps, this.segmentation.types, this.video.duration);
         log('segmentsbar created');
 
+        // if it is not iframe
         if (window.parent === window) {
             // start editor 
             this.editor = new Editor(this, this.segmentsbar, this.video, this.id, this.segmentation);
