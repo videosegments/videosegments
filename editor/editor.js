@@ -128,8 +128,8 @@ class Editor {
         }
 
         document.getElementById('vs-editor-buttons').style.borderBottom = '2px solid ' + settings.editor.colorBorders;
-
-        showTutorial();
+        
+        playTutorial(settings.tutorial.section);
     }
 
     createSegmentsEntries() {
@@ -686,6 +686,11 @@ class Editor {
     }
 
     async shareSegmentation() {
+        if ( settings.tutorial.finished !== true ) {
+            sendSmallModal('3', 'AvailableAfterTutorial');
+            return;
+        }
+
         if (this.lastShareIteration === this.iterations) {
             if (settings.popupSize === 'big') {
                 sendBigModal('1', 'noChangesInSegmentation');
@@ -1018,8 +1023,6 @@ class Editor {
 
             document.getElementById('vs-editor-buttons').style.borderBottom = '2px solid ' + settings.editor.colorBorders;
             document.getElementById('vs-editor-segments').style.borderBottom = '2px solid ' + settings.editor.colorBorders;
-        } else if (prop === 'tutorial') {
-            showTutorial();
         } else {
             log('unhandled prop change', prop);
         }

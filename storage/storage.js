@@ -123,11 +123,11 @@ function getSettings() {
         autoPauseDuration: 2.0,
         popupDurationOnSend: 5.0,
         databasePriority: 'local',
-        segmentationToolsOpacity: 80,
+        segmentationToolsOpacity: 100,
         segmentationToolsFullscreenOpacity: 60,
         segmentsBarLocation: 'separated',
         showPanel: 'always',
-        panelSize: 'maximized',
+        panelSize: 'minimized',
         popupSize: 'big',
         hideEndScreenCards: 'no',
 
@@ -158,15 +158,8 @@ function getSettings() {
         // tutorial
         tutorial: {
             started: false,
-            move: false,
-            gauge: false,
-            opacity: false,
-            minimize: false,
-            close: false,
-            startCut: false,
-            endCut: false,
-            origin: false,
-            share: false
+            section: 'tutorial_panel_hover',
+            finished: false
         },
 
         // editor settings 
@@ -218,6 +211,11 @@ function getSettings() {
         }, result => {
             // backward compatibility 
             settings = Object.assign({}, settings, result.settings);
+
+            if ( settings.tutorial.started !== false && settings.tutorial.finished !== true ) {
+                settings.tutorial.finished = true;
+                saveSettings();
+            }
 
             // return promise 
             resolve(settings);

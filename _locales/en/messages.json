@@ -84,7 +84,7 @@
 		"message": "Panel mode"
 	},
 	"Normal": {
-		"message": "Normal"
+		"message": "Skip & Play"
 	},
 	"Expert": {
 		"message": "Expert"
@@ -462,6 +462,34 @@
 	},
 	"TutorialShare": {
 		"message": "Send your segmentation to manual review. Accepted segmentations is visible to everyone"
+	},
+
+	"TutorialPanelHover": {
+		"message": "Hover your mouse over icon to open VideoSegments panel."
+	},
+	"TutorialPanelTransparency": {
+		"message": "Use this slider to change panel/icon transparency when mouse is outside of panel. Try it now!"
+	},
+	"TutorialPanelMovement": {
+		"message": "Click and drag to move panel. Move panel to place you like to continue tutorial"
+	},
+	"TutorialPanelMaximization": {
+		"message": "Press this icon to toggle panel minimization when mouse moves outside. Try it now!"
+	},
+	"TutorialPanelEndCut": {
+		"message": "Use this button to cut video start or to end cut. Press this button to continue tutorial"
+	},
+	"TutorialPanelSmartCursor": {
+		"message": "You can quickly adjust time using keyboard. Left\\right to move and top\\down to add. Try it now!"
+	},
+	"TutorialPanelShare": {
+		"message": "If video does not have community-based segmentation, you can send your to manual review by pressing this button! Press this button (nothing will happen) to continue tutorial"
+	},
+	"AvailableAfterTutorial": {
+		"message": "This button will work after tutorial"
+	},
+	"TutorialPanelStartCut": {
+		"message": "Use this button to cut video end or to start cut. Press this button to end tutorial"
 	},
 
 	"Blank": {

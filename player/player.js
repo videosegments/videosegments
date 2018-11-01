@@ -231,7 +231,6 @@ class Player {
             // round up time again  
             this.startTime = Math.round(this.video.currentTime);
             this.video.currentTime = Math.round(this.video.currentTime);
-            log(this.video.currentTime);
 
             // disable timer 
             clearTimeout(this.timer);

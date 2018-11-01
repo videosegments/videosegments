@@ -473,6 +473,7 @@
     max-width: 250px;
     z-index: 9000;
     cursor: context-menu;
+    pointer-events: none;
 }
 
 .vs-tutorial[x-placement="top"] {

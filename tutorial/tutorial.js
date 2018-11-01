@@ -20,221 +20,249 @@
 
 "use strict";
 
-let lastPopup;
-
-async function showWelcomePopup(observer) {
-    // if (settings.debug === true) settings.tutorial.started = false;
-
-    if (settings.tutorial.started !== false) {
+async function playTutorial(section) {
+    if (settings.tutorial.finished !== false) {
         return;
     }
 
-    // if it is iframe
-    if (window.parent !== window) {
-        return;
+    let updateState = false;
+    if (settings.tutorial.section !== section) {
+        updateState = true;
     }
-
-    injectCSS('https://use.fontawesome.com/releases/v5.2.0/css/all.css');
-
-    let content = await makeImport(
-        browser.extension.getURL("tutorial/welcome.html")
-    );
-
-    let popup = content.getElementsByClassName('vs-welcome')[0];
-    document.body.appendChild(popup);
-
-    let panel = document.getElementById('vs-dummy-editor');
-    setDummyColorScheme(panel, '#fff', '#000', '#ddd', '#ccc');
-
-    document.getElementById('vs-welcome-color-scheme-selector').addEventListener('change', function () {
-        if (this.value === 'light') {
-            setDummyColorScheme(panel, '#fff', '#000', '#ddd', '#ccc');
-        } else if (this.value === 'dark') {
-            setDummyColorScheme(panel, '#222', '#ddd', '#111', '#000');
-        } else if (this.value === 'green') {
-            setDummyColorScheme(panel, '#050', '#E1F9E1', '#050', '#161');
-        } else if (this.value === 'blue') {
-            setDummyColorScheme(panel, '#373276', '#D9D8EA', '#0C083B', '#827FB2');
-        }
-    });
-
-    document.getElementById('vs-welcome-start').addEventListener('click', () => {
-        popup.style.display = 'none';
-        
-        settings.tutorial.started = true;
-        if (document.getElementById('vs-welcome-tutorial-mode-full').checked === true) {
-            settings.tutorial.move = false;
-            settings.tutorial.gauge = false;
-            settings.tutorial.opacity = false;
-            settings.tutorial.minimize = false;
-            settings.tutorial.close = false;
-            settings.tutorial.startCut = false;
-            settings.tutorial.origin = false;
-            settings.tutorial.share = false;
-        } else if (document.getElementById('vs-welcome-tutorial-mode-short').checked === true) {
-            settings.tutorial.move = true;
-            settings.tutorial.gauge = false;
-            settings.tutorial.opacity = false;
-            settings.tutorial.minimize = true;
-            settings.tutorial.close = true;
-            settings.tutorial.startCut = false;
-            settings.tutorial.origin = true;
-            settings.tutorial.share = false;
-        } else if (document.getElementById('vs-welcome-tutorial-mode-skip').checked === true) {
-            settings.tutorial.move = true;
-            settings.tutorial.gauge = true;
-            settings.tutorial.opacity = true;
-            settings.tutorial.minimize = true;
-            settings.tutorial.close = true;
-            settings.tutorial.startCut = true;
-            settings.tutorial.origin = true;
-            settings.tutorial.share = true;
-        }
+    settings.tutorial.section = section;
+    if (updateState === true) {
         saveSettings();
+    }
+    log(section);
 
-        let colorSchemeSelect = document.getElementById('vs-welcome-color-scheme-selector');
-        let colorScheme = colorSchemeSelect.options[colorSchemeSelect.selectedIndex].value;
+    let panel = document.getElementById("vs-editor");
+    if (section === "tutorial_panel_hover") {
+        let obj = await displayPopper(panel, "TutorialPanelHover");
+        panel.addEventListener("mouseenter", onMouseEnter);
 
-        if (colorScheme === 'light') {
-            settings.editor.colorPanel = '#fff';
-            settings.editor.colorText = '#000';
-            settings.editor.colorBorders = '#000';
-            settings.editor.colorButtons = '#ddd';
-            saveSettings();
+        function onMouseEnter() {
+            panel.removeEventListener("mouseenter", onMouseEnter);
+            deletePopper(obj);
 
-            updateSettings(observer, 'colorPanel', '#fff');
-            updateSettings(observer, 'colorText', '#000');
-            updateSettings(observer, 'colorButtons', '#ddd');
-            updateSettings(observer, 'colorBorders', '#ccc');
-
-        } else if (colorScheme === 'dark') {
-            settings.editor.colorPanel = '#222';
-            settings.editor.colorText = '#ddd';
-            settings.editor.colorBorders = '#111';
-            settings.editor.colorButtons = '#000';
-            saveSettings();
-
-            updateSettings(observer, 'colorPanel', '#222');
-            updateSettings(observer, 'colorText', '#ddd');
-            updateSettings(observer, 'colorButtons', '#111');
-            updateSettings(observer, 'colorBorders', '#000');
+            playTutorial("tutorial_panel_maximization");
         }
-        updateSettings(observer, 'tutorial');
+    } else if (section === "tutorial_panel_maximization") {
+        let icon = document.getElementById('vs-editor-minimize');
+        let obj = await displayPopper(icon, "TutorialPanelMaximization", "bottom");
+        icon.addEventListener('click', onClick);
 
-        popup.remove();
-    });
+        function onClick() {
+            icon.removeEventListener('click', onClick);
+            deletePopper(obj);
+
+            panel.removeEventListener("mouseenter", onMouseEnter);
+            panel.removeEventListener("mouseleave", onMouseLeave);
+
+            playTutorial("tutorial_panel_transparency");
+        }
+
+        panel.addEventListener("mouseenter", onMouseEnter);
+        panel.addEventListener("mouseleave", onMouseLeave);
+
+        function onMouseEnter() {
+            showPopper(obj);
+        }
+
+        function onMouseLeave() {
+            hidePopper(obj);
+        }
+    } else if (section === "tutorial_panel_transparency") {
+        let slider = document.getElementById('vs-editor-opacity-slider');
+        let obj = await displayPopper(slider, "TutorialPanelTransparency");
+        slider.addEventListener("change", onChange);
+
+        function onChange() {
+            slider.removeEventListener("change", onChange);
+            deletePopper(obj);
+
+            panel.removeEventListener("mouseenter", onMouseEnter);
+            panel.removeEventListener("mouseleave", onMouseLeave);
+
+            playTutorial("tutorial_panel_movement");
+        }
+
+        panel.addEventListener("mouseenter", onMouseEnter);
+        panel.addEventListener("mouseleave", onMouseLeave);
+
+        function onMouseEnter() {
+            showPopper(obj);
+        }
+
+        function onMouseLeave() {
+            hidePopper(obj);
+        }
+    } else if (section === "tutorial_panel_movement") {
+        let icon = document.getElementById('vs-editor-move');
+        let obj = await displayPopper(icon, "TutorialPanelMovement");
+        icon.addEventListener('mousedown', startDrag);
+
+        function startDrag() {
+            icon.removeEventListener('mousedown', startDrag);
+            document.addEventListener('mouseup', endDrag);
+            deletePopper(obj);
+        }
+
+        function endDrag() {
+            document.removeEventListener('mouseup', endDrag);
+
+            panel.removeEventListener("mouseenter", onMouseEnter);
+            panel.removeEventListener("mouseleave", onMouseLeave);
+
+            playTutorial("tutorial_panel_end_cut");
+        }
+
+        panel.addEventListener("mouseenter", onMouseEnter);
+        panel.addEventListener("mouseleave", onMouseLeave);
+
+        function onMouseEnter() {
+            showPopper(obj);
+        }
+
+        function onMouseLeave() {
+            hidePopper(obj);
+        }
+    } else if (section === "tutorial_panel_end_cut") {
+        let icon = document.getElementById('vs-editor-segment-pl');
+        let obj = await displayPopper(icon, "TutorialPanelEndCut", "bottom");
+        icon.addEventListener('click', onClick);
+
+        function onClick() {
+            icon.removeEventListener('click', onClick);
+            deletePopper(obj);
+
+            panel.removeEventListener("mouseenter", onMouseEnter);
+            panel.removeEventListener("mouseleave", onMouseLeave);
+
+            playTutorial("tutorial_panel_smart_cursor");
+        }
+
+        panel.addEventListener("mouseenter", onMouseEnter);
+        panel.addEventListener("mouseleave", onMouseLeave);
+
+        function onMouseEnter() {
+            showPopper(obj);
+        }
+
+        function onMouseLeave() {
+            hidePopper(obj);
+        }
+    } else if (section === "tutorial_panel_smart_cursor") {
+        let obj = null;
+        let timer = setInterval(async function () {
+            if (document.activeElement.classList.contains("vs-editor-segment-entry-time") === true) {
+                if (obj !== null) {
+                    return;
+                }
+
+                let icon = document.activeElement;
+                obj = await displayPopper(icon, "TutorialPanelSmartCursor", "bottom");
+
+                icon.addEventListener('keyup', onKeyUp);
+
+                function onKeyUp(event) {
+                    if (event.keyCode === 38 || event.keyCode === 40) {
+                        clearTimeout(timer);
+
+                        icon.removeEventListener('keyup', onKeyUp);
+                        deletePopper(obj);
+
+                        panel.removeEventListener("mouseenter", onMouseEnter);
+                        panel.removeEventListener("mouseleave", onMouseLeave);
+
+                        playTutorial("tutorial_panel_share");
+                    }
+                };
+
+                panel.addEventListener("mouseenter", onMouseEnter);
+                panel.addEventListener("mouseleave", onMouseLeave);
+            } else {
+                if (obj !== null) {
+                    panel.removeEventListener("mouseenter", onMouseEnter);
+                    panel.removeEventListener("mouseleave", onMouseLeave);
+
+                    deletePopper(obj);
+                    obj = null;
+                }
+            }
+        }, 100);
+
+        function onMouseEnter() {
+            showPopper(obj);
+        }
+
+        function onMouseLeave() {
+            hidePopper(obj);
+        }
+    } else if (section === "tutorial_panel_share") {
+        let icon = document.getElementById('vs-editor-share');
+        let obj = await displayPopper(icon, "TutorialPanelShare", "bottom");
+        icon.addEventListener('click', onClick, {
+            capture: true
+        });
+
+        function onClick(e) {
+            icon.removeEventListener('click', onClick);
+            deletePopper(obj);
+
+            panel.removeEventListener("mouseenter", onMouseEnter);
+            panel.removeEventListener("mouseleave", onMouseLeave);
+
+            playTutorial("tutorial_panel_start_cut");
+        }
+
+        panel.addEventListener("mouseenter", onMouseEnter);
+        panel.addEventListener("mouseleave", onMouseLeave);
+
+        function onMouseEnter() {
+            showPopper(obj);
+        }
+
+        function onMouseLeave() {
+            hidePopper(obj);
+        }
+    } else if (section === "tutorial_panel_start_cut") {
+        let icon = document.getElementById('vs-editor-segment-sk');
+        let obj = await displayPopper(icon, "TutorialPanelStartCut", "bottom");
+        icon.addEventListener('click', onClick);
+
+        function onClick() {
+            icon.removeEventListener('click', onClick);
+            deletePopper(obj);
+
+            panel.removeEventListener("mouseenter", onMouseEnter);
+            panel.removeEventListener("mouseleave", onMouseLeave);
+
+            settings.tutorial.section = "";
+            settings.tutorial.finished = true;
+            saveSettings();
+        }
+
+        panel.addEventListener("mouseenter", onMouseEnter);
+        panel.addEventListener("mouseleave", onMouseLeave);
+
+        function onMouseEnter() {
+            showPopper(obj);
+        }
+
+        function onMouseLeave() {
+            hidePopper(obj);
+        }
+    }
 }
 
-function updateSettings(observer, prop, value) {
-    observer.updateSettings(prop, value);
-}
-
-function setDummyColorScheme(panel, backgroundColor, textColor, buttonsColor, bordersColor) {
-    panel.style.background = backgroundColor;
-    panel.style.color = textColor;
-
-    let entries = panel.getElementsByClassName('vs-editor-segment-entry-end-time');
-    for (let entry of entries) {
-        entry.style.background = backgroundColor;
-        entry.style.color = textColor;
-    }
-
-    let buttons = panel.getElementsByTagName('button');
-    for (let button of buttons) {
-        button.style.borderColor = bordersColor;
-        button.style.background = buttonsColor;
-        button.style.color = textColor;
-    }
-
-    document.getElementById('vs-dummy-editor-buttons').style.borderBottom = '2px solid ' + bordersColor;
-    document.getElementById('vs-dummy-editor-segments').style.borderBottom = '2px solid ' + bordersColor;
-
-}
-
-function showTutorial() {
-    if (settings.tutorial.started !== true) {
-        return;
-    }
-
-    let owner = document.getElementById("vs-editor");
-    tutorial(owner,
-        document.getElementById("vs-editor-move"),
-        "TutorialMove",
-        'top',
-        'move'
-    );
-    tutorial(
-        owner,
-        document.getElementById("vs-editor-acceleration"),
-        "TutorialAcceleration",
-        'top',
-        'gauge'
-    );
-    tutorial(
-        owner,
-        document.getElementById("vs-editor-opacity"),
-        "TutorialOpacitySlider",
-        'top',
-        'opacity'
-    );
-    tutorial(
-        owner,
-        document.getElementById("vs-editor-minimize"),
-        "TutorialMinimize",
-        'top',
-        'minimize'
-    );
-    tutorial(
-        owner,
-        document.getElementById("vs-editor-close"),
-        "TutorialClose",
-        'top',
-        'close'
-    );
-
-    tutorial(
-        owner,
-        document.getElementById("vs-editor-segment-pl"),
-        "TutorialCut",
-        'top',
-        'startCut'
-    );
-    tutorial(
-        owner,
-        document.getElementById("vs-editor-segment-sk"),
-        "TutorialCut",
-        'top',
-        'startCut'
-    );
-
-    tutorial(
-        owner,
-        document.getElementById("vs-editor-origin"),
-        "TutorialOrigin",
-        'bottom',
-        'origin'
-    );
-    tutorial(
-        owner,
-        document.getElementById("vs-editor-share"),
-        "TutorialShare",
-        'bottom',
-        'share'
-    );
-}
-
-async function tutorial(owner, element, message, placement, section) {
-    if (settings.tutorial[section] !== false) {
-        return;
-    }
-
+async function displayPopper(element, text, placement = "top") {
     let content = await makeImport(
         browser.extension.getURL("tutorial/tutorial.html")
     );
-    let popup = content.getElementsByClassName("vs-tutorial")[0];
-    translateNodeText(popup.getElementsByClassName('vs-tutorial-message')[0], message);
+    let popup = content.getElementsByClassName("vs-tutorial")[1];
+    translateNodeText(popup.getElementsByClassName('vs-tutorial-message')[0], text);
 
-    let p = new Popper(element, popup, {
+    let pop = new Popper(element, popup, {
         placement: placement,
         modifiers: {
             flip: {
@@ -242,21 +270,10 @@ async function tutorial(owner, element, message, placement, section) {
             }
         }
     });
-    popup.style.visibility = 'hidden';
+
     document.body.appendChild(popup);
 
-    let opacity = "1.0";
-    popup.addEventListener("mouseover", function () {
-        if (owner.style.opacity != "1.0") {
-            opacity = owner.style.opacity;
-        }
-        owner.style.opacity = "1.0";
-    });
-    popup.addEventListener("mouseout", function () {
-        owner.style.opacity = opacity;
-    });
-
-    owner.addEventListener("mousedown", startDrag);
+    document.getElementById("vs-editor").addEventListener("mousedown", startDrag);
     document.addEventListener("mousemove", drag);
     document.addEventListener("mouseup", endDrag);
 
@@ -266,7 +283,7 @@ async function tutorial(owner, element, message, placement, section) {
     }
 
     function drag() {
-        p.update();
+        pop.update();
     }
 
     function endDrag() {
@@ -274,60 +291,21 @@ async function tutorial(owner, element, message, placement, section) {
         document.removeEventListener("mouseup", endDrag);
     }
 
-    element.addEventListener('mouseover', () => {
-        if (typeof lastPopup !== 'undefined') {
-            lastPopup.style.visibility = 'hidden';
-        }
-
-        if (settings.tutorial[section] === false) {
-            popup.style.visibility = 'visible';
-            lastPopup = popup;
-        }
-    });
-
-    popup.getElementsByClassName('vs-tutorial-close')[0].addEventListener('click', () => {
-        lastPopup.style.visibility = 'hidden';
-        settings.tutorial[section] = true;
-        saveSettings();
-    });
-
-    // element.addEventListener('mouseout', () => {
-    //     popup.style.visibility = 'hidden';
-    // });
+    return {
+        popup: popup,
+        pop: pop
+    };
 }
 
-// document.addEventListener('DOMContentLoaded', function(){
-//     var example3popper1inst = new Popper(example3reference1, example3popper1, {
-//         placement: 'left',
-//         modifiers: {
-//             flip: {
-//                 behavior: ['left', 'bottom', 'top'],
-//             },
-//             preventOverflow: {
-//                 boundariesElement: example3reference1.parentNode,
-//             },
-//         }
-//     });
-//     interact('#example3reference1').draggable({
-//         restrict: {
-//             restriction: "parent",
-//             endOnly: true,
-//             elementRect: { top: 0, left: 0, bottom: 1, right: 1 }
-//         },
-//         onmove: dragMoveListener
-//     });
-//     var x = 0, y = 0;
-//     function dragMoveListener (event) {
-//         target = event.target,
-//             // keep the dragged position in the data-x/data-y attributes
-//             x += event.dx,
-//             y += event.dy;
+function hidePopper(obj) {
+    obj.popup.style.visibility = 'hidden';
+}
 
-//         // translate the element
-//         target.style.top = y + 'px';
-//         target.style.left = x + 'px'
+function showPopper(obj) {
+    obj.popup.style.visibility = 'visible';
+}
 
-//         example3popper1inst.update();
-//     }
-
-// }, false);
+function deletePopper(obj) {
+    obj.popup.remove();
+    obj.pop.destroy();
+}
