@@ -39,7 +39,7 @@
 		"message": "Always"
 	},
 	"Empty": {
-		"message": "Empty"
+		"message": "On empty"
 	},
 	"Never": {
 		"message": "Never"
@@ -84,7 +84,7 @@
 		"message": "Panel mode"
 	},
 	"Normal": {
-		"message": "Skip & Play"
+		"message": "Normal"
 	},
 	"Expert": {
 		"message": "Expert"
@@ -443,16 +443,16 @@
 		"message": "Click and drag to move panel"
 	},
 	"TutorialAcceleration": {
-		"message": "Click or scroll (or configure hotkeys in settings) to change video playback speed"
+		"message": "Click or mouse scroll to change video playback speed"
 	},
 	"TutorialOpacitySlider": {
 		"message": "Use this slider to make panel transparent when mouse is outside of panel"
 	},
 	"TutorialMinimize": {
-		"message": "Cycle through panel sizes: maximized -> minimized"
+		"message": "Toggle panel size: maximized <-> minimized"
 	},
 	"TutorialClose": {
-		"message": "Close panel (you can enable panel later using settings)"
+		"message": "Close panel (can be enabled in settings)"
 	},
 	"TutorialCut": {
 		"message": "Use \"start cut\" and \"end cut\" buttons or configure hotkeys (in settings) to cut videos"

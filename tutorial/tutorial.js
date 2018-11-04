@@ -25,234 +25,238 @@ async function playTutorial(section) {
         return;
     }
 
-    let updateState = false;
-    if (settings.tutorial.section !== section) {
-        updateState = true;
-    }
-    settings.tutorial.section = section;
-    if (updateState === true) {
-        saveSettings();
-    }
-    log(section);
+    settings.tutorial.section = "";
+    settings.tutorial.finished = true;
+    saveSettings();
 
-    let panel = document.getElementById("vs-editor");
-    if (section === "tutorial_panel_hover") {
-        let obj = await displayPopper(panel, "TutorialPanelHover");
-        panel.addEventListener("mouseenter", onMouseEnter);
+    // let updateState = false;
+    // if (settings.tutorial.section !== section) {
+    //     updateState = true;
+    // }
+    // settings.tutorial.section = section;
+    // if (updateState === true) {
+    //     saveSettings();
+    // }
+    // log(section);
 
-        function onMouseEnter() {
-            panel.removeEventListener("mouseenter", onMouseEnter);
-            deletePopper(obj);
+    // let panel = document.getElementById("vs-editor");
+    // if (section === "tutorial_panel_hover") {
+    //     let obj = await displayPopper(panel, "TutorialPanelHover");
+    //     panel.addEventListener("mouseenter", onMouseEnter);
 
-            playTutorial("tutorial_panel_maximization");
-        }
-    } else if (section === "tutorial_panel_maximization") {
-        let icon = document.getElementById('vs-editor-minimize');
-        let obj = await displayPopper(icon, "TutorialPanelMaximization", "bottom");
-        icon.addEventListener('click', onClick);
+    //     function onMouseEnter() {
+    //         panel.removeEventListener("mouseenter", onMouseEnter);
+    //         deletePopper(obj);
 
-        function onClick() {
-            icon.removeEventListener('click', onClick);
-            deletePopper(obj);
+    //         playTutorial("tutorial_panel_maximization");
+    //     }
+    // } else if (section === "tutorial_panel_maximization") {
+    //     let icon = document.getElementById('vs-editor-minimize');
+    //     let obj = await displayPopper(icon, "TutorialPanelMaximization", "bottom");
+    //     icon.addEventListener('click', onClick);
 
-            panel.removeEventListener("mouseenter", onMouseEnter);
-            panel.removeEventListener("mouseleave", onMouseLeave);
+    //     function onClick() {
+    //         icon.removeEventListener('click', onClick);
+    //         deletePopper(obj);
 
-            playTutorial("tutorial_panel_transparency");
-        }
+    //         panel.removeEventListener("mouseenter", onMouseEnter);
+    //         panel.removeEventListener("mouseleave", onMouseLeave);
 
-        panel.addEventListener("mouseenter", onMouseEnter);
-        panel.addEventListener("mouseleave", onMouseLeave);
+    //         playTutorial("tutorial_panel_transparency");
+    //     }
 
-        function onMouseEnter() {
-            showPopper(obj);
-        }
+    //     panel.addEventListener("mouseenter", onMouseEnter);
+    //     panel.addEventListener("mouseleave", onMouseLeave);
 
-        function onMouseLeave() {
-            hidePopper(obj);
-        }
-    } else if (section === "tutorial_panel_transparency") {
-        let slider = document.getElementById('vs-editor-opacity-slider');
-        let obj = await displayPopper(slider, "TutorialPanelTransparency");
-        slider.addEventListener("change", onChange);
+    //     function onMouseEnter() {
+    //         showPopper(obj);
+    //     }
 
-        function onChange() {
-            slider.removeEventListener("change", onChange);
-            deletePopper(obj);
+    //     function onMouseLeave() {
+    //         hidePopper(obj);
+    //     }
+    // } else if (section === "tutorial_panel_transparency") {
+    //     let slider = document.getElementById('vs-editor-opacity-slider');
+    //     let obj = await displayPopper(slider, "TutorialPanelTransparency");
+    //     slider.addEventListener("change", onChange);
 
-            panel.removeEventListener("mouseenter", onMouseEnter);
-            panel.removeEventListener("mouseleave", onMouseLeave);
+    //     function onChange() {
+    //         slider.removeEventListener("change", onChange);
+    //         deletePopper(obj);
 
-            playTutorial("tutorial_panel_movement");
-        }
+    //         panel.removeEventListener("mouseenter", onMouseEnter);
+    //         panel.removeEventListener("mouseleave", onMouseLeave);
 
-        panel.addEventListener("mouseenter", onMouseEnter);
-        panel.addEventListener("mouseleave", onMouseLeave);
+    //         playTutorial("tutorial_panel_movement");
+    //     }
 
-        function onMouseEnter() {
-            showPopper(obj);
-        }
+    //     panel.addEventListener("mouseenter", onMouseEnter);
+    //     panel.addEventListener("mouseleave", onMouseLeave);
 
-        function onMouseLeave() {
-            hidePopper(obj);
-        }
-    } else if (section === "tutorial_panel_movement") {
-        let icon = document.getElementById('vs-editor-move');
-        let obj = await displayPopper(icon, "TutorialPanelMovement");
-        icon.addEventListener('mousedown', startDrag);
+    //     function onMouseEnter() {
+    //         showPopper(obj);
+    //     }
 
-        function startDrag() {
-            icon.removeEventListener('mousedown', startDrag);
-            document.addEventListener('mouseup', endDrag);
-            deletePopper(obj);
-        }
+    //     function onMouseLeave() {
+    //         hidePopper(obj);
+    //     }
+    // } else if (section === "tutorial_panel_movement") {
+    //     let icon = document.getElementById('vs-editor-move');
+    //     let obj = await displayPopper(icon, "TutorialPanelMovement");
+    //     icon.addEventListener('mousedown', startDrag);
 
-        function endDrag() {
-            document.removeEventListener('mouseup', endDrag);
+    //     function startDrag() {
+    //         icon.removeEventListener('mousedown', startDrag);
+    //         document.addEventListener('mouseup', endDrag);
+    //         deletePopper(obj);
+    //     }
 
-            panel.removeEventListener("mouseenter", onMouseEnter);
-            panel.removeEventListener("mouseleave", onMouseLeave);
+    //     function endDrag() {
+    //         document.removeEventListener('mouseup', endDrag);
 
-            playTutorial("tutorial_panel_end_cut");
-        }
+    //         panel.removeEventListener("mouseenter", onMouseEnter);
+    //         panel.removeEventListener("mouseleave", onMouseLeave);
 
-        panel.addEventListener("mouseenter", onMouseEnter);
-        panel.addEventListener("mouseleave", onMouseLeave);
+    //         playTutorial("tutorial_panel_end_cut");
+    //     }
 
-        function onMouseEnter() {
-            showPopper(obj);
-        }
+    //     panel.addEventListener("mouseenter", onMouseEnter);
+    //     panel.addEventListener("mouseleave", onMouseLeave);
 
-        function onMouseLeave() {
-            hidePopper(obj);
-        }
-    } else if (section === "tutorial_panel_end_cut") {
-        let icon = document.getElementById('vs-editor-segment-pl');
-        let obj = await displayPopper(icon, "TutorialPanelEndCut", "bottom");
-        icon.addEventListener('click', onClick);
+    //     function onMouseEnter() {
+    //         showPopper(obj);
+    //     }
 
-        function onClick() {
-            icon.removeEventListener('click', onClick);
-            deletePopper(obj);
+    //     function onMouseLeave() {
+    //         hidePopper(obj);
+    //     }
+    // } else if (section === "tutorial_panel_end_cut") {
+    //     let icon = document.getElementById('vs-editor-segment-pl');
+    //     let obj = await displayPopper(icon, "TutorialPanelEndCut", "bottom");
+    //     icon.addEventListener('click', onClick);
 
-            panel.removeEventListener("mouseenter", onMouseEnter);
-            panel.removeEventListener("mouseleave", onMouseLeave);
+    //     function onClick() {
+    //         icon.removeEventListener('click', onClick);
+    //         deletePopper(obj);
 
-            playTutorial("tutorial_panel_smart_cursor");
-        }
+    //         panel.removeEventListener("mouseenter", onMouseEnter);
+    //         panel.removeEventListener("mouseleave", onMouseLeave);
 
-        panel.addEventListener("mouseenter", onMouseEnter);
-        panel.addEventListener("mouseleave", onMouseLeave);
+    //         playTutorial("tutorial_panel_smart_cursor");
+    //     }
 
-        function onMouseEnter() {
-            showPopper(obj);
-        }
+    //     panel.addEventListener("mouseenter", onMouseEnter);
+    //     panel.addEventListener("mouseleave", onMouseLeave);
 
-        function onMouseLeave() {
-            hidePopper(obj);
-        }
-    } else if (section === "tutorial_panel_smart_cursor") {
-        let obj = null;
-        let timer = setInterval(async function () {
-            if (document.activeElement.classList.contains("vs-editor-segment-entry-time") === true) {
-                if (obj !== null) {
-                    return;
-                }
+    //     function onMouseEnter() {
+    //         showPopper(obj);
+    //     }
 
-                let icon = document.activeElement;
-                obj = await displayPopper(icon, "TutorialPanelSmartCursor", "bottom");
+    //     function onMouseLeave() {
+    //         hidePopper(obj);
+    //     }
+    // } else if (section === "tutorial_panel_smart_cursor") {
+    //     let obj = null;
+    //     let timer = setInterval(async function () {
+    //         if (document.activeElement.classList.contains("vs-editor-segment-entry-time") === true) {
+    //             if (obj !== null) {
+    //                 return;
+    //             }
 
-                icon.addEventListener('keyup', onKeyUp);
+    //             let icon = document.activeElement;
+    //             obj = await displayPopper(icon, "TutorialPanelSmartCursor", "bottom");
 
-                function onKeyUp(event) {
-                    if (event.keyCode === 38 || event.keyCode === 40) {
-                        clearTimeout(timer);
+    //             icon.addEventListener('keyup', onKeyUp);
 
-                        icon.removeEventListener('keyup', onKeyUp);
-                        deletePopper(obj);
+    //             function onKeyUp(event) {
+    //                 if (event.keyCode === 38 || event.keyCode === 40) {
+    //                     clearTimeout(timer);
 
-                        panel.removeEventListener("mouseenter", onMouseEnter);
-                        panel.removeEventListener("mouseleave", onMouseLeave);
+    //                     icon.removeEventListener('keyup', onKeyUp);
+    //                     deletePopper(obj);
 
-                        playTutorial("tutorial_panel_share");
-                    }
-                };
+    //                     panel.removeEventListener("mouseenter", onMouseEnter);
+    //                     panel.removeEventListener("mouseleave", onMouseLeave);
 
-                panel.addEventListener("mouseenter", onMouseEnter);
-                panel.addEventListener("mouseleave", onMouseLeave);
-            } else {
-                if (obj !== null) {
-                    panel.removeEventListener("mouseenter", onMouseEnter);
-                    panel.removeEventListener("mouseleave", onMouseLeave);
+    //                     playTutorial("tutorial_panel_share");
+    //                 }
+    //             };
 
-                    deletePopper(obj);
-                    obj = null;
-                }
-            }
-        }, 100);
+    //             panel.addEventListener("mouseenter", onMouseEnter);
+    //             panel.addEventListener("mouseleave", onMouseLeave);
+    //         } else {
+    //             if (obj !== null) {
+    //                 panel.removeEventListener("mouseenter", onMouseEnter);
+    //                 panel.removeEventListener("mouseleave", onMouseLeave);
 
-        function onMouseEnter() {
-            showPopper(obj);
-        }
+    //                 deletePopper(obj);
+    //                 obj = null;
+    //             }
+    //         }
+    //     }, 100);
 
-        function onMouseLeave() {
-            hidePopper(obj);
-        }
-    } else if (section === "tutorial_panel_share") {
-        let icon = document.getElementById('vs-editor-share');
-        let obj = await displayPopper(icon, "TutorialPanelShare", "bottom");
-        icon.addEventListener('click', onClick, {
-            capture: true
-        });
+    //     function onMouseEnter() {
+    //         showPopper(obj);
+    //     }
 
-        function onClick(e) {
-            icon.removeEventListener('click', onClick);
-            deletePopper(obj);
+    //     function onMouseLeave() {
+    //         hidePopper(obj);
+    //     }
+    // } else if (section === "tutorial_panel_share") {
+    //     let icon = document.getElementById('vs-editor-share');
+    //     let obj = await displayPopper(icon, "TutorialPanelShare", "bottom");
+    //     icon.addEventListener('click', onClick, {
+    //         capture: true
+    //     });
 
-            panel.removeEventListener("mouseenter", onMouseEnter);
-            panel.removeEventListener("mouseleave", onMouseLeave);
+    //     function onClick(e) {
+    //         icon.removeEventListener('click', onClick);
+    //         deletePopper(obj);
 
-            playTutorial("tutorial_panel_start_cut");
-        }
+    //         panel.removeEventListener("mouseenter", onMouseEnter);
+    //         panel.removeEventListener("mouseleave", onMouseLeave);
 
-        panel.addEventListener("mouseenter", onMouseEnter);
-        panel.addEventListener("mouseleave", onMouseLeave);
+    //         playTutorial("tutorial_panel_start_cut");
+    //     }
 
-        function onMouseEnter() {
-            showPopper(obj);
-        }
+    //     panel.addEventListener("mouseenter", onMouseEnter);
+    //     panel.addEventListener("mouseleave", onMouseLeave);
 
-        function onMouseLeave() {
-            hidePopper(obj);
-        }
-    } else if (section === "tutorial_panel_start_cut") {
-        let icon = document.getElementById('vs-editor-segment-sk');
-        let obj = await displayPopper(icon, "TutorialPanelStartCut", "bottom");
-        icon.addEventListener('click', onClick);
+    //     function onMouseEnter() {
+    //         showPopper(obj);
+    //     }
 
-        function onClick() {
-            icon.removeEventListener('click', onClick);
-            deletePopper(obj);
+    //     function onMouseLeave() {
+    //         hidePopper(obj);
+    //     }
+    // } else if (section === "tutorial_panel_start_cut") {
+    //     let icon = document.getElementById('vs-editor-segment-sk');
+    //     let obj = await displayPopper(icon, "TutorialPanelStartCut", "bottom");
+    //     icon.addEventListener('click', onClick);
 
-            panel.removeEventListener("mouseenter", onMouseEnter);
-            panel.removeEventListener("mouseleave", onMouseLeave);
+    //     function onClick() {
+    //         icon.removeEventListener('click', onClick);
+    //         deletePopper(obj);
 
-            settings.tutorial.section = "";
-            settings.tutorial.finished = true;
-            saveSettings();
-        }
+    //         panel.removeEventListener("mouseenter", onMouseEnter);
+    //         panel.removeEventListener("mouseleave", onMouseLeave);
 
-        panel.addEventListener("mouseenter", onMouseEnter);
-        panel.addEventListener("mouseleave", onMouseLeave);
+    //         settings.tutorial.section = "";
+    //         settings.tutorial.finished = true;
+    //         saveSettings();
+    //     }
 
-        function onMouseEnter() {
-            showPopper(obj);
-        }
+    //     panel.addEventListener("mouseenter", onMouseEnter);
+    //     panel.addEventListener("mouseleave", onMouseLeave);
 
-        function onMouseLeave() {
-            hidePopper(obj);
-        }
-    }
+    //     function onMouseEnter() {
+    //         showPopper(obj);
+    //     }
+
+    //     function onMouseLeave() {
+    //         hidePopper(obj);
+    //     }
+    // }
 }
 
 async function displayPopper(element, text, placement = "top") {

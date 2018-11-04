@@ -96,6 +96,7 @@ class Player {
             injectCSSRule('.annotation {visibility: hidden !important;}');
             injectCSSRule('.ytp-cards-button {visibility: hidden !important;}');
             injectCSSRule('.ytp-ce-video {visibility: hidden !important;}');
+            injectCSSRule('.ytp-ce-expanding-image {visibility: hidden !important;}');
         }
     }
 
