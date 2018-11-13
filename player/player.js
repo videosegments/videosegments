@@ -38,9 +38,10 @@ class Player {
         }
 
         // extract youtube video ID 
-        let tmp = document.getElementsByClassName('ytp-title-link')[0];
-        let src = (tmp ? tmp.href : null) || (this.video ? this.video.src : null);
-        this.id = src.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/ ]{11})/i)[1];
+        // let tmp = document.getElementsByClassName('ytp-title-link')[0];
+        // let src = (tmp ? tmp.href : null) || (this.video ? this.video.src : null);
+        // this.id = src.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/ ]{11})/i)[1];
+        this.id = window.location.href.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/ ]{11})/i)[1];
 
         // play event will be called several times before video start 
         this.onPlayBeforeLoadedContext = () => {
