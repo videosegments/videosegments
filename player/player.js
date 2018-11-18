@@ -263,6 +263,11 @@ class Player {
         }
 
         this.cutButtonTimer = setInterval(() => {
+            this.cutButton = document.getElementById('vs-cut-video-button');
+            if ( this.cutButton !== null ) {
+                return;
+            }
+
             let actions = document.getElementById('top-level-buttons');
             if (actions !== null && actions.childNodes.length !== 0) {
                 clearInterval(this.cutButtonTimer);
