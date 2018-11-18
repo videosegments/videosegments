@@ -37,10 +37,9 @@ class Editor {
         this.lastShareIteration = -1;
         this.iterations = 0;
         this.dragging = false;
+        this.cutButtonTimer = null;
 
-        if (settings.showPanel === 'always' || (settings.showPanel === 'empty' && typeof this.segmentation === 'undefined')) {
-            this.createEditor();
-        }
+        this.createEditor();
 
         // sendCaptchaModal(this.checkCaptcha);
     }
@@ -48,8 +47,9 @@ class Editor {
     async createEditor() {
         let content = await makeImport(browser.extension.getURL('editor/editor.html'));
         this.panel = content.getElementById('vs-editor');
+        this.panel.style.visibility = 'hidden';
         document.body.appendChild(this.panel);
-        log('editor created');
+        // log('editor created');
 
         if (settings.mode === 'simplified') {
             this.panel.classList.add('vs-editor-simplified');
@@ -128,8 +128,10 @@ class Editor {
         }
 
         document.getElementById('vs-editor-buttons').style.borderBottom = '2px solid ' + settings.editor.colorBorders;
-        
-        playTutorial(settings.tutorial.section);
+
+        if (settings.showPanel === 'always' || (settings.showPanel === 'empty' && typeof this.segmentation === 'undefined')) {
+            this.panel.style.visibility = 'visible';
+        }
     }
 
     createSegmentsEntries() {
@@ -277,7 +279,8 @@ class Editor {
         this.hookAccelerationIcon();
         this.hookOpacitySlider();
         this.hookMinimizeIcon();
-        this.hookCloseIcon();
+        // this.hookCloseIcon();
+        this.hookInfoIcon();
     }
 
     showYouTubeControlsOnHover() {
@@ -450,12 +453,14 @@ class Editor {
         document.getElementById('vs-editor-segments').style.padding = '0px';
 
         document.getElementById('vs-editor-opacity').style.display = 'none';
-        document.getElementById('vs-editor-close').style.display = 'none';
+        // document.getElementById('vs-editor-close').style.display = 'none';
+        document.getElementById('vs-editor-info').style.display = 'none';
         document.getElementById('vs-editor-acceleration').style.display = 'none';
         document.getElementById('vs-editor-segments').style.borderBottom = '0px';
 
         document.getElementById('vs-editor-move').style.marginRight = '0px';
-        document.getElementById('vs-editor-close').style.marginLeft = '0px';
+        // document.getElementById('vs-editor-close').style.marginLeft = '0px';
+        // document.getElementById('vs-editor-info').style.marginLeft = '0px';
     }
 
     maximize() {
@@ -478,11 +483,13 @@ class Editor {
         document.getElementById('vs-editor-segments').style.borderBottom = '2px solid ' + settings.editor.colorBorders;
 
         document.getElementById('vs-editor-opacity').style.display = 'inline';
-        document.getElementById('vs-editor-close').style.display = 'inline';
+        // document.getElementById('vs-editor-close').style.display = 'inline';
+        document.getElementById('vs-editor-info').style.display = 'inline';
         document.getElementById('vs-editor-acceleration').style.display = 'inline';
 
         document.getElementById('vs-editor-move').style.marginRight = '4px';
-        document.getElementById('vs-editor-close').style.marginLeft = '4px';
+        // document.getElementById('vs-editor-close').style.marginLeft = '4px';
+        document.getElementById('vs-editor-info').style.marginLeft = '4px';
     }
 
     hookCloseIcon() {
@@ -495,6 +502,17 @@ class Editor {
 
             sendSmallModal('3', 'OpenUsingSettings');
         })
+    }
+
+    hookInfoIcon() {
+        let icon = document.getElementById('vs-editor-info');
+        icon.addEventListener('mouseenter', () => {
+            showInfo();
+        });
+
+        icon.addEventListener('mouseleave', () => {
+            hideInfo();
+        });
     }
 
     hookButtons() {
@@ -686,7 +704,7 @@ class Editor {
     }
 
     async shareSegmentation() {
-        if ( settings.tutorial.finished !== true ) {
+        if (settings.tutorial.finished !== true) {
             sendSmallModal('3', 'AvailableAfterTutorial');
             return;
         }
@@ -925,16 +943,11 @@ class Editor {
             settings.hotkeys = value;
         } else if (prop === 'showPanel') {
             settings[prop] = value;
-            log(settings.showPanel === 'always', settings.showPanel);
 
             if (settings.showPanel === 'always' || (settings.showPanel === 'empty' && (typeof this.segmentation === 'undefined' || this.iterations !== 0))) {
-                if (typeof this.panel === 'undefined') {
-                    this.createEditor();
-                }
+                this.panel.style.visibility = 'visible';
             } else {
-                if (typeof this.panel !== 'undefined') {
-                    this.remove();
-                }
+                this.panel.style.visibility = 'hidden';
             }
 
         } else if (prop === 'panelSize') {

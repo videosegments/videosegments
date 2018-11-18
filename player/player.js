@@ -41,6 +41,7 @@ class Player {
         // let tmp = document.getElementsByClassName('ytp-title-link')[0];
         // let src = (tmp ? tmp.href : null) || (this.video ? this.video.src : null);
         // this.id = src.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/ ]{11})/i)[1];
+        log(window.location.href);
         this.id = window.location.href.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/ ]{11})/i)[1];
 
         // play event will be called several times before video start 
@@ -246,13 +247,56 @@ class Player {
         }
 
         this.segmentsbar.set(this.segmentation.timestamps, this.segmentation.types, this.video.duration);
-        log('segmentsbar created');
+        // log('segmentsbar created');
 
         // if it is not iframe
         if (window.parent === window) {
             // start editor 
             this.editor = new Editor(this, this.segmentsbar, this.video, this.id, this.segmentation);
+            this.createCutVideoButton();
         }
+    }
+
+    createCutVideoButton() {
+        if (this.cutButtonTimer !== null) {
+            clearInterval(this.cutButtonTimer);
+        }
+
+        this.cutButtonTimer = setInterval(() => {
+            let actions = document.getElementById('top-level-buttons');
+            if (actions !== null && actions.childNodes.length !== 0) {
+                clearInterval(this.cutButtonTimer);
+                this.cutButtonTimer == null;
+
+                let button = document.createElement('button');
+                button.id = 'vs-cut-video-button';
+
+                let image = document.createElement('span');
+                image.id = 'vs-cut-video-button-image';
+                image.classList.add('fa');
+                image.classList.add('fa-cut');
+                button.appendChild(image);
+
+                let text = document.createElement('span');
+                text.id = 'vs-cut-video-button-text';
+                translateNodeText(text, "CutVideo");
+                button.appendChild(text);
+
+                actions.childNodes[1].insertAdjacentElement('afterEnd', button);
+                button.addEventListener('click', () => {
+                    if (settings.showPanel === 'always') {
+                        settings.showPanel = 'never';
+                        this.editor.panel.style.visibility = 'hidden';
+                    } else {
+                        settings.showPanel = 'always';
+                        this.editor.panel.style.visibility = 'visible';
+                    }
+                    saveSettings();
+                });
+
+                playTutorial(settings.tutorial.section, button);
+            }
+        }, 100);
     }
 
     // TODO: move get request to utils 
@@ -423,7 +467,7 @@ class Player {
     }
 
     tryRewind(toSegmentNumber) {
-        if ( this.startTime !== null ) {
+        if (this.startTime !== null) {
             this.video.currentTime = this.startTime;
             this.startTime = null;
         }

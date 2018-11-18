@@ -1,7 +1,7 @@
 {
 	"manifest_version": 2,
 	"name": "__MSG_extensionName__",
-	"version": "1.11.5.2",
+	"version": "1.11.5.3",
 	"applications": {
 		"gecko": {
 			"id": "{fca9d8e4-a5f2-4c00-9873-f38176edcba0}"
@@ -65,6 +65,6 @@
 		"modals/big.html",
 		"modals/captcha.html",
 		"tutorial/tutorial.html",
-		"tutorial/welcome.html"
+		"editor/cut-button.html"
 	]
 }

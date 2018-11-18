@@ -46,7 +46,7 @@
 */
 #vs-editor {
     position: absolute;
-    z-index: 2500;
+    z-index: 2000;
     /* background: white; */
     box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.25);
     border-radius: 3px;
@@ -464,14 +464,19 @@
 }
 
 .vs-tutorial {
+    font-family: Roboto, Arial, sans-serif;
     text-align: center;
-    padding: 5px;
-    background-color: #343a40;
-    font-size: 14px;
-    line-height: 150%;
+    font-size: 16px;
+
+    background-color: #ff0000;
     color: white;
-    max-width: 250px;
+
+    padding: 6px 10px;
+    margin-top: 5px;
+
+    max-width: 400px;
     z-index: 9000;
+
     cursor: context-menu;
     pointer-events: none;
 }
@@ -486,7 +491,7 @@
     height: 0;
     border-left: 10px solid transparent;
     border-right: 10px solid transparent;
-    border-top: 10px solid red;
+    border-top: 10px solid #ff0000;
     z-index: 9000;
     position: absolute;
     left: calc(50% - 10px);
@@ -503,7 +508,7 @@
     height: 0;
     border-left: 10px solid transparent;
     border-right: 10px solid transparent;
-    border-bottom: 10px solid red;
+    border-bottom: 10px solid #ff0000;
     z-index: 9000;
     position: absolute;
     left: 50%;
@@ -512,11 +517,140 @@
 }
 
 .vs-tutorial-message {
-    margin-bottom: 0.5rem;
+    margin-bottom: 0;
 }
 
 .vs-tutorial-close {
     width: 50%;
+}
+
+.vs-info {
+    font-family: Roboto, Arial, sans-serif;
+    text-align: center;
+    font-size: 14px;
+
+    background-color: #001020;
+    color: white;
+
+    padding: 6px 10px;
+
+    max-width: 120px;
+    z-index: 9000;
+
+    cursor: context-menu;
+    pointer-events: none;
+}
+
+.vs-info[x-placement="top"] {
+    margin-bottom: 10px;
+}
+
+.vs-info[x-placement="top"] .vs-info-arrow:after {
+    content: "";
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-top: 10px solid #f00;
+    z-index: 9000;
+    position: absolute;
+    left: calc(50% - 10px);
+    bottom: -10px;
+}
+
+.vs-info[x-placement="bottom"] {
+    margin-top: 10px;
+}
+
+.vs-info[x-placement="bottom"] .vs-info-arrow:after {
+    content: "";
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-bottom: 10px solid #f00;
+    z-index: 9000;
+    position: absolute;
+    left: 50%;
+    margin-left: -10px;
+    top: -10px;
+}
+
+.vs-info[x-placement="left"] {
+    margin-right: 10px;
+}
+
+.vs-info[x-placement="left"] .vs-info-arrow:after {
+    content: "";
+    width: 0;
+    height: 0;
+    border-left: 10px solid #f00;
+    border-bottom: 10px solid transparent;
+    border-top: 10px solid transparent;
+    z-index: 9000;
+    position: absolute;
+    top: calc(50% - 10px);
+    right: -10px;
+}
+
+.vs-info[x-placement="right"] {
+    margin-left: 10px;
+}
+
+.vs-info[x-placement="right"] .vs-info-arrow:after {
+    content: "";
+    width: 0;
+    height: 0;
+    border-right: 10px solid #f00;
+    border-bottom: 10px solid transparent;
+    border-top: 10px solid transparent;
+    z-index: 9000;
+    position: absolute;
+    top: calc(50% - 10px);
+    left: -10px;
+}
+
+.vs-info-message {
+    margin-bottom: 0;
+}
+
+.vs-info-large {
+    font-family: Roboto, Arial, sans-serif;
+    text-align: center;
+    font-size: 14px;
+
+    background-color: #001020;
+    color: white;
+
+    padding: 6px 10px;
+
+    max-width: 175px;
+    z-index: 9000;
+
+    cursor: context-menu;
+    pointer-events: none;
+}
+
+.vs-info-large[x-placement="bottom"] {
+    margin-top: 10px;
+}
+
+.vs-info-large[x-placement="bottom"] .vs-info-large-arrow:after {
+    content: "";
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-bottom: 10px solid #f00;
+    z-index: 9000;
+    position: absolute;
+    left: 50%;
+    margin-left: -10px;
+    top: -10px;
+}
+
+.vs-info-large-message {
+    margin-bottom: 0;
 }
 
 /*
@@ -732,7 +866,7 @@
     font-size: 22px;
 }
 
-.vs-welcome-tutorial input[type="radio"]:checked + label span {
+.vs-welcome-tutorial input[type="radio"]:checked+label span {
     border-bottom: 1px solid black;
 }
 
@@ -750,4 +884,37 @@
 
 #vs-welcome-start:hover {
     background-color: #e2e2e2;
+}
+
+/*
+    Other stuff
+*/
+#vs-cut-video-button {
+    background-color: white;
+    padding: 0;
+    border: 0;
+
+    outline: none;
+    cursor: pointer;
+    color: #888;
+}
+
+#vs-cut-video-button-image {
+    padding: 8px 4px;
+
+    max-height: 20px;
+    max-width: 20px;
+    height: 20px;
+    width: 20px;
+
+    top: -5px;
+    bottom: 0;
+}
+
+#vs-cut-video-button-text {
+    font-family: Roboto, Arial, sans-serif;
+    text-transform: uppercase;
+
+    line-height: 2.6em;
+    padding-right: 4px;
 }

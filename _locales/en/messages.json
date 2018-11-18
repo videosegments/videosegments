@@ -443,13 +443,13 @@
 		"message": "Click and drag to move panel"
 	},
 	"TutorialAcceleration": {
-		"message": "Click or mouse scroll to change video playback speed"
+		"message": "Click or scroll to change video playback speed"
 	},
 	"TutorialOpacitySlider": {
-		"message": "Use this slider to make panel transparent when mouse is outside of panel"
+		"message": "Transparency slider (when mouse is outside of panel)"
 	},
 	"TutorialMinimize": {
-		"message": "Toggle panel size: maximized <-> minimized"
+		"message": "Minimize/maximize panel"
 	},
 	"TutorialClose": {
 		"message": "Close panel (can be enabled in settings)"
@@ -490,6 +490,20 @@
 	},
 	"TutorialPanelStartCut": {
 		"message": "Use this button to cut video end or to start cut. Press this button to end tutorial"
+	},
+	
+	"TutorialOpenClosePanel": {
+		"message": "Press to open/close VideoSegments' interface"
+	},
+	"TutorialInfo": {
+		"message": "Hover to show help"
+	},
+	"TutorialEtc": {
+		"message": "After pressing start/end cut button you can quickly adjust time using keyboard arrows. Up/down to add/sub, left/right to move."
+	},
+
+	"CutVideo": {
+		"message": "Cut Video"
 	},
 
 	"Blank": {

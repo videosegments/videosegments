@@ -123,10 +123,10 @@ function getSettings() {
         autoPauseDuration: 2.0,
         popupDurationOnSend: 5.0,
         databasePriority: 'local',
-        segmentationToolsOpacity: 60,
+        segmentationToolsOpacity: 80,
         segmentationToolsFullscreenOpacity: 50,
         segmentsBarLocation: 'separated',
-        showPanel: 'always',
+        showPanel: 'never',
         panelSize: 'maximized',
         popupSize: 'big',
         hideEndScreenCards: 'no',
@@ -158,7 +158,7 @@ function getSettings() {
         // tutorial
         tutorial: {
             started: false,
-            section: 'tutorial_panel_hover',
+            section: 'tutorial_open_close_panel',
             finished: false
         },
 

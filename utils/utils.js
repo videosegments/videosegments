@@ -21,6 +21,7 @@
 'use strict';
 
 function makeImport(file) {
+    isFirefox = true;
     if (isFirefox) {
         let xhr = new XMLHttpRequest();
         xhr.open('GET', file);
