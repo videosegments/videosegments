@@ -163,7 +163,7 @@
     width: 30%;
     font-size: 10px;
     margin-top: 3px;
-    border-style: solid;
+    /* border-style: solid; */
 }
 
 #vs-editor-expert-buttons .vs-editor-expert-buttons-container {
@@ -202,8 +202,12 @@
 .vs-editor-segment-entry {
     display: flex;
     align-items: center;
-    line-height: 20px;
     justify-content: center;
+    margin-bottom: 7px;
+}
+
+.vs-editor-segment-entry:last-child {
+    margin-bottom: 2px;
 }
 
 .vs-editor-segment-entry .fa-times {
@@ -278,6 +282,10 @@
 
 .vs-editor-display-none {
     display: none;
+}
+
+#vs-editor-review-buttons button {
+    font-size: 11px;
 }
 
 /*
@@ -897,6 +905,8 @@
     outline: none;
     cursor: pointer;
     color: #888;
+
+    width: 120px;
 }
 
 #vs-cut-video-button-image {

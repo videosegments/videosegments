@@ -99,8 +99,8 @@ class Editor {
         this.createSegmentsEntries();
 
         // prevent clicks to video player through panel 
-        this.panel.addEventListener('click', (e) => {
-            e.stopPropagation()
+        this.panel.addEventListener('click', event => {
+            event.stopPropagation()
         });
 
         // hook active items 
@@ -112,8 +112,19 @@ class Editor {
         let origin = ((typeof this.segmentation.origin !== 'undefined') ? this.segmentation.origin : 'noSegmentation');
         this.setSegmentationOrigin(origin);
 
-        if (origin === 'official') {
+        if (origin === 'official' || origin === 'noSegmentation') {
+            document.getElementById('vs-editor-review-buttons').style.display = 'none';
             document.getElementById('vs-editor-share').style.display = 'none';
+        } else {
+            let pid = getQueryString('vs-mod');
+            if (pid === null) {
+                document.getElementById('vs-editor-review-buttons').style.display = 'none';
+                document.getElementById('vs-editor-share').style.display = 'block';
+            } else {
+                document.getElementById('vs-editor-review-buttons').style.display = 'block';
+                document.getElementById('vs-editor-share').style.display = 'none';
+                // window.location.href = removeParam("vs-mod", window.location.href);
+            }
         }
 
         this.panel.style.background = settings.editor.colorPanel;
@@ -156,10 +167,6 @@ class Editor {
         entry.getElementsByClassName('vs-editor-segment-entry-type')[0].style.color = settings.editor.colorText;
         entry.getElementsByClassName('vs-editor-segment-entry-type')[0].style.background = settings.editor.colorPanel;
 
-        // let startTimeInput = entry.getElementsByClassName('vs-editor-segment-entry-start-time')[0];
-        // startTimeInput.value = secondsToClockTime(this.segmentation.timestamps[i]);
-        // startTimeInput.size = startTimeInput.value.length + 1;
-
         let span = entry.getElementsByClassName('vs-editor-segment-entry-type-simplified')[0];
         let select = entry.getElementsByClassName('vs-editor-segment-entry-type')[0];
 
@@ -187,20 +194,6 @@ class Editor {
     }
 
     updateEntryStartTime(endTime) {
-        //     let entry = endTime.parentNode.parentNode;
-        // 
-        //     let nextEntry, index;
-        //     for (index = 0; index < this.segments.childNodes.length; ++index) {
-        //         if (this.segments.childNodes[index] === entry) {
-        //             nextEntry = this.segments.childNodes[index + 1];
-        //             break;
-        //         }
-        //     }
-        // 
-        //     if (typeof nextEntry !== 'undefined') {
-        //         let startTime = nextEntry.getElementsByClassName('vs-editor-segment-entry-start-time')[0];
-        //         startTime.value = secondsToClockTime(this.segmentation.timestamps[index + 1]);
-        //     }
         log('remove this call');
     }
 
@@ -279,7 +272,6 @@ class Editor {
         this.hookAccelerationIcon();
         this.hookOpacitySlider();
         this.hookMinimizeIcon();
-        // this.hookCloseIcon();
         this.hookInfoIcon();
     }
 
@@ -453,14 +445,11 @@ class Editor {
         document.getElementById('vs-editor-segments').style.padding = '0px';
 
         document.getElementById('vs-editor-opacity').style.display = 'none';
-        // document.getElementById('vs-editor-close').style.display = 'none';
         document.getElementById('vs-editor-info').style.display = 'none';
         document.getElementById('vs-editor-acceleration').style.display = 'none';
         document.getElementById('vs-editor-segments').style.borderBottom = '0px';
 
         document.getElementById('vs-editor-move').style.marginRight = '0px';
-        // document.getElementById('vs-editor-close').style.marginLeft = '0px';
-        // document.getElementById('vs-editor-info').style.marginLeft = '0px';
     }
 
     maximize() {
@@ -483,25 +472,11 @@ class Editor {
         document.getElementById('vs-editor-segments').style.borderBottom = '2px solid ' + settings.editor.colorBorders;
 
         document.getElementById('vs-editor-opacity').style.display = 'inline';
-        // document.getElementById('vs-editor-close').style.display = 'inline';
         document.getElementById('vs-editor-info').style.display = 'inline';
         document.getElementById('vs-editor-acceleration').style.display = 'inline';
 
         document.getElementById('vs-editor-move').style.marginRight = '4px';
-        // document.getElementById('vs-editor-close').style.marginLeft = '4px';
         document.getElementById('vs-editor-info').style.marginLeft = '4px';
-    }
-
-    hookCloseIcon() {
-        let icon = document.getElementById('vs-editor-close');
-        icon.addEventListener('click', () => {
-            settings.showPanel = 'never';
-            this.panel.remove();
-            this.panel = undefined;
-            saveSettings();
-
-            sendSmallModal('3', 'OpenUsingSettings');
-        })
     }
 
     hookInfoIcon() {
@@ -701,9 +676,16 @@ class Editor {
     hookActions() {
         let share = document.getElementById('vs-editor-share');
         share.addEventListener('click', this.shareSegmentation.bind(this));
+
+        let accept = document.getElementById('vs-editor-accept');
+        accept.addEventListener('click', this.shareSegmentation.bind(this, 0));
+        let reject = document.getElementById('vs-editor-reject');
+        reject.addEventListener('click', this.shareSegmentation.bind(this, 1));
+        let correct = document.getElementById('vs-editor-correct');
+        correct.addEventListener('click', this.shareSegmentation.bind(this, 2));
     }
 
-    async shareSegmentation() {
+    async shareSegmentation(decision) {
         if (settings.tutorial.finished !== true) {
             sendSmallModal('3', 'AvailableAfterTutorial');
             return;
@@ -729,7 +711,13 @@ class Editor {
             segmentation.types = convertSimplifiedSegmentation(segmentation.types);
         }
 
-        let response = await xhr_post('https://db.videosegments.org/api/v3/set.php', segmentation);
+        let response;
+        if (typeof decision !== 'undefined') {
+            segmentation.decision = decision;
+            response = await xhr_post('https://db.videosegments.org/api/v3/set.php', segmentation);
+        } else {
+            response = await xhr_post('https://db.videosegments.org/api/v3/set.php', segmentation);
+        }
         log(response);
 
         if (response.code === '3') {
@@ -873,7 +861,10 @@ class Editor {
             });
 
             document.getElementById('vs-editor-segments').style.display = 'block';
-            document.getElementById('vs-editor-share').style.display = 'block';
+            let pid = getQueryString('vs-mod');
+            if (pid === null) {
+                document.getElementById('vs-editor-share').style.display = 'block';
+            }
         }
 
         this.iterations = this.iterations + 1;
@@ -908,7 +899,7 @@ class Editor {
         let textNode = document.createTextNode(translateText('savedLocally') + ' (' + this.iterations + ')');
         this.originElement.appendChild(textNode);
 
-        document.getElementById('vs-editor-share').style.display = 'block';
+        // document.getElementById('vs-editor-share').style.display = 'block';
     }
 
     updateSettings(prop, value) {

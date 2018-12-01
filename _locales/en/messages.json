@@ -502,8 +502,21 @@
 		"message": "After pressing start/end cut button you can quickly adjust time using keyboard arrows. Up/down to add/sub, left/right to move."
 	},
 
+	"reject": {
+		"message": "R"
+	},
+	"correct": {
+		"message": "C"
+	},
+	"accept": {
+		"message": "A"
+	},
+
 	"CutVideo": {
 		"message": "Cut Video"
+	},
+	"HidePanel": {
+		"message": "Close Panel"
 	},
 
 	"Blank": {

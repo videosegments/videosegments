@@ -41,7 +41,6 @@ class Player {
         // let tmp = document.getElementsByClassName('ytp-title-link')[0];
         // let src = (tmp ? tmp.href : null) || (this.video ? this.video.src : null);
         // this.id = src.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/ ]{11})/i)[1];
-        log(window.location.href);
         this.id = window.location.href.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/ ]{11})/i)[1];
 
         // play event will be called several times before video start 
@@ -51,6 +50,7 @@ class Player {
                 // round video's current time because it already played 0.0001'th of second  
                 this.video.currentTime = Math.round(this.video.currentTime);
                 log('autopausing video at: ', this.video.currentTime);
+                this.startTime = Math.round(this.video.currentTime);
 
                 // if video is not paused 
                 if (this.video.paused === false) {
@@ -137,6 +137,7 @@ class Player {
     }
 
     onGotSegmentation(origin, segmentation, secondaryOrigin) {
+        log(settings.databasePriority);
         log('got ' + ((settings.databasePriority === origin) ? 'primary' : 'secondary') + ' segmentation:', origin, segmentation);
 
         // save current segmentation 
@@ -156,7 +157,7 @@ class Player {
             else if (this[secondaryOrigin] && this[secondaryOrigin].types) {
                 // set secondary segmentation as primary 
                 this.segmentation = this[secondaryOrigin];
-                this.segmentation.origin = origin;
+                this.segmentation.origin = secondaryOrigin;
 
                 log('no primary segmentation exists, use secondary as primary');
                 this.onSegmentationReady();
@@ -231,10 +232,6 @@ class Player {
 
         // if autopause timer is working 
         if (this.timer) {
-            // round up time again  
-            this.startTime = Math.round(this.video.currentTime);
-            this.video.currentTime = Math.round(this.video.currentTime);
-
             // disable timer 
             clearTimeout(this.timer);
             this.timer = undefined;
@@ -284,7 +281,14 @@ class Player {
 
                 let text = document.createElement('span');
                 text.id = 'vs-cut-video-button-text';
-                translateNodeText(text, "CutVideo");
+
+                if (settings.showPanel === 'always') {
+                    translateNodeText(text, "HidePanel");
+                }
+                else {
+                    translateNodeText(text, "CutVideo");
+                }
+
                 button.appendChild(text);
 
                 actions.childNodes[1].insertAdjacentElement('afterEnd', button);
@@ -292,16 +296,18 @@ class Player {
                     if (settings.showPanel === 'always') {
                         settings.showPanel = 'never';
                         this.editor.panel.style.visibility = 'hidden';
+                        translateNodeText(text, "CutVideo");
                     } else {
                         settings.showPanel = 'always';
                         this.editor.panel.style.visibility = 'visible';
+                        translateNodeText(text, "HidePanel");
                     }
                     saveSettings();
                 });
 
                 playTutorial(settings.tutorial.section, button);
             }
-        }, 100);
+        }, 1000);
     }
 
     // TODO: move get request to utils 
@@ -358,25 +364,6 @@ class Player {
                 origin: origin
             };
         } else {
-            // https://stackoverflow.com/a/16941754
-            function removeParam(key, sourceURL) {
-                var rtn = sourceURL.split("?")[0],
-                    param,
-                    params_arr = [],
-                    queryString = (sourceURL.indexOf("?") !== -1) ? sourceURL.split("?")[1] : "";
-                if (queryString !== "") {
-                    params_arr = queryString.split("&");
-                    for (var i = params_arr.length - 1; i >= 0; i -= 1) {
-                        param = params_arr[i].split("=")[0];
-                        if (param === key) {
-                            params_arr.splice(i, 1);
-                        }
-                    }
-                    rtn = rtn + "?" + params_arr.join("&");
-                }
-                return rtn;
-            }
-
             // window.location.href = removeParam("vs-pid", window.location.href);
             window.location = removeParam("vs-pid", window.location.href);
         }
@@ -472,15 +459,18 @@ class Player {
     }
 
     tryRewind(toSegmentNumber) {
+        let currentTime;
         if (this.startTime !== null) {
-            this.video.currentTime = this.startTime;
+            currentTime = this.startTime;
             this.startTime = null;
         }
+        else {
+            currentTime = this.video.currentTime;
+        }
 
-        let delay = this.segmentation.timestamps[toSegmentNumber] - this.video.currentTime;
-        log('onPlayEvent', this.video.currentTime, this.startTime, this.seekTime, delay);
+        let delay = this.segmentation.timestamps[toSegmentNumber] - currentTime;
         if (delay <= 0) {
-            let duration = this.segmentation.timestamps[toSegmentNumber + 1] - this.video.currentTime;
+            let duration = this.segmentation.timestamps[toSegmentNumber + 1] - currentTime;
             if (duration <= settings.segments[this.segmentation.types[toSegmentNumber]].duration) {
                 this.prevPlaybackRate = this.video.playbackRate;
                 this.preventRateChangedEvent = true;
@@ -502,7 +492,7 @@ class Player {
                 this.video.currentTime = this.segmentation.timestamps[toSegmentNumber + 1];
 
                 toSegmentNumber = this.findNextSegmentToRewind(toSegmentNumber);
-                delay = this.segmentation.timestamps[toSegmentNumber] - this.video.currentTime;
+                delay = this.segmentation.timestamps[toSegmentNumber] - currentTime;
             }
         }
 
@@ -524,7 +514,14 @@ class Player {
     findNextSegmentToRewind(currentSegmentNumber) {
         if (!this.segmentation || !this.segmentation.timestamps || !this.segmentation.types) return null;
 
-        let currentTime = Math.round(this.video.currentTime * 100) / 100;
+        let currentTime;
+        if (this.startTime !== null) {
+            currentTime = Math.round(this.startTime * 100) / 100;
+        }
+        else {
+            currentTime = Math.round(this.video.currentTime * 100) / 100;
+        }
+
         for (let i = currentSegmentNumber; i < this.segmentation.types.length; ++i) {
             if (settings.segments[this.segmentation.types[i]].skip == true && this.segmentation.timestamps[i] >= currentTime) {
                 return i;
@@ -607,6 +604,10 @@ class Player {
         if (this.timer) {
             clearTimeout(this.timer);
             this.timer = undefined;
+        }
+
+        if (this.cutButtonTimer !== null) {
+            clearInterval(this.cutButtonTimer);
         }
 
         this.segmentation = undefined;
