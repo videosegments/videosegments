@@ -479,7 +479,7 @@ class Player {
 
                 delay = duration * (1000 / this.video.playbackRate);
                 // timers have awful precision so start a little bit earlier
-                if (delay > 500) {
+                if (delay > 500 && delay > 40) {
                     // TODO: timers precision is about 10ms, so it can be calculated more precisily depending on speed
                     delay -= 40;
                 }
@@ -492,7 +492,7 @@ class Player {
                 this.video.currentTime = this.segmentation.timestamps[toSegmentNumber + 1];
 
                 toSegmentNumber = this.findNextSegmentToRewind(toSegmentNumber);
-                delay = this.segmentation.timestamps[toSegmentNumber] - currentTime;
+                delay = this.segmentation.timestamps[toSegmentNumber] - this.video.currentTime;
             }
         }
 
