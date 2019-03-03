@@ -1,6 +1,6 @@
 /*
     VideoSegments. Extension to Cut YouTube Videos. 
-    Copyright (C) 2017-2018  Alex Lys
+    Copyright (C) 2017-2019  Alex Lys
 
     This file is part of VideoSegments.
 
@@ -208,6 +208,13 @@ class Player {
 
         // listen for events 
         this.video.addEventListener('play', this.onPlayEventContext);
+        this.video.addEventListener('seeked', () => {
+			// quick fix for looped videos 
+			if (this.video.currentTime <= 0.1) {
+				this.startTime = 0.0;
+				this.onPlayEvent(""); // pass something or handler will reject 
+			}
+		});
         this.video.addEventListener('pause', this.onPauseEventContext);
         this.video.addEventListener('ratechange', this.onRateChangeEventContext);
 
@@ -436,12 +443,12 @@ class Player {
             return;
         }
 
-        if (this.muteEvent === 0) {
-            this.muteEvent = -1;
-            log('muted');
-            return;
-        }
-        this.muteEvent = this.muteEvent - 1;
+        // if (this.muteEvent === 0) {
+            // this.muteEvent = -1;
+            // log('muted');
+            // return;
+        // }
+        // this.muteEvent = this.muteEvent - 1;
 
         if (this.segmentation) {
             if (this.timer) {
@@ -467,6 +474,7 @@ class Player {
         else {
             currentTime = this.video.currentTime;
         }
+		log(currentTime, toSegmentNumber);
 
         let delay = this.segmentation.timestamps[toSegmentNumber] - currentTime;
         if (delay <= 0) {

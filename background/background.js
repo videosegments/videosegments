@@ -1,6 +1,6 @@
 /*
     VideoSegments. Extension to Cut YouTube Videos. 
-    Copyright (C) 2017-2018  Alex Lys
+    Copyright (C) 2017-2019  Alex Lys
 
     This file is part of VideoSegments.
 
