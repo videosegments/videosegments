@@ -101,7 +101,7 @@ function xhr_post(url, data) {
             "content-type",
             "application/x-www-form-urlencoded"
         );
-		xhr.send(post);
+        xhr.send(post);
     });
 }
 
