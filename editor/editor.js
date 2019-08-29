@@ -713,45 +713,48 @@ class Editor {
 			segmentation.types = convertSimplifiedSegmentation(segmentation.types);
 		}
 
-		let response;
 		if (typeof decision !== 'undefined') {
 			segmentation.decision = decision;
-			response = await xhr_post('https://db.videosegments.org/api/v3/set.php', segmentation);
-		} else {
-			response = await xhr_post('https://db.videosegments.org/api/v3/set.php', segmentation);
 		}
-		log(response);
+		browser.runtime.sendMessage({
+			'send_segmentation': segmentation
+		}, response => {
+			log(response);
 
-		if (response.code === '3') {
-			sendCaptchaModal(event => {
-				this.checkCaptcha(event, segmentation)
-			});
-		} else {
-			if (response.code === '0') {
-				sendSmallModal(response.code, response.message);
-
-				if (response.message === 'added' || response.message === 'updated' || response.message === 'accepted' || response.message === 'overriden') {
-					this.setSegmentationOrigin('official');
-				} else if (response.message === 'sended') {
-					this.setSegmentationOriginLink();
-				}
+			if (response.code === '3') {
+				sendCaptchaModal(event => {
+					this.checkCaptcha(event, segmentation)
+				});
 			} else {
-				if (settings.popupSize === 'big') {
-					sendBigModal(response.code, response.message);
-				} else {
+				if (response.code === '0') {
 					sendSmallModal(response.code, response.message);
+
+					if (response.message === 'added' || response.message === 'updated' || response.message === 'accepted' || response.message === 'overriden') {
+						this.setSegmentationOrigin('official');
+					} else if (response.message === 'sended') {
+						this.setSegmentationOriginLink();
+					}
+				} else {
+					if (settings.popupSize === 'big') {
+						sendBigModal(response.code, response.message);
+					} else {
+						sendSmallModal(response.code, response.message);
+					}
 				}
 			}
-		}
+		});
 	}
 
-	async checkCaptcha(event, segmentation) {
+	checkCaptcha(event, segmentation) {
 		if (event.origin === 'https://db.videosegments.org') {
 			segmentation.captcha = event.data;
 
-			let response = await xhr_post('https://db.videosegments.org/api/v3/set.php', segmentation);
-			sendSmallModal(response.code, response.message);
-			log(response);
+			browser.runtime.sendMessage({
+				'send_segmentation': segmentation
+			}, response => {
+				log(response);
+				sendSmallModal(response.code, response.message);
+			});
 		}
 	}
 
