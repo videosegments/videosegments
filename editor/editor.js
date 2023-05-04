@@ -145,6 +145,26 @@ class Editor {
 		}
 	}
 
+	createSharableSegments(segmentation) {
+
+		let seg_str = '';
+		let j = 1;
+
+		for (let i = 0; i < segmentation.timestamps.length; i += 2) {
+			console.log(i)
+			console.log(`Segment ${j}: ${segmentation.timestamps[i]}-${segmentation.timestamps[i+1]}\n\n`)
+			console.log(segmentation.timestamps)
+			seg_str += `Segment ${j}: ${secondsToClockTime(segmentation.timestamps[i])}-${secondsToClockTime(segmentation.timestamps[i+1])}\n\n`;
+			j += 1;
+
+		}
+
+		seg_str += `https://www.youtube.com/watch?v=${this.id}&segments=${encodeURIComponent(JSON.stringify(segmentation))}`
+
+		return seg_str
+
+	}
+
 	createSegmentsEntries() {
 		if (!this.segmentation || !this.segmentation.timestamps || !this.segmentation.types) {
 			document.getElementById('vs-editor-segments').style.display = 'none';
@@ -687,25 +707,53 @@ class Editor {
 		correct.addEventListener('click', this.shareSegmentation.bind(this, 2));
 	}
 
-	async shareSegmentation(decision) {
-		if (settings.tutorial.finished !== true) {
-			sendSmallModal('3', 'AvailableAfterTutorial');
-			return;
-		}
 
-		if (this.lastShareIteration === this.iterations) {
-			if (settings.popupSize === 'big') {
-				sendBigModal('1', 'noChangesInSegmentation');
-			} else {
-				sendSmallModal('1', 'noChangesInSegmentation');
-			}
-			return;
-		}
-		this.lastShareIteration = this.iterations;
+	
+	copyText(stringWithNewLines){
+
+        // Step 1: create a textarea element.
+        // It is capable of holding linebreaks (newlines) unlike "input" element
+        const mySmartTextarea = document.createElement('textarea');
+        
+        // Step 2: Store your string in innerHTML of mySmartTextarea element        
+        mySmartTextarea.innerHTML = stringWithNewLines;
+        
+        // Step3: find an id element within the body to append your mySmartTextarea there temporarily
+        const parentElement = document.body
+        parentElement.appendChild(mySmartTextarea);
+        
+        // Step 4: Simulate selection of your text from mySmartTextarea programmatically 
+        mySmartTextarea.select();
+        
+        // Step 5: simulate copy command (ctrl+c)
+        // now your string with newlines should be copied to your clipboard 
+        document.execCommand('copy');
+
+        // Step 6: Now you can get rid of your "smart" textarea element
+        parentElement.removeChild(mySmartTextarea);
+    }
+
+
+
+	async shareSegmentation(decision) {
+		// if (settings.tutorial.finished !== true) {
+		// 	sendSmallModal('3', 'AvailableAfterTutorial');
+		// 	return;
+		// }
+
+		// if (this.lastShareIteration === this.iterations) {
+		// 	if (settings.popupSize === 'big') {
+		// 		sendBigModal('1', 'noChangesInSegmentation');
+		// 	} else {
+		// 		sendSmallModal('1', 'noChangesInSegmentation');
+		// 	}
+		// 	return;
+		// }
+		// this.lastShareIteration = this.iterations;
 
 		let segmentation = {
 			id: this.id,
-			timestamps: this.segmentation.timestamps.slice(1, -1),
+			timestamps: this.segmentation.timestamps.slice(1, this.segmentation.timestamps.length),
 			types: this.segmentation.types.slice()
 		}
 
@@ -713,36 +761,41 @@ class Editor {
 			segmentation.types = convertSimplifiedSegmentation(segmentation.types);
 		}
 
-		if (typeof decision !== 'undefined') {
-			segmentation.decision = decision;
-		}
-		browser.runtime.sendMessage({
-			'send_segmentation': segmentation
-		}, response => {
-			log(response);
+		// if (typeof decision !== 'undefined') {
+		// 	segmentation.decision = decision;
+		// }
 
-			if (response.code === '3') {
-				sendCaptchaModal(event => {
-					this.checkCaptcha(event, segmentation)
-				});
-			} else {
-				if (response.code === '0') {
-					sendSmallModal(response.code, response.message);
+		let shareText = this.createSharableSegments(segmentation)
+		this.copyText(shareText)
+		alert(`Copied to Clipboard!\n\n${shareText}`)
 
-					if (response.message === 'added' || response.message === 'updated' || response.message === 'accepted' || response.message === 'overriden') {
-						this.setSegmentationOrigin('official');
-					} else if (response.message === 'sended') {
-						this.setSegmentationOriginLink();
-					}
-				} else {
-					if (settings.popupSize === 'big') {
-						sendBigModal(response.code, response.message);
-					} else {
-						sendSmallModal(response.code, response.message);
-					}
-				}
-			}
-		});
+		// browser.runtime.sendMessage({
+		// 	'send_segmentation': segmentation
+		// }, response => {
+		// 	log(response);
+
+		// 	if (response.code === '3') {
+		// 		sendCaptchaModal(event => {
+		// 			this.checkCaptcha(event, segmentation)
+		// 		});
+		// 	} else {
+		// 		if (response.code === '0') {
+		// 			sendSmallModal(response.code, response.message);
+
+		// 			if (response.message === 'added' || response.message === 'updated' || response.message === 'accepted' || response.message === 'overriden') {
+		// 				this.setSegmentationOrigin('official');
+		// 			} else if (response.message === 'sended') {
+		// 				this.setSegmentationOriginLink();
+		// 			}
+		// 		} else {
+		// 			if (settings.popupSize === 'big') {
+		// 				sendBigModal(response.code, response.message);
+		// 			} else {
+		// 				sendSmallModal(response.code, response.message);
+		// 			}
+		// 		}
+		// 	}
+		// });
 	}
 
 	checkCaptcha(event, segmentation) {

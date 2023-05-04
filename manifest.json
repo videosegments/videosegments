@@ -57,7 +57,8 @@
 		"https://*.videosegments.org/*",
 		"unlimitedStorage",
 		"storage",
-		"tabs"
+		"tabs",
+		"clipboardWrite"
 	],
 	"web_accessible_resources": [
 		"editor/editor.html",
