@@ -113,6 +113,8 @@ class Player {
 		this.segmentsbar = new Segmentsbar(progressBar);
 
 		let pid = getQueryString('vs-pid');
+		let q_segments = JSON.parse(decodeURIComponent(getQueryString('segments')))
+
 		if (pid === null) {
 			// request local and community segmentations 
 			this.getCommunitySegmentation().then(segmentation => {
@@ -129,7 +131,17 @@ class Player {
 					}, 'local');
 				}
 			});
-			this.getLocalSegmentation().then(segmentation => self.onGotSegmentation('local', segmentation, 'official'));
+			if (q_segments != null) {
+				this.getLocalSegmentation().then(segmentation => {
+					self.onGotSegmentation('local', {
+						timestamps: q_segments.timestamps,
+						types: q_segments.types
+					}, 'official')
+			}
+			else {
+				this.getLocalSegmentation().then(segmentation => self.onGotSegmentation('local', segmentation, 'official'));
+			}
+
 		} else {
 			this.segmentation = await this.getPendingSegmentation(pid);
 			this.onSegmentationReady();
