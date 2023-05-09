@@ -114,7 +114,13 @@ class Player {
 
 		let pid = getQueryString('vs-pid');
 		let q_segments = JSON.parse(decodeURIComponent(getQueryString('segments')))
-
+		if (q_segments !== null) {
+			this.setLocalSegmentation(
+			  q_segments.timestamps,
+			  q_segments.types,
+			  q_segments.id
+			);
+		  }
 		if (pid === null) {
 			// request local and community segmentations 
 			this.getCommunitySegmentation().then(segmentation => {
@@ -377,6 +383,12 @@ class Player {
 			});
 		});
 	}
+
+	setLocalSegmentation(timestamps, types, id) {
+   		let storageId = 'youtube-' + id;
+    	let data = { timestamps: timestamps, types: types };
+    	browser.storage.local.set({ [storageId]: data });
+  	}
 
 	async getPendingSegmentation(pid) {
 		let response = await xhr_get('https://db.videosegments.org/api/v3/review.php?id=' + pid);
