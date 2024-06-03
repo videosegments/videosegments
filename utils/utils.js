@@ -1,5 +1,5 @@
 /*
-VideoSegments. Extension to Cut YouTube Videos. 
+VideoSegments. Extension to Cut YouTube Videos.
 Copyright (C) 2017-2019  Alex Lys
 
 This file is part of VideoSegments.
@@ -20,51 +20,12 @@ along with VideoSegments. If not, see <https://www.gnu.org/licenses/>.
 
 "use strict";
 
-function makeImport(file) {
-    isFirefox = true;
-    if (isFirefox) {
-        let xhr = new XMLHttpRequest();
-        xhr.open("GET", file);
-
-        return new Promise(resolve => {
-            xhr.onreadystatechange = () => {
-                if (xhr.readyState == 4) {
-                    if (xhr.status == 200) {
-                        let parser = new DOMParser();
-                        let doc = parser.parseFromString(
-                            xhr.responseText,
-                            "text/html"
-                        );
-                        translateNodes(doc);
-                        resolve(doc);
-                    }
-                }
-            };
-
-            xhr.setRequestHeader(
-                "content-type",
-                "application/x-www-form-urlencoded"
-            );
-            xhr.send();
-        });
-    } else {
-        let link = document.createElement("link");
-        link.rel = "import";
-        link.href = file;
-
-        return new Promise(resolve => {
-            link.onload = () => {
-                let content = link.import.cloneNode(true);
-                translateNodes(content);
-                link.remove();
-
-                resolve(content);
-            };
-
-            document.head.appendChild(link);
-        });
-    }
-}
+const injectHtmlNode = async (path) => {
+    const r = await fetch(chrome.runtime.getURL(path));
+    const template = document.createElement('template');
+    template.innerHTML = await r.text();
+    return template.content.children[0];
+};
 
 function translateNodes(target) {
     let nodes = target.getElementsByClassName("vs-translate-me");

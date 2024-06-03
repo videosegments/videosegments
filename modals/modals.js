@@ -1,5 +1,5 @@
 /*
-    VideoSegments. Extension to Cut YouTube Videos. 
+    VideoSegments. Extension to Cut YouTube Videos.
     Copyright (C) 2017-2019  Alex Lys
 
     This file is part of VideoSegments.
@@ -21,7 +21,7 @@
 'use strict';
 
 async function sendSmallModal(code, message) {
-    let modal = await makeImport(browser.extension.getURL('modals/small.html'));
+    let modal = injectHtmlNode('modals/small.html');
     modal = modal.getElementsByClassName('vs-small-modal')[0];
 
     let header = modal.getElementsByClassName('vs-small-modal-header')[0];
@@ -59,7 +59,7 @@ async function sendSmallModal(code, message) {
 }
 
 async function sendBigModal(code, message) {
-    let modal = await makeImport(browser.extension.getURL('modals/big.html'));
+    let modal = injectHtmlNode('modals/big.html');
     modal = modal.getElementsByClassName('vs-big-modal')[0];
 
     let header = modal.getElementsByClassName('vs-big-modal-header')[0];
@@ -95,7 +95,7 @@ async function sendBigModal(code, message) {
 }
 
 async function sendCaptchaModal(messageContext) {
-    let modal = await makeImport(browser.extension.getURL('modals/captcha.html'));
+    let modal = injectHtmlNode('modals/captcha.html');
     modal = modal.getElementsByClassName('vs-captcha-modal')[0];
 
     function messageContextInner(event) {

@@ -1,5 +1,5 @@
 /*
-    VideoSegments. Extension to Cut YouTube Videos. 
+    VideoSegments. Extension to Cut YouTube Videos.
     Copyright (C) 2017-2019  Alex Lys
 
     This file is part of VideoSegments.
@@ -22,8 +22,6 @@
 
 let timer;
 
-window.browser = window.browser || window.chrome;
-
 function getSettings() {
 	let settings = {
 		displayPending: false,
@@ -31,20 +29,20 @@ function getSettings() {
 	}
 
 	return new Promise(resolve => {
-		// request settings 
-		browser.storage.local.get({
+		// request settings
+		chrome.storage.local.get({
 			settings
 		}, (result) => {
-			// backward compatibility 
+			// backward compatibility
 			settings = Object.assign({}, settings, result.settings);
-			// return promise 
+			// return promise
 			resolve(settings);
 		});
 	});
 }
 
 getSettings().then(settings => {
-	browser.browserAction.setBadgeBackgroundColor({
+	chrome.action.setBadgeBackgroundColor({
 		color: "#00ABFF"
 	});
 
@@ -108,11 +106,11 @@ function xhr_post(url, data) {
 async function updatePendingRequestCount() {
 	let response = await xhr_get('https://db.videosegments.org/api/v3/review.php?requests');
 	if (typeof response.requests !== 'undefined') {
-		browser.browserAction.setBadgeText({
+		chrome.action.setBadgeText({
 			text: response.requests
 		});
 	} else {
-		browser.browserAction.setBadgeText({
+		chrome.action.setBadgeText({
 			text: ''
 		});
 
@@ -123,7 +121,7 @@ async function updatePendingRequestCount() {
 	}
 }
 
-browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 	if (typeof request.displayPending !== 'undefined') {
 		if (request.displayPending) {
 			if (typeof timer === 'undefined') {
@@ -135,7 +133,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
 				timer.toggle();
 			}
 		} else {
-			browser.browserAction.setBadgeText({
+			chrome.action.setBadgeText({
 				text: ''
 			});
 

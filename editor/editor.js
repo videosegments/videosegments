@@ -1,5 +1,5 @@
 /*
-    VideoSegments. Extension to Cut YouTube Videos. 
+    VideoSegments. Extension to Cut YouTube Videos.
     Copyright (C) 2017-2019  Alex Lys
 
     This file is part of VideoSegments.
@@ -45,8 +45,9 @@ class Editor {
 	}
 
 	async createEditor() {
-		let content = await makeImport(browser.extension.getURL('editor/editor.html'));
-		this.panel = content.getElementById('vs-editor');
+		this.panel = await injectHtmlNode('editor/editor.html');
+		document.body.insertAdjacentElement('beforeend', this.panel);
+
 		this.panel.style.visibility = 'hidden';
 		document.body.appendChild(this.panel);
 		// log('editor created');
@@ -93,17 +94,16 @@ class Editor {
 			document.getElementById('vs-editor-simplified-buttons').style.display = 'none';
 		}
 
-		let entryTemplate = await makeImport(browser.extension.getURL('editor/entry.html'));
-		this.segmentEntryTemplate = entryTemplate.getElementsByClassName('vs-editor-segment-entry')[0];
+		this.segmentEntryTemplate = await injectHtmlNode('editor/entry.html');
 		this.segments = document.getElementById('vs-editor-segments');
 		this.createSegmentsEntries();
 
-		// prevent clicks to video player through panel 
+		// prevent clicks to video player through panel
 		this.panel.addEventListener('click', event => {
 			event.stopPropagation()
 		});
 
-		// hook active items 
+		// hook active items
 		this.hookControls();
 		this.hookButtons();
 		this.hookActions();
@@ -153,7 +153,7 @@ class Editor {
 		}
 
 		for (let i = 0; i < this.segmentation.types.length; ++i) {
-			// pass by reference to make smart cursor able to change timestamps 
+			// pass by reference to make smart cursor able to change timestamps
 			let entry = this.createSegmentEntry(i);
 			this.segments.appendChild(entry);
 		}
@@ -533,7 +533,7 @@ class Editor {
 	addSegment(timestamp, type, left) {
 		// log(timestamp, type, left);
 
-		// clear focus 
+		// clear focus
 		document.activeElement.blur();
 
 		let entry;
@@ -827,7 +827,7 @@ class Editor {
 	saveSegmentation() {
 		let video_id = 'youtube-' + this.id;
 		if (this.segmentation.types.length === 0) {
-			// remove it from local database 
+			// remove it from local database
 			browser.storage.local.remove([video_id], () => {
 				this.setSegmentationOrigin('deleted');
 			});
@@ -838,7 +838,7 @@ class Editor {
 			// save locally
 			let segmentation;
 			if (settings.mode === 'simplified') {
-				// break link between segments data and saved data 
+				// break link between segments data and saved data
 				segmentation = {
 					timestamps: this.segmentation.timestamps.slice(),
 					types: convertSimplifiedSegmentation(this.segmentation.types)
@@ -851,13 +851,13 @@ class Editor {
 				};
 			}
 
-			segmentation.timestamps.shift(); // remove first 
+			segmentation.timestamps.shift(); // remove first
 			if (segmentation.timestamps[segmentation.timestamps.length - 1] !== this.video.duration) {
-				// abstract segment to prevent segmentation extending  
+				// abstract segment to prevent segmentation extending
 				segmentation.timestamps.push(this.video.duration);
 				segmentation.types.push('-');
 			}
-			segmentation.timestamps.pop(); // remove last 
+			segmentation.timestamps.pop(); // remove last
 
 			browser.storage.local.set({
 				[video_id]: segmentation

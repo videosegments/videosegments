@@ -1,5 +1,5 @@
 /*
-    VideoSegments. Extension to Cut YouTube Videos. 
+    VideoSegments. Extension to Cut YouTube Videos.
     Copyright (C) 2017-2019  Alex Lys
 
     This file is part of VideoSegments.
@@ -87,9 +87,7 @@ function hideInfo() {
 
 async function displayPopper(element, text, placement = 'top', classname = 'vs-tutorial') {
     if (typeof displayPopper.content === 'undefined') {
-        displayPopper.content = await makeImport(
-            browser.extension.getURL("tutorial/tutorial.html")
-        );
+        displayPopper.content = injectHtmlNode("tutorial/tutorial.html");
     }
 
     if (classname !== 'vs-tutorial' && hovering === false) {
