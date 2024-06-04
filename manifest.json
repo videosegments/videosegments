@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "__MSG_extensionName__",
-  "version": "1.11.7",
+  "version": "1.11.8",
   "default_locale": "en",
   "description": "__MSG_extensionDescription__",
   "icons": {
@@ -41,7 +41,7 @@
       "all_frames": true
     }
   ],
-  "permissions": ["unlimitedStorage", "storage", "tabs"],
+  "permissions": ["unlimitedStorage", "storage"],
   "web_accessible_resources": [
     {
       "resources": [
